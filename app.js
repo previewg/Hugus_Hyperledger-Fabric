@@ -15,6 +15,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.listen(process.env.PORT,console.log(`${process.env.PORT} port is listening...`));
+app.listen(process.env.PORT,()=> console.log(`${process.env.PORT} port is listening...`));
 
 module.exports = app;
