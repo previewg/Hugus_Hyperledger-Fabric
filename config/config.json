@@ -6,11 +6,18 @@
     "host": "management-tutorial.cohjyjh51jft.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql"
   },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
   "production": {
-    "username": "user",
-    "password": "simegats1004!",
-    "database": "project",
-    "host": "management-tutorial.cohjyjh51jft.ap-northeast-2.rds.amazonaws.com",
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   }
 }

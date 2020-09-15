@@ -1,14 +1,17 @@
-'use strict';
+const path = require('path');
+const Sequelize = require('sequelize');
 
-const { Sequelize } = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+//개발용인지 배포용(production)인지 나눔.
+const config = require('../config/config.json')[env];
+
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
-
-const story = require('./story');
-
 const db = {};
+
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.story = story(sequelize,Sequelize);
+
+db.User = require('./user')(sequelize, Sequelize);
 
 module.exports = db;
+
