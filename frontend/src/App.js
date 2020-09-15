@@ -1,10 +1,14 @@
 import React from 'react';
-//test
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {StoryMain} from './components'
+
 function App() {
   return (
-    <div className="App">
-      asdasd
-    </div>
+      <Router>
+          <Switch>
+              <Route exact path="/story" component={StoryMain} />
+          </Switch>
+      </Router>
   );
 }
 
