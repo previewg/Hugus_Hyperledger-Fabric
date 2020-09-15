@@ -3,7 +3,7 @@ import { Authentication } from '../components';
 import { connect } from 'react-redux';
 import { registerRequest } from '../actions/auth';
 
-class Register extends React.Component {
+class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
@@ -55,4 +55,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

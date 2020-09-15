@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {loginRequest} from '../actions/auth';
 
 
-class Login extends React.Component {
+class SignIn extends React.Component {
 
     constructor(props) {
         super(props);
@@ -54,4 +54,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

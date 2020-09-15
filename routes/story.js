@@ -11,4 +11,8 @@ router.get('/', function(req, res, next) {
     console.log(result))
 });
 
+router.post("/write",(req,res,next)=>{
+  res.json({res:req.body.ex});
+})
+
 module.exports = router;

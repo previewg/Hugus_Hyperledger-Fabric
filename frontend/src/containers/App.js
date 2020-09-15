@@ -1,5 +1,5 @@
 import React from 'react';
-import {Header} from '../components';
+import {NavBar} from '../components';
 import {logoutRequest} from '../actions/auth';
 import {connect} from "react-redux";
 
@@ -56,7 +56,7 @@ class App extends React.Component {
         return (
             <>
                 {isAuth ? undefined :
-                    <Header isLoggedIn={this.props.status.isLoggedIn}
+                    <NavBar isLoggedIn={this.props.status.isLoggedIn}
                             onLogout={this.handleLogout}/>}
                 {this.props.children}
             </>

@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {App, Home, Login, Register} from './containers';
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+
+// Redux
+import rootReducer from "./reducers/index";
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import rootReducer from "./reducers/index";
 import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
+
+// Router
+import {App, Home, Login, Register, StoryMain} from './containers';
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {NavBar} from "./components";
 
 
 const store = createStore(
@@ -17,15 +22,17 @@ const store = createStore(
 );
 
 ReactDOM.render(
-        <Provider store={store}>
-            <BrowserRouter>
-                <Switch>
-                    <Route exact path="/" component={App}/>
-                    <Route path="/home" component={Home}/>
-                    <Route path="/login" component={Login}/>
-                    <Route path="/register" component={Register}/>
-                </Switch>
-            </BrowserRouter>
-        </Provider>,
-        document.getElementById('root')
+    <Provider store={store}>
+        <BrowserRouter>
+            <NavBar/>
+            <Switch>
+                <Route exact path="/" component={App}/>
+                <Route path="/home" component={Home}/>
+                <Route path="/login" component={Login}/>
+                <Route path="/register" component={Register}/>
+                <Route path="/story" component={StoryMain}/>
+            </Switch>
+        </BrowserRouter>
+    </Provider>,
+    document.getElementById('root')
 );
