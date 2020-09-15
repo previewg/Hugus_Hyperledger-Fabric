@@ -2,11 +2,11 @@
 
 const express = require('express');
 const router = express.Router();
-const {story} = require('../models/index');
+const {Story} = require('../models');
 
 
 router.get('/', function(req, res, next) {
-  story.findAll({})
+  Story.findAll({})
     .then((result)=>
     console.log(result))
 });

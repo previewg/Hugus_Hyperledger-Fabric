@@ -1,4 +1,4 @@
-const path = require('path');
+'use strict';
 const Sequelize = require('sequelize');
 
 const env = process.env.NODE_ENV || 'development';
@@ -12,6 +12,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.User = require('./user')(sequelize, Sequelize);
+db.Story = require('./story')(sequelize, Sequelize);
 
 module.exports = db;
 

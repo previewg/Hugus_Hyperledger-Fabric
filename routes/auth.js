@@ -61,6 +61,8 @@ router.post('/login', async (req, res, next) => {
         //     email: user.email,
         // }
         //Password 비교
+
+
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
                 const payload = {

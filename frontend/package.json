@@ -9,7 +9,6 @@
     "react": "^16.13.1",
     "react-addons-update": "^15.6.2",
     "react-dom": "^16.13.1",
-<<<<<<< HEAD
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
@@ -17,10 +16,6 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.0"
-=======
-    "react-scripts": "3.4.3",
-    "redux": "^4.0.5"
->>>>>>> c1021b272e19470c2f91739d1dfe89709df40ffd
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,7 +38,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3000",
   "devDependencies": {
     "axios": "^0.20.0",
     "react-redux": "^7.2.1",

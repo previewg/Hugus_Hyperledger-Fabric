@@ -1,9 +1,0 @@
-diff a/app.js b/app.js	(rejected hunks)
-@@ -7,6 +7,7 @@
- const {sequelize} = require('./models');
- const cors = require('cors');
- const port = 3000;
-+
- require('cookie-parser')();
- require('morgan')('dev');
- 
