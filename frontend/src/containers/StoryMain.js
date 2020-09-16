@@ -6,6 +6,7 @@ const StoryMenuStyle = styled.div`
   height: 150px;
   display: flex;
   justify-content: center;
+  align-items: center;
   section{
       width: 40%;
       height: 50px;
@@ -14,6 +15,7 @@ const StoryMenuStyle = styled.div`
       align-items: center;
       article{
         font-size: 20px;
+        cursor: pointer;
       }
   }
   

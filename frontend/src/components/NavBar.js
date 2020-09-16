@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import styled from 'styled-components';
 
 const NavStyle = styled.nav`
+  
   display: flex;
   height: 50px;
   border-bottom: solid 0.1px ;
@@ -40,6 +41,7 @@ const NavStyle = styled.nav`
   }
   
   .dropdown{
+      z-index: 10;
       display: flex;
       justify-content: center;
       ul{
@@ -61,7 +63,6 @@ const NavStyle = styled.nav`
          display: flex;
          align-items: center;
          height: 40px;
-         font-weight: bold;
           font-size: 13px;
           transition : .1s ease-in-out;
              :hover{
