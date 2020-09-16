@@ -9,10 +9,13 @@ import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Router
-import {App, Home, Login, Register, StoryMain} from './containers';
+import {App, Home, Login, Register, StoryMain,StoryWrite} from './containers';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {NavBar} from "./components";
 
+// Slick css
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const store = createStore(
     rootReducer,
@@ -30,7 +33,8 @@ ReactDOM.render(
                 <Route path="/home" component={Home}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
-                <Route path="/story" component={StoryMain}/>
+                <Route exact path="/story" component={StoryMain}/>
+                <Route path="/story/write" component={StoryWrite}/>
             </Switch>
         </BrowserRouter>
     </Provider>,

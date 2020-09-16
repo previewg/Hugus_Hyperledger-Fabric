@@ -1,10 +1,11 @@
 import React from 'react';
+import StorySlider from "../components/StoryMain/StorySlider";
 
 const StoryMain = () => {
     return (
-        <div>
-            여기는 스토리 메인
-        </div>
+        <>
+            <StorySlider />
+        </>
     );
 }
 
