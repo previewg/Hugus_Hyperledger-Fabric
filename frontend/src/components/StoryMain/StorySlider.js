@@ -6,7 +6,7 @@ const SliderStyle = styled.div`
   display: flex;
   justify-content: center;
       .slick-slider{
-       width: 70%;
+       width: 60%;
     .slick-slide>div{
       width: 90%;
     }
