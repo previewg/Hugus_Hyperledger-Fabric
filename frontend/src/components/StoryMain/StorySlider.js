@@ -11,8 +11,6 @@ const SliderStyle = styled.div`
       width: 90%;
     }
   }
-  
-  
 `;
 
 const StorySlider = () => {
