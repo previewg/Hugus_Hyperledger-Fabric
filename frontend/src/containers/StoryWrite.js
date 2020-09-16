@@ -34,7 +34,7 @@ const StoryWrite = () => {
 
             <div className="info">
                 <h5>작성자 소개</h5>
-                <td><textarea onkeydown="resize(this)" rows="7" cols="100"
+                <td><textarea rows="7" cols="100"
                               placeholder="본인을 마음껏 표현해주세요." class="form-control"></textarea></td>
             </div>
 
@@ -45,19 +45,19 @@ const StoryWrite = () => {
                     <td><input type="text" placeholder="파일을 선택하세요. " name="filename"/></td>
                 </tr>
 
-                <td><textarea onkeydown="resize(this)" rows="18" cols="100"
+                <td><textarea rows="18" cols="100"
                               class="form-control" placeholder="내용을 입력하세요. "></textarea></td>
             </div>
 
             <div className="item">
                 <h5>필요 물품</h5>
-                <td><textarea onkeydown="resize(this)" rows="7" cols="100"
+                <td><textarea rows="7" cols="100"
                               placeholder="# 물품입력" class="form-control"></textarea></td>
             </div>
 
             <div className="hashtag">
                 <h5>태그</h5>
-                <td><textarea onkeydown="resize(this)" rows="7" cols="100"
+                <td><textarea rows="7" cols="100"
                               placeholder="#태그" class="form-control"></textarea></td>
             </div>
         </StoryWriteStyle>

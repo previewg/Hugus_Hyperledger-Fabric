@@ -9,17 +9,13 @@ const NavStyle = styled.nav`
   border-bottom: solid 0.1px ;
   align-items: center;
   text-align: center;
-  background-color: #333333;
   
   a{
     text-decoration: none;
-    color:#d6d6d6;
+    color:black;
     transition : .2s ease-in-out;
-    :hover{
-     color:white;
-    }
+    
   }
-  
   
   .nav__title{
     padding-left: 70px;
@@ -27,6 +23,11 @@ const NavStyle = styled.nav`
     width:15%;
     font-size: xx-large;
     font-weight: bold;
+    :hover{
+        a{
+          color: orange;
+        }
+    }
   }
   
   .nav__menus{
@@ -53,17 +54,17 @@ const NavStyle = styled.nav`
         justify-content: space-between;
         top: 45px;
         border: solid 1px orange;
-        background-color: #bcbcbc;
+        backdrop-filter: blur(6px);
         width:90px;
-        transition : .2s ease-in-out;
+        transition : .3s ease-in-out;
         opacity: 0;
         padding: 20px;
          a{
-         color: white;
+         color: #666666;
          display: flex;
          align-items: center;
          height: 40px;
-          font-size: 13px;
+          font-size: 14px;
           transition : .1s ease-in-out;
              :hover{
               transform: translateX(10px);

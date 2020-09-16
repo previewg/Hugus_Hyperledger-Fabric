@@ -34,7 +34,7 @@ const StoryNavStyle = styled.div`
       width: 8%;
       height: 3px;
       background-color: orange;
-      transition: all .5s ease-in-out;
+      transition: all .4s ease-in-out;
       }
       
   .underline{
