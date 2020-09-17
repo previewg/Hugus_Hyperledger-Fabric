@@ -102,6 +102,7 @@ const StoryWriteStyle = styled.div`
                 border:none;
                 }
             }
+
             .submit {
             width:100%;
             display:flex;
@@ -119,8 +120,72 @@ const StoryWriteStyle = styled.div`
                 height:28px;    
             }    
             }
+            /* Tagging Basic Style */
+.tagging {
+	border: 1px solid #CCCCCC;
+	cursor: text;
+	font-size: 1em;
+	height: auto;
+	padding: 10px 10px 15px;
+}
+
+.tag {
+	background: none repeat scroll 0 0 #EE7407;
+	border-radius: 2px;
+	color: white;
+	cursor: default;
+	display: inline-block;
+	position: relative;
+	white-space: nowrap;
+	padding: 4px 20px 4px 0;
+	margin: 5px 10px 0 0;
+}
+
+.tag span {
+	background: none repeat scroll 0 0 #D66806;
+	border-radius: 2px 0 0 2px;
+	margin-right: 5px;
+	padding: 5px 10px 5px;
+}
+
+.tag .tag-i {
+	color: white;
+	cursor: pointer;
+	font-size: 1.3em;
+	height: 0;
+	line-height: 0.1em;
+	position: absolute;
+	right: 5px;
+	top: 0.7em;
+	text-align: center;
+	width: 10px;
+}
+
+.tag .tag-i:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+.type-zone {
+	border: 0 none;
+	height: auto;
+	width: auto;
+	min-width: 20px;
+	display: inline-block;
+}
+
+.type-zone:focus {
+	outline: none;
+}
+
+
+
             }
         `;
+
+
+
+
 
 const StoryWrite = () => {
     const [data, setData] = useState('')
@@ -182,33 +247,23 @@ const StoryWrite = () => {
                 
 
 
-
-                <body>
-    <div class="content">
-        <form action="writeDo.php" method="POST" id="tag-form">
-            <input type="hidden" value="" name="tag" id="rdTag" />
-            <button type="submit">태그등록</button>
-        </form>
-
-        <ul id="tag-list">
-        </ul>
-
-        <div>
-            <input type="text" id="tag" size="7" placeholder="태그입력" />
-        </div>
-
-    </div>
-</body>
-
-
-
-
                 <div className="submit">
                         <button className="button" onClick="">
                         제출하기
                         </button>
                         <img src="/icons/PaperPlane.png"/>
                 </div>
+
+                
+
+                <div class="example-wrapper">
+        <div class="tags well">
+            <label for="tag" class="control-label">Tag</label>
+            <div data-tags-input-name="taggone" id="tag">preexisting-tag, another-tag</div>
+        </div>
+    </div>
+
+
             </div>
         </StoryWriteStyle>
     );

@@ -56,7 +56,7 @@ const NextArrow = (props) => {
         className={className}
         style={{ ...style, display: "block",paddingLeft:'300px',transform:'scale(2)'}}
         onClick={onClick}
-        src='/icons/Next icon.png'
+        src='/icons/Nexticon.png'
       />
     );
 };
@@ -68,7 +68,7 @@ const PrevArrow = (props) => {
         className={className}
         style={{ ...style, display: "block",paddingRight:'300px',transform:'scale(2)'}}
         onClick={onClick}
-        src='/icons/Back icon.png'
+        src='/icons/Backicon.png'
       />
     );
 }
