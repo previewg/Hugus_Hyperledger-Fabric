@@ -38,16 +38,16 @@ app.use((req,res)=>{
 	new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
 });
 
-// mongodb에 세션 저장설정
-const MongoStore = require('connect-mongo')(session);
-app.use(session({
-	secret : 'anyword',
-	resave : false,
-	saveUninitialized:false,
-	store : new MongoStore({
-		url : 'mongodb://192.168.99.100:37017/db01',
-		collection : 'session'
-	})
-}))
+// // mongodb에 세션 저장설정
+// const MongoStore = require('connect-mongo')(session);
+// app.use(session({
+// 	secret : 'anyword',
+// 	resave : false,
+// 	saveUninitialized:false,
+// 	store : new MongoStore({
+// 		url : 'mongodb://192.168.99.100:37017/db01',
+// 		collection : 'session'
+// 	})
+// }))
 
 app.listen(process.env.PORT,()=> console.log(`${process.env.PORT} port is listening...`));
