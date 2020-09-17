@@ -1,39 +1,33 @@
 import React from 'react';
-import StorySlider from "../components/StoryMain/StorySlider";
+import {Link} from "react-router-dom";
 import styled from 'styled-components';
+import StorySlider from "../components/StoryMain/StorySlider";
+import StoryNav from "../components/StoryMain/StoryNav";
+import StoryList from "../components/StoryMain/StoryList";
 
-const StoryMenuStyle = styled.div`
-  height: 150px;
+const StoryMainStyle = styled.div`
   display: flex;
-  justify-content: center;
-  section{
-      width: 40%;
-      height: 50px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      article{
-        font-size: 20px;
-      }
+  flex-direction: column;
+  .StoryWrite__btn{
+    position: absolute;
+    top:22%;
+    right: 15%;
+    color:black;
+    text-decoration: none;
   }
   
 `;
 
-
-
 const StoryMain = () => {
+
     return (
-        <>
-            <StoryMenuStyle>
-                <section>
-                    <article>최신 스토리</article>
-                    <article>인기 스토리</article>
-                    <article>관심 스토리</article>
-                    <article>지난 스토리</article>
-                </section>
-            </StoryMenuStyle>
+        <StoryMainStyle>
+            <StoryNav/>
+            <Link className='StoryWrite__btn' >글작성</Link>
             <StorySlider />
-        </>
+            <StoryList/>
+        </StoryMainStyle>
+
     );
 }
 
