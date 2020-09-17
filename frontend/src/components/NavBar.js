@@ -3,12 +3,15 @@ import {Link} from "react-router-dom";
 import styled from 'styled-components';
 
 const NavStyle = styled.nav`
-  
+  position: fixed;
+  width: 100%;
   display: flex;
   height: 50px;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
   align-items: center;
   text-align: center;
+  background-color: white;
+  z-index: 100;
   
   a{
     text-decoration: none;
@@ -31,6 +34,7 @@ const NavStyle = styled.nav`
   }
   
   .nav__menus{
+  height: 50px;
     width:60%;
     display:flex;
     justify-content: center;
@@ -42,7 +46,6 @@ const NavStyle = styled.nav`
   }
   
   .dropdown{
-      z-index: 10;
       display: flex;
       justify-content: center;
       ul{
