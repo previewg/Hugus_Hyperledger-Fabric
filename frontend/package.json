@@ -47,5 +47,5 @@
     "react-router-dom": "^5.2.0",
     "redux-thunk": "^2.3.0"
   },
-  "proxy": "http://localhost:3000"
+  "proxy": "http://127.0.0.1:3000"
 }

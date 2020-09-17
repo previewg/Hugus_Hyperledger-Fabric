@@ -1,49 +1,39 @@
 import axios from 'axios';
-import {
-    AUTH_SIGNIN,
-    AUTH_SIGNIN_SUCCESS,
-    AUTH_SIGNIN_FAILURE,
-    AUTH_SIGNOUT,
-    AUTH_SIGNOUT_ERROR,
-    AUTH_SIGNUP,
-    AUTH_SIGNUP_SUCCESS,
-    AUTH_SIGNUP_FAILURE
-} from './ActionTypes';
-
+import * as types from './ActionTypes';
 
 export const signIn = () => {
-    return {type: AUTH_SIGNIN}
+    return {type: types.AUTH_SIGNIN}
 }
 
 export const signUp = () => {
-    return {type: AUTH_SIGNUP};
+    return {type: types.AUTH_SIGNUP};
 }
 
 export const signInSuccess = (email) => {
     return {
-        type: AUTH_SIGNIN_SUCCESS,
+        type: types.AUTH_SIGNIN_SUCCESS,
         email:email
     };
 }
 
 export const signInFailure = (error) => {
-    return {type: AUTH_SIGNIN_FAILURE,error:error};
+    return {type: types.AUTH_SIGNIN_FAILURE,error:error};
 }
 
 export const signUpSuccess = () => {
-    return {type: AUTH_SIGNUP_SUCCESS};
+    return {type: types.AUTH_SIGNUP_SUCCESS};
 }
 
 export const signUpFailure = (error) => {
-    return {type: AUTH_SIGNUP_FAILURE,error:error};
+    return {type: types.AUTH_SIGNUP_FAILURE,error:error};
 }
 
 export const signOut = () => {
-    return {type: AUTH_SIGNOUT};
+    return {type: types.AUTH_SIGNOUT};
 }
 
 export const signOutError = (error) => {
-    return {type: AUTH_SIGNOUT_ERROR,error:error};
+    return {type: types.AUTH_SIGNOUT_ERROR,error:error};
 }
 
 // 회원가입

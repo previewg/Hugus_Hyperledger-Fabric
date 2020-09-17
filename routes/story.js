@@ -26,8 +26,9 @@ router.get('/', function (req, res, next) {
 //   }
 // });
 
-router.post("/write", async (req, res) => {
+router.post("/add", async (req, res) => {
   try {
+    console.log(req)
     let obj;
     obj = {
       story_title: req.body.title,
@@ -45,7 +46,7 @@ router.post("/write", async (req, res) => {
   }
 });
 
-router.post("/delete", async (req, res) => {
+router.delete("/delete", async (req, res) => {
   try {
     await Story.destroy({where:{ id:req.body.id }});
     res.json({ message: true });
@@ -55,7 +56,7 @@ router.post("/delete", async (req, res) => {
   }
 });
 
-router.post("/update", async (req, res) => {
+router.put("/update", async (req, res) => {
   try {
     
     await Story.update({

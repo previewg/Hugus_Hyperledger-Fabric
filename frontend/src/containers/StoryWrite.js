@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components'
-import axios from "axios";
+import {useDispatch} from "react-redux";
+import {storyAdd} from "../actions/story";
 
 const StoryWriteStyle = styled.div`
     display:flex;
@@ -88,7 +89,7 @@ const StoryWriteStyle = styled.div`
                         } 
                     }
                 }
-                textarea {
+                textarea { 
                     padding: 12px;
                     resize: none;
                     width: 100%;
@@ -164,11 +165,30 @@ const StoryWriteStyle = styled.div`
 
 
 const StoryWrite = () => {
-    const [data, setData] = useState('')
-
-    useEffect(() => {
-
+    const [data, setData] = useState({
+        title:'예시',
+        info:'',
+        content:'',
+        file:'',
+        item:'',
+        hashtag:''
     })
+    const formData = new FormData();
+    const dispatch = useDispatch();
+
+    const storyAddHandler = () => {
+        formData.append('title','될걸?');
+        console.log(formData)
+        dispatch(storyAdd(formData));
+        setData({
+            title:'',
+            info:'',
+            content:'',
+            file:'',
+            item:'',
+            hashtag:''
+        })
+    }
 
     return (
         <StoryWriteStyle>
@@ -214,7 +234,7 @@ const StoryWrite = () => {
 
 
                 <div className="submit">
-                    <button onClick="">
+                    <button onClick={storyAddHandler}>
                         제출하기
                         <img src="/icons/PaperPlane.png"/>
                     </button>
