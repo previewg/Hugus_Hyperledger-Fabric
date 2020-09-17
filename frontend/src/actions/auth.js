@@ -1,97 +1,81 @@
-import {
-    AUTH_LOGIN,
-    AUTH_LOGIN_SUCCESS,
-    AUTH_LOGIN_FAILURE,
-    AUTH_REGISTER,
-    AUTH_REGISTER_SUCCESS,
-    AUTH_REGISTER_FAILURE,
-    AUTH_LOGOUT
-} from './ActionTypes';
 import axios from 'axios';
-/* ====== AUTH ====== */
+import {
+    AUTH_SIGNIN,
+    AUTH_SIGNIN_SUCCESS,
+    AUTH_SIGNIN_FAILURE,
+    AUTH_SIGNOUT,
+    AUTH_SIGNOUT_ERROR,
+    AUTH_SIGNUP,
+    AUTH_SIGNUP_SUCCESS,
+    AUTH_SIGNUP_FAILURE
+} from './ActionTypes';
 
-/* LOGIN */
-export function loginRequest(email, password) {
-    return (dispatch) => {
-        dispatch(login());
 
-        return axios.post('http://localhost:3000/auth/login', {email, password})
-            .then((response) => {
-                dispatch(loginSuccess(email));
-            }).catch((error) => {
-                dispatch(loginFailure());
-            });
-    }
+export const signIn = () => {
+    return {type: AUTH_SIGNIN}
 }
 
-export function login() {
+export const signUp = () => {
+    return {type: AUTH_SIGNUP};
+}
+
+export const signInSuccess = (email) => {
     return {
-        type: AUTH_LOGIN
+        type: AUTH_SIGNIN_SUCCESS,
+        email:email
     };
 }
 
-export function loginSuccess(username) {
-    return {
-        type: AUTH_LOGIN_SUCCESS,
-        username
-    };
+export const signInFailure = (error) => {
+    return {type: AUTH_SIGNIN_FAILURE,error:error};
 }
 
-export function loginFailure() {
-    return {
-        type: AUTH_LOGIN_FAILURE
-    };
+export const signUpSuccess = () => {
+    return {type: AUTH_SIGNUP_SUCCESS};
 }
 
-/* REGISTER */
-export function registerRequest(email, nickname, password) {
-    return (dispatch) => {
-        //inform register API is starting
-        dispatch(register());
-        return axios.post('http://localhost:3000/auth/signup', {email, nickname, password})
-            .then((response) => {
-                dispatch(registerSuccess());
-            }).catch((error) => {
-                //error.response.data.code
-                dispatch(registerFailure());
-            });
-    };
+export const signUpFailure = (error) => {
+    return {type: AUTH_SIGNUP_FAILURE,error:error};
 }
 
-export function register() {
-    return {
-        type: AUTH_REGISTER
-    };
+export const signOut = () => {
+    return {type: AUTH_SIGNOUT};
 }
 
-export function registerSuccess() {
-    return {
-        type: AUTH_REGISTER_SUCCESS
-    };
+export const signOutError = (error) => {
+    return {type: AUTH_SIGNOUT_ERROR,error:error};
 }
 
-export function registerFailure(error) {
-    return {
-        type: AUTH_REGISTER_FAILURE,
-        // error
-    };
+// 회원가입
+export const signUpRequest = (email, nickname, password) => async dispatch => {
+    dispatch(signUp());
+    await axios.post('/auth/signup', {email, nickname, password})
+    .then(response => {
+        dispatch(signUpSuccess());
+    }).catch(error => {
+        dispatch(signUpFailure(error));
+    });
+};
+
+// 로그인
+export const signInRequest = (email, password) => async dispatch => {
+    dispatch(signIn());
+    await axios.post('/auth/login', {email, password})
+    .then(response => {
+        dispatch(signInSuccess(email));
+    }).catch(error => {
+        dispatch(signInFailure(error));
+    });
 }
 
-/* LOGOUT thunk함수
-*/
-export function logoutRequest() {
-    return (dispatch) => {
-        return axios.post('http://localhost:3000/auth/logout')
-            .then((response) => {
-                dispatch(logout());
-            });
-    };
-}
+// 로그아웃
+export const signOutRequest = () => async dispatch => {
+    await axios.post('/auth/signOut')
+        .then(response => {
+            dispatch(signOut());
+        }).catch(error=>{
+            dispatch(signOutError(error));
+        });
+};
 
-//action.type값이 'AUTH_LOGOUT'인 객체를 리턴하는 액션생성자 함수
-export function logout() {
-    return {
-        type: AUTH_LOGOUT
-    };
-}
 

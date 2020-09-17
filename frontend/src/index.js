@@ -29,10 +29,9 @@ ReactDOM.render(
         <BrowserRouter>
             <NavBar/>
             <Switch>
-                <Route exact path="/" component={App}/>
-                <Route path="/home" component={Home}/>
-                <Route path="/login" component={Login}/>
-                <Route path="/register" component={Register}/>
+                <Route exact path="/" component={Home}/>
+                {/*<Route path="/login" component={Login}/>*/}
+                {/*<Route path="/register" component={Register}/>*/}
                 <Route exact path="/story" component={StoryMain}/>
                 <Route path="/story/write" component={StoryWrite}/>
             </Switch>

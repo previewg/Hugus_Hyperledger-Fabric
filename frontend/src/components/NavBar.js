@@ -6,7 +6,7 @@ const NavStyle = styled.nav`
   
   display: flex;
   height: 50px;
-  border-bottom: solid 0.1px ;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
   align-items: center;
   text-align: center;
   
