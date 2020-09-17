@@ -1,7 +1,7 @@
 import React from 'react';
 import {Authentication} from '../components';
 import {connect} from 'react-redux';
-import {loginRequest} from '../actions/auth';
+import {signInRequest} from '../actions/auth';
 
 
 class SignIn extends React.Component {
@@ -12,7 +12,7 @@ class SignIn extends React.Component {
     }
 
     handleLogin(id, pw) {
-        return this.props.loginRequest(id, pw).then(
+        return this.props.signInRequest(id, pw).then(
             () => {
                 if (this.props.status === "SUCCESS") {
                     console.log(this.props.status)
@@ -48,8 +48,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginRequest: (id, pw) => {
-            return dispatch(loginRequest(id, pw));
+        signInRequest: (id, pw) => {
+            return dispatch(signInRequest(id, pw));
         }
     };
 };

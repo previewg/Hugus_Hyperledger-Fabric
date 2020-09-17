@@ -1,7 +1,7 @@
 import React from 'react';
 import { Authentication } from '../components';
 import { connect } from 'react-redux';
-import { registerRequest } from '../actions/auth';
+import { signUpRequest } from '../actions/auth';
 
 class SignUp extends React.Component {
 
@@ -11,7 +11,7 @@ class SignUp extends React.Component {
     }
 
     handleRegister(email,nickname, password) {
-        return this.props.registerRequest(email,nickname, password).then(
+        return this.props.signUpRequest(email,nickname, password).then(
             () => {
                 if(this.props.status === "SUCCESS") {
                     this.props.history.push('/login');
@@ -49,8 +49,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        registerRequest: (email,nickname, password) => {
-            return dispatch(registerRequest(email,nickname, password));
+        signUpRequest: (email,nickname, password) => {
+            return dispatch(signUpRequest(email,nickname, password));
         }
     };
 };
