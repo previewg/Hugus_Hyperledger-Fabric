@@ -146,7 +146,7 @@ const NavBar = () => {
             <div className='user'>
                 <img className='user__icon' src='/icons/User.png'/>
                 <p>(이름)</p>
-                <Link>(로그인)</Link>
+                <Link >(로그인)</Link>
                 <Link to='/search'>
                     <img className='search__icon' src='/icons/Search.png'/>
                 </Link>
