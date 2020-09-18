@@ -9,7 +9,7 @@ import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Router
-import {App, Home, Login, Register, StoryMain,StoryWrite} from './containers';
+import {App, Home, Login, Register, StoryMain,StoryWrite, TotalSearch} from './containers';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {NavBar} from "./components";
 
@@ -34,6 +34,7 @@ ReactDOM.render(
                 {/*<Route path="/register" component={Register}/>*/}
                 <Route exact path="/story" component={StoryMain}/>
                 <Route path="/story/write" component={StoryWrite}/>
+                <Route path="/story/search" component={TotalSearch}/>
             </Switch>
         </BrowserRouter>
     </Provider>,

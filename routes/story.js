@@ -31,7 +31,7 @@ router.get('/', function (req, res, next) {
 
 router.post("/add", async (req, res) => {
   try {
-    console.log(req)
+    // console.log(req)
     let obj;
     obj = {
       story_title: req.body.title,

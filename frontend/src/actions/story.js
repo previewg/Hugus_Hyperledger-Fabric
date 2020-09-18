@@ -10,7 +10,7 @@ const STORY_UPDATE = "STORY_UPDATE";
 
 // 게시물 등록
 export const storyAdd = (data) => async dispatch => {
-	await axios.post('/story/add', data,{headers:{'content-type':'multipart/form-data'}})
+	await axios.post('/story/add', data , {headers:{'content-type':'multipart/form-data'}})
 		.then(response => {
 			alert('성공적으로 등록되었습니다.');
 		}).catch(error => {
