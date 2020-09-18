@@ -115,22 +115,55 @@ const StoryWriteStyle = styled.div`
                 }
                 
             }
-            .item {
+            .items {
                 font-weight: bold;
                 margin-top:35px;
-                input {
-                padding: 5px;
-                    height: 20px;
-                    outline:none;
-                    border: none;
-                    border-bottom: solid 0.1px lightgray;
-                    transition: 0.3s ease-in-out;
-                        :focus{
-                            border-bottom:solid 0.1px orange;
+                >div{
+                display: flex;
+                align-items: center;
+                height: 50px;
+                    input {
+                    padding: 5px;
+                        height: 20px;
+                        outline:none;
+                        border: none;
+                        border-bottom: solid 0.1px lightgray;
+                        transition: 0.3s ease-in-out;
+                            :focus{
+                                border-bottom:solid 0.1px orange;
+                        }
                     }
+                    .added__item{
+                      display: flex;
+                        .item{
+                          padding: 10px;
+                          border-radius: 20px;
+                          background-color: orange;
+                          font-size:12px;
+                          margin: 5px;
+                          color: white;
+                          font-weight: 200;
+                        }
+                        .clear{
+                          position:relative;
+                          border-radius: 7.5px;
+                          font-size: 12px;
+                          right: 15px;
+                          top:-10px;
+                          height: 15px;
+                          width: 15px;
+                          background-color: darkgray;
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                          cursor:pointer;
+                        }
+                  }
                 }
+                
+                
             }
-            .hashtag {
+            .hashtags {
                 font-weight: bold;
                 margin-top:20px;
                 input {
@@ -183,7 +216,9 @@ const StoryWrite = () => {
         content:'',
         files:null,
         item:'',
-        hashtag:''
+        hashtag:'',
+        items:[],
+        hashtags:[],
     })
 
     const dispatch = useDispatch();
@@ -205,7 +240,9 @@ const StoryWrite = () => {
             content:'',
             files:null,
             item:'',
-            hashtag:''
+            hashtag:'',
+            items:[],
+            hashtags:[],
         });
     }
 
@@ -216,12 +253,44 @@ const StoryWrite = () => {
                 ...data,
                 [e.target.name]:e.target.files
             });
-        }else{
+        } else{
             setData({
                 ...data,
                 [e.target.name]:e.target.value
             });
         }
+    }
+
+    const addItem = (e) => {
+        let items=data.items.concat(e.target.value);
+        setData({
+            ...data,
+            item:'',
+            items,
+        })
+    }
+    const addHashtag = (e) => {
+        let hashtags=data.hashtags.concat(e.target.value);
+        setData({
+            ...data,
+            hashtag:'',
+            hashtags,
+        })
+    }
+
+    const onDeleteHandler = (key) =>{
+        let items = data.items;
+        if(key===0){
+            items=data.items.slice(1,data.items.length);
+        }else if(key===data.items.length-1){
+            items=data.items.slice(0,key);
+        }else{
+            items=data.items.slice(0,key).concat(data.items.slice(key+1,data.items.length))
+        }
+        setData({
+            ...data,
+            items,
+        })
     }
 
     return (
@@ -250,20 +319,31 @@ const StoryWrite = () => {
                             <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
                         </div>
                     </div>
-
                     <textarea name='content'  value={data.content} required placeholder="내용을 입력하세요. " onChange={onChangeHandler}></textarea>
                 </div>
 
 
-                <div className="item">
+                <div className="items">
                     <p>필요 물품</p>
-                    <input name='item'  value={data.item} placeholder="# 물품입력" onChange={onChangeHandler}>
-                    </input>
+                    <div>
+                        <input name='item'  value={data.item} placeholder="# 물품입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addItem(e)}}/>
+                        {data.items.map((item,key)=> {
+                            return(
+                                <div className='added__item' >
+                                    <p className='item' key={key}>
+                                        {item}
+                                    </p>
+                                    <p className='clear' onClick={()=>onDeleteHandler(key)} key={key+100}>
+                                        x
+                                    </p>
+                                </div>)
+                        })}
+                    </div>
                 </div>
 
-                <div className="hashtag">
+                <div className="hashtags">
                     <p>태그</p>
-                    <input name='hashtag'  value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler}></input>
+                    <input name='hashtag'  value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addHashtag(e)}}/>
                 </div>
 
 
