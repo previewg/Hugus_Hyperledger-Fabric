@@ -2,16 +2,29 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const models = require('./models');
+const multer = require('multer');
+const fs =require('fs');
+
 require('cookie-parser')();
 require('morgan')('dev');
 require('dotenv').config();
 require('cors')();
-const app = express();
 
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+// Multer 파일 저장 경로
+app.use('/uploads',express.static(path.join(__dirname,'uploads')));
+const upload = module.exports =multer({
+	storage:multer.diskStorage({
+		destination:(req,file,cb)=>cb(null,'uploads'),
+		filename:(req,file,cb)=>cb(null,file.originalname+'-'+Date.now())
+	})
+})
 
 // Router 설정
 const authRouter = require('./routes/auth');
-
 const storyRouter = require('./routes/story');
 
 // sequelize mariadb 연결
@@ -25,9 +38,7 @@ models.sequelize.sync()
 	process.exit();
 });
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Router 사용
 app.use('/auth',authRouter);
@@ -51,3 +62,5 @@ app.use((req,res)=>{
 // }))
 
 app.listen(process.env.PORT,()=> console.log(`${process.env.PORT} port is listening...`));
+
+

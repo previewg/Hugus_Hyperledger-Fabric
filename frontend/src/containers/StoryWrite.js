@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components'
 import {useDispatch} from "react-redux";
 import {storyAdd} from "../actions/story";
@@ -69,24 +69,36 @@ const StoryWriteStyle = styled.div`
                 display:flex;
                 flex-direction:column;
                 div{
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
                   p{
                   font-weight: bold;
                   }
                   >div{
+                  height:30px;
+                  position:relative;
+                  left: 640px;
                     width:80px;
                     display: flex;
                     align-items: center;
-                        span{
-                        font-size:80%;
+                        label{
+                          display: inline-block;
+                          color: grey;
+                          font-size: small;
+                          cursor: pointer;
+                          transition: 0.2s ease-in-out;
+                          :hover{
+                            color: orange;
+                          }
                         }
-                        .clip {
-                        width:22px;
-                        height:22px;
-                        cursor:pointer;
-                        } 
+                    input[type="file"] {
+                      position: absolute;
+                      width: 1px;
+                      height: 1px;
+                      padding: 0;
+                      margin: -1px;
+                      overflow: hidden;
+                      clip: rect(0, 0, 0, 0);
+                      border: 0;
+                    }
                     }
                 }
                 textarea { 
@@ -166,28 +178,50 @@ const StoryWriteStyle = styled.div`
 
 const StoryWrite = () => {
     const [data, setData] = useState({
-        title:'예시',
+        title:'',
         info:'',
         content:'',
-        file:'',
+        files:null,
         item:'',
         hashtag:''
     })
-    const formData = new FormData();
+
     const dispatch = useDispatch();
 
     const storyAddHandler = () => {
-        formData.append('title','될걸?');
-        console.log(formData)
+        const formData = new FormData();
+        formData.append('title',data.title);
+        formData.append('info',data.info);
+        formData.append('content',data.content);
+        formData.append('item',data.item);
+        formData.append('hashtag',data.hashtag);
+        for (const file of data.files) {
+            formData.append(`file`, file);
+        }
         dispatch(storyAdd(formData));
         setData({
             title:'',
             info:'',
             content:'',
-            file:'',
+            files:null,
             item:'',
             hashtag:''
-        })
+        });
+    }
+
+    const onChangeHandler = (e) => {
+        e.preventDefault();
+        if(e.target.name==='files'){
+            setData({
+                ...data,
+                [e.target.name]:e.target.files
+            });
+        }else{
+            setData({
+                ...data,
+                [e.target.name]:e.target.value
+            });
+        }
     }
 
     return (
@@ -198,13 +232,13 @@ const StoryWrite = () => {
                 </div>
                 <div className='title'>
                     <p>제목</p>
-                    <input type="text" placeholder="제목을 입력하세요." name="story_title"/>
+                    <input name='title' value={data.title} type="text" placeholder="제목을 입력하세요." onChange={onChangeHandler}/>
                 </div>
 
 
                 <div className="info">
                     <p>작성자 소개</p>
-                    <textarea required placeholder="본인을 마음껏 표현해주세요." ></textarea>
+                    <textarea name='info' value={data.info} required placeholder="본인을 마음껏 표현해주세요." onChange={onChangeHandler}></textarea>
                 </div>
 
 
@@ -212,24 +246,24 @@ const StoryWrite = () => {
                     <div>
                         <p>내용</p>
                         <div>
-                            <span>파일 첨부</span>
-                            <img className="clip" src="/icons/Clip.png"/>
+                            <label for='files'>파일 첨부</label>
+                            <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
                         </div>
                     </div>
 
-                    <textarea required placeholder="내용을 입력하세요. "></textarea>
+                    <textarea name='content'  value={data.content} required placeholder="내용을 입력하세요. " onChange={onChangeHandler}></textarea>
                 </div>
 
 
                 <div className="item">
                     <p>필요 물품</p>
-                    <input placeholder="# 물품입력">
+                    <input name='item'  value={data.item} placeholder="# 물품입력" onChange={onChangeHandler}>
                     </input>
                 </div>
 
                 <div className="hashtag">
                     <p>태그</p>
-                    <input placeholder="# 태그입력"></input>
+                    <input name='hashtag'  value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler}></input>
                 </div>
 
 

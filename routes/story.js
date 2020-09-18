@@ -3,9 +3,9 @@
 const express = require('express');
 const router = express.Router();
 const { Story } = require('../models');
+const upload = require('../app');
 
-
-router.get('/', function (req, res, next) {
+router.get('/',  (req, res, next) => {
   Story.findAll({})
     .then((result) =>
       console.log(result))
@@ -26,24 +26,22 @@ router.get('/', function (req, res, next) {
 //   }
 // });
 
-router.post("/add", async (req, res) => {
-  try {
-    console.log(req)
-    let obj;
-    obj = {
-      story_title: req.body.title,
-      user_info: req.body.user_info,
-      story_content: req.body.content,
-      story_hashtag: req.body.hashtag
-    };
-    const story = new Story(obj);
+router.post("/add", upload.array('file'),async (req, res) => {
+    try{
+      console.log(req);
+      res.json({success:1})
+    }catch (error){
 
-    await story.save();
-    res.json({ message: "스토리가 업로드 되었습니다." });
-  } catch (err) {
-    console.log(err);
-    res.json({ message: false });
-  }
+    }
+    // let obj;
+    // obj = {
+    //   story_title: req.body.title,
+    //   user_info: req.body.user_info,
+    //   story_content: req.body.content,
+    //   story_hashtag: req.body.hashtag
+    // };
+    // const story = new Story(obj);
+    // await story.save();
 });
 
 router.delete("/delete", async (req, res) => {
