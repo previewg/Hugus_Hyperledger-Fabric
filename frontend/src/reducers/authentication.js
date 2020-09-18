@@ -16,19 +16,38 @@ const initialState = {
     }
 };
 
-export default function authentication(state, action) {
-    if (typeof state === "undefined") {
-        state = initialState;
-    }
+export default function authentication(state = initialState, action) {
     switch (action.type) {
-        /* Login */
-        case types.AUTH_LOGIN:
+        // 회원가입
+        case types.AUTH_SIGNUP:
+            return update(state, {
+                register: {
+                    status: {$set: 'WAITING'},
+                    error: {$set: -1}
+                }
+            });
+        case types.AUTH_SIGNUP_SUCCESS:
+            return update(state, {
+                register: {
+                    status: {$set: 'SUCCESS'},
+                }
+            });
+        case types.AUTH_SIGNUP_FAILURE:
+            return update(state, {
+                register: {
+                    status: {$set: 'FAILURE'},
+                    error: {$set: action.error}
+                }
+            });
+        
+        // 로그인
+        case types.AUTH_SIGNIN:
             return update(state, {
                 login: {
                     status: {$set: 'WAITING'}
                 }
             });
-        case types.AUTH_LOGIN_SUCCESS:
+        case types.AUTH_SIGNIN_SUCCESS:
             return update(state, {
                 login: {
                     status: {$set: 'SUCCESS'}
@@ -38,35 +57,23 @@ export default function authentication(state, action) {
                     currentUser: {$set: action.email}
                 }
             });
-        case types.AUTH_LOGIN_FAILURE:
+        case types.AUTH_SIGNIN_FAILURE:
             return update(state, {
                 login: {
                     status: {$set: 'FAILURE'}
                 }
             });
-        /* REGISTER */
-        case types.AUTH_REGISTER:
+        
+        // 로그아웃
+        case types.AUTH_SIGNOUT:
             return update(state, {
-                register: {
-                    status: {$set: 'WAITING'},
-                    error: {$set: -1}
+                status: {
+                    isLoggedIn: {$set: false},
+                    currentUser: {$set: ''}
                 }
             });
-        case types.AUTH_REGISTER_SUCCESS:
-            return update(state, {
-                register: {
-                    status: {$set: 'SUCCESS'},
-                }
-            });
-        case types.AUTH_REGISTER_FAILURE:
-            return update(state, {
-                register: {
-                    status: {$set: 'FAILURE'},
-                    error: {$set: action.error}
-                }
-            });
-        /* logout */
-        case types.AUTH_LOGOUT:
+
+        case types.AUTH_SIGNOUT_ERROR:
             return update(state, {
                 status: {
                     isLoggedIn: {$set: false},

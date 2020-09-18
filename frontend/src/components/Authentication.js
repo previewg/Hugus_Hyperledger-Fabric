@@ -24,9 +24,7 @@ class Authentication extends React.Component {
 
     handleLogin() {
         let id = this.state.email;
-
         let pw = this.state.password;
-
         this.props.onLogin(id, pw).then(
             (success) => {
                 if (!success) {

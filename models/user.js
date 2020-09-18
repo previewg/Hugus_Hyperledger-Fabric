@@ -2,7 +2,7 @@
 const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('user', {
+    return sequelize.define('User', {
         email: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -17,8 +17,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        subscribe:{
+            type: DataTypes.BOOLEAN,
+            allowNull:true,
+        }
     }, {
-        tableName:'users',
+        tableName:'user',
         freezeTableName: true,
         underscored: true,
         paranoid: true, //soft delete

@@ -1,151 +1,210 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components'
-import axios from "axios";
+import {useDispatch} from "react-redux";
+import {storyAdd} from "../actions/story";
 
 const StoryWriteStyle = styled.div`
-            display:flex;
-            justify-content:center;
-            margin-top:140px;
-            margin-bottom:70px;
-            .layout {
-            width:60%;
-            display:flex;
-            flex-direction: column;
-            align-items: flex-start;
-
-            
+    display:flex;
+    justify-content:center;
+    margin-bottom:70px;
+        .layout {
+        margin-top: 100px;
+        width:35%;
+        display:flex;
+        flex-direction: column;
             .write_title {
-            position:relative;
-            left:33%;
             text-align:center;
-            width:260px;
+            font-size: 20px;
             padding:10px;
-            border-bottom:solid orange;
-
+            display: flex;
+            justify-content: center;
+              p{
+                width: 200px;
+                height: 40px;
+                border-bottom:solid orange 2px;
+              }
             }
-        
-
             .title {
             margin-top:50px;
+            width: 100%;
             display:flex;
             align-items:center;
                 p{
-                margin-right:50px;
+                font-weight: bold;
+                margin-right:30px;
                 }
                 input {
                 border:none;
                 width:300px;
                 padding:5px;
                 border-bottom:solid 0.1px gray;
-                :focus{
-                    outline:none;
-                }
+                transition: 0.3s ease-in-out;
+                    :focus{
+                        outline:none;
+                        border-bottom:solid 0.1px orange;
+                    }
                 }
             }
 
             .info{
             margin-top:35px;
-
                 p{
-                
+                  font-weight: bold;
                 }
                 textarea {
-                padding-top:12px;
-                padding-left:12px;
-                    
+                padding:12px;
+                width: 100%;
+                height: 150px;
+                border-radius: 4px;
+                resize: none;
+                transition: 0.3s ease-in-out;
+                    :focus{
+                        outline:none;
+                        border:solid 0.1px orange;
+                    }
                 }
             }
-
-
             .content{
                 margin-top:50px;
                 display:flex;
                 flex-direction:column;
-                div:nth-child(1){
-                width:100%;
+                div{
                 display:flex;
                 justify-content:space-between;
-                
-                }
-                div:nth-child(2){
-                display:flex;
-                width:22%;
-                    p {
-                    font-size:70%;
+                align-items:center;
+                  p{
+                  font-weight: bold;
+                  }
+                  >div{
+                    width:80px;
+                    display: flex;
+                    align-items: center;
+                        span{
+                        font-size:80%;
+                        }
+                        .clip {
+                        width:22px;
+                        height:22px;
+                        cursor:pointer;
+                        } 
                     }
-                    img {
-                        display:flex;
-                justify-content:space-between;
-                    width:28px;
-                    height:28px;
                 }
-
+                textarea { 
+                    padding: 12px;
+                    resize: none;
+                    width: 100%;
+                    height: 400px;
+                    border-radius: 4px;
+                    transition: 0.3s ease-in-out;
+                        :focus{
+                            outline:none;
+                            border:solid 0.1px orange;
+                    }
                 }
                 
-                textarea {
-                padding-top:12px;
-                padding-left:12px;
             }
-        }
-
-
             .item {
+                font-weight: bold;
                 margin-top:35px;
-                textarea {
-                    border:solid 2px orange;
-                    padding-top:12px;
-                    padding-left:12px;
-                    :focus{
+                input {
+                padding: 5px;
+                    height: 20px;
                     outline:none;
-                }
+                    border: none;
+                    border-bottom: solid 0.1px lightgray;
+                    transition: 0.3s ease-in-out;
+                        :focus{
+                            border-bottom:solid 0.1px orange;
+                    }
                 }
             }
             .hashtag {
+                font-weight: bold;
                 margin-top:20px;
-
-                textarea {
-                padding-top:12px;
-                padding-left:12px;
-                border:none;
-
+                input {
+                padding: 5px;
+                    height: 20px;
+                    outline:none;
+                    border: none;
+                    border-bottom: solid 0.1px lightgray;
+                    transition: 0.3s ease-in-out;
+                        :focus{
+                            border-bottom:solid 0.1px orange;
+                    }
                 }
             }
 
-            .button {
+            .submit {
+            width:100%;
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            button {
                 margin-top:15px;
                 border:none;
                 background:white;
-                width:175%;
+                font-size:15px;
+                outline:none;
+                cursor: pointer;
+                font-weight: bold;
+                transition: 0.2s ease-in-out;
+                :hover{
+                  color:orange;
+                }
+              >img {
+              margin-left: 10px;
+                width:20px;
+                height:20px;    
+              }
             }
-
-
+                
             }
+ 
+        }
+`;
 
-            
-        `;
 
 const StoryWrite = () => {
-    const [data, setData] = useState('')
-
-    useEffect(() => {
-
+    const [data, setData] = useState({
+        title:'예시',
+        info:'',
+        content:'',
+        file:'',
+        item:'',
+        hashtag:''
     })
+    const formData = new FormData();
+    const dispatch = useDispatch();
+
+    const storyAddHandler = () => {
+        formData.append('title','될걸?');
+        console.log(formData)
+        dispatch(storyAdd(formData));
+        setData({
+            title:'',
+            info:'',
+            content:'',
+            file:'',
+            item:'',
+            hashtag:''
+        })
+    }
 
     return (
         <StoryWriteStyle>
             <div className="layout">
-                <div className="write_title">글쓰기</div>
+                <div className="write_title">
+                    <p>글쓰기</p>
+                </div>
                 <div className='title'>
-                <p>제목</p>
-                <input type="text" placeholder="제목을 입력하세요." name="story_title" class="form-control" />
+                    <p>제목</p>
+                    <input type="text" placeholder="제목을 입력하세요." name="story_title"/>
                 </div>
 
 
                 <div className="info">
                     <p>작성자 소개</p>
-                    <textarea rows="7" cols="100"
-                    placeholder="본인을 마음껏 표현해주세요." class="form-control">
-                    </textarea>
+                    <textarea required placeholder="본인을 마음껏 표현해주세요." ></textarea>
                 </div>
 
 
@@ -153,39 +212,34 @@ const StoryWrite = () => {
                     <div>
                         <p>내용</p>
                         <div>
-                        <p>파일 첨부</p>
-                        <div className="imgs">
-                        <img className="clip" src="/icons/Clip.png"/>
-                        <img className="picture" src="/icons/Picture.png"/>
-                        <img className="video" src="/icons/Video.png"/>
-                        </div>                      
+                            <span>파일 첨부</span>
+                            <img className="clip" src="/icons/Clip.png"/>
                         </div>
                     </div>
 
-                    <textarea rows="18" cols="100"
-                    class="form-control" placeholder="내용을 입력하세요. ">
-                    </textarea>
+                    <textarea required placeholder="내용을 입력하세요. "></textarea>
                 </div>
 
 
                 <div className="item">
                     <p>필요 물품</p>
-                    <textarea rows="7" cols="100"
-                    placeholder="# 물품입력" class="form-control"> 
-                    </textarea>
+                    <input placeholder="# 물품입력">
+                    </input>
                 </div>
 
                 <div className="hashtag">
                     <p>태그</p>
-                    <textarea rows="7" cols="100"
-                    placeholder="#태그입력" class="form-control">
-                    </textarea>
+                    <input placeholder="# 태그입력"></input>
                 </div>
 
-            <button className="button" onClick="">
-            제출하기
-            </button>
 
+                <div className="submit">
+                    <button onClick={storyAddHandler}>
+                        제출하기
+                        <img src="/icons/PaperPlane.png"/>
+                    </button>
+
+                </div>
             </div>
         </StoryWriteStyle>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavBar} from '../components';
-import {logoutRequest} from '../actions/auth';
+import {signOutRequest} from '../actions/auth';
 import {connect} from "react-redux";
 
 class App extends React.Component {
@@ -12,7 +12,7 @@ class App extends React.Component {
     }
 
     handleLogout() {
-        this.props.logoutRequest().then(
+        this.props.signOutRequest().then(
             () => {
                 let loginData = {
                     isLoggedIn: false,
@@ -71,8 +71,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        logoutRequest: () => {
-            return dispatch(logoutRequest());
+        signOutRequest: () => {
+            return dispatch(signOutRequest());
         }
     }
 }

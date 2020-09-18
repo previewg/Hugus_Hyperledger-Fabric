@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 
 const StoryNavStyle = styled.div`
+margin-top: 50px;
   height: 200px;
   display: flex;
   flex-direction: column;

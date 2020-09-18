@@ -23,7 +23,7 @@ const StoryMain = () => {
     return (
         <StoryMainStyle>
             <StoryNav/>
-            <Link className='StoryWrite__btn' >글작성</Link>
+            <Link className='StoryWrite__btn' to='/story/write' >글작성</Link>
             <StorySlider />
             <StoryList/>
         </StoryMainStyle>

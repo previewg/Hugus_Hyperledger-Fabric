@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define('Story', {
-		story_title:{
+	return sequelize.define('Campaign', {
+		campaign_title:{
 			type: DataTypes.STRING,
 			allowNull:false,
 		},
@@ -10,27 +10,23 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull:false,
 		},
-		story_content:{
+		campaign_content:{
 			type:DataTypes.TEXT,
 			allowNull:false,
 		},
-		story_file:{
+		campaign_file:{
 			type:DataTypes.STRING,
 			allowNull:true,
 		},
-		story_item:{
-			type:DataTypes.STRING,
-			allowNull:true,
-		},
-		story_hashtag:{
+		campaign_hashtag:{
 			type:DataTypes.STRING,
 			allowNull:false,
 		},
-		story_goal:{
+		campaign_goal:{
 			type:DataTypes.INTEGER,
 			allowNull:false,
 		},
-		story_vote:{
+		campaign_vote:{
 			type:DataTypes.INTEGER,
 			allowNull:true,
 		},
@@ -43,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull:true,
 		}
 	},{
-		tableName:'story',
+		tableName:'campaign',
 		freezeTableName: true,
 		underscored: true,
 		paranoid: true, //soft delete
