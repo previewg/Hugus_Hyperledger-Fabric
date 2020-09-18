@@ -39,6 +39,7 @@ const TotalSearchStyle = styled.div`
                 width:50%;
                 display:flex;
                 align-items:center;
+
                 input {
                     margin-top:25px;
                     padding:12px;
@@ -48,19 +49,21 @@ const TotalSearchStyle = styled.div`
                     resize: none;
                     transition: 0.3s ease-in-out;
                     border:solid orange 6px;
-                    background-image : url('/icons/Search.png');
-                    background-position:right; 
-                    background-repeat:no-repeat;
-                    background-size:5%;
-                    :focus{
+                    :focus {
                         outline:none;
                     }
                 }
-
+                img{
+                    width:35px;
+                    position:relative;
+                    z-index:1;
+                    right:60px;
+                    top:11px;
+                }
     }
 
         .c {
-            margin-top:50px;
+            margin-top:30px;
             width:50%;
             input {
                     margin-top:25px;
@@ -95,11 +98,12 @@ return (
 
             <div className="b">
                 <input className="search_form" type="text" placeholder="해시태그로 관련 캠페인, 스토리를 검색해보세요!"/>
-                {/* <img src="/icons/search.png"/> */}
+                <img src="/icons/search.png"/>
             </div>
 
             <div className="c">
                 <input className="" type="text" placeholder="#여기에 #추천태그 #여기에 #추천태그 #여기에 #추천태그"/>
+                
             </div>
         </div>
 </TotalSearchStyle>

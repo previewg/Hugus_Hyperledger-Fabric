@@ -34,7 +34,7 @@ ReactDOM.render(
                 {/*<Route path="/register" component={Register}/>*/}
                 <Route exact path="/story" component={StoryMain}/>
                 <Route path="/story/write" component={StoryWrite}/>
-                <Route path="/story/search" component={TotalSearch}/>
+                <Route path="/search" component={TotalSearch}/>
             </Switch>
         </BrowserRouter>
     </Provider>,
