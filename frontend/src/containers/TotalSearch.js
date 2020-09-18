@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 
 const TotalSearchStyle = styled.div`
-    width:100%;
     display:flex;
     justify-content:center;
     padding-top:50px;
@@ -13,21 +12,22 @@ const TotalSearchStyle = styled.div`
         display:flex;
         flex-direction:column;
         align-items:center;
-            .a {
-                width:40%;
+            .content {
+                height: 250px;
+                width:30%;
                 display:flex;
                 justify-content:space-between;
-                margin-bottom:40px;
                 .logo {
                     width:300px;
                     height:200px;
                     display:flex;
+                    justify-content: center;
+                    align-items: center;
                 }
-                
                 .title_text {
                     p:nth-child(1) {
                         font-weight:bold;
-                        
+                        font-size: 25px;
                     }
                     p:nth-child(2) {
                     }
@@ -35,7 +35,7 @@ const TotalSearchStyle = styled.div`
 
             }
 
-            .b {
+            .search__bar {
                 width:50%;
                 display:flex;
                 align-items:center;
@@ -62,7 +62,7 @@ const TotalSearchStyle = styled.div`
                 }
     }
 
-        .c {
+        .suggestion {
             margin-top:30px;
             width:50%;
             input {
@@ -88,7 +88,7 @@ const TotalSearch = () => {
 return (
     <TotalSearchStyle>
         <div className="layout">
-            <div className="a">
+            <div className="content">
                 <div className="logo">로고</div>
                 <div className="title_text">
                     <p>마음을 담는 기부<br/>허그에 담기다</p>
@@ -96,14 +96,13 @@ return (
                 </div>
             </div>
 
-            <div className="b">
+            <div className="search__bar">
                 <input className="search_form" type="text" placeholder="해시태그로 관련 캠페인, 스토리를 검색해보세요!"/>
                 <img src="/icons/search.png"/>
             </div>
 
-            <div className="c">
+            <div className="suggestion">
                 <input className="" type="text" placeholder="#여기에 #추천태그 #여기에 #추천태그 #여기에 #추천태그"/>
-                
             </div>
         </div>
 </TotalSearchStyle>
