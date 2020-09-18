@@ -18,6 +18,9 @@ router.get('/', function (req, res, next) {
 //       sort: { createdAt: -1 }
 //     })
 //     .then((res) => {
+
+
+
 //       res.json({ list: Story })
 //     })
 //   } catch (err) {
