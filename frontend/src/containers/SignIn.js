@@ -13,29 +13,28 @@ class SignIn extends React.Component {
 
     handleLogin(id, pw) {
         return this.props.signInRequest(id, pw).then(
-            () => {
-                if (this.props.status === "SUCCESS") {
-                    console.log(this.props.status)
-                    let loginData = {
-                        isLoggedIn: true,
-                        email: id
-                    };
-
-                    document.cookie = 'key=' + btoa(JSON.stringify(loginData));
-                    this.props.history.push('/');
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+          () => {
+              if (this.props.status === "SUCCESS") {
+                  let loginData = {
+                      isLoggedIn: true,
+                      email: id,
+                  };
+                  document.cookie = 'key=' + btoa(JSON.stringify(loginData));
+                  this.props.history.push('/');
+                  return true;
+              } else {
+                  return false;
+              }
+          }
         );
     }
 
     render() {
         return (
-            <div>
-                <Authentication mode={true} onLogin={this.handleLogin}/>
-            </div>
+          <div>
+              <Authentication mode={true} onLogin={this.handleLogin}/>
+              {this.props.children}
+          </div>
         );
     }
 }

@@ -43,14 +43,14 @@ export const signUpRequest = (email, nickname, password) => async dispatch => {
     .then(response => {
         dispatch(signUpSuccess());
     }).catch(error => {
-        dispatch(signUpFailure(error));
+        dispatch(signUpFailure(error.response.data.code));
     });
 };
 
 // 로그인
 export const signInRequest = (email, password) => async dispatch => {
     dispatch(signIn());
-    await axios.post('/auth/login', {email, password})
+    await axios.post('/auth/signin', {email, password})
     .then(response => {
         dispatch(signInSuccess(email));
     }).catch(error => {
@@ -60,7 +60,7 @@ export const signInRequest = (email, password) => async dispatch => {
 
 // 로그아웃
 export const signOutRequest = () => async dispatch => {
-    await axios.post('/auth/signOut')
+    await axios.post('/auth/signout')
         .then(response => {
             dispatch(signOut());
         }).catch(error=>{

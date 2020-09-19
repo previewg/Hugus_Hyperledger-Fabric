@@ -31,7 +31,8 @@ const StoryWriteStyle = styled.div`
             align-items:center;
                 p{
                 font-weight: bold;
-                margin-right:30px;
+                margin-right:10px;
+                width: 80px;
                 }
                 input {
                 border:none;
@@ -75,12 +76,11 @@ const StoryWriteStyle = styled.div`
                   >div{
                   height:30px;
                   position:relative;
-                  left: 640px;
+                  left:95%;
                     width:80px;
                     display: flex;
                     align-items: center;
                         label{
-                          display: inline-block;
                           color: grey;
                           font-size: small;
                           cursor: pointer;
@@ -121,6 +121,7 @@ const StoryWriteStyle = styled.div`
                 >div{
                 display: flex;
                 align-items: center;
+                width: 100%;
                 height: 50px;
                     input {
                     padding: 5px;
@@ -143,6 +144,7 @@ const StoryWriteStyle = styled.div`
                           margin: 5px;
                           color: white;
                           font-weight: 200;
+                          min-width: auto;
                         }
                         .clear{
                           position:relative;
@@ -343,7 +345,7 @@ const StoryWrite = () => {
 
                 <div className="hashtags">
                     <p>태그</p>
-                    <input name='hashtag'  value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addHashtag(e)}}/>
+                    <input name='hashtag' value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addHashtag(e)}}/>
                 </div>
 
 

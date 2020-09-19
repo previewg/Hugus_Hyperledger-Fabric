@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import styled from 'styled-components';
+import {useDispatch, useSelector} from "react-redux";
+import {signOutRequest} from "../actions/auth";
 
 const NavStyle = styled.nav`
   position: fixed;
@@ -138,8 +140,10 @@ const NavStyle = styled.nav`
 `;
 
 const ResNavStyle = styled.nav`
+    display: none;
     @media (max-width: 700px){
-      position: absolute;
+    display: block;
+      position: fixed;
       z-index: 10;
       transition: all .4s ease-in-out;
       visibility: ${props=>props.isClicked?'visible':'hidden'};
@@ -157,23 +161,52 @@ const ResNavStyle = styled.nav`
           padding: 10px;
           width: 60%;
           display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+          justify-content: space-around;
+          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
           div{
-            border:solid;
+            height: 100%;
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            >div{
+              height: 20px;
+            }
+            >p{
+              margin:0;
+              font-size: 13px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 90% ;
+              height: 80px ;
+              text-align: center;
+              cursor: pointer;
+              transition: .3s ease-in-out;
+              :hover{
+                background-color: orange;
+                color: white;
+              }
+            }
+            .hugus{
+              background-color: orange;
+              color: white;
+              font-weight: bold;
+            }
           }
         }
-        .res__menu__line{
-          width: 1px;
-          height: 310px;
-          margin: 20px;
-          background-color: lightgray;
-        }
         .res__menu__info{
-          padding: 10px;
+          width: 40%;
           display: flex;
           flex-direction: column;
           justify-content: space-around;
+          div{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
         }
       }
     }
@@ -183,9 +216,30 @@ const ResNavStyle = styled.nav`
 
 const NavBar = () => {
     const [isClicked,setIsClicked] = useState(false);
+    const dispatch = useDispatch();
+    const username = useSelector(state => state.authentication.status.currentUser);
+    const isSignedIn = useSelector(state => state.authentication.status.isLoggedIn);
+
 
     const onClickHandler = () =>{
         isClicked ? setIsClicked(false):setIsClicked(true);
+    }
+
+    const onSignOutHandler = () => {
+        dispatch(signOutRequest());
+    }
+
+    useEffect(()=>{
+
+
+    })
+
+    const signedIn = () => {
+        if (isSignedIn) {
+            return <div style={{cursor:'pointer'}} onClick={onSignOutHandler}>로그아웃</div>
+        }else{
+            return <Link to='/signin' >로그인</Link>
+        }
     }
 
     return (
@@ -229,8 +283,8 @@ const NavBar = () => {
               </div>
               <div className='user'>
                   <img className='user__icon' src='/icons/User.png'/>
-                  <p>(이름)</p>
-                  <Link >(로그인)</Link>
+                  <p>{username}님</p>
+                  {signedIn()}
                   <Link to='/search'>
                       <img className='search__icon' src='/icons/Search.png'/>
                   </Link>
@@ -244,16 +298,27 @@ const NavBar = () => {
           <ResNavStyle isClicked={isClicked}>
               <section>
                   <article className='res__menu__item'>
-                      <div>1</div>
-                      <div>2</div>
-                      <div>3</div>
-                  </article>
-                  <article className='res__menu__line'>
-                      <div></div>
+                      <div>
+                          <div>STORY</div>
+                          <p>인기<br/>스토리</p>
+                          <p>최신<br/>스토리</p>
+                          <p>관심<br/>스토리</p>
+                      </div>
+                      <div>
+                          <div>MY</div>
+                          <p>캠페인<br/>모금현황</p>
+                          <p className='hugus'>HUGUS</p>
+                          <p>스토리<br/>투표현황</p>
+                      </div>
+                      <div>
+                          <div>ACT</div>
+                          <p>물품<br/>구매인증</p>
+                          <p>물품<br/>전달과정</p>
+                          <p>수혜자의<br/>이야기</p>
+                      </div>
                   </article>
                   <article className='res__menu__info'>
-                      <div>user1</div>
-                      <div>로그인</div>
+                      <div>{username}님</div>
                       <div>검색</div>
                   </article>
 

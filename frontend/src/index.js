@@ -9,7 +9,7 @@ import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Router
-import {App, Home, Login, Register, StoryMain,StoryWrite, TotalSearch} from './containers';
+import {Home, SignIn, SignUp, StoryMain,StoryWrite, TotalSearch} from './containers';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {NavBar} from "./components";
 
@@ -30,8 +30,8 @@ ReactDOM.render(
             <NavBar/>
             <Switch>
                 <Route exact path="/" component={Home}/>
-                {/*<Route path="/login" component={Login}/>*/}
-                {/*<Route path="/register" component={Register}/>*/}
+                <Route path="/signin" component={SignIn}/>
+                <Route path="/signup" component={SignUp}/>
                 <Route exact path="/story" component={StoryMain}/>
                 <Route path="/story/write" component={StoryWrite}/>
                 <Route path="/search" component={TotalSearch}/>

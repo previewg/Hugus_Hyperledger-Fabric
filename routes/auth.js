@@ -2,29 +2,53 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {User} = require('../models');
-//const session = require('express-session');
+const session = require('express-session');
 const router = express.Router();
+const MongoStore = require('connect-mongo')(session);
 
-// router.use(session({
-//     secret: 'Molrang~$1$234',
-//     resave: false,
-//     saveUninitialized: true
-// }));
-// generates hash
 
-// compares the password
+router.use(session({
+    secret: 'Molrang~$1$234',
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({
+        url: "mongodb://localhost/Hug_us_session",
+        collection: "sessions"
+    })
+}));
 
 
 router.post('/signup', async (req, res, next) => {
     const {email, nickname, password} = req.body;
+    let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    let regPassword = /^[a-zA-Z0-9]{10,15}$/
 
     try {
         const exUser = await User.findOne({where: {email}});
+        const exNick = await User.findOne({where: {nickname}});
         //중복방지
         if (exUser) {
-            res.status(500).json({
-                error: '중복이메일',
+            return res.status(400).json({
+                error: 'EMAIL EXISTS',
                 code: 1
+            })
+        }
+        if(!regEmail.test(req.body.email)){
+            return res.status(400).json({
+                error:'BAD EMAIL EXP',
+                code: 2
+            })
+        }
+        if(exNick){
+            return res.status(400).json({
+                error:'NICKNAME EXISTS',
+                code: 3
+            })
+        }
+        if(!regPassword.test(req.body.password)){
+            return res.status(400).json({
+                error:"BAD PASSWORD",
+                code: 4
             })
         }
 
@@ -43,9 +67,8 @@ router.post('/signup', async (req, res, next) => {
 
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/signin', async (req, res, next) => {
     const {email, password} = req.body;
-    // let session = req.session;
 
     User.findOne({
         where: {
@@ -56,49 +79,56 @@ router.post('/login', async (req, res, next) => {
         if (!user) {
             return res.status(404).json({emailnotfound: "Email not found"});
         }
-        // session.loginInfo = {
-        //     _id: user._id,
-        //     email: user.email,
-        // }
-        //Password 비교
-
 
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
+                let session = req.session;
+                session.loginInfo = {
+                    user_email: user.email
+                };
+                // session.save(err =>{
+                //     if(err) throw err;
+                // });
+                //  console.log(req.session);
+
+
                 const payload = {
                     id: user.id,
                     nickname: user.nickname,
                 };
                 // jwt 객체가 sign() method를 호출해서 토큰을 생성
                 jwt.sign(
-                    payload,
-                    process.env.JWT_SECRET,
-                    {
-                        //token 지속시간
-                        expiresIn: '24h',
-                    },
-                    (err, token) => {
-                        //res.cookie(key,value) cookie에 key값을 넣는 방식
-                        res.cookie('token', token);
-                        res.json({
-                            nickname: user.nickname,
-                            id: user.id,
-                            token: token,
-                        });
-                    },
+                  payload,
+                  process.env.JWT_SECRET,
+                  {
+                      //token 지속시간
+                      expiresIn: '24h',
+                  },
+                  (err, token) => {
+                      // res.cookie(key,value) cookie에 key값을 넣는 방식
+                      res.cookie('token', token);
+                      res.json({
+                          nickname: user.nickname,
+                          id: user.id,
+                          token: token,
+                      });
+                  },
                 );
             } else {
                 return res
-                    .status(400)
-                    .json({passwordincorrect: 'PassWord Incorrect'});
+                  .status(400)
+                  .json({passwordincorrect: 'PassWord Incorrect'});
             }
         });
     });
 });
-router.post('/logout', (req, res) => {
+router.post('/signout', (req, res) => {
+    let store = req.sessionStore;
+    store.destroy(err => { if(err) throw err; })
     res.clearCookie('token')
     return res.json({success: true});
+
+
 })
 
 module.exports = router;
-

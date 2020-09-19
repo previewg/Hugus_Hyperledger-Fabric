@@ -47,6 +47,17 @@ const SliderStyle = styled.div`
     font-size: 17px;
     }
   }
+  
+  @media(max-width: 700px){
+    .slick-slider{
+        width: 700px;
+        height: 550px;
+      }
+      
+    .slick-slide>div{
+    padding: 20px;
+  }
+  }
 `;
 
 const NextArrow = (props) => {
