@@ -223,13 +223,12 @@ const ResNavStyle = styled.nav`
 const NavBar = () => {
     const [isClicked,setIsClicked] = useState({
         menu:false,
-        signUp:false,
-        signIn:false,
     });
     const dispatch = useDispatch();
     const username = useSelector(state => state.authentication.status.currentUser);
     const isSignedIn = useSelector(state => state.authentication.status.isLoggedIn);
     const signInBtn = useSelector(state => state.nav.signInBtn);
+    const signUpBtn = useSelector(state => state.nav.signUpBtn);
 
 
     const onClickHandler = (e) =>{
@@ -250,11 +249,6 @@ const NavBar = () => {
     const onSignOutHandler = () => {
         dispatch(signOutRequest());
     }
-
-    useEffect(()=>{
-
-
-    })
 
     const signedIn = () => {
         if (isSignedIn) {
@@ -346,7 +340,7 @@ const NavBar = () => {
 
               </section>
           </ResNavStyle>
-          <SignUp signInBtn={signInBtn}/>
+          <SignUp signUpBtn={signUpBtn}/>
           <SignIn signInBtn={signInBtn}/>
       </>
 

@@ -14,3 +14,6 @@ export const AUTH_SIGNOUT_ERROR = "AUTH_SIGNOUT_ERROR";
 
 // SignIn Button is clicked
 export const SIGNIN_BTN_IS_CLICKED = "SIGNIN_BTN_IS_CLICKED";
+
+// SignUp Button is clicked
+export const SIGNUP_BTN_IS_CLICKED = "SIGNUP_BTN_IS_CLICKED";

@@ -2,28 +2,32 @@ import React from 'react';
 import styled from 'styled-components';
 import {useDispatch} from "react-redux";
 import {signUpRequest} from "../../actions/auth";
+import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/nav";
 
 const SignUpStyle = styled.div`
-	position: absolute;
+	position: fixed;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	width: 100%;
 	height: 100vh;
-	background-color: transparent;
-	visibility: hidden;
-	opacity: 0;
-	z-index: -10;
-	transition: all 0.4s ease-in-out;
+	${props=>props.signUpBtn ? 'display: flex;	background-color: rgba(0,0,0,0.5); z-index:10':'display: none	;	z-index: -10;'};
 	section{
-			border: solid;
+			background-color: white;
 			width: 400px;
 			height: 550px;
 			.header{
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				height: 20%;
+				flex-direction: column;
+				height: 25%;
+				.close__btn{
+					font-size: 12px;
+					position: relative;
+					left: 170px;
+					cursor: pointer;
+				}
 				p{
 					font-size: 25px;
 				}
@@ -33,15 +37,17 @@ const SignUpStyle = styled.div`
 				flex-direction: column;
 				align-items: center;
 				justify-content: space-around;
-				height: 50%;
+				height: 45%;
 				input{
-					width: 60%;
+					width: 70%;
 					height: 30px;
 					border: none;
 					border-bottom: lightgray solid 0.1px;
 					font-size: 15px;
+					transition: 0.4s ease-in-out;
 					:focus{
 						outline: none;
+						border-bottom: orange solid 0.1px;
 					}
 				}
 				
@@ -50,7 +56,7 @@ const SignUpStyle = styled.div`
 					border-radius: 5px;
 					background-color: white;
 					color: orange;
-					width: 60%;
+					width: 70%;
 					height: 40px;
 					font-size: 15px;
 					font-weight: bold;
@@ -91,10 +97,10 @@ const SignUpStyle = styled.div`
 					display: flex;
 					justify-content: space-around;
 					width: 50%;
+					color: gray;
 					p:nth-child(2){
 						color: orange;
 						cursor:pointer;
-						font-weight: bold;
 					}
 				}
 			}
@@ -125,10 +131,17 @@ const SignUp = (props) => {
 		);
 	}
 
+	const onClickHandler = (e) =>{
+		if(e.target === e.currentTarget){
+			dispatch(signUpBtnIsClicked())
+		}
+	}
+
 	return (
-		<SignUpStyle >
+		<SignUpStyle signUpBtn={props.signUpBtn} onClick={onClickHandler}>
 			<section>
 				<article className='header'>
+					<p className='close__btn' onClick={()=>dispatch(signUpBtnIsClicked())}>닫기</p>
 					<p>회원가입</p>
 				</article>
 				<article className='form'>
@@ -146,7 +159,7 @@ const SignUp = (props) => {
 					</div>
 					<div className='already'>
 						<p>이미 회원이신가요?</p>
-						<p>로그인</p>
+						<p onClick={()=>dispatch(signInBtnIsClicked())}>로그인</p>
 					</div>
 				</article>
 			</section>

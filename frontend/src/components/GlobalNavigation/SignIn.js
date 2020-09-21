@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {useDispatch} from "react-redux";
-import {signInBtnIsClicked} from "../../actions/nav";
+import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/nav";
 
 const SignInStyle = styled.div`
 	position: fixed;
@@ -89,7 +89,7 @@ const SignInStyle = styled.div`
 						color: white;
 					}
 					:nth-child(2){
-						background-color: #feec34;
+						background-color: #f7e100;
 					}
 					:nth-child(3){
 						background-color: #4064ac;
@@ -115,8 +115,13 @@ const SignInStyle = styled.div`
 const SignIn = (props) => {
 	const dispatch = useDispatch();
 
+	const onClickHandler = (e) =>{
+		if(e.target === e.currentTarget){
+			dispatch(signInBtnIsClicked())
+		}
+	}
 	return (
-		<SignInStyle signInBtn={props.signInBtn}>
+		<SignInStyle signInBtn={props.signInBtn} onClick={onClickHandler}>
 			<section>
 				<article className='header'>
 					<p className='close__btn' onClick={()=>dispatch(signInBtnIsClicked())}>닫기</p>
@@ -140,7 +145,7 @@ const SignIn = (props) => {
 					<button>페이스북 계정으로 로그인</button>
 					<div className='already'>
 						<p>회원이 아니신가요?</p>
-						<p>회원가입</p>
+						<p onClick={()=>dispatch(signUpBtnIsClicked())}>회원가입</p>
 					</div>
 				</article>
 			</section>

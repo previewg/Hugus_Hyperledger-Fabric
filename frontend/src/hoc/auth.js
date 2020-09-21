@@ -25,6 +25,7 @@ export default (Component, option, adminRoute=null) => {
 				}
 			}
 		}	, []);
+
 		return (
 			<Component {...props} />
 		)
