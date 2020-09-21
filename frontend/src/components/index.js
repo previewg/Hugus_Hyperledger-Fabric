@@ -1,4 +1,4 @@
-import NavBar from './NavBar';
+import NavBar from './GlobalNavigation/NavBar';
 import Authentication from './Authentication';
 
 export {

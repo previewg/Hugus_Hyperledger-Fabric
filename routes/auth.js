@@ -1,12 +1,12 @@
 const express = require('express');
+const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {User} = require('../models');
 const session = require('express-session');
-const router = express.Router();
 const MongoStore = require('connect-mongo')(session);
 
-
+// MongoDB 설정
 router.use(session({
     secret: 'Molrang~$1$234',
     resave: false,
@@ -16,7 +16,6 @@ router.use(session({
         collection: "sessions"
     })
 }));
-
 
 router.post('/signup', async (req, res, next) => {
     const {email, nickname, password} = req.body;
@@ -70,12 +69,7 @@ router.post('/signup', async (req, res, next) => {
 router.post('/signin', async (req, res, next) => {
     const {email, password} = req.body;
 
-    User.findOne({
-        where: {
-            email,
-        },
-
-    }).then((user) => {
+    User.findOne({where: {email}}).then((user) => {
         if (!user) {
             return res.status(404).json({emailnotfound: "Email not found"});
         }
@@ -90,7 +84,6 @@ router.post('/signin', async (req, res, next) => {
                 //     if(err) throw err;
                 // });
                 //  console.log(req.session);
-
 
                 const payload = {
                     id: user.id,
@@ -122,13 +115,12 @@ router.post('/signin', async (req, res, next) => {
         });
     });
 });
+
 router.post('/signout', (req, res) => {
     let store = req.sessionStore;
     store.destroy(err => { if(err) throw err; })
     res.clearCookie('token')
     return res.json({success: true});
-
-
 })
 
 module.exports = router;

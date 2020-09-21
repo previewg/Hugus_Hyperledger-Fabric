@@ -12,6 +12,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {Home, SignIn, SignUp, StoryMain,StoryWrite, TotalSearch} from './containers';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {NavBar} from "./components";
+import Auth from 'hoc/auth';
 
 // Slick css
 import "slick-carousel/slick/slick.css";
@@ -29,12 +30,12 @@ ReactDOM.render(
         <BrowserRouter>
             <NavBar/>
             <Switch>
-                <Route exact path="/" component={Home}/>
-                <Route path="/signin" component={SignIn}/>
-                <Route path="/signup" component={SignUp}/>
-                <Route exact path="/story" component={StoryMain}/>
-                <Route path="/story/write" component={StoryWrite}/>
-                <Route path="/search" component={TotalSearch}/>
+                <Route exact path="/" component={Auth(Home,null)}/>
+                <Route path="/signin" component={Auth(SignIn,false)}/>
+                <Route path="/signup" component={Auth(SignUp,false)}/>
+                <Route exact path="/story" component={Auth(StoryMain,null)}/>
+                <Route path="/story/write" component={Auth(StoryWrite,true)}/>
+                <Route path="/search" component={Auth(TotalSearch,null)}/>
             </Switch>
         </BrowserRouter>
     </Provider>,

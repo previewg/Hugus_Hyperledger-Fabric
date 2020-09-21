@@ -2,7 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
-import {signOutRequest} from "../actions/auth";
+import {signOutRequest} from "../../actions/auth";
+import {signInBtnIsClicked} from "../../actions/nav";
+import SignUp from "./SignUp";
+import SignIn from "./SignIn";
 
 const NavStyle = styled.nav`
   position: fixed;
@@ -85,6 +88,9 @@ const NavStyle = styled.nav`
     width: 300px;
     align-items: center;
     justify-content: space-around;
+    p:nth-child(3){
+      cursor: pointer;
+    }
     a{
     display: flex;
     align-items: center;
@@ -116,15 +122,15 @@ const NavStyle = styled.nav`
             transition: all .3s ease-in-out;
           }
           span:nth-child(1) {
-            ${props => props.isClicked ?'transform:rotate(-45deg); top:15px;right:1px;background-color:orange' : 'top:5px;right:1px'}
+            ${props => props.isClicked.menu ?'transform:rotate(-45deg); top:15px;right:1px;background-color:orange' : 'top:5px;right:1px'}
             }
             
           span:nth-child(2) {
-            ${props => props.isClicked? 'opacity: 0;top:15px;right:1px' : 'top:15px;right:1px'}
+            ${props => props.isClicked.menu ? 'opacity: 0;top:15px;right:1px' : 'top:15px;right:1px'}
             }
             
           span:nth-child(3) {
-            ${props => props.isClicked?'transform: rotate(45deg);top:15px;right:1px;background-color:orange' : 'top:25px;right:1px'}
+            ${props => props.isClicked.menu ?'transform: rotate(45deg);top:15px;right:1px;background-color:orange' : 'top:25px;right:1px'}
             }
       }
       .user{
@@ -146,11 +152,11 @@ const ResNavStyle = styled.nav`
       position: fixed;
       z-index: 10;
       transition: all .4s ease-in-out;
-      visibility: ${props=>props.isClicked?'visible':'hidden'};
+      visibility: ${props=>props.isClicked.menu ?'visible':'hidden'};
       background-color: white;
       width: 100%;
       height: 400px;
-      top: ${props=>props.isClicked?'0':'-400px'};
+      top: ${props=>props.isClicked.menu ?'0':'-400px'};
       box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
       
       section{
@@ -215,14 +221,30 @@ const ResNavStyle = styled.nav`
 
 
 const NavBar = () => {
-    const [isClicked,setIsClicked] = useState(false);
+    const [isClicked,setIsClicked] = useState({
+        menu:false,
+        signUp:false,
+        signIn:false,
+    });
     const dispatch = useDispatch();
     const username = useSelector(state => state.authentication.status.currentUser);
     const isSignedIn = useSelector(state => state.authentication.status.isLoggedIn);
+    const signInBtn = useSelector(state => state.nav.signInBtn);
 
 
-    const onClickHandler = () =>{
-        isClicked ? setIsClicked(false):setIsClicked(true);
+    const onClickHandler = (e) =>{
+        let nowClicked = e.target.id;
+        if(isClicked[nowClicked]){
+            setIsClicked({
+                ...isClicked,
+                [nowClicked]:false
+            })
+        }else{
+            setIsClicked({
+                ...isClicked,
+                [nowClicked]:true
+            })
+        }
     }
 
     const onSignOutHandler = () => {
@@ -238,7 +260,7 @@ const NavBar = () => {
         if (isSignedIn) {
             return <div style={{cursor:'pointer'}} onClick={onSignOutHandler}>로그아웃</div>
         }else{
-            return <Link to='/signin' >로그인</Link>
+            return <p onClick={()=>dispatch(signInBtnIsClicked())} >로그인</p>
         }
     }
 
@@ -289,7 +311,7 @@ const NavBar = () => {
                       <img className='search__icon' src='/icons/Search.png'/>
                   </Link>
               </div>
-              <div className='res__menu__btn' onClick={onClickHandler}>
+              <div className='res__menu__btn' id='menu' onClick={onClickHandler}>
                   <span></span>
                   <span></span>
                   <span></span>
@@ -324,6 +346,8 @@ const NavBar = () => {
 
               </section>
           </ResNavStyle>
+          <SignUp signInBtn={signInBtn}/>
+          <SignIn signInBtn={signInBtn}/>
       </>
 
     )

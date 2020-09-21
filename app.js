@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
@@ -14,7 +15,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
-// Multer 파일 저장 경로
+
+// Multer 설정
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 const upload = module.exports =multer({
 	storage:multer.diskStorage({
@@ -23,11 +25,19 @@ const upload = module.exports =multer({
 	})
 })
 
+try{
+	fs.readdirSync('uploads');
+}catch (error){
+	console.log('uploads 폴더 생성');
+	fs.mkdirSync('uploads');
+}
+
+
 // Router 설정
 const authRouter = require('./routes/auth');
 const storyRouter = require('./routes/story');
 
-// sequelize mariadb 연결
+// sequelize MariaDB 연결
 models.sequelize.sync()
 .then(() => {
 	console.log('✓ DB 연결 성공');
