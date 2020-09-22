@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {signInBtnIsClicked} from "../actions/nav";
+import GoBack from "./Goback";
 
 export default (Component, option, adminRoute=null) => {
 
@@ -9,7 +10,6 @@ export default (Component, option, adminRoute=null) => {
   // false -> 로그인한 유저는 출입이 불가능한 페이지
 
 	const AuthenticateCheck = (props) => {
-		const dispatch = useDispatch();
 		const isLoggedIn = useSelector(state => state.authentication.status.isLoggedIn);
 		const [isAllowed,setIsAllowed] = useState(true);
 
@@ -17,7 +17,6 @@ export default (Component, option, adminRoute=null) => {
 			if (!isLoggedIn) {
 				// 로그인을 하지 않은 상태
 				if (option) {
-					dispatch(signInBtnIsClicked());
 					setIsAllowed(false);
 				}
 			}else{
@@ -28,8 +27,8 @@ export default (Component, option, adminRoute=null) => {
 			}
 		}	, []);
 
-		if (isAllowed) return <Component {...props} />;
-		else return <div onLoad={()=>props.history.push('/')}></div>;
+		if (!isAllowed) return <GoBack {...props}/>;
+		else return <Component {...props} />;
 	};
 	return AuthenticateCheck;
 };

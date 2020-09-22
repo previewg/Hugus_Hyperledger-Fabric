@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import StorySlider from "../components/StoryMain/StorySlider";
 import StoryNav from "../components/StoryMain/StoryNav";
 import StoryList from "../components/StoryMain/StoryList";
+import {useDispatch, useSelector} from "react-redux";
+import {signInBtnIsClicked} from "../actions/nav";
 
 const StoryMainStyle = styled.div`
   display: flex;
@@ -14,16 +16,24 @@ const StoryMainStyle = styled.div`
     right: 15%;
     color:black;
     text-decoration: none;
+    cursor:pointer;
   }
   
 `;
 
-const StoryMain = () => {
+const StoryMain = (props) => {
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector(state => state.authentication.status.isLoggedIn);
+
+    const onClickHandler = () => {
+        if (isLoggedIn)  props.history.push('/story/write');
+        else dispatch(signInBtnIsClicked())
+    }
 
     return (
         <StoryMainStyle>
             <StoryNav/>
-            <Link className='StoryWrite__btn' to='/story/write' >글작성</Link>
+            <p className='StoryWrite__btn' onClick={onClickHandler}  >글작성</p>
             <StorySlider />
             <StoryList/>
         </StoryMainStyle>
