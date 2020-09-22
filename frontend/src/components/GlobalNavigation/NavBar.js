@@ -224,6 +224,7 @@ const NavBar = () => {
     const [isClicked,setIsClicked] = useState({
         menu:false,
     });
+
     const dispatch = useDispatch();
     const username = useSelector(state => state.authentication.status.currentUser);
     const isSignedIn = useSelector(state => state.authentication.status.isLoggedIn);
@@ -246,17 +247,18 @@ const NavBar = () => {
         }
     }
 
-    const onSignOutHandler = () => {
-        dispatch(signOutRequest());
-    }
 
     const signedIn = () => {
         if (isSignedIn) {
-            return <div style={{cursor:'pointer'}} onClick={onSignOutHandler}>로그아웃</div>
+            return <div style={{cursor:'pointer'}} onClick={()=> dispatch(signOutRequest())}>로그아웃</div>
         }else{
             return <p onClick={()=>dispatch(signInBtnIsClicked())} >로그인</p>
         }
     }
+
+    useEffect(()=>{
+        console.log(username)
+    },[username])
 
     return (
       <>

@@ -72,10 +72,10 @@ router.post('/signin', async (req, res, next) => {
     User.findOne({where: {email}}).then((user) => {
         if (!user) {
             return res.status(404).json({emailnotfound: "Email not found"});
-        }
+        };
 
-        bcrypt.compare(password, user.password).then((isMatch) => {
-            if (isMatch) {
+        bcrypt.compare(password, user.password).then((isMatched) => {
+            if (isMatched) {
                 let session = req.session;
                 session.loginInfo = {
                     user_email: user.email
@@ -99,7 +99,7 @@ router.post('/signin', async (req, res, next) => {
                   },
                   (err, token) => {
                       // res.cookie(key,value) cookie에 key값을 넣는 방식
-                      res.cookie('token', token);
+                      res.cookie('hugus', token);
                       res.json({
                           nickname: user.nickname,
                           id: user.id,
@@ -119,7 +119,7 @@ router.post('/signin', async (req, res, next) => {
 router.post('/signout', (req, res) => {
     let store = req.sessionStore;
     store.destroy(err => { if(err) throw err; })
-    res.clearCookie('token')
+    res.clearCookie('hugus')
     return res.json({success: true});
 })
 

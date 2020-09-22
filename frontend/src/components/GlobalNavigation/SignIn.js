@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch} from "react-redux";
 import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/nav";
+import {signInRequest} from "../../actions/auth";
 
 const SignInStyle = styled.div`
 	position: fixed;
@@ -114,12 +115,34 @@ const SignInStyle = styled.div`
 
 const SignIn = (props) => {
 	const dispatch = useDispatch();
+	const [user,setUser] = useState({
+		email:'',
+		password:''
+	})
 
 	const onClickHandler = (e) =>{
 		if(e.target === e.currentTarget){
 			dispatch(signInBtnIsClicked())
 		}
 	}
+
+	const onChangeHandler = (e) => {
+		setUser({
+			...user,
+			[e.target.id]:e.target.value
+		})
+	}
+
+	const signInHandler = () => {
+		dispatch(signInRequest({user})).then(()=>{
+			setUser({
+				email:'',
+				password:''
+			})
+		});
+
+	}
+
 	return (
 		<SignInStyle signInBtn={props.signInBtn} onClick={onClickHandler}>
 			<section>
@@ -128,19 +151,18 @@ const SignIn = (props) => {
 					<p>로그인</p>
 				</article>
 				<article className='form'>
-					<input placeholder='이메일'/>
-					<input placeholder='비밀번호'/>
+					<input id='email' placeholder='이메일' onChange={onChangeHandler}/>
+					<input type='password' id='password' placeholder='비밀번호' onChange={onChangeHandler}/>
 					<div>
 						<div className='checkbox'>
 							<input type='checkbox'/>
 							<p>로그인 유지하기</p>
 						</div>
-
 						<p>아이디/비밀번호 찾기</p>
 					</div>
 				</article>
 				<article className='buttons'>
-					<button>HUGUS 계정으로 로그인</button>
+					<button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
 					<button>카카오 계정으로 로그인</button>
 					<button>페이스북 계정으로 로그인</button>
 					<div className='already'>

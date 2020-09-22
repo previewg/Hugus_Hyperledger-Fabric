@@ -31,7 +31,7 @@ class Home extends React.Component {
 		}
 
 		// get login data from cookie
-		let loginData = getCookie('key');
+		let loginData = getCookie('token');
 
 		// if loginData is undefined, do nothing
 		if (typeof loginData === "undefined") return;

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as types from './ActionTypes';
+import {signInBtnIsClicked} from "./nav";
 
 export const signIn = () => {
     return {type: types.AUTH_SIGNIN}
@@ -9,10 +10,10 @@ export const signUp = () => {
     return {type: types.AUTH_SIGNUP};
 }
 
-export const signInSuccess = (email) => {
+export const signInSuccess = (nickname) => {
     return {
         type: types.AUTH_SIGNIN_SUCCESS,
-        email:email
+        nickname:nickname
     };
 }
 
@@ -48,11 +49,12 @@ export const signUpRequest = (email, nickname, password) => async dispatch => {
 };
 
 // 로그인
-export const signInRequest = (email, password) => async dispatch => {
+export const signInRequest = ({user}) => async dispatch => {
     dispatch(signIn());
-    await axios.post('/auth/signin', {email, password})
+    await axios.post('/auth/signin', {...user})
     .then(response => {
-        dispatch(signInSuccess(email));
+        dispatch(signInSuccess(response.data.nickname));
+        dispatch(signInBtnIsClicked());
     }).catch(error => {
         dispatch(signInFailure(error));
     });

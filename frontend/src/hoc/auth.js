@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {signInBtnIsClicked} from "../actions/nav";
 
@@ -11,24 +11,25 @@ export default (Component, option, adminRoute=null) => {
 	const AuthenticateCheck = (props) => {
 		const dispatch = useDispatch();
 		const isLoggedIn = useSelector(state => state.authentication.status.isLoggedIn);
+		const [isAllowed,setIsAllowed] = useState(true);
 
 		useEffect(() => {
 			if (!isLoggedIn) {
 				// 로그인을 하지 않은 상태
 				if (option) {
 					dispatch(signInBtnIsClicked());
+					setIsAllowed(false);
 				}
 			}else{
 				//로그인을 한 상태
 				if(option===false){
-					props.history.push('/')
+					setIsAllowed(false);
 				}
 			}
 		}	, []);
 
-		return (
-			<Component {...props} />
-		)
+		if (isAllowed) return <Component {...props} />;
+		else return <div onLoad={()=>props.history.push('/')}></div>;
 	};
 	return AuthenticateCheck;
 };

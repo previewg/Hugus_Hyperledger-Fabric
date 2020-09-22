@@ -107,7 +107,7 @@ return (
 
             <div className="search__bar">
                 <input className="search_form" type="text" placeholder="해시태그로 검색해보세요!"/>
-                <img src="/icons/search.png"/>
+                <img alt='search__icon' src="/icons/search.png"/>
             </div>
 
             <div className="suggestion">

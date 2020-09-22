@@ -1,6 +1,13 @@
 import * as types from '../actions/ActionTypes';
 import update from 'react-addons-update';
 
+
+function getCookie(name) {
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
 const initialState = {
     login: {
         status: 'INIT'
@@ -11,10 +18,11 @@ const initialState = {
     },
     status: {
         valid: false,
-        isLoggedIn: false,
+        isLoggedIn: getCookie('hugus') || false,
         currentUser: ''
     }
 };
+
 
 export default function authentication(state = initialState, action) {
     switch (action.type) {
@@ -54,8 +62,8 @@ export default function authentication(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: {$set: true},
-                    currentUser: {$set: action.email}
-                }
+                    currentUser: {$set: action.nickname}
+                },
             });
         case types.AUTH_SIGNIN_FAILURE:
             return update(state, {

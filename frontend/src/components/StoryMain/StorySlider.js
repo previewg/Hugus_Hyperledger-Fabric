@@ -101,22 +101,22 @@ const StorySlider = () => {
             <Slider {...settings}>
                 <div className='story'>
                     <p className='story__hashtag'>#해시태그</p>
-                    <img src='/pics/1.jpg'/>
+                    <img alt='' src='/pics/1.jpg'/>
                     <p className='story__title'>게시물1의 제목</p>
                 </div>
                 <div className='story'>
                     <p className='story__hashtag'>#해시태그</p>
-                    <img src='/pics/2.jpg'/>
+                    <img alt='' src='/pics/2.jpg'/>
                     <p className='story__title'>게시물2의 제목</p>
                 </div>
                 <div className='story'>
                     <p className='story__hashtag'>#해시태그</p>
-                    <img src='/pics/3.jpg'/>
+                    <img alt='' src='/pics/3.jpg'/>
                     <p className='story__title'>게시물3의 제목</p>
                 </div>
                 <div className='story'>
                     <p className='story__hashtag'>#해시태그</p>
-                    <img src='/pics/4.jpg'/>
+                    <img alt='' src='/pics/4.jpg'/>
                     <p className='story__title'>게시물4의 제목</p>
                 </div>
             </Slider>
