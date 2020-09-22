@@ -23,11 +23,17 @@ const NavStyle = styled.nav`
     transition : .2s ease-in-out;
   }
   .nav__title{
-    padding-left: 70px;
+  display: flex;
+  align-items: flex-start;
+    padding-left: 40px;
     text-align: start;
     width:15%;
     font-size: xx-large;
     font-weight: bold;
+    .logo{
+      width: 20px;
+      margin-right: 20px;
+    }
     :hover{
         a{
           color: orange;
@@ -259,6 +265,7 @@ const NavBar = () => {
       <>
           <NavStyle isClicked={isClicked}>
               <div className="nav__title">
+                  <img className='logo' src='icons/hugus.svg'/>
                   <Link to="/">
                       HUGUS
                   </Link>
