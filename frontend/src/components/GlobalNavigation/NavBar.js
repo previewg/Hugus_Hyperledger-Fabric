@@ -257,7 +257,6 @@ const NavBar = () => {
     }
 
     useEffect(()=>{
-        console.log(username)
     },[username])
 
     return (
@@ -301,7 +300,7 @@ const NavBar = () => {
               </div>
               <div className='user'>
                   <img className='user__icon' src='/icons/User.png'/>
-                  <p>{username}님</p>
+                  <p>{username}</p>
                   {signedIn()}
                   <Link to='/search'>
                       <img className='search__icon' src='/icons/Search.png'/>
@@ -336,7 +335,7 @@ const NavBar = () => {
                       </div>
                   </article>
                   <article className='res__menu__info'>
-                      <div>{username}님</div>
+                      <div>{username}</div>
                       <div>검색</div>
                   </article>
 

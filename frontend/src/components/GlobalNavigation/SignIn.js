@@ -134,7 +134,8 @@ const SignIn = (props) => {
 	}
 
 	const signInHandler = () => {
-		dispatch(signInRequest({user})).then(()=>{
+		dispatch(signInRequest({user})).then(
+			()=>{
 			setUser({
 				email:'',
 				password:''
