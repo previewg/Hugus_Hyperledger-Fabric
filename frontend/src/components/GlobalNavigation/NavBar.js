@@ -3,9 +3,7 @@ import {Link} from "react-router-dom";
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
 import {signOutRequest} from "../../actions/auth";
-import {signInBtnIsClicked} from "../../actions/nav";
-import SignUp from "./SignUp";
-import SignIn from "./SignIn";
+import {signInBtnIsClicked} from "../../actions/user";
 
 const NavStyle = styled.nav`
   position: fixed;
@@ -129,15 +127,15 @@ const NavStyle = styled.nav`
             transition: all .3s ease-in-out;
           }
           span:nth-child(1) {
-            ${props => props.isClicked.menu ?'transform:rotate(-45deg); top:15px;right:1px;background-color:orange' : 'top:5px;right:1px'}
+            ${props => props.menuClicked ?'transform:rotate(-45deg); top:15px;right:1px;background-color:orange' : 'top:5px;right:1px'}
             }
             
           span:nth-child(2) {
-            ${props => props.isClicked.menu ? 'opacity: 0;top:15px;right:1px' : 'top:15px;right:1px'}
+            ${props => props.menuClicked ? 'opacity: 0;top:15px;right:1px' : 'top:15px;right:1px'}
             }
             
           span:nth-child(3) {
-            ${props => props.isClicked.menu ?'transform: rotate(45deg);top:15px;right:1px;background-color:orange' : 'top:25px;right:1px'}
+            ${props => props.menuClicked ?'transform: rotate(45deg);top:15px;right:1px;background-color:orange' : 'top:25px;right:1px'}
             }
       }
       .user{
@@ -159,11 +157,11 @@ const ResNavStyle = styled.nav`
       position: fixed;
       z-index: 10;
       transition: all .4s ease-in-out;
-      visibility: ${props=>props.isClicked.menu ?'visible':'hidden'};
+      visibility: ${props=>props.menuClicked ?'visible':'hidden'};
       background-color: white;
       width: 100%;
       height: 400px;
-      top: ${props=>props.isClicked.menu ?'0':'-400px'};
+      top: ${props=>props.menuClicked ?'0':'-400px'};
       box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
       
       section{
@@ -247,32 +245,15 @@ const ResNavStyle = styled.nav`
 `;
 
 const NavBar = () => {
-    const [isClicked,setIsClicked] = useState({
-        menu:false,
-    });
+    const [menuClicked,setMenuClicked] = useState(false);
 
     const dispatch = useDispatch();
     const username = useSelector(state => state.authentication.status.currentUser);
     const isSignedIn = useSelector(state => state.authentication.status.isLoggedIn);
-    const signInBtn = useSelector(state => state.nav.signInBtn);
-    const signUpBtn = useSelector(state => state.nav.signUpBtn);
 
-
-    const onClickHandler = (e) =>{
-        let nowClicked = e.target.id;
-        if(isClicked[nowClicked]){
-            setIsClicked({
-                ...isClicked,
-                [nowClicked]:false
-            })
-        }else{
-            setIsClicked({
-                ...isClicked,
-                [nowClicked]:true
-            })
-        }
+    const onClickHandler = () =>{
+        menuClicked ? setMenuClicked(false):setMenuClicked(true)
     }
-
 
     const signedIn = () => {
         if (isSignedIn) {
@@ -292,9 +273,9 @@ const NavBar = () => {
 
     return (
       <>
-          <NavStyle isClicked={isClicked}>
+          <NavStyle menuClicked={menuClicked}>
               <div className="nav__title">
-                  <img className='logo' src='icons/hugus.svg'/>
+                  <img className='logo' alt='hugus' src='/icons/hugus.svg'/>
                   <Link to="/">
                       HUGUS
                   </Link>
@@ -331,10 +312,10 @@ const NavBar = () => {
                   </div>
               </div>
               <div className='user'>
-                  <img className='user__icon' src='icons/user.png'/>
+                  <img className='user__icon' alt='user__icon' src='/icons/user.png'/>
                   {signedIn()}
                   <Link to='/search'>
-                      <img className='search__icon' src='/icons/Search.png'/>
+                      <img className='search__icon' alt='search__icon' src='/icons/Search.png'/>
                   </Link>
               </div>
               <div className='res__menu__btn' id='menu' onClick={onClickHandler}>
@@ -343,7 +324,7 @@ const NavBar = () => {
                   <span></span>
               </div>
           </NavStyle>
-          <ResNavStyle isClicked={isClicked}>
+          <ResNavStyle menuClicked={menuClicked}>
               <section>
                   <article className='res__menu__item'>
                       <div>
@@ -372,8 +353,6 @@ const NavBar = () => {
 
               </section>
           </ResNavStyle>
-          <SignUp signUpBtn={signUpBtn}/>
-          <SignIn signInBtn={signInBtn}/>
       </>
 
     )

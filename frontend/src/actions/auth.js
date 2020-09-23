@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as types from './ActionTypes';
-import {signInBtnIsClicked, signUpBtnIsClicked} from "./nav";
+import {signInBtnIsClicked, signUpBtnIsClicked} from "./user";
 
 export const signIn = () => {
     return {type: types.AUTH_SIGNIN}

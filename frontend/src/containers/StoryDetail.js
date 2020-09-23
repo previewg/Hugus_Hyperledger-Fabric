@@ -180,13 +180,13 @@ return (
                 </div>
                 <div className='title'>
                     <p>제목</p>
-                    <input name='title' value="" type="text"/>
+                    <input name='title'  type="text"/>
                 </div>
 
 
                 <div className="info">
                     <p>작성자 소개</p>
-                    <textarea name='info' value="" required ></textarea>
+                    <textarea name='info' required ></textarea>
                 </div>
 
 
@@ -195,7 +195,7 @@ return (
                         <p>내용</p>
                     </div>
 
-                    <textarea name='content'  value=""></textarea>
+                    <textarea name='content'></textarea>
                 </div>
 
 

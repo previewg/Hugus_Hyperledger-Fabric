@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
-import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/nav";
+import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
 import {signInRequest} from "../../actions/auth";
 
 const SignInStyle = styled.div`
@@ -10,7 +10,9 @@ const SignInStyle = styled.div`
 	align-items: center;
 	width: 100%;
 	height: 100vh;
-	${props => props.signInBtn ? 'display: flex;	background-color: rgba(0,0,0,0.5); z-index:10' : 'display: none	;	z-index: -10;'};
+	display: flex;
+	background-color: rgba(0,0,0,0.5);
+	z-index:10;
 	section{
 			background-color: white;
 			width: 400px;
@@ -112,8 +114,7 @@ const SignInStyle = styled.div`
 	}
 
 `;
-const SignIn = (props) => {
-
+const SignIn = () => {
     const dispatch = useDispatch();
     const [user, setUser] = useState({
         email: '',
@@ -151,7 +152,7 @@ const SignIn = (props) => {
     }, [loginStatus])
 
     return (
-        <SignInStyle signInBtn={props.signInBtn} onClick={onClickHandler}>
+        <SignInStyle onClick={onClickHandler}>
             <section>
                 <article className='header'>
                     <p className='close__btn' onClick={() => dispatch(signInBtnIsClicked())}>닫기</p>

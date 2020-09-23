@@ -1,9 +1,9 @@
 import authentication from './authentication';
-import nav from "./nav";
+import user from "./user";
 
 import { combineReducers } from 'redux';
 
 export default combineReducers({
     authentication,
-    nav
+    user
 });

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components'
 import {useDispatch} from "react-redux";
 import {storyAdd} from "../actions/story";
@@ -251,7 +251,6 @@ const StoryWrite = () => {
         items:[],
         hashtags:[],
     })
-
     const dispatch = useDispatch();
 
     const storyAddHandler = () => {
@@ -364,7 +363,7 @@ const StoryWrite = () => {
                     <div>
                         <p>내용</p>
                         <div>
-                            <label for='files'>파일 첨부</label>
+                            <label htmlFor='files'>파일 첨부</label>
                             <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
                         </div>
                     </div>

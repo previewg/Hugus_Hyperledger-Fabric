@@ -9,9 +9,9 @@ import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Router
-import {Home,StoryMain,StoryWrite, StoryDetail, TotalSearch} from 'containers';
+import {Home, StoryMain, StoryWrite, StoryDetail, TotalSearch, User} from 'containers';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {NavBar,ScrollTop} from "components";
+import {NavBar, ScrollTop} from "components";
 import Auth from 'hoc/auth';
 
 // Slick css
@@ -30,6 +30,7 @@ ReactDOM.render(
         <BrowserRouter>
             <NavBar/>
             <ScrollTop/>
+            <User/>
             <Switch>
                 <Route exact path="/" component={Auth(Home,null)}/>
                 <Route exact path="/story" component={Auth(StoryMain,null)}/>

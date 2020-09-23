@@ -1,9 +1,6 @@
-import React, {useEffect} from 'react';
-import {useDispatch} from "react-redux";
-import {signInBtnIsClicked} from "../actions/nav";
+import {useEffect} from 'react';
 
 const GoBack = (props) =>{
-    const dispatch = useDispatch();
 
     useEffect(()=>{
         props.history.goBack();
