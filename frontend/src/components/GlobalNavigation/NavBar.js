@@ -287,6 +287,9 @@ const NavBar = () => {
         }
     }
 
+    useEffect(()=>{
+    },[username])
+
     return (
       <>
           <NavStyle isClicked={isClicked}>

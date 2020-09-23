@@ -1,7 +1,6 @@
 import * as types from '../actions/ActionTypes';
 import update from 'react-addons-update';
 
-
 function getCookie(name) {
     let value = "; " + document.cookie;
     let parts = value.split("; " + name + "=");
@@ -41,7 +40,6 @@ export default function authentication(state = initialState, action) {
             return update(state, {
                 register: {
                     status: {$set: 'WAITING'},
-                    error: {$set: -1}
                 }
             });
         case types.AUTH_SIGNUP_SUCCESS:

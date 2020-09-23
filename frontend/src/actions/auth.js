@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as types from './ActionTypes';
-import {signInBtnIsClicked} from "./nav";
+import {signInBtnIsClicked, signUpBtnIsClicked} from "./nav";
 
 export const signIn = () => {
     return {type: types.AUTH_SIGNIN}
@@ -38,9 +38,9 @@ export const signOutError = (error) => {
 }
 
 // 회원가입
-export const signUpRequest = (email, nickname, password) => async dispatch => {
+export const signUpRequest = ({user}) => async dispatch => {
     dispatch(signUp());
-    await axios.post('/auth/signup', {email, nickname, password})
+    await axios.post('/auth/signup', {...user})
     .then(response => {
         dispatch(signUpSuccess());
     }).catch(error => {
