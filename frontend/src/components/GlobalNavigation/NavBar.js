@@ -89,9 +89,10 @@ const NavStyle = styled.nav`
       }
   }
   .user{
-    padding-left: 30px;
     display: flex;
-    width: 300px;
+    position:absolute;
+    right: 10px;
+    width: 20%;
     align-items: center;
     justify-content: space-around;
     p:nth-child(3){
@@ -213,11 +214,31 @@ const ResNavStyle = styled.nav`
           display: flex;
           flex-direction: column;
           justify-content: space-around;
-          div{
-            height: 100%;
+          p{
             display: flex;
             justify-content: center;
             align-items: center;
+          }
+          div{
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            :hover{
+              color: orange;
+            }
+          }
+          a{
+            color: black;
+            text-decoration: none;
+            height: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor:pointer;
+            :hover{
+              color: orange;
+            }
           }
         }
       }
@@ -255,9 +276,14 @@ const NavBar = () => {
 
     const signedIn = () => {
         if (isSignedIn) {
-            return <div style={{cursor:'pointer'}} onClick={()=> dispatch(signOutRequest())}>로그아웃</div>
+            return (
+                <>
+                    <p>{username}님</p>
+                    <div style={{cursor:'pointer'}} onClick={()=> dispatch(signOutRequest())}>로그아웃</div>
+                </>
+            )
         }else{
-            return <p onClick={()=>dispatch(signInBtnIsClicked())} >로그인</p>
+            return <p style={{cursor:'pointer'}} onClick={()=>dispatch(signInBtnIsClicked())} >로그인</p>
         }
     }
 
@@ -302,8 +328,6 @@ const NavBar = () => {
                   </div>
               </div>
               <div className='user'>
-                  <img className='user__icon' src='/icons/User.png'/>
-                  <p>{username}님</p>
                   {signedIn()}
                   <Link to='/search'>
                       <img className='search__icon' src='/icons/Search.png'/>
@@ -338,8 +362,8 @@ const NavBar = () => {
                       </div>
                   </article>
                   <article className='res__menu__info'>
-                      <div>{username}님</div>
-                      <div>검색</div>
+                      {signedIn()}
+                      <Link to='/search'>검색</Link>
                   </article>
 
               </section>

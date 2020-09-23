@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import StorySlider from "../components/StoryMain/StorySlider";
 import StoryNav from "../components/StoryMain/StoryNav";
 import StoryList from "../components/StoryMain/StoryList";
+import StoryMoreBtn from "../components/StoryMain/StoryMoreBtn";
 import {useDispatch, useSelector} from "react-redux";
 import {signInBtnIsClicked} from "../actions/nav";
 
@@ -39,6 +40,7 @@ const StoryMain = (props) => {
             <StoryNav/>
             <p className='StoryWrite__btn' onClick={onClickHandler}  >글작성</p>
             <StorySlider />
+            <StoryMoreBtn/>
             <StoryList/>
         </StoryMainStyle>
 
