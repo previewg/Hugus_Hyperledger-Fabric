@@ -4,24 +4,21 @@ import styled from 'styled-components';
 const MoreBtnStyle = styled.div`
   margin-top: 60px;
   display: flex;
-  justify-content: center;
   align-items: center;
   div{
-    height: 30px;
-    width: 70%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  width: 17%;
+  display: flex;
+  justify-content: flex-end;
     img{
-      position: absolute;
-      left: 220px;
       background-color: #FFA500;
       border-radius: 50px;
       width: 40px;
       transition: 0.4s ease-in-out;
-      ${props=>props.icon ?'margin-left:10px;':'margin-left:0'};
+      ${props=>props.icon ?'margin-right:10px;':'margin-right:0'};
     }
-    button{
+  }
+  button{
+      margin-left: 10px;
       text-align: left;
       border:none;
       background-color: transparent;
@@ -32,7 +29,6 @@ const MoreBtnStyle = styled.div`
         transform: scale(1.15);
         color: orange;
       }
-    }
   }
 
 `
@@ -53,10 +49,10 @@ const StoryMoreBtn = () => {
 
     return(
         <MoreBtnStyle icon={icon}>
-            <div onClick={scrolldown}>
+            <div>
                 <img id='more__icon' alt='more__icon' src='icons/rightArrow.svg'/>
-                <button>여기를 눌러<br/>더 많은 스토리를 둘러보세요!</button>
             </div>
+            <button onClick={scrolldown}>여기를 눌러<br/>더 많은 스토리를 둘러보세요!</button>
         </MoreBtnStyle>
     )
 };
