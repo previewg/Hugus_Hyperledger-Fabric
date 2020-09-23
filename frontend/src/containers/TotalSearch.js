@@ -57,10 +57,17 @@ const TotalSearchStyle = styled.div`
                     margin-left: 30px;
                 }
                 img{
+                    cursor:pointer;
                     width:30px;
                     position:relative;
                     z-index:1;
                     right:45px;
+                    cursor:pointer;
+                        transition: .1s ease-in-out; 
+                    :hover{
+                        color: orange;
+                        transform: scale(1.2);
+                        }
                 }
     }
 
@@ -109,7 +116,7 @@ return (
 
             <div className="search__bar">
                 <input className="search_form" type="text" placeholder="해시태그로 검색해보세요!"/>
-                <img alt='search__icon' src="/icons/search.png"/>
+                <img alt='search__icon' src="/icons/search.png" onClick=""/>
             </div>
 
             <div className="suggestion">

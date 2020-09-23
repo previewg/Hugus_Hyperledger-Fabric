@@ -18,9 +18,6 @@ router.get('/',  (req, res, next) => {
 //       sort: { createdAt: -1 }
 //     })
 //     .then((res) => {
-
-
-
 //       res.json({ list: Story })
 //     })
 //   } catch (err) {
@@ -33,18 +30,19 @@ router.post("/add", upload.array('file'),async (req, res) => {
     try{
       console.log(req);
       res.json({success:1})
+      
+      Story.create({
+        story_title:req.body.title,
+        user_info:req.body.info,
+        story_content: req.body.content,
+        story_items: req.body.items,
+        story_hashtags: req.body.hashtags,
+        story_goal:100,
+        user_email:'moonnr94@gmail.com'
+      });
     }catch (error){
-
+      console.log(error)
     }
-    // let obj;
-    // obj = {
-    //   story_title: req.body.title,
-    //   user_info: req.body.user_info,
-    //   story_content: req.body.content,
-    //   story_hashtag: req.body.hashtag
-    // };
-    // const story = new Story(obj);
-    // await story.save();
 });
 
 router.delete("/delete", async (req, res) => {

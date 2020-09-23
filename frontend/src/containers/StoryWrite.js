@@ -229,7 +229,7 @@ const StoryWriteStyle = styled.div`
                   color:orange;
                 }
               >img {
-              margin-left: 10px;
+                margin-left: 10px;
                 width:20px;
                 height:20px;    
               }
@@ -259,8 +259,8 @@ const StoryWrite = () => {
         formData.append('title',data.title);
         formData.append('info',data.info);
         formData.append('content',data.content);
-        formData.append('item',data.item);
-        formData.append('hashtag',data.hashtag);
+        formData.append('items',data.items);
+        formData.append('hashtags',data.hashtags);
         for (const file of data.files) {
             formData.append(`file`, file);
         }
