@@ -2,10 +2,10 @@ import * as types from '../actions/ActionTypes';
 
 const initialState = {
 	signInBtn:false,
-	signUpBtn:false
+	signUpBtn:false,
 };
 
-export default function nav(state = initialState, action) {
+export default function user(state = initialState, action) {
 	switch (action.type) {
 		case types.SIGNIN_BTN_IS_CLICKED:
 			if(state.signInBtn) return {signInBtn:false}

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
 import {signUpRequest} from "../../actions/auth";
-import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/nav";
+import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
 import authentication from "../../reducers/authentication";
 
 
@@ -13,7 +13,8 @@ const SignUpStyle = styled.div`
 	align-items: center;
 	width: 100%;
 	height: 100vh;
-	${props => props.signUpBtn ? 'display: flex;	background-color: rgba(0,0,0,0.5); z-index:10' : 'display: none	;	z-index: -10;'};
+	background-color: rgba(0,0,0,0.5); 
+	z-index:10;
 	section{
 			background-color: white;
 			width: 400px;
@@ -152,15 +153,17 @@ const SignUpStyle = styled.div`
 	}
 
 `;
-const SignUp = (props) => {
+const SignUp = () => {
     const dispatch = useDispatch();
     const errorCode = useSelector(state => state.authentication.register.error)
     const registerStatus = useSelector(state => state.authentication.register.status)
+    const signUpBtn = useSelector(state=>state.nav.signUpBtn);
     const [user, setUser] = useState({
         email: '',
         nickname: '',
         password: ''
     })
+    const [openTerm, setOpenTerm] = useState(false);
     const errorMessage = [
         '이메일이 이미 존재합니다.',
         '이메일 형식에 맞게 입력해주세요',
@@ -168,11 +171,10 @@ const SignUp = (props) => {
         '패스워드는 영문,숫자 포함 10자리 이상 입력해주세요',
     ];
 
+
     const signUpHandler = () => {
         dispatch(signUpRequest({user}));
     }
-
-    const [openTerm, setOpenTerm] = useState(false);
 
     const onClickTerm = () => {
         setOpenTerm(true)
@@ -209,7 +211,7 @@ const SignUp = (props) => {
     },[registerStatus])
 
     return (
-        <SignUpStyle signUpBtn={props.signUpBtn} onClick={onClickHandler}>
+        <SignUpStyle  onClick={onClickHandler}>
             <section>
                 <article className='header'>
                     <p className='close__btn' onClick={() => dispatch(signUpBtnIsClicked())}>닫기</p>
@@ -229,9 +231,9 @@ const SignUp = (props) => {
                 <article className='social'>
                     <p>소셜 계정으로 간편하게 가입하세요!</p>
                     <div className='social__logo'>
-                        <img src='icons/google.png'/>
-                        <img src='icons/kakao.png'/>
-                        <img src='icons/facebook.png'/>
+                        <img alt='google' src='icons/google.png'/>
+                        <img alt='kakao' src='icons/kakao.png'/>
+                        <img alt='facebook' src='icons/facebook.png'/>
                     </div>
                     <div className='already'>
                         <p>이미 회원이신가요?</p>

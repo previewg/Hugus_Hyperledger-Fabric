@@ -107,7 +107,7 @@ return (
     <TotalSearchStyle>
         <div className="layout">
             <div className="content">
-                <img className="logo" src='icons/hugus.svg'/>
+                <img className="logo" alt='hugus' src='/icons/hugus.svg'/>
                 <div className="title_text">
                     <p>마음을 담는 기부<br/>허그에 담기다</p>
                     <p>따뜻하게 안아줄 수 있는<br/>투명하고 자율적인 기부 플랫폼</p>
