@@ -331,6 +331,7 @@ const NavBar = () => {
                   </div>
               </div>
               <div className='user'>
+                  <img className='user__icon' src='icons/user.png'/>
                   {signedIn()}
                   <Link to='/search'>
                       <img className='search__icon' src='/icons/Search.png'/>

@@ -77,6 +77,7 @@ const SignUpStyle = styled.div`
 					font-size: 15px;
 					font-weight: bold;
 					cursor:pointer;
+					outline:none;
 					:hover{
 						background-color: orange;
 						color: white;
