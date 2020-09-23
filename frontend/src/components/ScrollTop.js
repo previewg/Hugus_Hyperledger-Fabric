@@ -5,10 +5,10 @@ const ScrollTopStyle = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  cursor:pointer;
 
       .scroll {
-      opacity: 0.3;
+      cursor:pointer;
+      opacity: 0.6;
       background-color: orange;
       width: 40px;
       height: 40px;
@@ -17,9 +17,14 @@ const ScrollTopStyle = styled.div`
       right: 10px;
       border-radius: 5px;
       border: none;
+      font-size:14px;
+      font-weight:bold;
       
-      &:hover {
+      :hover {
         opacity: 1;
+      }
+      :focus{
+      outline: none;
       }
 
 
@@ -37,7 +42,7 @@ const ScrollTop = () => {
     return(
         <ScrollTopStyle onClick={onClickHandler}>
             <button title='Back to top' className='scroll'>
-                top
+                Top
             </button>
         </ScrollTopStyle>
     )

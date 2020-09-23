@@ -14,11 +14,12 @@ const TotalSearchStyle = styled.div`
         align-items:center;
             .content {
                 height: 250px;
-                width:50%;
+                width:40%;
                 display:flex;
                 justify-content:space-around;
+                align-items: center;
                 .logo {
-                    height:200px;
+                    height:140px;
                     display:flex;
                     justify-content: center;
                     align-items: center;
@@ -35,6 +36,7 @@ const TotalSearchStyle = styled.div`
             }
 
             .search__bar {
+                margin-top: 20px;
                 width:50%;
                 display:flex;
                 align-items:center;
@@ -98,7 +100,7 @@ return (
     <TotalSearchStyle>
         <div className="layout">
             <div className="content">
-                <div className="logo">로고</div>
+                <img className="logo" src='icons/hugus.svg'/>
                 <div className="title_text">
                     <p>마음을 담는 기부<br/>허그에 담기다</p>
                     <p>따뜻하게 안아줄 수 있는<br/>투명하고 자율적인 기부 플랫폼</p>

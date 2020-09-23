@@ -134,14 +134,11 @@ const SignIn = (props) => {
 	}
 
 	const signInHandler = () => {
-		dispatch(signInRequest({user})).then(
-			()=>{
-			setUser({
-				email:'',
-				password:''
-			})
-		});
-
+		dispatch(signInRequest({user}));
+		setUser({
+			email:'',
+			password:''
+		})
 	}
 
 	return (
@@ -152,8 +149,8 @@ const SignIn = (props) => {
 					<p>로그인</p>
 				</article>
 				<article className='form'>
-					<input id='email' placeholder='이메일' onChange={onChangeHandler}/>
-					<input type='password' id='password' placeholder='비밀번호' onChange={onChangeHandler}/>
+					<input id='email' placeholder='이메일' value={user.email} onChange={onChangeHandler}/>
+					<input type='password' id='password' value={user.password} placeholder='비밀번호' onChange={onChangeHandler}/>
 					<div>
 						<div className='checkbox'>
 							<input type='checkbox'/>
