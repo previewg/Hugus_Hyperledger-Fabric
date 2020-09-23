@@ -161,10 +161,10 @@ const SignUp = (props) => {
         password: ''
     })
     const errorMessage = [
-        'Email already Exists',
-        'Invalid Username',
-        'Nickname already exists',
-        'Invalid Password',
+        '이메일이 이미 존재합니다.',
+        '이메일 형식에 맞게 입력해주세요',
+        '닉네임이 이미 존재합니다.',
+        '패스워드는 영문,숫자 포함 10자리 이상 입력해주세요',
     ];
 
     const signUpHandler = () => {
@@ -195,8 +195,8 @@ const SignUp = (props) => {
 
     useEffect(()=>{
         if (registerStatus === "SUCCESS") {
-            dispatch(signUpBtnIsClicked())
             alert("회원가입성공");
+            dispatch(signInBtnIsClicked())
             setUser({
                 email: '',
                 nickname: '',

@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/nav";
 import {signInRequest} from "../../actions/auth";
 
@@ -10,7 +10,7 @@ const SignInStyle = styled.div`
 	align-items: center;
 	width: 100%;
 	height: 100vh;
-	${props=>props.signInBtn ? 'display: flex;	background-color: rgba(0,0,0,0.5); z-index:10':'display: none	;	z-index: -10;'};
+	${props => props.signInBtn ? 'display: flex;	background-color: rgba(0,0,0,0.5); z-index:10' : 'display: none	;	z-index: -10;'};
 	section{
 			background-color: white;
 			width: 400px;
@@ -112,65 +112,73 @@ const SignInStyle = styled.div`
 	}
 
 `;
-
 const SignIn = (props) => {
-	const dispatch = useDispatch();
-	const [user,setUser] = useState({
-		email:'',
-		password:''
-	})
 
-	const onClickHandler = (e) =>{
-		if(e.target === e.currentTarget){
-			dispatch(signInBtnIsClicked())
-		}
-	}
+    const dispatch = useDispatch();
+    const [user, setUser] = useState({
+        email: '',
+        password: ''
+    })
+    const loginStatus = useSelector(state => state.authentication.login.status)
 
-	const onChangeHandler = (e) => {
-		setUser({
-			...user,
-			[e.target.id]:e.target.value
-		})
-	}
+    const onClickHandler = (e) => {
+        if (e.target === e.currentTarget) {
+            dispatch(signInBtnIsClicked())
+        }
+    }
 
-	const signInHandler = () => {
-		dispatch(signInRequest({user}));
-		setUser({
-			email:'',
-			password:''
-		})
-	}
+    const onChangeHandler = (e) => {
+        setUser({
+            ...user,
+            [e.target.id]: e.target.value
+        })
+    }
 
-	return (
-		<SignInStyle signInBtn={props.signInBtn} onClick={onClickHandler}>
-			<section>
-				<article className='header'>
-					<p className='close__btn' onClick={()=>dispatch(signInBtnIsClicked())}>닫기</p>
-					<p>로그인</p>
-				</article>
-				<article className='form'>
-					<input id='email' placeholder='이메일' value={user.email} onChange={onChangeHandler}/>
-					<input type='password' id='password' value={user.password} placeholder='비밀번호' onChange={onChangeHandler}/>
-					<div>
-						<div className='checkbox'>
-							<input type='checkbox'/>
-							<p>로그인 유지하기</p>
-						</div>
-						<p>아이디/비밀번호 찾기</p>
-					</div>
-				</article>
-				<article className='buttons'>
-					<button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
-					<button>카카오 계정으로 로그인</button>
-					<button>페이스북 계정으로 로그인</button>
-					<div className='already'>
-						<p>회원이 아니신가요?</p>
-						<p onClick={()=>dispatch(signUpBtnIsClicked())}>회원가입</p>
-					</div>
-				</article>
-			</section>
-		</SignInStyle>
-	)
+    const signInHandler = () => {
+        dispatch(signInRequest({user}));
+
+    }
+    useEffect(() => {
+        if (loginStatus === 'SUCCESS') {
+            alert("로그인성공");
+            setUser({
+                email: '',
+                password: ''
+            })
+        }
+    }, [loginStatus])
+
+    return (
+        <SignInStyle signInBtn={props.signInBtn} onClick={onClickHandler}>
+            <section>
+                <article className='header'>
+                    <p className='close__btn' onClick={() => dispatch(signInBtnIsClicked())}>닫기</p>
+                    <p>로그인</p>
+                </article>
+                <article className='form'>
+                    <input id='email' placeholder='이메일' value={user.email} onChange={onChangeHandler}/>
+                    <input type='password' id='password' value={user.password} placeholder='비밀번호'
+                           onChange={onChangeHandler}/>
+                    <div>
+                        <div className='checkbox'>
+                            <input type='checkbox'/>
+                            <p>로그인 유지하기</p>
+                        </div>
+                        <p>아이디/비밀번호 찾기</p>
+                    </div>
+                </article>
+                <article className='buttons'>
+                    <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
+                    <button>카카오 계정으로 로그인</button>
+                    <button>페이스북 계정으로 로그인</button>
+                    <div className='already'>
+                        <p>회원이 아니신가요?</p>
+                        <p onClick={() => dispatch(signUpBtnIsClicked())}>회원가입</p>
+                    </div>
+                </article>
+            </section>
+        </SignInStyle>
+    )
 }
 
 export default SignIn;
