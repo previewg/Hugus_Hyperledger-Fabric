@@ -157,7 +157,6 @@ const SignUp = () => {
     const dispatch = useDispatch();
     const errorCode = useSelector(state => state.authentication.register.error)
     const registerStatus = useSelector(state => state.authentication.register.status)
-    const signUpBtn = useSelector(state=>state.nav.signUpBtn);
     const [user, setUser] = useState({
         email: '',
         nickname: '',
