@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
 import {signUpRequest} from "../../actions/auth";
@@ -160,30 +160,15 @@ const SignUp = (props) => {
         nickname: '',
         password: ''
     })
-    let errorMessage = [
+    const errorMessage = [
         'Email already Exists',
         'Invalid Username',
         'Nickname already exists',
         'Invalid Password',
     ];
-    console.log(registerStatus)
-    console.log(errorCode)
 
     const signUpHandler = () => {
-        dispatch(signUpRequest({user})).then(
-            () => {
-                if (registerStatus === "SUCCESS") {
-                    alert("회원가입성공")
-                } else if (registerStatus === "FAILURE") {
-                    setUser({
-                        email: '',
-                        nickname: '',
-                        password: ''
-                    })
-                    alert(errorMessage[errorCode-1])
-
-                }
-            })
+        dispatch(signUpRequest({user}));
     }
 
     const [openTerm, setOpenTerm] = useState(false);
@@ -194,6 +179,7 @@ const SignUp = (props) => {
     const CloseTerm = () => {
         setOpenTerm(false)
     }
+
     const onChangeHandler = (e) => {
         setUser({
             ...user,
@@ -207,6 +193,20 @@ const SignUp = (props) => {
         }
     }
 
+    useEffect(()=>{
+        if (registerStatus === "SUCCESS") {
+            dispatch(signUpBtnIsClicked())
+            alert("회원가입성공");
+            setUser({
+                email: '',
+                nickname: '',
+                password: ''
+            })
+        } else if (registerStatus === "FAILURE") {
+            alert(errorMessage[errorCode-1])
+        }
+    },[registerStatus])
+
     return (
         <SignUpStyle signUpBtn={props.signUpBtn} onClick={onClickHandler}>
             <section>
@@ -215,9 +215,9 @@ const SignUp = (props) => {
                     <p>회원가입</p>
                 </article>
                 <article className='form'>
-                    <input id='email' placeholder='이메일' onChange={onChangeHandler}/>
-                    <input id='nickname' placeholder='닉네임' onChange={onChangeHandler}/>
-                    <input id='password' type='password' placeholder='비밀번호' onChange={onChangeHandler}/>
+                    <input id='email' value={user.email} placeholder='이메일' onChange={onChangeHandler}/>
+                    <input id='nickname' value={user.nickname} placeholder='닉네임' onChange={onChangeHandler}/>
+                    <input id='password' value={user.password} type='password' placeholder='비밀번호' onChange={onChangeHandler}/>
                     <div className='agreement'>
                         <input type='checkbox'/>
                         <p onClick={onClickTerm}>개인정보 이용 동의</p>
