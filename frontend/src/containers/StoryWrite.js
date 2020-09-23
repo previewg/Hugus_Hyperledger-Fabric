@@ -162,22 +162,52 @@ const StoryWriteStyle = styled.div`
                         }
                   }
                 }
-                
-                
             }
             .hashtags {
                 font-weight: bold;
                 margin-top:20px;
-                input {
-                padding: 5px;
-                    height: 20px;
-                    outline:none;
-                    border: none;
-                    border-bottom: solid 0.1px lightgray;
-                    transition: 0.3s ease-in-out;
-                        :focus{
-                            border-bottom:solid 0.1px orange;
+                >div{
+                display: flex;
+                align-items: center;
+                width: 100%;
+                height: 50px;
+                    input {
+                        margin-right:7px;
+                        padding: 5px;
+                        height: 20px;
+                        outline:none;
+                        border: none;
+                        transition: 0.3s ease-in-out;
+         
                     }
+                    .added__hashtag{
+                    display: flex;
+                        .hashtag{
+                        display: flex; 
+                        padding-top:10px;
+                        padding-bottom:-1px;
+                        font-size:12px;
+                        margin: 5px;
+                        color: orange;
+                        font-weight: 200;
+                        min-width: auto;
+                        border-bottom:solid 0.1px orange;
+                        }
+                        .clear{
+                          position:relative;
+                          border-radius: 7.5px;
+                          font-size: 6px;
+                          right: 6px;
+                          top:-4px;
+                          height: 15px;
+                          width: 15px;
+                          background-color: darkgray;
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                          cursor:pointer;
+                        }
+                  }
                 }
             }
 
@@ -209,7 +239,6 @@ const StoryWriteStyle = styled.div`
  
         }
 `;
-
 
 const StoryWrite = () => {
     const [data, setData] = useState({
@@ -295,6 +324,24 @@ const StoryWrite = () => {
         })
     }
 
+
+    
+    const onTagDeleteHandler = (key) =>{
+        let hashtags = data.hashtags;
+        if(key===0){
+            hashtags=data.hashtags.slice(1,data.hashtags.length);
+        }else if(key===data.hashtags.length-1){
+            hashtags=data.hashtags.slice(0,key);
+        }else{
+            hashtags=data.hashtags.slice(0,key).concat(data.hashtags.slice(key+1,data.hashtags.length))
+        }
+        setData({
+            ...data,
+            hashtags,
+        })
+    }
+
+
     return (
         <StoryWriteStyle>
             <div className="layout">
@@ -345,7 +392,20 @@ const StoryWrite = () => {
 
                 <div className="hashtags">
                     <p>태그</p>
+                    <div>
                     <input name='hashtag' value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addHashtag(e)}}/>
+                    {data.hashtags.map((hashtag,key)=> {
+                            return(
+                                <div className='added__hashtag' >
+                                    <p className='hashtag' key={key}>
+                                        #{hashtag}
+                                    </p>
+                                    <p className='clear' onClick={()=>onTagDeleteHandler(key)} key={key+100}>
+                                        x
+                                    </p>
+                                </div>)
+                        })}
+                    </div>    
                 </div>
 
 

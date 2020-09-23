@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Link} from "react-router-dom";
 import styled from 'styled-components';
 import StorySlider from "../components/StoryMain/StorySlider";
@@ -29,6 +29,10 @@ const StoryMain = (props) => {
         if (isLoggedIn)  props.history.push('/story/write');
         else dispatch(signInBtnIsClicked())
     }
+
+    useEffect(()=>{
+      window.scrollTo(0,0);
+    },[])
 
     return (
         <StoryMainStyle>
