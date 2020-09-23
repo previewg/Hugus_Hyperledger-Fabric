@@ -8,7 +8,7 @@ const StoryListStyle = styled.div`
   margin-top: 100px;  
   section{
     width: 60%;
-    height: 500px;
+    height: 100vh;
     border:solid;
   }
 `;

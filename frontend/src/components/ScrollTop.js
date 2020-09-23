@@ -5,9 +5,9 @@ const ScrollTopStyle = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  cursor:pointer;
 
       .scroll {
+      cursor:pointer;
       opacity: 0.6;
       background-color: orange;
       width: 40px;

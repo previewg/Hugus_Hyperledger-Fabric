@@ -28,8 +28,8 @@ const StoryNavStyle = styled.div`
    .underline__current{
       position:relative;
       left:${props=>{
-    if(props.type==='new') return '-15%';
-    else if(props.type==='hot') return '-5%'
+    if(props.type==='hot') return '-15%';
+    else if(props.type==='new') return '-5%'
     else if(props.type==='my') return '5%'
     else return '15%'
 }};
@@ -72,8 +72,8 @@ const StoryNavStyle = styled.div`
    .underline__current{
       position:relative;
           left:${props=>{
-      if(props.type==='new') return '-30%';
-      else if(props.type==='hot') return '-10%'
+      if(props.type==='hot') return '-30%';
+      else if(props.type==='new') return '-10%'
       else if(props.type==='my') return '10%'
       else return '30%'
     }};
@@ -118,7 +118,7 @@ const StoryNavStyle = styled.div`
 `;
 
 const StoryNav = () => {
-    const [storyType, setStoryType] = useState('new');
+    const [storyType, setStoryType] = useState('hot');
 
     const typeChange = (e) => {
         e.preventDefault();
@@ -128,14 +128,14 @@ const StoryNav = () => {
     return (
         <StoryNavStyle type={storyType}>
             <section>
-                <article name='new' onClick={(e)=>typeChange(e)}>최신 스토리</article>
                 <article name='hot' onClick={(e)=>typeChange(e)}>인기 스토리</article>
+                <article name='new' onClick={(e)=>typeChange(e)}>최신 스토리</article>
                 <article name='my' onClick={(e)=>typeChange(e)}>관심 스토리</article>
                 <article name='past' onClick={(e)=>typeChange(e)}>지난 스토리</article>
             </section>
             <section className='res__section'>
-              <article name='new' onClick={(e)=>typeChange(e)}>최신</article>
               <article name='hot' onClick={(e)=>typeChange(e)}>인기</article>
+              <article name='new' onClick={(e)=>typeChange(e)}>최신</article>
               <article name='my' onClick={(e)=>typeChange(e)}>관심</article>
               <article name='past' onClick={(e)=>typeChange(e)}>지난</article>
             </section>
