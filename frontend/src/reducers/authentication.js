@@ -83,6 +83,9 @@ export default function authentication(state = initialState, action) {
         // 로그아웃
         case types.AUTH_SIGNOUT:
             return update(state, {
+                login: {
+                    status: {$set: 'INIT'}
+                },
                 status: {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ''}

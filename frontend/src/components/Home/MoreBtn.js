@@ -33,7 +33,7 @@ const MoreBtnStyle = styled.div`
 
 `
 
-const StoryMoreBtn = () => {
+const MoreBtn = () => {
     const [icon,setIcon] = useState(false);
 
     const scrollDown = () => {
@@ -52,9 +52,9 @@ const StoryMoreBtn = () => {
             <div>
                 <img id='more__icon' alt='more__icon' src='icons/rightArrow.svg'/>
             </div>
-            <button onClick={scrollDown}>여기를 눌러<br/>더 많은 스토리를 둘러보세요!</button>
+            <button onClick={scrollDown}>여기를 눌러<br/>아래로 스크롤</button>
         </MoreBtnStyle>
     )
 };
 
-export default StoryMoreBtn;
+export default MoreBtn;

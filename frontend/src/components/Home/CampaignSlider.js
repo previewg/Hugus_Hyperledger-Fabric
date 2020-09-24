@@ -21,7 +21,7 @@ const SliderStyle = styled.div`
       transform: scale(1.2);
     }
 
-  .story{
+  .campaign{
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
     border-radius: 5px;
     cursor:pointer;
@@ -84,7 +84,7 @@ const PrevArrow = (props) => {
     );
 }
 
-const StorySlider = () => {
+const CampaignSlider = () => {
     const settings = {
         infinite: true,
         autopspeed: 5000,
@@ -99,25 +99,25 @@ const StorySlider = () => {
     return(
         <SliderStyle>
             <Slider {...settings}>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/1.jpg'/>
-                    <p className='story__title'>게시물1의 제목</p>
+                    <p className='campaign__title'>게시물1의 제목</p>
                 </div>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/2.jpg'/>
-                    <p className='story__title'>게시물2의 제목</p>
+                    <p className='campaign__title'>게시물2의 제목</p>
                 </div>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/3.jpg'/>
-                    <p className='story__title'>게시물3의 제목</p>
+                    <p className='campaign__title'>게시물3의 제목</p>
                 </div>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/4.jpg'/>
-                    <p className='story__title'>게시물4의 제목</p>
+                    <p className='campaign__title'>게시물4의 제목</p>
                 </div>
             </Slider>
         </SliderStyle>
@@ -126,4 +126,4 @@ const StorySlider = () => {
     )
 }
 
-export default StorySlider;
+export default CampaignSlider;

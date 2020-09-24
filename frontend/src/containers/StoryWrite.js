@@ -247,7 +247,7 @@ const ErrorBoxStyle = styled.p`
     else return 'opacity:1;transform: translateX(-100px);'
 }};
   right:0;
-  background-color: orange;
+  background-color: #ffa500;
   border-radius: 5px;
   color: white;
   display: flex;
@@ -474,7 +474,7 @@ const StoryWrite = (props) => {
     }
 
     useEffect(()=>{
-    },[errorCode,preImg])
+    },[errorCode])
 
     return (
         <>
