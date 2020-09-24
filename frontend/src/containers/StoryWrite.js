@@ -238,14 +238,21 @@ const StoryWriteStyle = styled.div`
         }
 `;
 
-const ErrorBoxStyle = styled.div`
+const ErrorBoxStyle = styled.p`
+    ${props=> { if(props.error ==0) return 'display:none;opacity:0';
+    else return'opacity:1;transform: translateX(-100px);'}};
+  right:0;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
-  right: 30px;
   top: 100px;
-  width: 200px;
+  width: 180px;
   height: 50px;
+  transition: 0.7s ease-in-out;
+  font-size: 15px;
   
-
 `;
 
 const errorMsg = [
@@ -289,43 +296,43 @@ const StoryWrite = (props) => {
     const errorHandler = () => {
         if(!data.title) {
             setErrorCode(1)
+            title.current.focus();
             setFilled({
                 ...filled,
                 title: false
             })
-            title.current.focus();
             return false;
         } else if(!data.info){
+            setErrorCode(2)
             info.current.focus();
             setFilled({
                 ...filled,
                 info: false
             })
-            setErrorCode(2)
             return false;
         } else if(!data.content){
+            setErrorCode(3)
             content.current.focus();
             setFilled({
                 ...filled,
                 content: false
             })
-            setErrorCode(3)
             return false;
         } else if(data.items.length==0) {
+            setErrorCode(4)
             items.current.focus();
             setFilled({
                 ...filled,
                 items: false
             })
-            setErrorCode(4)
             return false;
         } else if(data.hashtags.length==0) {
+            setErrorCode(5)
             hashtags.current.focus();
             setFilled({
                 ...filled,
                 hashtags: false
             })
-            setErrorCode(5)
             return false;
         }
         return true
@@ -372,11 +379,12 @@ const StoryWrite = (props) => {
                 [e.target.name]:e.target.value
             });
             setErrorCode(0)
-            if(e.target.name!=='item'&&e.target.name!=='hashtag')
-            setFilled({
-                ...filled,
-                [e.target.name]:true
-            })
+            if(e.target.name!=='item'&&e.target.name!=='hashtag'){
+                setFilled({
+                    ...filled,
+                    [e.target.name]:true
+                })
+            }
         }
     }
 
@@ -391,6 +399,7 @@ const StoryWrite = (props) => {
             ...filled,
             items:true
         })
+
     }
 
     const addHashtag = (e) => {
@@ -437,7 +446,7 @@ const StoryWrite = (props) => {
     }
 
     useEffect(()=>{
-
+        console.log(errorCode)
     },[errorCode])
 
     return (
@@ -517,7 +526,7 @@ const StoryWrite = (props) => {
                     </div>
                 </div>
             </StoryWriteStyle>
-            <ErrorBoxStyle>
+            <ErrorBoxStyle error={errorCode}>
                 {errorMsg[errorCode]}
             </ErrorBoxStyle>
         </>
