@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import styled from 'styled-components'
 import {useDispatch} from "react-redux";
+import styled from 'styled-components'
 import {storyAdd} from "../actions/story";
 
 const StoryWriteStyle = styled.div`
@@ -234,13 +234,12 @@ const StoryWriteStyle = styled.div`
                 height:20px;    
               }
             }
-                
             }
- 
         }
 `;
 
 const StoryWrite = () => {
+    const dispatch = useDispatch();
     const [data, setData] = useState({
         title:'',
         info:'',
@@ -251,7 +250,6 @@ const StoryWrite = () => {
         items:[],
         hashtags:[],
     })
-    const dispatch = useDispatch();
 
     const storyAddHandler = () => {
         const formData = new FormData();

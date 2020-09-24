@@ -36,7 +36,7 @@ const MoreBtnStyle = styled.div`
 const StoryMoreBtn = () => {
     const [icon,setIcon] = useState(false);
 
-    const scrolldown = () => {
+    const scrollDown = () => {
         window.scrollTo({top:900,left:0,behavior:'smooth'});
     }
 
@@ -52,7 +52,7 @@ const StoryMoreBtn = () => {
             <div>
                 <img id='more__icon' alt='more__icon' src='icons/rightArrow.svg'/>
             </div>
-            <button onClick={scrolldown}>여기를 눌러<br/>더 많은 스토리를 둘러보세요!</button>
+            <button onClick={scrollDown}>여기를 눌러<br/>더 많은 스토리를 둘러보세요!</button>
         </MoreBtnStyle>
     )
 };

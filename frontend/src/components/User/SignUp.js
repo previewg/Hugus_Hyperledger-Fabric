@@ -189,12 +189,6 @@ const SignUp = () => {
         })
     }
 
-    const onClickHandler = (e) => {
-        if (e.target === e.currentTarget) {
-            dispatch(signUpBtnIsClicked())
-        }
-    }
-
     useEffect(()=>{
         if (registerStatus === "SUCCESS") {
             alert("회원가입성공");
@@ -210,7 +204,7 @@ const SignUp = () => {
     },[registerStatus])
 
     return (
-        <SignUpStyle  onClick={onClickHandler}>
+        <SignUpStyle >
             <section>
                 <article className='header'>
                     <p className='close__btn' onClick={() => dispatch(signUpBtnIsClicked())}>닫기</p>

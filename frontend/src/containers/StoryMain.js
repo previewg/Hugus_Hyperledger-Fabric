@@ -4,8 +4,8 @@ import StorySlider from "../components/StoryMain/StorySlider";
 import StoryNav from "../components/StoryMain/StoryNav";
 import StoryList from "../components/StoryMain/StoryList";
 import StoryMoreBtn from "../components/StoryMain/StoryMoreBtn";
-import {useDispatch, useSelector} from "react-redux";
 import {signInBtnIsClicked} from "../actions/user";
+import {useDispatch} from "react-redux";
 
 const StoryMainStyle = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const StoryMainStyle = styled.div`
 
 const StoryMain = (props) => {
     const dispatch = useDispatch();
-    const isLoggedIn = useSelector(state => state.authentication.status.isLoggedIn);
+    const isLoggedIn = props.isLoggedIn;
 
     const onClickHandler = () => {
         if (isLoggedIn)  props.history.push('/story/write');

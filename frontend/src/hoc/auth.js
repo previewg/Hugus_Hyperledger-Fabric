@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import GoBack from "./Goback";
 
 export default (Component, option, adminRoute=null) => {
@@ -25,8 +25,8 @@ export default (Component, option, adminRoute=null) => {
 			}
 		}	, []);
 
-		if (!isAllowed) return <GoBack {...props}/>;
-		else return <Component {...props} />;
+		if (!isAllowed) return <GoBack  {...props}/>;
+		else return <Component isLoggedIn={isLoggedIn} {...props} />;
 	};
 	return AuthenticateCheck;
 };

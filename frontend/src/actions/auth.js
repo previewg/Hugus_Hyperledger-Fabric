@@ -69,5 +69,3 @@ export const signOutRequest = () => async dispatch => {
             dispatch(signOutError(error));
         });
 };
-
-

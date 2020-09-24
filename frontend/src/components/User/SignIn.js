@@ -122,12 +122,6 @@ const SignIn = () => {
     })
     const loginStatus = useSelector(state => state.authentication.login.status)
 
-    const onClickHandler = (e) => {
-        if (e.target === e.currentTarget) {
-            dispatch(signInBtnIsClicked())
-        }
-    }
-
     const onChangeHandler = (e) => {
         setUser({
             ...user,
@@ -152,7 +146,7 @@ const SignIn = () => {
     }, [loginStatus])
 
     return (
-        <SignInStyle onClick={onClickHandler}>
+        <SignInStyle >
             <section>
                 <article className='header'>
                     <p className='close__btn' onClick={() => dispatch(signInBtnIsClicked())}>닫기</p>
