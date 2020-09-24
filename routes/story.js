@@ -26,10 +26,12 @@ router.get('/',  (req, res, next) => {
 //   }
 // });
 
-router.post("/add", upload.array('file'),async (req, res) => {
+router.post("/add", upload.array('files'),async (req, res) => {
     try{
-      res.json({success:1})
-      
+      let files='';
+      for (const file of req.files) {
+        files += file.filename+','
+      }
       Story.create({
         story_title:req.body.title,
         user_info:req.body.info,
@@ -37,8 +39,10 @@ router.post("/add", upload.array('file'),async (req, res) => {
         story_items: req.body.items,
         story_hashtags: req.body.hashtags,
         story_goal:100,
-        user_email:'moonnr94@gmail.com'
+        user_email:'moonnr94@gmail.com',
+        story_file:files
       });
+      res.json({success:1})
     }catch (error){
       console.log(error)
     }
