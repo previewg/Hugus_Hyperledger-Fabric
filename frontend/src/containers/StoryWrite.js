@@ -69,26 +69,29 @@ const StoryWriteStyle = styled.div`
                 margin-top:50px;
                 display:flex;
                 flex-direction:column;
-                div{
-                  p{
+                p{
                   font-weight: bold;
                   }
-                  >div{
-                  height:30px;
-                  position:relative;
-                  left:95%;
-                    width:80px;
+                div{
                     display: flex;
-                    align-items: center;
-                        label{
-                          color: grey;
-                          font-size: small;
-                          cursor: pointer;
-                          transition: 0.2s ease-in-out;
-                          :hover{
-                            color: orange;
-                          }
-                        }
+                    justify-content: flex-end;
+                    align-items: flex-end;
+                    margin-bottom: 10px;
+                    .preImg{
+                      width: 9%;
+                      height: 60px;
+                      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4);
+                      margin: 5px;
+                    }
+                    label{
+                      color: grey;
+                      font-size: small;
+                      cursor: pointer;
+                      transition: 0.2s ease-in-out;
+                      :hover{
+                        color: orange;
+                      }
+                    }
                     input[type="file"] {
                       position: absolute;
                       width: 1px;
@@ -99,8 +102,8 @@ const StoryWriteStyle = styled.div`
                       clip: rect(0, 0, 0, 0);
                       border: 0;
                     }
-                    }
                 }
+                
                 textarea { 
                     padding: 12px;
                     resize: none;
@@ -239,10 +242,14 @@ const StoryWriteStyle = styled.div`
 `;
 
 const ErrorBoxStyle = styled.p`
-    ${props=> { if(props.error ==0) return 'display:none;opacity:0';
-    else return'opacity:1;transform: translateX(-100px);'}};
+    ${props => {
+    if (props.error == 0) return 'display:none;opacity:0';
+    else return 'opacity:1;transform: translateX(-100px);'
+}};
   right:0;
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
+  background-color: orange;
+  border-radius: 5px;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -257,11 +264,11 @@ const ErrorBoxStyle = styled.p`
 
 const errorMsg = [
     '',
-    '제목을 입력하세요',
-    '소개를 입력하세요',
-    '내용을 입력하세요',
-    '필요 품목을 입력하세요',
-    '해시태그를 입력하세요'
+    '제목을 입력 바랍니다',
+    '소개를 입력 바랍니다',
+    '내용을 입력 바랍니다',
+    '필요 품목을 입력 바랍니다',
+    '해시태그를 입력 바랍니다'
 ]
 
 const StoryWrite = (props) => {
@@ -292,6 +299,8 @@ const StoryWrite = (props) => {
     })
 
     const [errorCode,setErrorCode] = useState(0);
+
+    const [preImg,setPreImg] = useState([]);
 
     const errorHandler = () => {
         if(!data.title) {
@@ -349,8 +358,8 @@ const StoryWrite = (props) => {
 
             if(data.files!==null){for (const file of data.files) {
                 formData.append(`files`, file);
-            }}else formData.append('files',null);
-
+            }}else formData.append('files','');
+            console.log(formData)
             dispatch(storyAdd(formData));
             setData({
                 title:'',
@@ -366,9 +375,27 @@ const StoryWrite = (props) => {
         }
     }
 
+    const previewImg = (e)=>{
+        setPreImg([]);
+        for (const file of e.target.files) {
+            let reader = new FileReader();
+            reader.onloadend = () => {
+                let newPreImg= preImg;
+                newPreImg.push({
+                    file : file,
+                    previewURL : reader.result
+                });
+                setPreImg(newPreImg);
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
     const onChangeHandler = (e) => {
         e.preventDefault();
+
         if(e.target.name==='files'){
+            previewImg(e);
             setData({
                 ...data,
                 [e.target.name]:e.target.files
@@ -398,8 +425,8 @@ const StoryWrite = (props) => {
         setFilled({
             ...filled,
             items:true
-        })
-
+        });
+        setErrorCode(0)
     }
 
     const addHashtag = (e) => {
@@ -413,6 +440,7 @@ const StoryWrite = (props) => {
             ...filled,
             hashtags:true
         })
+        setErrorCode(0)
     };
 
     const onDeleteHandler = (key) => ()=>{
@@ -446,8 +474,7 @@ const StoryWrite = (props) => {
     }
 
     useEffect(()=>{
-        console.log(errorCode)
-    },[errorCode])
+    },[errorCode,preImg])
 
     return (
         <>
@@ -469,12 +496,13 @@ const StoryWrite = (props) => {
 
 
                     <div className="content">
+                        <p>내용</p>
                         <div>
-                            <p>내용</p>
-                            <div>
-                                <label htmlFor='files'>파일 첨부</label>
-                                <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
-                            </div>
+                            {preImg.map((item,key)=>{
+                                return (<img className='preImg' src={item.previewURL} key={key} alt='preview'/>)
+                            })}
+                            <label htmlFor='files'>파일 첨부</label>
+                            <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
                         </div>
                         <textarea name='content' ref={content} value={data.content} required placeholder="내용을 입력하세요. " onChange={onChangeHandler}></textarea>
                     </div>
