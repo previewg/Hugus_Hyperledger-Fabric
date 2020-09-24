@@ -4,6 +4,8 @@ import SignUp from './User/SignUp';
 import StoryList from "./StoryMain/StoryList";
 import StoryNav from "./StoryMain/StoryNav";
 import CampaignSlider from "./Home/CampaignSlider";
+import HugusInfo from "./Home/HugusInfo";
+import CampaignList from "./Home/CampaignList";
 import MoreBtn from './Home/MoreBtn'
 import ScrollTop from './ScrollTop';
 import EditInfo from "./UserInfo/EditInfo";
@@ -19,6 +21,8 @@ export {
     StoryNav,
     CampaignSlider,
     MoreBtn,
+  HugusInfo,
+  CampaignList,
     ScrollTop,
     EditInfo,
     History,

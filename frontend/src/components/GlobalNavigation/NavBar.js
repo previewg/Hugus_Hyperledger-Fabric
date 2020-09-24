@@ -9,7 +9,7 @@ const NavStyle = styled.nav`
   position: fixed;
   width: 100%;
   display: flex;
-  height: 50px;
+  height: 60px;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
   align-items: center;
   text-align: center;

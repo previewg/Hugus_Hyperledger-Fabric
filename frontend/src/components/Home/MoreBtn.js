@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 const MoreBtnStyle = styled.div`
-  margin-top: 60px;
+  margin-top: 100px;
+  margin-bottom: 100px;
   display: flex;
   align-items: center;
   div{
@@ -37,7 +38,7 @@ const MoreBtn = () => {
     const [icon,setIcon] = useState(false);
 
     const scrollDown = () => {
-        window.scrollTo({top:900,left:0,behavior:'smooth'});
+        window.scrollTo({top:850,left:0,behavior:'smooth'});
     }
 
     useEffect(()=>{

@@ -5,9 +5,14 @@ import Slider from 'react-slick';
 const SliderStyle = styled.div`
   display: flex;
   justify-content: center;
+  height: 30%;
+  width: 80%;
+  .slick-dots{
+    position: relative;
+    margin-top: 10px;
+  }
   .slick-slider{
-    width: 1250px;
-    height: 550px;
+    width: 90%;
   }
   .slick-slide{
   display: flex;
@@ -15,7 +20,7 @@ const SliderStyle = styled.div`
   transition: all 0.7s ease-in-out;
   }
   .slick-slide>div{
-    padding: 50px;
+    padding: 15%;
   }
   .slick-center{
       transform: scale(1.2);
@@ -25,11 +30,10 @@ const SliderStyle = styled.div`
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
     border-radius: 5px;
     cursor:pointer;
-    height:400px;
     :focus{
     outline: none;
     };
-    .story__hashtag{
+    .campaign__hashtag{
     font-size: 12px;
     text-align: end;
     color: orange;
@@ -40,7 +44,7 @@ const SliderStyle = styled.div`
     width: 100%; 
     height: auto;
     }
-    .story__title{
+    .campaign__title{
     padding: 10px;
     padding-top: 0;
     padding-bottom: 0;
@@ -97,6 +101,7 @@ const CampaignSlider = () => {
         prevArrow:<PrevArrow/>
     };
     return(
+      <div style={{display:'flex',justifyContent:'center'}}>
         <SliderStyle>
             <Slider {...settings}>
                 <div className='campaign'>
@@ -121,6 +126,7 @@ const CampaignSlider = () => {
                 </div>
             </Slider>
         </SliderStyle>
+      </div>
 
 
     )
