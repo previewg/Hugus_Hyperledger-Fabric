@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
 import {signUpRequest} from "../../actions/auth";
 import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
-import authentication from "../../reducers/authentication";
 
 
 const SignUpStyle = styled.div`

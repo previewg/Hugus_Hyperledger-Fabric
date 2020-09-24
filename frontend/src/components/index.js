@@ -6,6 +6,10 @@ import StoryNav from "./StoryMain/StoryNav";
 import StorySlider from "./StoryMain/StorySlider";
 import StoryMoreBtn from './StoryMain/StoryMoreBtn'
 import ScrollTop from './ScrollTop';
+import EditInfo from "./UserInfo/EditInfo";
+import History from "./UserInfo/History";
+import MyNews from "./UserInfo/MyNews";
+import MyHome from "./UserInfo/MyHome";
 
 export {
     NavBar,
@@ -15,5 +19,9 @@ export {
     StoryNav,
     StorySlider,
     StoryMoreBtn,
-    ScrollTop
+    ScrollTop,
+    EditInfo,
+    History,
+    MyHome,
+    MyNews
 };

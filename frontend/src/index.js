@@ -9,7 +9,7 @@ import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Router
-import {Home, StoryMain, StoryWrite, StoryDetail, TotalSearch, User} from 'containers';
+import {Home, StoryMain, StoryWrite, StoryDetail, TotalSearch, User, UserInfo} from 'containers';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {NavBar, ScrollTop} from "components";
 import Auth from 'hoc/auth';
@@ -37,6 +37,7 @@ ReactDOM.render(
                 <Route path="/story/write" component={Auth(StoryWrite,true)}/>
                 <Route path="/story/detail" component={Auth(StoryDetail,true)}/>
                 <Route path="/search" component={Auth(TotalSearch,null)}/>
+                <Route path="/userinfo" component={Auth(UserInfo,true)}/>
             </Switch>
         </BrowserRouter>
     </Provider>,

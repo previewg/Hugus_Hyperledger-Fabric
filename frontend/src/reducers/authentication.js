@@ -96,6 +96,22 @@ export default function authentication(state = initialState, action) {
                     currentUser: {$set: ''}
                 }
             });
+        case types.AUTH_SIGN_DESTORY:
+            return update(state,{
+                status: {
+                    isLoggedIn: {$set: false},
+                    currentUser: {$set: ''}
+                }
+            })
+        case types.AUTH_SIGN_DESTORY_ERROR:
+            return update(state,{
+                status: {
+                    isLoggedIn: {$set: false},
+                    currentUser: {$set: ''}
+                }
+            })
+
+
         default:
             return state;
 

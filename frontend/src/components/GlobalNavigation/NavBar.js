@@ -292,7 +292,7 @@ const NavBar = () => {
                       </ul>
                   </div>
                   <div className='dropdown'>
-                      <Link to="/my">
+                      <Link to="/userinfo">
                           My
                       </Link>
                       <ul>
