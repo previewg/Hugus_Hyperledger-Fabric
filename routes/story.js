@@ -28,7 +28,6 @@ router.get('/',  (req, res, next) => {
 
 router.post("/add", upload.array('file'),async (req, res) => {
     try{
-      console.log(req);
       res.json({success:1})
       
       Story.create({
