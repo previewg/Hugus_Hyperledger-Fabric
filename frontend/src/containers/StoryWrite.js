@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from "react-redux";
 import styled from 'styled-components'
 import {storyAdd} from "../actions/story";
@@ -238,8 +238,33 @@ const StoryWriteStyle = styled.div`
         }
 `;
 
-const StoryWrite = () => {
+const ErrorBoxStyle = styled.div`
+  position: fixed;
+  right: 30px;
+  top: 100px;
+  width: 200px;
+  height: 50px;
+  
+
+`;
+
+const errorMsg = [
+    '',
+    '제목을 입력하세요',
+    '소개를 입력하세요',
+    '내용을 입력하세요',
+    '필요 품목을 입력하세요',
+    '해시태그를 입력하세요'
+]
+
+const StoryWrite = (props) => {
     const dispatch = useDispatch();
+    const title = useRef();
+    const info = useRef();
+    const content = useRef();
+    const items = useRef();
+    const hashtags = useRef();
+
     const [data, setData] = useState({
         title:'',
         info:'',
@@ -251,27 +276,87 @@ const StoryWrite = () => {
         hashtags:[],
     })
 
-    const storyAddHandler = () => {
-        const formData = new FormData();
-        formData.append('title',data.title);
-        formData.append('info',data.info);
-        formData.append('content',data.content);
-        formData.append('items',data.items);
-        formData.append('hashtags',data.hashtags);
-        for (const file of data.files) {
-            formData.append(`file`, file);
+    const [filled,setFilled] = useState({
+        title:true,
+        info:true,
+        content:true,
+        items:true,
+        hashtags:true
+    })
+
+    const [errorCode,setErrorCode] = useState(0);
+
+    const errorHandler = () => {
+        if(!data.title) {
+            setErrorCode(1)
+            setFilled({
+                ...filled,
+                title: false
+            })
+            title.current.focus();
+            return false;
+        } else if(!data.info){
+            info.current.focus();
+            setFilled({
+                ...filled,
+                info: false
+            })
+            setErrorCode(2)
+            return false;
+        } else if(!data.content){
+            content.current.focus();
+            setFilled({
+                ...filled,
+                content: false
+            })
+            setErrorCode(3)
+            return false;
+        } else if(data.items.length==0) {
+            items.current.focus();
+            setFilled({
+                ...filled,
+                items: false
+            })
+            setErrorCode(4)
+            return false;
+        } else if(data.hashtags.length==0) {
+            hashtags.current.focus();
+            setFilled({
+                ...filled,
+                hashtags: false
+            })
+            setErrorCode(5)
+            return false;
         }
-        dispatch(storyAdd(formData));
-        setData({
-            title:'',
-            info:'',
-            content:'',
-            files:null,
-            item:'',
-            hashtag:'',
-            items:[],
-            hashtags:[],
-        });
+        return true
+    }
+
+    const storyAddHandler = () => {
+        if(errorHandler()){
+            const formData = new FormData();
+            formData.append('title',data.title);
+            formData.append('info',data.info);
+            formData.append('content',data.content);
+            formData.append('items',data.items);
+            formData.append('hashtags',data.hashtags);
+
+            if(data.files!==null){for (const file of data.files) {
+                formData.append(`files`, file);
+            }}else formData.append('files',null);
+
+            dispatch(storyAdd(formData));
+            setData({
+                title:'',
+                info:'',
+                content:'',
+                files:null,
+                item:'',
+                hashtag:'',
+                items:[],
+                hashtags:[],
+            });
+            props.history.push('/story');
+        }
     }
 
     const onChangeHandler = (e) => {
@@ -286,6 +371,12 @@ const StoryWrite = () => {
                 ...data,
                 [e.target.name]:e.target.value
             });
+            setErrorCode(0)
+            if(e.target.name!=='item'&&e.target.name!=='hashtag')
+            setFilled({
+                ...filled,
+                [e.target.name]:true
+            })
         }
     }
 
@@ -296,7 +387,12 @@ const StoryWrite = () => {
             item:'',
             items,
         })
+        setFilled({
+            ...filled,
+            items:true
+        })
     }
+
     const addHashtag = (e) => {
         let hashtags=data.hashtags.concat(e.target.value);
         setData({
@@ -304,9 +400,13 @@ const StoryWrite = () => {
             hashtag:'',
             hashtags,
         })
-    }
+        setFilled({
+            ...filled,
+            hashtags:true
+        })
+    };
 
-    const onDeleteHandler = (key) =>{
+    const onDeleteHandler = (key) => ()=>{
         let items = data.items;
         if(key===0){
             items=data.items.slice(1,data.items.length);
@@ -321,9 +421,7 @@ const StoryWrite = () => {
         })
     }
 
-
-    
-    const onTagDeleteHandler = (key) =>{
+    const onTagDeleteHandler = (key) => ()=>{
         let hashtags = data.hashtags;
         if(key===0){
             hashtags=data.hashtags.slice(1,data.hashtags.length);
@@ -338,83 +436,92 @@ const StoryWrite = () => {
         })
     }
 
+    useEffect(()=>{
+
+    },[errorCode])
 
     return (
-        <StoryWriteStyle>
-            <div className="layout">
-                <div className="write_title">
-                    <p>글쓰기</p>
-                </div>
-                <div className='title'>
-                    <p>제목</p>
-                    <input name='title' value={data.title} type="text" placeholder="제목을 입력하세요." onChange={onChangeHandler}/>
-                </div>
+        <>
+            <StoryWriteStyle>
+                <div className="layout">
+                    <div className="write_title">
+                        <p>글쓰기</p>
+                    </div>
+                    <div className='title'>
+                        <p>제목</p>
+                        <input name='title' ref={title} value={data.title} type="text" placeholder="제목을 입력하세요." onChange={onChangeHandler}/>
+                    </div>
 
 
-                <div className="info">
-                    <p>작성자 소개</p>
-                    <textarea name='info' value={data.info} required placeholder="본인을 마음껏 표현해주세요." onChange={onChangeHandler}></textarea>
-                </div>
+                    <div className="info">
+                        <p>작성자 소개</p>
+                        <textarea name='info' ref={info} value={data.info} required placeholder="본인을 마음껏 표현해주세요." onChange={onChangeHandler}></textarea>
+                    </div>
 
 
-                <div className="content">
-                    <div>
-                        <p>내용</p>
+                    <div className="content">
                         <div>
-                            <label htmlFor='files'>파일 첨부</label>
-                            <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
+                            <p>내용</p>
+                            <div>
+                                <label htmlFor='files'>파일 첨부</label>
+                                <input id='files' name='files' type='file' multiple  accept="image/*" onChange={onChangeHandler}/>
+                            </div>
+                        </div>
+                        <textarea name='content' ref={content} value={data.content} required placeholder="내용을 입력하세요. " onChange={onChangeHandler}></textarea>
+                    </div>
+
+
+                    <div className="items">
+                        <p>필요 물품</p>
+                        <div>
+                            <input name='item'  ref={items} value={data.item} placeholder="# 물품입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addItem(e)}}/>
+                            {data.items.map((item,key)=> {
+                                return(
+                                    <div className='added__item' >
+                                        <p className='item' key={key}>
+                                            {item}
+                                        </p>
+                                        <p className='clear' onClick={onDeleteHandler(key)} key={key+100}>
+                                            x
+                                        </p>
+                                    </div>)
+                            })}
                         </div>
                     </div>
-                    <textarea name='content'  value={data.content} required placeholder="내용을 입력하세요. " onChange={onChangeHandler}></textarea>
-                </div>
+
+                    <div className="hashtags">
+                        <p>태그</p>
+                        <div>
+                            <input name='hashtag' ref={hashtags} value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addHashtag(e)}}/>
+                            {data.hashtags.map((hashtag,key)=> {
+                                return(
+                                    <div className='added__hashtag' >
+                                        <p className='hashtag' key={key}>
+                                            #{hashtag}
+                                        </p>
+                                        <p className='clear' onClick={onTagDeleteHandler(key)} key={key+100}>
+                                            x
+                                        </p>
+                                    </div>)
+                            })}
+                        </div>
+                    </div>
 
 
-                <div className="items">
-                    <p>필요 물품</p>
-                    <div>
-                        <input name='item'  value={data.item} placeholder="# 물품입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addItem(e)}}/>
-                        {data.items.map((item,key)=> {
-                            return(
-                                <div className='added__item' >
-                                    <p className='item' key={key}>
-                                        {item}
-                                    </p>
-                                    <p className='clear' onClick={()=>onDeleteHandler(key)} key={key+100}>
-                                        x
-                                    </p>
-                                </div>)
-                        })}
+                    <div className="submit">
+                        <button onClick={storyAddHandler}>
+                            제출하기
+                            <img src="/icons/PaperPlane.png"/>
+                        </button>
+
                     </div>
                 </div>
+            </StoryWriteStyle>
+            <ErrorBoxStyle>
+                {errorMsg[errorCode]}
+            </ErrorBoxStyle>
+        </>
 
-                <div className="hashtags">
-                    <p>태그</p>
-                    <div>
-                    <input name='hashtag' value={data.hashtag} placeholder="# 태그입력" onChange={onChangeHandler} onKeyDown={(e)=>{if(e.keyCode===13) addHashtag(e)}}/>
-                    {data.hashtags.map((hashtag,key)=> {
-                            return(
-                                <div className='added__hashtag' >
-                                    <p className='hashtag' key={key}>
-                                        #{hashtag}
-                                    </p>
-                                    <p className='clear' onClick={()=>onTagDeleteHandler(key)} key={key+100}>
-                                        x
-                                    </p>
-                                </div>)
-                        })}
-                    </div>    
-                </div>
-
-
-                <div className="submit">
-                    <button onClick={storyAddHandler}>
-                        제출하기
-                        <img src="/icons/PaperPlane.png"/>
-                    </button>
-
-                </div>
-            </div>
-        </StoryWriteStyle>
     );
 }
 

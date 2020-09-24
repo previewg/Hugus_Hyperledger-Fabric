@@ -11,6 +11,7 @@ export default (Component, option, adminRoute=null) => {
 		const isLoggedIn = useSelector(state => state.authentication.status.isLoggedIn);
 		const [isAllowed,setIsAllowed] = useState(true);
 
+
 		useEffect(() => {
 			if (!isLoggedIn) {
 				// 로그인을 하지 않은 상태
