@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as types from './ActionTypes';
 import {signInBtnIsClicked, signUpBtnIsClicked} from "./user";
 
+
 export const signIn = () => {
     return {type: types.AUTH_SIGNIN}
 }
@@ -10,10 +11,11 @@ export const signUp = () => {
     return {type: types.AUTH_SIGNUP};
 }
 
-export const signInSuccess = (nickname) => {
+export const signInSuccess = (nickname, password) => {
     return {
         type: types.AUTH_SIGNIN_SUCCESS,
-        nickname: nickname
+        nickname: nickname,
+        password: password
     };
 }
 
@@ -65,7 +67,7 @@ export const signInRequest = ({user}) => async dispatch => {
     dispatch(signIn());
     await axios.post('/auth/signin', {...user})
         .then(response => {
-            dispatch(signInSuccess(response.data.nickname));
+            dispatch(signInSuccess(response.data.nickname, response.data.password));
             dispatch(signInBtnIsClicked());
         }).catch(error => {
             dispatch(signInFailure(error));
@@ -84,7 +86,7 @@ export const signOutRequest = () => async dispatch => {
 // 삭제
 
 export const signDestroyRequest = (username) => async dispatch => {
-    await axios.post('/auth/destroy',{username})
+    await axios.post('/auth/destroy', {username})
         .then(username => {
             dispatch(signDestroy());
         }).catch(error => {
@@ -97,5 +99,13 @@ export const signUpdateRequest = () => async dispatch => {
             dispatch(signUpdate());
         }).catch(error => {
             dispatch(signUpdateError(error));
+        })
+}
+export const profileUpload = (formData) => async dispatch => {
+    await axios.put('auth/profile', formData, {headers: {'content-type': 'multipart/form-data'}})
+        .then(response => {
+            alert('프로필 업로드 완료')
+        }).catch(error => {
+            alert('실패!!!!!!!!!!!!!')
         })
 }

@@ -21,6 +21,9 @@ const History = () => {
             <div className="section_intro">
                 {username}님께서 참여하신 캠페인은 총 n 건 입니다.
             </div>
+            <div className="section_middle">
+                총 후원 금액은 n 원 입니다.
+            </div>
         </History_main>
     )
 }

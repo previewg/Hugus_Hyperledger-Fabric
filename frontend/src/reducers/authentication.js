@@ -28,7 +28,9 @@ const initialState = {
     status: {
         valid: false,
         isLoggedIn: getCookie('hugus') || false,
-        currentUser: parseJwt(getCookie('hugus')).nickname || ''
+        currentUser: parseJwt(getCookie('hugus')).nickname || '',
+        user_pwd:'',
+
     }
 };
 
@@ -70,7 +72,8 @@ export default function authentication(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: {$set: true},
-                    currentUser: {$set: action.nickname}
+                    currentUser: {$set: action.nickname},
+                    user_pwd:{$set: action}
                 },
             });
         case types.AUTH_SIGNIN_FAILURE:
@@ -83,6 +86,9 @@ export default function authentication(state = initialState, action) {
         // 로그아웃
         case types.AUTH_SIGNOUT:
             return update(state, {
+                login:{
+                    status:{$set:'INIT'}
+                },
                 status: {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ''}
@@ -96,6 +102,7 @@ export default function authentication(state = initialState, action) {
                     currentUser: {$set: ''}
                 }
             });
+          //회원탈퇴
         case types.AUTH_SIGN_DESTORY:
             return update(state,{
                 status: {

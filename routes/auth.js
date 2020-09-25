@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const {User} = require('../models');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const upload = require('../app');
 
 // MongoDB 설정
 router.use(session({
@@ -149,5 +150,19 @@ router.post('/destroy', (req, res, next) => {
     }
 
 })
-
+router.put("/profile", upload.single("file"), async (req, res) => {
+    const {username} = req.body;
+    try {
+        console.log(req.file)
+        let profile = username+req.file.path
+        await User.update({
+                user_profile: profile
+            }, {where: {nickname: username}}
+        )
+        res.json({success: true})
+    } catch (err) {
+        console.log(err);
+        res.json({message: false})
+    }
+});
 module.exports = router;

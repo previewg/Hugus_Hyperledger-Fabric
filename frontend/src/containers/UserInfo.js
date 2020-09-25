@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import {EditInfo, History, MyHome, MyNews} from "../components";
+import ConfirmPwd from "../components/UserInfo/ConfirmPwd";
 
 
 const UserInfoSideBar = styled.div`
@@ -13,12 +14,18 @@ height: 100vh;
     flex-direction: column;
     align-content: center;
     font-size: x-large;
-    border-radius: 3px;
+    
         li{
+        border-radius: 40px;
+        margin-top: 20px;
+        display: flex;
         list-style: none;
         background: #CCCCCC;
-        padding: 10px;
+        padding: 15px;
         border-bottom-color: black;
+        justify-content: center;
+        align-content: center;
+       
         }
         .profile_image{
             background:#808080;
@@ -44,9 +51,7 @@ const UserInfo = () => {
     return (<>
             <UserInfoSideBar type={infoType}>
                 <section>
-                    <div className="profile_image">
-                        프로필사진
-                    </div>
+
                     <li name="my_home" onClick={(e) => typeChange(e)}>MY홈
                     </li>
                     <li name="my_news" onClick={(e) => typeChange(e)}>내 소식
