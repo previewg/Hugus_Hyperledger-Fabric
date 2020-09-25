@@ -16,6 +16,10 @@ db.Story = require('./story')(sequelize, Sequelize);
 db.Comment = require('./comment')(sequelize, Sequelize);
 db.Like = require('./like')(sequelize, Sequelize);
 db.Campaign = require('./campaign')(sequelize, Sequelize);
+db.Hashtag = require('./hashtag')(sequelize, Sequelize);
+db.Item = require('./item')(sequelize, Sequelize);
+db.StoryHashtag = require('./storyHashtag')(sequelize, Sequelize);
+db.StoryItem = require('./storyItem')(sequelize, Sequelize);
 
 db.User.hasMany(db.Story,{foreignKey:'user_email',sourceKey:'email'});
 db.User.hasMany(db.Comment,{foreignKey:'user_email',sourceKey:'email'});
@@ -37,6 +41,19 @@ db.Campaign.hasMany(db.Comment,{foreignKey:'campaign_id',sourceKey:'id'});
 db.Campaign.hasMany(db.Like,{foreignKey:'campaign_id',sourceKey:'id'});
 db.Campaign.belongsTo(db.User,{foreignKey:'user_email',targetKey:'email'});
 
+// Story & Hashtag
+db.Story.belongsToMany(db.Hashtag,{through:'StoryHashtag',foreignKey:'story_id'});
+db.Hashtag.belongsToMany(db.Story,{through:'StoryHashtag',foreignKey:'hashtag_id'});
+
+db.StoryHashtag.belongsTo(db.Story,{foreignKey:'story_id',targetKey:'id'});
+db.StoryHashtag.belongsTo(db.Hashtag,{foreignKey:'hashtag_id',targetKey:'id'});
+
+// Story & Item
+db.Story.belongsToMany(db.Item,{through:'StoryItem',foreignKey:'story_id'});
+db.Item.belongsToMany(db.Story,{through:'StoryItem',foreignKey:'item_id'});
+
+db.StoryItem.belongsTo(db.Story,{foreignKey:'story_id',targetKey:'id'});
+db.StoryItem.belongsTo(db.Item,{foreignKey:'item_id',targetKey:'id'});
 
 module.exports = db;
 
