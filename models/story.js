@@ -18,14 +18,6 @@ module.exports = (sequelize, DataTypes) => {
 			type:DataTypes.STRING,
 			allowNull:true,
 		},
-		story_items:{
-			type:DataTypes.STRING,
-			allowNull:true,
-		},
-		story_hashtags:{
-			type:DataTypes.STRING,
-			allowNull:false,
-		},
 		story_goal:{
 			type:DataTypes.INTEGER,
 			allowNull:false,
