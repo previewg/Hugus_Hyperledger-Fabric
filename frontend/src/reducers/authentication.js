@@ -28,9 +28,7 @@ const initialState = {
     status: {
         valid: false,
         isLoggedIn: getCookie('hugus') || false,
-        currentUser: parseJwt(getCookie('hugus')).nickname || '',
-        user_pwd:'',
-
+        currentUser: parseJwt(getCookie('hugus')).nickname || ''
     }
 };
 
@@ -72,8 +70,7 @@ export default function authentication(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: {$set: true},
-                    currentUser: {$set: action.nickname},
-                    user_pwd:{$set: action}
+                    currentUser: {$set: action.nickname}
                 },
             });
         case types.AUTH_SIGNIN_FAILURE:
@@ -86,9 +83,6 @@ export default function authentication(state = initialState, action) {
         // 로그아웃
         case types.AUTH_SIGNOUT:
             return update(state, {
-                login:{
-                    status:{$set:'INIT'}
-                },
                 status: {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ''}

@@ -5,9 +5,14 @@ import Slider from 'react-slick';
 const SliderStyle = styled.div`
   display: flex;
   justify-content: center;
+  height: 30%;
+  width: 80%;
+  .slick-dots{
+    position: relative;
+    margin-top: 10px;
+  }
   .slick-slider{
-    width: 1250px;
-    height: 550px;
+    width: 90%;
   }
   .slick-slide{
   display: flex;
@@ -15,21 +20,20 @@ const SliderStyle = styled.div`
   transition: all 0.7s ease-in-out;
   }
   .slick-slide>div{
-    padding: 50px;
+    padding: 15%;
   }
   .slick-center{
       transform: scale(1.2);
     }
 
-  .story{
+  .campaign{
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
     border-radius: 5px;
     cursor:pointer;
-    height:400px;
     :focus{
     outline: none;
     };
-    .story__hashtag{
+    .campaign__hashtag{
     font-size: 12px;
     text-align: end;
     color: orange;
@@ -40,7 +44,7 @@ const SliderStyle = styled.div`
     width: 100%; 
     height: auto;
     }
-    .story__title{
+    .campaign__title{
     padding: 10px;
     padding-top: 0;
     padding-bottom: 0;
@@ -84,7 +88,7 @@ const PrevArrow = (props) => {
     );
 }
 
-const StorySlider = () => {
+const CampaignSlider = () => {
     const settings = {
         infinite: true,
         autopspeed: 5000,
@@ -97,33 +101,35 @@ const StorySlider = () => {
         prevArrow:<PrevArrow/>
     };
     return(
+      <div style={{display:'flex',justifyContent:'center'}}>
         <SliderStyle>
             <Slider {...settings}>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/1.jpg'/>
-                    <p className='story__title'>게시물1의 제목</p>
+                    <p className='campaign__title'>게시물1의 제목</p>
                 </div>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/2.jpg'/>
-                    <p className='story__title'>게시물2의 제목</p>
+                    <p className='campaign__title'>게시물2의 제목</p>
                 </div>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/3.jpg'/>
-                    <p className='story__title'>게시물3의 제목</p>
+                    <p className='campaign__title'>게시물3의 제목</p>
                 </div>
-                <div className='story'>
-                    <p className='story__hashtag'>#해시태그</p>
+                <div className='campaign'>
+                    <p className='campaign__hashtag'>#해시태그</p>
                     <img alt='' src='/pics/4.jpg'/>
-                    <p className='story__title'>게시물4의 제목</p>
+                    <p className='campaign__title'>게시물4의 제목</p>
                 </div>
             </Slider>
         </SliderStyle>
+      </div>
 
 
     )
 }
 
-export default StorySlider;
+export default CampaignSlider;

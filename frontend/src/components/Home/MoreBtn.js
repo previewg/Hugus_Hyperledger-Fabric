@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 const MoreBtnStyle = styled.div`
-  margin-top: 60px;
+  margin-top: 100px;
+  margin-bottom: 100px;
   display: flex;
   align-items: center;
   div{
@@ -33,11 +34,11 @@ const MoreBtnStyle = styled.div`
 
 `
 
-const StoryMoreBtn = () => {
+const MoreBtn = () => {
     const [icon,setIcon] = useState(false);
 
     const scrollDown = () => {
-        window.scrollTo({top:900,left:0,behavior:'smooth'});
+        window.scrollTo({top:850,left:0,behavior:'smooth'});
     }
 
     useEffect(()=>{
@@ -52,9 +53,9 @@ const StoryMoreBtn = () => {
             <div>
                 <img id='more__icon' alt='more__icon' src='icons/rightArrow.svg'/>
             </div>
-            <button onClick={scrollDown}>여기를 눌러<br/>더 많은 스토리를 둘러보세요!</button>
+            <button onClick={scrollDown}>여기를 눌러<br/>아래로 스크롤</button>
         </MoreBtnStyle>
     )
 };
 
-export default StoryMoreBtn;
+export default MoreBtn;

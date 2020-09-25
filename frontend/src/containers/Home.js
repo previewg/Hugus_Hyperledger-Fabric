@@ -1,16 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
+import {CampaignList, CampaignSlider, HugusInfo, MoreBtn} from "../components";
 
 const HomeStyle = styled.div`
-
-
+  padding-top: 150px;
 `;
 
 
 const Home = () => {
     return(
       <HomeStyle>
-          여기가 홈페이지
+          <CampaignSlider/>
+          <MoreBtn/>
+          <HugusInfo/>
+          <CampaignList/>
       </HomeStyle>
     )
 }
