@@ -41,19 +41,15 @@ db.Campaign.hasMany(db.Comment,{foreignKey:'campaign_id',sourceKey:'id'});
 db.Campaign.hasMany(db.Like,{foreignKey:'campaign_id',sourceKey:'id'});
 db.Campaign.belongsTo(db.User,{foreignKey:'user_email',targetKey:'email'});
 
-// Story & Hashtag
-db.Story.belongsToMany(db.Hashtag,{through:'StoryHashtag',foreignKey:'story_id'});
-db.Hashtag.belongsToMany(db.Story,{through:'StoryHashtag',foreignKey:'hashtag_id'});
+db.Hashtag.belongsToMany(db.Story, {through: 'StoryHashtag',foreignKey: 'hashtag_id'});
+db.Story.belongsToMany(db.Hashtag, {through: 'StoryHashtag',foreignKey: 'story_id'});
+db.StoryHashtag.belongsTo(db.Hashtag, {foreignKey: 'hashtag_id',targetKey:'id'});
+db.StoryHashtag.belongsTo(db.Story, {foreignKey: 'story_id',targetKey:'id'});
 
-db.StoryHashtag.belongsTo(db.Story,{foreignKey:'story_id',targetKey:'id'});
-db.StoryHashtag.belongsTo(db.Hashtag,{foreignKey:'hashtag_id',targetKey:'id'});
-
-// Story & Item
-db.Story.belongsToMany(db.Item,{through:'StoryItem',foreignKey:'story_id'});
-db.Item.belongsToMany(db.Story,{through:'StoryItem',foreignKey:'item_id'});
-
-db.StoryItem.belongsTo(db.Story,{foreignKey:'story_id',targetKey:'id'});
-db.StoryItem.belongsTo(db.Item,{foreignKey:'item_id',targetKey:'id'});
+db.Story.belongsToMany(db.Item, {through: 'StoryItem',foreignKey: 'story_id'});
+db.Item.belongsToMany(db.Story, {through: 'StoryItem',foreignKey: 'item_id'});
+db.StoryItem.belongsTo(db.Item, {foreignKey: 'item_id',targetKey:'id'});
+db.StoryItem.belongsTo(db.Story, {foreignKey: 'story_id',targetKey:'id'});
 
 module.exports = db;
 
