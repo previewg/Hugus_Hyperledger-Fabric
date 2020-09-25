@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
 import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
-import {signInRequest} from "../../actions/auth";
+import {signIn, signInRequest} from "../../actions/auth";
 
 const SignInStyle = styled.div`
 	position: fixed;
@@ -131,9 +131,9 @@ const SignIn = () => {
 
     const signInHandler = () => {
         dispatch(signInRequest({user}));
-
     }
     useEffect(() => {
+        dispatch(signIn());
         if (loginStatus === 'SUCCESS') {
             alert("로그인성공");
             setUser({

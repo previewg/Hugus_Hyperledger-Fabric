@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import {EditInfo, History, MyHome, MyNews} from "../components";
-import ConfirmPwd from "../components/UserInfo/ConfirmPwd";
 
 
 const UserInfoSideBar = styled.div`
