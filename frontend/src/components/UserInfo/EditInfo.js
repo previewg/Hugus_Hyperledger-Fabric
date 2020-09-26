@@ -12,6 +12,9 @@ width: 100%;
 height: 50px;
 border-radius: 30px;
 margin-left: 70px;
+.preImg{
+height: 5%;
+width: 5%;
 .destroy_button{
 display: flex;
 width: 100%;
@@ -20,6 +23,9 @@ background:#ff5c7e ;
 color:white;
 align-items: center;
 justify-content: center;
+
+
+}
 }
 `
 
@@ -29,15 +35,19 @@ const EditInfo = () => {
     const [profile, setProfile] = useState({
         file: null,
     })
+
     const [preImg, setPreImg] = useState([]);
-
-    const signDestroyHandler = () => {
-        console.log("클릭됨!!")
-        dispatch(signDestroyRequest(username))
-        alert("회원탈퇴가 완료되었습니다.")
-        window.history.back()
-
+    const onDeleteClick = async () => {
+        const ok = window.confirm('정말 탈퇴 하시겠습니까?')
+        if (ok) {
+            const ok2 = window.confirm('진짜로??')
+            if (ok2) {
+                await dispatch(signDestroyRequest(username))
+                window.history.back()
+            }
+        }
     }
+
     const previewImg = (e) => {
         setPreImg([]);
         for (const file of e.target.files) {
@@ -62,7 +72,7 @@ const EditInfo = () => {
         formData.append(`file`, profile.file[0]);
         formData.append(`username`, username);
         dispatch(profileUpload(formData))
-        console.log(formData)
+
 
     }
     const onChangeHandler = (e) => {
@@ -78,6 +88,7 @@ const EditInfo = () => {
 
     }
     useEffect(() => {
+
 
     }, [preImg])
 
@@ -101,7 +112,7 @@ const EditInfo = () => {
 
             </div>
 
-            <span onClick={signDestroyHandler} className="destroy_button">
+            <span onClick={onDeleteClick} className="destroy_button">
     회원 탈퇴 하기
 </span>
         </EditPage>

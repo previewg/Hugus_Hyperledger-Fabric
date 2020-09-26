@@ -13,8 +13,8 @@ export const AUTH_SIGNOUT = "AUTH_SIGNOUT";
 export const AUTH_SIGNOUT_ERROR = "AUTH_SIGNOUT_ERROR";
 
 // SignDestroy
-export const AUTH_SIGN_DESTORY = "AUTH_SIGN_DESTORY"
-export const AUTH_SIGN_DESTORY_ERROR = "AUTH_SIGN_DESTORY_ERROR"
+export const AUTH_SIGN_DESTROY = "AUTH_SIGN_DESTROY"
+export const AUTH_SIGN_DESTROY_ERROR = "AUTH_SIGN_DESTROY_ERROR"
 
 // SignUpdate
 export const AUTH_SIGN_UPDATE = "AUTH_SIGN_UPDATE"
@@ -25,3 +25,12 @@ export const SIGNIN_BTN_IS_CLICKED = "SIGNIN_BTN_IS_CLICKED";
 
 // SignUp Button is clicked
 export const SIGNUP_BTN_IS_CLICKED = "SIGNUP_BTN_IS_CLICKED";
+
+//Confirm Password At MyInfo
+export const CONFIRM = 'CONFIRM'
+export const CONFIRM_PWD = "CONFIRM_PWD"
+export const CONFIRM_PWD_ERROR = "CONFIRM_PWD_ERROR"
+
+//Profile Path
+export const PROFILE_PATH = 'PROFILE_PATH'
+export const PROFILE_PATH_SUCCESS = 'PROFILE_PATH_SUCCESS'

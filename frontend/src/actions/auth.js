@@ -11,11 +11,10 @@ export const signUp = () => {
     return {type: types.AUTH_SIGNUP};
 }
 
-export const signInSuccess = (nickname, password) => {
+export const signInSuccess = (nickname) => {
     return {
         type: types.AUTH_SIGNIN_SUCCESS,
         nickname: nickname,
-        password: password
     };
 }
 
@@ -39,10 +38,10 @@ export const signOutError = (error) => {
     return {type: types.AUTH_SIGNOUT_ERROR, error: error};
 }
 export const signDestroy = () => {
-    return {type: types.AUTH_SIGN_DESTORY};
+    return {type: types.AUTH_SIGN_DESTROY};
 }
 export const signDestroyError = () => {
-    return {type: types.AUTH_SIGN_DESTORY_ERROR};
+    return {type: types.AUTH_SIGN_DESTROY_ERROR};
 }
 export const signUpdate = () => {
     return {type: types.AUTH_SIGN_UPDATE};
@@ -50,6 +49,22 @@ export const signUpdate = () => {
 export const signUpdateError = () => {
     return {type: types.AUTH_SIGN_UPDATE_ERROR};
 }
+export const confirm = () => {
+    return {type: types.CONFIRM};
+}
+export const confirmPassword = () => {
+    return {type: types.CONFIRM_PWD};
+}
+export const confirmPasswordError = () => {
+    return {type: types.CONFIRM_PWD_ERROR};
+}
+export const profilePath = () => {
+    return {type: types.PROFILE_PATH}
+}
+export const profilePathSuccess = (profile_path) => {
+    return {type: types.PROFILE_PATH_SUCCESS, profile_path:profile_path}
+}
+
 
 // 회원가입
 export const signUpRequest = ({user}) => async dispatch => {
@@ -102,10 +117,21 @@ export const signUpdateRequest = () => async dispatch => {
         })
 }
 export const profileUpload = (formData) => async dispatch => {
+    // dispatch(profilePath())
     await axios.put('auth/profile', formData, {headers: {'content-type': 'multipart/form-data'}})
         .then(response => {
+            dispatch(profilePathSuccess(response.data.profile_path))
             alert('프로필 업로드 완료')
         }).catch(error => {
             alert('실패!!!!!!!!!!!!!')
+        })
+}
+export const confirmPwd = (user) => async dispatch => {
+    dispatch(confirm());
+    await axios.post('auth/confirm', {...user})
+        .then(response => {
+            dispatch(confirmPassword())
+        }).catch(error => {
+            dispatch(confirmPasswordError(error))
         })
 }

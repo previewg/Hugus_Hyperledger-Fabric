@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from 'styled-components';
 import {EditInfo, History, MyHome, MyNews} from "../components";
 import ConfirmPwd from "../components/UserInfo/ConfirmPwd";
+import {useSelector} from "react-redux";
 
 
 const UserInfoSideBar = styled.div`
@@ -15,6 +16,11 @@ height: 100vh;
     align-content: center;
     font-size: x-large;
     
+    .profile_img{
+    width: 15%;
+    height: 15%;
+    }
+    
         li{
         border-radius: 40px;
         margin-top: 20px;
@@ -27,25 +33,21 @@ height: 100vh;
         align-content: center;
        
         }
-        .profile_image{
-            background:#808080;
-            height: 140px;
-
-        }
+        
     }
 `
 const InfoMains = styled.div`
 
 `
 
-
 const UserInfo = () => {
     const [infoType, setInfoType] = useState('my_home')
-
     const typeChange = (e) => {
         e.preventDefault();
+
         setInfoType(e.target.getAttribute('name'));
     }
+
 
 
     return (<>
@@ -73,7 +75,7 @@ const UserInfo = () => {
                         {infoType === "my_history" ? <History/> : null}
                     </div>
                     <div>
-                        {infoType === "edit_profile" ? <EditInfo/> : null}
+                        {infoType === "edit_profile" ? <ConfirmPwd/> : null}
                     </div>
                 </InfoMains>
             </UserInfoSideBar>

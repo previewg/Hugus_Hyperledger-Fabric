@@ -7,11 +7,11 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
-function parseJwt (token) {
-    if (!token) return {nickname:''};
+function parseJwt(token) {
+    if (!token) return {nickname: ''};
     let base64Url = token.split('.')[1];
     let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
     return JSON.parse(jsonPayload);
@@ -26,6 +26,8 @@ const initialState = {
         error: -1
     },
     status: {
+        profile_path:'',
+        confirm_pwd: 'INIT',
         valid: false,
         isLoggedIn: getCookie('hugus') || false,
         currentUser: parseJwt(getCookie('hugus')).nickname || ''
@@ -55,7 +57,7 @@ export default function authentication(state = initialState, action) {
                     error: {$set: action.error}
                 }
             });
-        
+
         // 로그인
         case types.AUTH_SIGNIN:
             return update(state, {
@@ -79,10 +81,13 @@ export default function authentication(state = initialState, action) {
                     status: {$set: 'FAILURE'}
                 }
             });
-        
+
         // 로그아웃
         case types.AUTH_SIGNOUT:
             return update(state, {
+                login: {
+                    status: {$set: 'INIT'}
+                },
                 status: {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ''}
@@ -96,23 +101,45 @@ export default function authentication(state = initialState, action) {
                     currentUser: {$set: ''}
                 }
             });
-          //회원탈퇴
-        case types.AUTH_SIGN_DESTORY:
-            return update(state,{
+        //회원탈퇴
+        case types.AUTH_SIGN_DESTROY:
+            return update(state, {
                 status: {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ''}
                 }
             })
-        case types.AUTH_SIGN_DESTORY_ERROR:
-            return update(state,{
+        case types.AUTH_SIGN_DESTROY_ERROR:
+            return update(state, {
                 status: {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ''}
                 }
             })
-
-
+        case types.CONFIRM:
+            return update(state, {
+                status:{
+                    confirm_pwd:{$set:'INIT'}
+                }
+            })
+        case types.CONFIRM_PWD:
+            return update(state, {
+                status: {
+                    confirm_pwd: {$set: 'SUCCESS'}
+                }
+            })
+        case types.CONFIRM_PWD_ERROR:
+            return update(state, {
+                status: {
+                    confirm_pwd: {$set: 'FAILURE'}
+                }
+            })
+        case types.PROFILE_PATH_SUCCESS:
+            return update(state, {
+                status:{
+                    profile_path: {$set:action.profile_path}
+                }
+            })
         default:
             return state;
 

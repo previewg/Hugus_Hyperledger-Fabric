@@ -250,7 +250,7 @@ const NavBar = () => {
     const dispatch = useDispatch();
     const username = useSelector(state => state.authentication.status.currentUser);
     const isSignedIn = useSelector(state => state.authentication.status.isLoggedIn);
-
+    const path = useSelector(state => state.authentication.status.profile_path);
     const onClickHandler = () =>{
         menuClicked ? setMenuClicked(false):setMenuClicked(true)
     }
@@ -259,6 +259,7 @@ const NavBar = () => {
         if (isSignedIn) {
             return (
                 <>
+                    <img className="profile_img" alt='' src={'../'+path}/>
                     <p>{username}님</p>
                     <div style={{cursor:'pointer'}} onClick={()=> dispatch(signOutRequest())}>로그아웃</div>
                 </>

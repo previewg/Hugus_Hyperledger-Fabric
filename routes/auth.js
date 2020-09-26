@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -5,7 +6,10 @@ const jwt = require('jsonwebtoken');
 const {User} = require('../models');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-const upload = require('../app');
+const profile_upload = require('../app');
+
+
+
 
 // MongoDB 설정
 router.use(session({
@@ -17,6 +21,8 @@ router.use(session({
         collection: "sessions"
     })
 }));
+
+
 
 router.post('/signup', async (req, res, next) => {
     const {email, nickname, password} = req.body;
@@ -112,7 +118,7 @@ router.post('/signin', async (req, res) => {
             } else {
                 return res
                     .status(400)
-                    .json({passwordincorrect: 'PassWord Incorrect'});
+                    .json({password_incorrect: 'PassWord Incorrect'});
             }
         });
     });
@@ -150,19 +156,39 @@ router.post('/destroy', (req, res, next) => {
     }
 
 })
-router.put("/profile", upload.single("file"), async (req, res) => {
+router.put("/profile", profile_upload.single("file"), async (req, res) => {
     const {username} = req.body;
     try {
         console.log(req.file)
-        let profile = username+req.file.path
+        let profile = req.file.path
         await User.update({
                 user_profile: profile
             }, {where: {nickname: username}}
         )
-        res.json({success: true})
+        res.json({profile_path:profile})
     } catch (err) {
         console.log(err);
         res.json({message: false})
     }
 });
+router.post('/confirm', async (req, res) => {
+    console.log(req.body)
+    const {username, password } = req.body.user;
+
+
+    User.findOne({where: {nickname: username}}).then((user) => {
+        bcrypt.compare(password, user.password).then((isMatched) => {
+            if (isMatched) {
+                return res
+
+                    .status(200)
+                    .json({success: true})
+            } else {
+                res
+                    .status(400)
+                    .json({password_incorrect: 'PassWord Incorrect'})
+            }
+        })
+    })
+})
 module.exports = router;

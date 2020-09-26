@@ -25,6 +25,16 @@ const upload = module.exports =multer({
 	})
 })
 
+app.use('/user_profile',express.static(path.join(__dirname,'user_profile')));
+const profile_upload = module.exports =multer({
+	storage:multer.diskStorage({
+		destination:(req,file,cb)=>cb(null,'user_profile'),
+		filename:(req,file,cb)=>cb(null,file.originalname)
+	})
+})
+
+
+
 try{
 	fs.readdirSync('uploads');
 }catch (error){

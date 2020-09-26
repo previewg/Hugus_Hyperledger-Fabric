@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from "react-redux";
 import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
-import {signInRequest} from "../../actions/auth";
+import {signIn, signInRequest} from "../../actions/auth";
 
 const SignInStyle = styled.div`
 	position: fixed;
@@ -134,19 +134,20 @@ const SignIn = () => {
 
     }
     useEffect(() => {
+        dispatch(signIn());
         if (loginStatus === 'SUCCESS') {
             alert("로그인성공");
             setUser({
                 email: '',
                 password: ''
             })
-        }else if(loginStatus === 'FAILURE'){
+        } else if (loginStatus === 'FAILURE') {
             alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
         }
     }, [loginStatus])
 
     return (
-        <SignInStyle >
+        <SignInStyle>
             <section>
                 <article className='header'>
                     <p className='close__btn' onClick={() => dispatch(signInBtnIsClicked())}>닫기</p>
