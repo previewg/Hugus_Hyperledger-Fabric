@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import GoBack from "./Goback";
+import {signIn} from "../actions/auth";
 
 export default (Component, option, adminRoute=null) => {
 	// null -> 누구나 출입이 가능한 페이지 (home)
@@ -10,7 +11,6 @@ export default (Component, option, adminRoute=null) => {
 	const AuthenticateCheck = (props) => {
 		const isLoggedIn = useSelector(state => state.authentication.status.isLoggedIn);
 		const [isAllowed,setIsAllowed] = useState(true);
-
 
 		useEffect(() => {
 			if (!isLoggedIn) {
