@@ -1,10 +1,9 @@
+"use strict";
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
 
 // multer 설정
 const multer = require("multer");
@@ -14,19 +13,6 @@ const upload = multer({
     filename: (req, file, cb) => cb(null, file.originalname + "_" + Date.now()),
   }),
 });
-
-// MongoDB 설정
-router.use(
-  session({
-    secret: "Molrang~$1$234",
-    resave: false,
-    saveUninitialized: true,
-    store: new MongoStore({
-      url: "mongodb://localhost/Hug_us_session",
-      collection: "sessions",
-    }),
-  })
-);
 
 router.post("/signup", async (req, res, next) => {
   const { email, nickname, password } = req.body;

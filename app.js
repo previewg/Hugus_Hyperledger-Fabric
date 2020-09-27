@@ -1,9 +1,10 @@
 "use strict";
 const express = require("express");
-const session = require("express-session");
 const path = require("path");
 const models = require("./models");
 const fs = require("fs");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 
 require("cookie-parser")();
 require("morgan")("dev");
@@ -15,7 +16,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Multer 설정
+// MongoDB 설정
+app.use(
+  session({
+    secret: "Molrang~$1$234",
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({
+      url: "mongodb://localhost/HUGUS",
+      collection: "sessions",
+    }),
+  })
+);
+
+// 업로드 파일 경로 설정
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/user_profile", express.static(path.join(__dirname, "user_profile")));
 
@@ -24,6 +38,13 @@ try {
 } catch (error) {
   console.log("uploads 폴더 생성");
   fs.mkdirSync("uploads");
+}
+
+try {
+  fs.readdirSync("user_profile");
+} catch (error) {
+  console.log("user_profile 폴더 생성");
+  fs.mkdirSync("user_profile");
 }
 
 // Router 설정

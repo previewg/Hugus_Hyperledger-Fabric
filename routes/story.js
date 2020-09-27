@@ -1,8 +1,7 @@
 "use strict";
-
 const express = require("express");
 const router = express.Router();
-const { Story, Story_File } = require("../models");
+const { Story, Story_File, Hashtag, Story_Hashtag } = require("../models");
 
 // multer 설정
 const multer = require("multer");
@@ -16,25 +15,40 @@ const upload = multer({
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
-    let store = req.sessionStore;
-    console.log(store);
-    Story.create({
+    const user_email = req.session.loginInfo.user_email;
+    const story = await Story.create({
       story_title: req.body.title,
       user_info: req.body.info,
       story_content: req.body.content,
       story_goal: 100,
-      user_email: "moonnr94@gmail.com",
+      user_email: user_email,
     });
 
     for (const file of req.files) {
-      Story_File.create({
-        story_id: 1,
+      await Story_File.create({
+        story_id: story.dataValues.id,
         file: file.filename,
       });
     }
+
+    const hashtags = req.body.hashtags.split(",");
+    for (const hashtag of hashtags) {
+      const tag = await Hashtag.findOrCreate({
+        where: { hashtag: hashtag },
+      });
+
+      console.log(tag[0]);
+      await Story_Hashtag.findOrCreate({
+        where: {
+          story_id: story.dataValues.id,
+          hashtag_id: tag[0].dataValues.id,
+        },
+      });
+    }
+
     res.json({ success: 1 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 

@@ -418,31 +418,37 @@ const StoryWrite = (props) => {
   };
 
   const addItem = (e) => {
-    let items = data.items.concat(e.target.value);
-    setData({
-      ...data,
-      item: "",
-      items,
-    });
-    setFilled({
-      ...filled,
-      items: true,
-    });
-    setErrorCode(0);
+    if (e.target.value === "") setErrorCode(4);
+    else {
+      let items = data.items.concat(e.target.value);
+      setData({
+        ...data,
+        item: "",
+        items,
+      });
+      setFilled({
+        ...filled,
+        items: true,
+      });
+      setErrorCode(0);
+    }
   };
 
   const addHashtag = (e) => {
-    let hashtags = data.hashtags.concat(e.target.value);
-    setData({
-      ...data,
-      hashtag: "",
-      hashtags,
-    });
-    setFilled({
-      ...filled,
-      hashtags: true,
-    });
-    setErrorCode(0);
+    if (e.target.value === "") setErrorCode(5);
+    else {
+      let hashtags = data.hashtags.concat(e.target.value);
+      setData({
+        ...data,
+        hashtag: "",
+        hashtags,
+      });
+      setFilled({
+        ...filled,
+        hashtags: true,
+      });
+      setErrorCode(0);
+    }
   };
 
   const onDeleteHandler = (key) => () => {
@@ -555,7 +561,7 @@ const StoryWrite = (props) => {
                 placeholder="# 물품입력"
                 onChange={onChangeHandler}
                 onKeyDown={(e) => {
-                  if (e.keyCode === 13) addItem(e);
+                  if (e.key === "Enter") addItem(e);
                 }}
               />
               {data.items.map((item, key) => {
@@ -587,7 +593,7 @@ const StoryWrite = (props) => {
                 placeholder="# 태그입력"
                 onChange={onChangeHandler}
                 onKeyDown={(e) => {
-                  if (e.keyCode === 13) addHashtag(e);
+                  if (e.key === "Enter") addHashtag(e);
                 }}
               />
               {data.hashtags.map((hashtag, key) => {
