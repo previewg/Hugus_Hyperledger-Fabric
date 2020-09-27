@@ -1,9 +1,9 @@
-import authentication from './authentication';
+import authentication from "./authentication";
 import user from "./user";
 
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export default combineReducers({
-    authentication,
-    user
+  authentication,
+  user,
 });

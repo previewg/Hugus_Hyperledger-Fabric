@@ -1,12 +1,11 @@
-import {useEffect} from 'react';
+import { useEffect } from "react";
 
-const GoBack = (props) =>{
+const GoBack = (props) => {
+  useEffect(() => {
+    props.history.goBack();
+  }, []);
 
-    useEffect(()=>{
-        props.history.goBack();
-    },[])
-
-    return null;
-}
+  return null;
+};
 
 export default GoBack;

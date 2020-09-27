@@ -31,14 +31,13 @@ const MoreBtnStyle = styled.div`
         color: orange;
       }
   }
-
 `
 
 const MoreBtn = () => {
     const [icon,setIcon] = useState(false);
 
     const scrollDown = () => {
-        window.scrollTo({top:850,left:0,behavior:'smooth'});
+        window.scrollTo({top:750,left:0,behavior:'smooth'});
     }
 
     useEffect(()=>{
@@ -51,7 +50,7 @@ const MoreBtn = () => {
     return(
         <MoreBtnStyle icon={icon}>
             <div>
-                <img id='more__icon' alt='more__icon' src='icons/rightArrow.svg'/>
+                <img id='more__icon' alt='more__icon' src='/icons/rightArrow.svg'/>
             </div>
             <button onClick={scrollDown}>여기를 눌러<br/>아래로 스크롤</button>
         </MoreBtnStyle>
