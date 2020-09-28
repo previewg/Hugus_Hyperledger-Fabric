@@ -1,26 +1,36 @@
 import axios from "axios";
 
 // Action Type
-// StoryAdd
-const STORY_ADD = "STORY_ADD";
-const STORY_ADD_SUCCESS = "STORY_ADD_SUCCESS";
+export const STORY_ADD = "STORY_ADD";
+export const STORY_ADD_SUCCESS = "STORY_ADD_SUCCESS";
+export const STORY_ADD_FAILURE = "STORY_ADD_FAILURE";
+export const STORY_DELETE = "STORY_DELETE";
+export const STORY_UPDATE = "STORY_UPDATE";
 
-// StoryDelete
-const STORY_DELETE = "STORY_DELETE";
-// StoryUpdate
-const STORY_UPDATE = "STORY_UPDATE";
+const storyAddStart = () => {
+  return { type: STORY_ADD };
+};
+
+const storyAddSuccess = () => {
+  return { type: STORY_ADD_SUCCESS };
+};
+
+const storyAddFailure = () => {
+  return { type: STORY_ADD_FAILURE };
+};
 
 // 게시물 등록
 export const storyAdd = (data) => async (dispatch) => {
+  dispatch(storyAddStart());
   await axios
     .post("/story/add", data, {
       headers: { "content-type": "multipart/form-data" },
     })
     .then((response) => {
-      alert("성공적으로 등록되었습니다.");
+      dispatch(storyAddSuccess());
     })
     .catch((error) => {
-      alert("등록에 실패하였습니다.");
+      dispatch(storyAddFailure());
     });
 };
 

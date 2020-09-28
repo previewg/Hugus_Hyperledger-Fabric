@@ -1,7 +1,14 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Story, Story_File, Hashtag, Story_Hashtag } = require("../models");
+const {
+  Story,
+  Story_File,
+  Hashtag,
+  Story_Hashtag,
+  Item,
+  Story_Item,
+} = require("../models");
 
 // multer 설정
 const multer = require("multer");
@@ -33,15 +40,28 @@ router.post("/add", upload.array("files"), async (req, res) => {
 
     const hashtags = req.body.hashtags.split(",");
     for (const hashtag of hashtags) {
-      const tag = await Hashtag.findOrCreate({
+      const result = await Hashtag.findOrCreate({
         where: { hashtag: hashtag },
       });
 
-      console.log(tag[0]);
       await Story_Hashtag.findOrCreate({
         where: {
           story_id: story.dataValues.id,
-          hashtag_id: tag[0].dataValues.id,
+          hashtag_id: result[0].dataValues.id,
+        },
+      });
+    }
+
+    const items = req.body.items.split(",");
+    for (const item of items) {
+      const result = await Item.findOrCreate({
+        where: { item: item },
+      });
+
+      await Story_Item.findOrCreate({
+        where: {
+          story_id: story.dataValues.id,
+          item_id: result[0].dataValues.id,
         },
       });
     }

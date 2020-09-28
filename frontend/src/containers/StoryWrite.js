@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { storyAdd } from "../actions/story";
 
@@ -278,6 +278,7 @@ const StoryWrite = (props) => {
   const content = useRef();
   const items = useRef();
   const hashtags = useRef();
+  const addStatus = useSelector((state) => state.story.add.status);
 
   const [data, setData] = useState({
     title: "",
@@ -363,17 +364,6 @@ const StoryWrite = (props) => {
         formData.append("files", "");
       }
       dispatch(storyAdd(formData));
-      setData({
-        title: "",
-        info: "",
-        content: "",
-        files: null,
-        item: "",
-        hashtag: "",
-        items: [],
-        hashtags: [],
-      });
-      props.history.push("/story");
     }
   };
 
@@ -485,7 +475,24 @@ const StoryWrite = (props) => {
     });
   };
 
-  useEffect(() => {}, [errorCode]);
+  useEffect(() => {
+    if (addStatus === "SUCCESS") {
+      alert("등록에 성공하였습니다.");
+      setData({
+        title: "",
+        info: "",
+        content: "",
+        files: null,
+        item: "",
+        hashtag: "",
+        items: [],
+        hashtags: [],
+      });
+      props.history.push("/story");
+    } else if (addStatus === "FAILURE") {
+      alert("등록에 실패 하였습니다.");
+    }
+  }, [errorCode, addStatus]);
 
   return (
     <>
