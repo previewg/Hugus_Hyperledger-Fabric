@@ -8,6 +8,8 @@ const {
   Story_Hashtag,
   Item,
   Story_Item,
+  User,
+  Comment,
 } = require("../models");
 
 // multer 설정
@@ -84,6 +86,7 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
+// 스토리 수정
 router.put("/update", async (req, res) => {
   try {
     await Story.update(
@@ -104,7 +107,7 @@ router.put("/update", async (req, res) => {
   }
 });
 
-// 스토리 리스트 호출
+// 스토리 목록 조회
 router.get("/list/:section", async (req, res) => {
   try {
     let section = req.params.section;
@@ -114,15 +117,36 @@ router.get("/list/:section", async (req, res) => {
       offset = 18 * (section - 1);
     }
     const list = await Story.findAll({
+      attributes: ["story_title", "id"],
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
-        { model: Story_File, attributes: ["file"] },
+        { model: Story_File, attributes: ["file"], limit: 1 },
       ],
       offset: offset,
       limit: section * 18 - 1,
     });
 
     res.json({ list: list, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// 스토리 목록 조회
+router.get("/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const data = await Story.findOne({
+      where: { id: id },
+      include: [
+        { model: Hashtag, attributes: ["hashtag"] },
+        { model: Item, attributes: ["item"] },
+        { model: User, attributes: ["nickname"] },
+        { model: Comment, attributes: ["comments", "user_email"] },
+      ],
+    });
+
+    res.json({ data: data, success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

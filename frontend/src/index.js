@@ -43,8 +43,7 @@ ReactDOM.render(
         <Route exact path="/" component={Auth(Home, null)} />
         <Route exact path="/story" component={Auth(StoryMain, null)} />
         <Route path="/story/write" component={Auth(StoryWrite, true)} />
-        <Route path="/story/detail" component={Auth(StoryDetail, true)} />
-        <Route path="/story/:id" component={Auth(StoryDetail, true)} />
+        <Route path="/story/:id" component={Auth(StoryDetail, null)} />
         <Route path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
       </Switch>

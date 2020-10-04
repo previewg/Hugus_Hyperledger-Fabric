@@ -565,7 +565,7 @@ const StoryWrite = (props) => {
                 name="item"
                 ref={items}
                 value={data.item}
-                placeholder="# 물품입력"
+                placeholder="물품입력"
                 onChange={onChangeHandler}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") addItem(e);

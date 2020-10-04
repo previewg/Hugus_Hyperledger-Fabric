@@ -5,6 +5,9 @@ import {
   STORY_LIST_LOAD,
   STORY_LIST_LOAD_SUCCESS,
   STORY_LIST_LOAD_FAILURE,
+  STORY_LOAD,
+  STORY_LOAD_SUCCESS,
+  STORY_LOAD_FAILURE,
   STORY_LIST_NUM_INCREASE,
 } from "../actions/story";
 import update from "react-addons-update";
@@ -23,6 +26,10 @@ const initialState = {
     status: "INIT",
     data: [],
     num: 1,
+  },
+  detail: {
+    status: "INIT",
+    data: null,
   },
 };
 
@@ -75,7 +82,29 @@ export default function story(state = initialState, action) {
     case STORY_LIST_NUM_INCREASE:
       return update(state, {
         list: {
-          num: { $set: +1 },
+          num: { $set: state.list.num + 1 },
+        },
+      });
+
+    case STORY_LOAD:
+      return update(state, {
+        detail: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_LOAD_SUCCESS:
+      return update(state, {
+        detail: {
+          status: { $set: "SUCCESS" },
+          data: { $set: action.data },
+        },
+      });
+
+    case STORY_LOAD_FAILURE:
+      return update(state, {
+        detail: {
+          status: { $set: "FAILURE" },
         },
       });
 

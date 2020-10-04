@@ -23,7 +23,6 @@ const StoryListStyle = styled.div`
       text-decoration: none;
       .story__thumbnail {
         z-index: -1;
-        opacity: 0.7;
         width: 100%;
         height: 100%;
       }
@@ -45,12 +44,12 @@ const StoryListStyle = styled.div`
   }
 `;
 
-const StoryList = (props) => {
+const StoryList = () => {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.story.list.status);
   const list = useSelector((state) => state.story.list.data);
   const num = useSelector((state) => state.story.list.num);
-  console.log(list);
+
   useEffect(() => {
     dispatch(storyListLoader(1));
     // scroll event listener 등록
@@ -61,8 +60,8 @@ const StoryList = (props) => {
     };
   }, []);
 
-  const loadMore = async () => {
-    await dispatch(storyListNumIncrease());
+  const loadMore = () => {
+    dispatch(storyListNumIncrease());
     dispatch(storyListLoader(num));
   };
 
@@ -84,7 +83,7 @@ const StoryList = (props) => {
               {story.Hashtags.map((tag, key) => {
                 return (
                   <span key={key} className="story__hashtag">
-                    {tag.hashtag}
+                    #{tag.hashtag}
                   </span>
                 );
               })}
