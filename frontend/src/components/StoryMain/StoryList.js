@@ -1,51 +1,106 @@
-import React from 'react';
-import styled from 'styled-components'
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { storyListLoader, storyListNumIncrease } from "../../actions/story";
+import { Link } from "react-router-dom";
 
 const StoryListStyle = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  section{
-    width: 48%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    article{
-        display: flex;
-        justify-content: space-between;
-        margin: 40px;
+  margin-top: 70px;
+  section {
+    width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 30px;
+    a {
+      height: 290px;
+      display: flex;
+      justify-self: center;
+      align-self: center;
+      text-decoration: none;
+      .story__thumbnail {
+        z-index: -1;
+        opacity: 0.7;
         width: 100%;
-        height:100% ;
-        div{
-          height:50%;
-          width: 50%;
-          padding: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
-        }
+        height: 100%;
+      }
+      .story__hashtag {
+        position: relative;
+        left: 260px;
+        top: 10px;
+        color: orange;
+      }
+      .story__title {
+        position: relative;
+        top: 220px;
+        right: 230px;
+        font-size: 17px;
+        color: white;
+        font-weight: bold;
+      }
     }
   }
 `;
 
-const StoryList = () => {
-    return (
-        <StoryListStyle>
-            <section>
-                <article>
-                    <div>1</div>
-                    <div>2</div>
-                    <div>3</div>
-                </article>
-                <article>
-                    <div>4</div>
-                    <div>5</div>
-                    <div>6</div>
-                </article>
-            </section>
-        </StoryListStyle>
-    );
-}
+const StoryList = (props) => {
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.story.list.status);
+  const list = useSelector((state) => state.story.list.data);
+  const num = useSelector((state) => state.story.list.num);
+  console.log(list);
+  useEffect(() => {
+    dispatch(storyListLoader(1));
+    // scroll event listener 등록
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      // scroll event listener 해제
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const loadMore = async () => {
+    await dispatch(storyListNumIncrease());
+    dispatch(storyListLoader(num));
+  };
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight && status !== "WAITING") {
+      loadMore();
+    }
+  };
+
+  return (
+    <StoryListStyle>
+      <section>
+        {list.map((story, key) => {
+          return (
+            <Link key={key} to={`/story/${story.id}`}>
+              {story.Hashtags.map((tag, key) => {
+                return (
+                  <span key={key} className="story__hashtag">
+                    {tag.hashtag}
+                  </span>
+                );
+              })}
+              <img
+                className="story__thumbnail"
+                src={
+                  "http://localhost:3000/uploads/" + story.Story_Files[0].file
+                }
+              />
+              <p className="story__title">{story.story_title}</p>
+            </Link>
+          );
+        })}
+      </section>
+    </StoryListStyle>
+  );
+};
 
 export default StoryList;

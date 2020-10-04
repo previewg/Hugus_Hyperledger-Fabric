@@ -4,6 +4,12 @@ import axios from "axios";
 export const STORY_ADD = "STORY_ADD";
 export const STORY_ADD_SUCCESS = "STORY_ADD_SUCCESS";
 export const STORY_ADD_FAILURE = "STORY_ADD_FAILURE";
+
+export const STORY_LIST_LOAD = "STORY_LIST_LOAD";
+export const STORY_LIST_LOAD_SUCCESS = "STORY_LIST_LOAD_SUCCESS";
+export const STORY_LIST_LOAD_FAILURE = "STORY_LIST_LOAD_FAILURE";
+export const STORY_LIST_NUM_INCREASE = "STORY_LIST_NUM_INCREASE";
+
 export const STORY_DELETE = "STORY_DELETE";
 export const STORY_UPDATE = "STORY_UPDATE";
 
@@ -17,6 +23,22 @@ const storyAddSuccess = () => {
 
 const storyAddFailure = () => {
   return { type: STORY_ADD_FAILURE };
+};
+
+const storyListLoadStart = () => {
+  return { type: STORY_LIST_LOAD };
+};
+
+const storyListLoadSuccess = (list) => {
+  return { type: STORY_LIST_LOAD_SUCCESS, list: list };
+};
+
+const storyListLoadFailure = () => {
+  return { type: STORY_LIST_LOAD_FAILURE };
+};
+
+export const storyListNumIncrease = () => {
+  return { type: STORY_LIST_NUM_INCREASE };
 };
 
 // 게시물 등록
@@ -55,5 +77,18 @@ export const storyUpdate = ({ data }) => async (dispatch) => {
     })
     .catch((error) => {
       alert("수정에 실패하였습니다.");
+    });
+};
+
+export const storyListLoader = (section) => async (dispatch) => {
+  dispatch(storyListLoadStart());
+  await axios
+    .get(`/story/list/${section}`)
+    .then((response) => {
+      dispatch(storyListLoadSuccess(response.data.list));
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(storyListLoadFailure());
     });
 };

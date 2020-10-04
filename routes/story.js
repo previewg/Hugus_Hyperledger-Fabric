@@ -15,7 +15,7 @@ const multer = require("multer");
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => cb(null, "uploads"),
-    filename: (req, file, cb) => cb(null, file.originalname + "_" + Date.now()),
+    filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname),
   }),
 });
 
@@ -69,6 +69,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
     res.json({ success: 1 });
   } catch (error) {
     console.error(error);
+    res.status(400).json({ success: 3 });
   }
 });
 
@@ -100,6 +101,30 @@ router.put("/update", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({ message: false });
+  }
+});
+
+// 스토리 리스트 호출
+router.get("/list/:section", async (req, res) => {
+  try {
+    let section = req.params.section;
+    let offset = 0;
+
+    if (section > 1) {
+      offset = 18 * (section - 1);
+    }
+    const list = await Story.findAll({
+      include: [
+        { model: Hashtag, attributes: ["hashtag"] },
+        { model: Story_File, attributes: ["file"] },
+      ],
+      offset: offset,
+      limit: section * 18 - 1,
+    });
+
+    res.json({ list: list, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
   }
 });
 

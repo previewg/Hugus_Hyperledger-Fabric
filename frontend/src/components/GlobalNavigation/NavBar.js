@@ -248,7 +248,7 @@ const ResNavStyle = styled.nav`
   }
 `;
 
-const NavBar = () => {
+const NavBar = (props) => {
   const [menuClicked, setMenuClicked] = useState(false);
 
   const dispatch = useDispatch();
@@ -308,7 +308,7 @@ const NavBar = () => {
             </ul>
           </div>
           <div className="dropdown">
-            <Link to="/userinfo">My</Link>
+            <Link to="/my">My</Link>
             <ul>
               <Link to="">캠페인 모금현황</Link>
               <Link to="">스토리 투표현황</Link>
@@ -324,7 +324,13 @@ const NavBar = () => {
           </div>
         </div>
         <div className="user">
-          <img className="user__icon" alt="user__icon" src="/icons/user.png" />
+          <Link to="/my">
+            <img
+              className="user__icon"
+              alt="user__icon"
+              src="/icons/user.png"
+            />
+          </Link>
           {signedIn()}
           <Link to="/search">
             <img
