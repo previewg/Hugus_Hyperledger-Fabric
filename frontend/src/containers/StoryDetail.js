@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storyLoader } from "../actions/story";
+import {like, storyLike, storyLoader} from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import { commentAdd } from "../actions/comment";
@@ -66,10 +66,25 @@ const StoryDetailStyle = styled.div`
     .hashtags {
       font-weight: bold;
       margin-top: 35px;
+      .tag{
+        margin-right: 10px;
+        font-weight: normal;
+        color: orange;
+      }
+    }
+    
+    .visited{
+      margin-top: 50px;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 13px;
+      >p{
+        margin: 0;
+        margin-left: 10px;
+      }
     }
 
     .comment__false {
-      margin-top: 35px;
       font-weight: bold;
       display: flex;
       flex-direction: column;
@@ -94,7 +109,6 @@ const StoryDetailStyle = styled.div`
     }
 
     .comment__true {
-      margin-top: 35px;
       font-weight: bold;
       display: flex;
       flex-direction: column;
@@ -104,6 +118,7 @@ const StoryDetailStyle = styled.div`
         .icon {
           display: flex;
           > img {
+            margin-left: 5px;
             cursor: pointer;
             width: 20px;
           }
@@ -205,6 +220,7 @@ const StoryDetail = ({ match }) => {
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
+
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
   }, []);
@@ -247,6 +263,10 @@ const StoryDetail = ({ match }) => {
        console.log(e);
   }
 
+  const likeHandler = (status) => {
+    dispatch(storyLike(data.id,status))
+  }
+
   const Comment = () => {
     if (!isLoggedIn) {
       return (
@@ -254,7 +274,6 @@ const StoryDetail = ({ match }) => {
           <div className="header">
             <p>댓글</p>
             <div className="icon">
-              <img alt="like" className="like" src="/icons/like.svg" />
               <img alt="unlike" className="unlike" src="/icons/unlike.svg" />
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
@@ -269,8 +288,7 @@ const StoryDetail = ({ match }) => {
           <div className="header">
             <p>댓글</p>
             <div className="icon">
-              <img alt="like" className="like" src="/icons/like.svg" />
-              <img alt="unlike" className="unlike" src="/icons/unlike.svg" />
+              {data.Story_Likes[0].like ? <img onClick={()=>likeHandler(true)} alt="like" className="like" src="/icons/like.svg" />:<img  onClick={()=>likeHandler(false)} alt="unlike" className="unlike" src="/icons/unlike.svg" />}
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
@@ -312,7 +330,7 @@ const StoryDetail = ({ match }) => {
           </div>
 
           <div className="items">
-            <p>필요 물품</p>
+            <p>저는 이런것들이 필요합니다</p>
             {data.Items.map((item, key) => {
               return (
                 <span className="item" key={key}>
@@ -324,10 +342,17 @@ const StoryDetail = ({ match }) => {
 
           <div className="hashtags">
             <p>태그</p>
+            {data.Hashtags.map((tag, key) => {
+              return (
+                  <span className="tag" key={key}>
+                  {tag.hashtag}
+                </span>
+              );
+            })}
           </div>
           <div className="visited">
-            <p></p>
-            <p></p>
+            <p>좋아요</p>
+            <p>조회수 {data.visited}</p>
           </div>
           {Comment()}
           <div className="back">

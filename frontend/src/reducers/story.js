@@ -8,7 +8,9 @@ import {
   STORY_LOAD,
   STORY_LOAD_SUCCESS,
   STORY_LOAD_FAILURE,
-  STORY_LIST_NUM_INCREASE,
+  STORY_LIKE,
+  STORY_LIKE_SUCCESS,
+  STORY_LIKE_FAILURE
 } from "../actions/story";
 import update from "react-addons-update";
 
@@ -31,6 +33,11 @@ const initialState = {
     status: "INIT",
     data: null,
   },
+  like:{
+    user:false,
+    status:"INIT",
+    num:0,
+  }
 };
 
 export default function story(state = initialState, action) {
@@ -110,11 +117,39 @@ export default function story(state = initialState, action) {
           status: { $set: "SUCCESS" },
           data: { $set: action.data },
         },
+        like:{
+          user: { $set: action.like },
+          likeNum: { $set: action.likeNum },
+        }
       });
 
     case STORY_LOAD_FAILURE:
       return update(state, {
         detail: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_LIKE:
+      return update(state, {
+        like: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_LIKE_SUCCESS:
+
+      return update(state, {
+        like: {
+          /////여기!!!!
+          status: { $set: "SUCCESS" },
+        },
+
+      });
+
+    case STORY_LIKE_FAILURE:
+      return update(state, {
+        like: {
           status: { $set: "FAILURE" },
         },
       });

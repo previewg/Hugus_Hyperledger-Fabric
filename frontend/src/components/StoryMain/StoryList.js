@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { storyListLoader, visit } from "../../actions/story";
+import {storyListLoader, storyVisit} from "../../actions/story";
 import { Link } from "react-router-dom";
 import {SyncLoader} from "react-spinners";
 import {css} from "@emotion/core";
@@ -107,7 +107,7 @@ const StoryList = () => {
   };
 
   const visitHandler = (id) => {
-    dispatch(visit(id));
+    dispatch(storyVisit(id));
   }
 
   return (

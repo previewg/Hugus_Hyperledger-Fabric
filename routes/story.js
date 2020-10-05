@@ -12,6 +12,7 @@ const {
   Story_Comment,
   Story_Like,
 } = require("../models");
+const sequelize = require("sequelize");
 
 // multer 설정
 const multer = require("multer");
@@ -136,19 +137,31 @@ router.get("/list/:section", async (req, res) => {
 // 스토리 상세 조회
 router.get("/:id", async (req, res) => {
   try {
-    let id = req.params.id;
-    console.log(id)
+    const story_id = req.params.id;
+    const user_email = req.session.loginInfo.user_email;
+
+    console.log(user_email)
     const data = await Story.findOne({
-      where: { id: id },
+      where: { id: story_id },
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Item, attributes: ["item"] },
         { model: User, attributes: ["nickname"] },
         { model: Story_Comment, attributes: ["comment", "user_email"] },
+
       ],
     });
 
-    res.json({ data: data, success: 1 });
+
+    const likeNum = await Story_Like.count({
+      where:{story_id:story_id}
+    })
+
+    const like = await Story_Like.findOne({
+      where:{story_id:story_id,user_email:user_email}
+    })
+
+    res.json({ data: data,like:(like?true:false),likeNum:likeNum, success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }
@@ -157,7 +170,7 @@ router.get("/:id", async (req, res) => {
 // 스토리 조회수
 router.put("/visit",async (req,res)=>{
   try{
-    let id = req.body.story_id;
+    const id = req.body.story_id;
     const visited = await Story.findOne({
       attributes:["visited"],
       where:{id:id}
@@ -167,6 +180,25 @@ router.put("/visit",async (req,res)=>{
     where:{id:id},
     })
     res.json({  success: 1 });
+  }catch (error){
+    res.status(400).json({ success: 3 });
+  }
+})
+
+// 스토리 좋아요
+router.put("/like",async (req,res)=>{
+  try{
+    const story_id = req.body.story_id;
+    const status = req.body.status;
+    const user_email = req.session.loginInfo.user_email;
+
+    await Story_Like.update({
+      like: !status},{
+      where:{story_id:story_id,user_email:user_email},
+    })
+    res.json({  success: 1 });
+
+
   }catch (error){
     res.status(400).json({ success: 3 });
   }
