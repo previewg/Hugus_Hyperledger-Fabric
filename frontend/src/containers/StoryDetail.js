@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { storyLoader } from "../actions/story";
 import HashLoader from "react-spinners/HashLoader";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
+import { commentAdd } from "../actions/comment";
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -176,7 +177,28 @@ const StoryDetailStyle = styled.div`
     }
   }
 `;
-
+const ErrorBoxStyle = styled.p`
+  ${(props) => {
+    if (props.error == false) {
+      return "display:none;opacity:0";
+    } else {
+      return "opacity:1;transform: translateX(-100px);";
+    }
+  }};
+  right: 0;
+  background-color: #ffa500;
+  border-radius: 5px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 100px;
+  width: 180px;
+  height: 50px;
+  transition: 0.7s ease-in-out;
+  font-size: 15px;
+`;
 const StoryDetail = ({ match }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.story.detail.data);
@@ -187,6 +209,22 @@ const StoryDetail = ({ match }) => {
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
   }, []);
+
+  const comment = useRef();
+  // const addStatus = useSelector((state) => state.comments.add.status);
+  const errorMsg = "댓글을 입력하세요";
+
+  const [comments, setComments] = useState("");
+  const [error,setError] = useState(false)
+
+  const commentAddHandler = () => {
+    if (comments==="") {
+      comment.current.focus();
+    }else{
+      dispatch(commentAdd({comment:comments,story_id:data.id}))
+      
+    }
+  };
 
   const Loader = () => {
     return (
@@ -204,6 +242,11 @@ const StoryDetail = ({ match }) => {
       />
     );
   };
+
+  const onChangeHandler = (e) => {
+       setComments(e.target.value)
+       console.log(e);
+  }
 
   const Comment = () => {
     if (!isLoggedIn) {
@@ -232,13 +275,19 @@ const StoryDetail = ({ match }) => {
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
-          <input placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
+          <input value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
           <div className="comment__buttons">
-            <button>취소</button>
-            <button>등록</button>
+            <button className="comment__clear">취소</button>
+            <button
+            onClick={commentAddHandler}>등록</button>
           </div>
-          <div></div>
+
+
+          <div>
+
+          </div>
         </div>
+        
       );
     }
   };
@@ -246,6 +295,7 @@ const StoryDetail = ({ match }) => {
   if (status !== "SUCCESS") return Loader();
   else
     return (
+      <>
       <StoryDetailStyle>
         <div className="layout">
           <div className="title">
@@ -284,6 +334,8 @@ const StoryDetail = ({ match }) => {
           </div>
         </div>
       </StoryDetailStyle>
+      <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
+      </>
     );
 };
 export default StoryDetail;
