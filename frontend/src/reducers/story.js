@@ -10,7 +10,7 @@ import {
   STORY_LOAD_FAILURE,
   STORY_LIKE,
   STORY_LIKE_SUCCESS,
-  STORY_LIKE_FAILURE
+  STORY_LIKE_FAILURE,
 } from "../actions/story";
 import update from "react-addons-update";
 
@@ -33,11 +33,11 @@ const initialState = {
     status: "INIT",
     data: null,
   },
-  like:{
-    user:false,
-    status:"INIT",
-    num:0,
-  }
+  like: {
+    user: false,
+    status: "INIT",
+    num: 0,
+  },
 };
 
 export default function story(state = initialState, action) {
@@ -68,34 +68,35 @@ export default function story(state = initialState, action) {
         list: {
           status: { $set: "WAITING" },
         },
+        like: {
+          status: { $set: "WAITING" },
+        },
       });
 
     case STORY_LIST_LOAD_SUCCESS:
       let newData = state.list.data.concat(action.list);
-      if (action.status===true){
+      if (action.status === true) {
         return update(state, {
           list: {
             status: { $set: "SUCCESS" },
             data: { $set: newData },
-            num:{$set:state.list.num +1}
+            num: { $set: state.list.num + 1 },
           },
         });
-      }else if(state.list.num===1 && action.status===false){
+      } else if (state.list.num === 1 && action.status === false) {
         return update(state, {
           list: {
             status: { $set: "SUCCESS" },
             data: { $set: action.list },
           },
         });
-      }
-      else{
+      } else {
         return update(state, {
           list: {
             status: { $set: "SUCCESS" },
           },
         });
       }
-
 
     case STORY_LIST_LOAD_FAILURE:
       return update(state, {
@@ -117,10 +118,11 @@ export default function story(state = initialState, action) {
           status: { $set: "SUCCESS" },
           data: { $set: action.data },
         },
-        like:{
+        like: {
+          status: { $set: "SUCCESS" },
           user: { $set: action.like },
           likeNum: { $set: action.likeNum },
-        }
+        },
       });
 
     case STORY_LOAD_FAILURE:
@@ -138,13 +140,16 @@ export default function story(state = initialState, action) {
       });
 
     case STORY_LIKE_SUCCESS:
+      let num;
+      if (state.like.user) num = state.like.likeNum - 1;
+      else num = state.like.likeNum + 1;
 
       return update(state, {
         like: {
-          /////여기!!!!
           status: { $set: "SUCCESS" },
+          user: { $set: !state.like.user },
+          likeNum: { $set: num },
         },
-
       });
 
     case STORY_LIKE_FAILURE:

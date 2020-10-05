@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {like, storyLike, storyLoader} from "../actions/story";
+import { like, storyLike, storyLoader } from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import { commentAdd } from "../actions/comment";
+import { signInBtnIsClicked } from "../actions/user";
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -66,19 +67,19 @@ const StoryDetailStyle = styled.div`
     .hashtags {
       font-weight: bold;
       margin-top: 35px;
-      .tag{
+      .tag {
         margin-right: 10px;
         font-weight: normal;
         color: orange;
       }
     }
-    
-    .visited{
+
+    .visited {
       margin-top: 50px;
       display: flex;
       justify-content: flex-end;
       font-size: 13px;
-      >p{
+      > p {
         margin: 0;
         margin-left: 10px;
       }
@@ -94,6 +95,7 @@ const StoryDetailStyle = styled.div`
         .icon {
           display: flex;
           > img {
+            margin-left: 5px;
             cursor: pointer;
             width: 20px;
           }
@@ -217,27 +219,28 @@ const StoryDetail = ({ match }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.story.detail.data);
   const status = useSelector((state) => state.story.detail.status);
+  const like = useSelector((state) => state.story.like);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
+  const loginStatus = useSelector((state) => state.authentication.login.status);
 
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
-  }, []);
+  }, [loginStatus === "SUCCESS"]);
 
   const comment = useRef();
   // const addStatus = useSelector((state) => state.comments.add.status);
   const errorMsg = "댓글을 입력하세요";
 
   const [comments, setComments] = useState("");
-  const [error,setError] = useState(false)
+  const [error, setError] = useState(false);
 
   const commentAddHandler = () => {
-    if (comments==="") {
+    if (comments === "") {
       comment.current.focus();
-    }else{
-      dispatch(commentAdd({comment:comments,story_id:data.id}))
-      
+    } else {
+      dispatch(commentAdd({ comment: comments, story_id: data.id }));
     }
   };
 
@@ -259,13 +262,13 @@ const StoryDetail = ({ match }) => {
   };
 
   const onChangeHandler = (e) => {
-       setComments(e.target.value)
-       console.log(e);
-  }
+    setComments(e.target.value);
+    console.log(e);
+  };
 
   const likeHandler = (status) => {
-    dispatch(storyLike(data.id,status))
-  }
+    dispatch(storyLike(data.id, status));
+  };
 
   const Comment = () => {
     if (!isLoggedIn) {
@@ -274,7 +277,12 @@ const StoryDetail = ({ match }) => {
           <div className="header">
             <p>댓글</p>
             <div className="icon">
-              <img alt="unlike" className="unlike" src="/icons/unlike.svg" />
+              <img
+                onClick={() => dispatch(signInBtnIsClicked())}
+                alt="unlike"
+                className="unlike"
+                src="/icons/unlike.svg"
+              />
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
@@ -288,23 +296,37 @@ const StoryDetail = ({ match }) => {
           <div className="header">
             <p>댓글</p>
             <div className="icon">
-              {data.Story_Likes[0].like ? <img onClick={()=>likeHandler(true)} alt="like" className="like" src="/icons/like.svg" />:<img  onClick={()=>likeHandler(false)} alt="unlike" className="unlike" src="/icons/unlike.svg" />}
+              {like.user ? (
+                <img
+                  onClick={() => likeHandler(true)}
+                  alt="like"
+                  className="like"
+                  src="/icons/like.svg"
+                />
+              ) : (
+                <img
+                  onClick={() => likeHandler(false)}
+                  alt="unlike"
+                  className="unlike"
+                  src="/icons/unlike.svg"
+                />
+              )}
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
-          <input value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
+          <input
+            value={comments}
+            onChange={onChangeHandler}
+            className="comment_input"
+            placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
+          />
           <div className="comment__buttons">
             <button className="comment__clear">취소</button>
-            <button
-            onClick={commentAddHandler}>등록</button>
+            <button onClick={commentAddHandler}>등록</button>
           </div>
 
-
-          <div>
-
-          </div>
+          <div></div>
         </div>
-        
       );
     }
   };
@@ -313,56 +335,56 @@ const StoryDetail = ({ match }) => {
   else
     return (
       <>
-      <StoryDetailStyle>
-        <div className="layout">
-          <div className="title">
-            <p>{data.story_title}</p>
-            <p>{data.User.nickname}님</p>
-          </div>
-          <div className="info">
-            <p>작성자 소개</p>
-            <p>{data.user_info}</p>
-          </div>
+        <StoryDetailStyle>
+          <div className="layout">
+            <div className="title">
+              <p>{data.story_title}</p>
+              <p>{data.User.nickname}님</p>
+            </div>
+            <div className="info">
+              <p>작성자 소개</p>
+              <p>{data.user_info}</p>
+            </div>
 
-          <div className="content">
-            <p>내용</p>
-            <p>{data.story_content}</p>
-          </div>
+            <div className="content">
+              <p>내용</p>
+              <p>{data.story_content}</p>
+            </div>
 
-          <div className="items">
-            <p>저는 이런것들이 필요합니다</p>
-            {data.Items.map((item, key) => {
-              return (
-                <span className="item" key={key}>
-                  {item.item}
-                </span>
-              );
-            })}
-          </div>
+            <div className="items">
+              <p>저는 이런것들이 필요합니다</p>
+              {data.Items.map((item, key) => {
+                return (
+                  <span className="item" key={key}>
+                    {item.item}
+                  </span>
+                );
+              })}
+            </div>
 
-          <div className="hashtags">
-            <p>태그</p>
-            {data.Hashtags.map((tag, key) => {
-              return (
+            <div className="hashtags">
+              <p>태그</p>
+              {data.Hashtags.map((tag, key) => {
+                return (
                   <span className="tag" key={key}>
-                  {tag.hashtag}
-                </span>
-              );
-            })}
+                    {tag.hashtag}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="visited">
+              <p>좋아요 {like.likeNum}</p>
+              <p>조회수 {data.visited}</p>
+            </div>
+            {Comment()}
+            <div className="back">
+              <Link className="back_btn" to="/story">
+                글목록
+              </Link>
+            </div>
           </div>
-          <div className="visited">
-            <p>좋아요</p>
-            <p>조회수 {data.visited}</p>
-          </div>
-          {Comment()}
-          <div className="back">
-            <Link className="back_btn" to="/story">
-              글목록
-            </Link>
-          </div>
-        </div>
-      </StoryDetailStyle>
-      <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
+        </StoryDetailStyle>
+        <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
       </>
     );
 };

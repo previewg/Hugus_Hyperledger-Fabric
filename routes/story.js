@@ -138,9 +138,10 @@ router.get("/list/:section", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const story_id = req.params.id;
-    const user_email = req.session.loginInfo.user_email;
+    let user_email;
+    if (req.session.loginInfo) user_email = req.session.loginInfo.user_email;
+    else user_email = null;
 
-    console.log(user_email)
     const data = await Story.findOne({
       where: { id: story_id },
       include: [
@@ -148,60 +149,90 @@ router.get("/:id", async (req, res) => {
         { model: Item, attributes: ["item"] },
         { model: User, attributes: ["nickname"] },
         { model: Story_Comment, attributes: ["comment", "user_email"] },
-
       ],
     });
 
-
     const likeNum = await Story_Like.count({
-      where:{story_id:story_id}
-    })
+      where: { story_id: story_id, like: true },
+    });
+    if (user_email) {
+      const like = await Story_Like.findOne({
+        where: { story_id: story_id, user_email: user_email, like: true },
+      });
 
-    const like = await Story_Like.findOne({
-      where:{story_id:story_id,user_email:user_email}
-    })
-
-    res.json({ data: data,like:(like?true:false),likeNum:likeNum, success: 1 });
+      res.json({
+        data: data,
+        like: like ? true : false,
+        likeNum: likeNum,
+        success: 1,
+      });
+    } else {
+      res.json({
+        data: data,
+        like: false,
+        likeNum: likeNum,
+        success: 1,
+      });
+    }
   } catch (error) {
     res.status(400).json({ success: 3 });
   }
 });
 
 // 스토리 조회수
-router.put("/visit",async (req,res)=>{
-  try{
+router.put("/visit", async (req, res) => {
+  try {
     const id = req.body.story_id;
     const visited = await Story.findOne({
-      attributes:["visited"],
-      where:{id:id}
-    })
-    await Story.update({
-      visited: visited.dataValues.visited+1},{
-    where:{id:id},
-    })
-    res.json({  success: 1 });
-  }catch (error){
+      attributes: ["visited"],
+      where: { id: id },
+    });
+    await Story.update(
+      {
+        visited: visited.dataValues.visited + 1,
+      },
+      {
+        where: { id: id },
+      }
+    );
+    res.json({ success: 1 });
+  } catch (error) {
     res.status(400).json({ success: 3 });
   }
-})
+});
 
 // 스토리 좋아요
-router.put("/like",async (req,res)=>{
-  try{
+router.put("/like", async (req, res) => {
+  try {
     const story_id = req.body.story_id;
     const status = req.body.status;
     const user_email = req.session.loginInfo.user_email;
 
-    await Story_Like.update({
-      like: !status},{
-      where:{story_id:story_id,user_email:user_email},
-    })
-    res.json({  success: 1 });
+    const history = await Story_Like.findOne({
+      where: { story_id: story_id, user_email: user_email },
+    });
 
+    if (history) {
+      await Story_Like.update(
+        {
+          like: !status,
+        },
+        {
+          where: { story_id: story_id, user_email: user_email },
+        }
+      );
+    } else {
+      await Story_Like.create({
+        story_id: story_id,
+        user_email: user_email,
+        like: !status,
+      });
+    }
 
-  }catch (error){
+    res.json({ success: 1 });
+  } catch (error) {
     res.status(400).json({ success: 3 });
   }
-})
+});
 
 module.exports = router;
