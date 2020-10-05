@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { storyLoader } from "../actions/story";
-import HashLoader from "react-spinners/HashLoader";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import { commentAdd } from "../actions/comment";
@@ -299,7 +298,7 @@ const StoryDetail = ({ match }) => {
       <StoryDetailStyle>
         <div className="layout">
           <div className="title">
-            <p>{data.id}</p>
+            <p>{data.story_title}</p>
             <p>{data.User.nickname}님</p>
           </div>
           <div className="info">
@@ -325,6 +324,10 @@ const StoryDetail = ({ match }) => {
 
           <div className="hashtags">
             <p>태그</p>
+          </div>
+          <div className="visited">
+            <p></p>
+            <p></p>
           </div>
           {Comment()}
           <div className="back">

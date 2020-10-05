@@ -8,7 +8,6 @@ export const STORY_ADD_FAILURE = "STORY_ADD_FAILURE";
 export const STORY_LIST_LOAD = "STORY_LIST_LOAD";
 export const STORY_LIST_LOAD_SUCCESS = "STORY_LIST_LOAD_SUCCESS";
 export const STORY_LIST_LOAD_FAILURE = "STORY_LIST_LOAD_FAILURE";
-export const STORY_LIST_NUM_INCREASE = "STORY_LIST_NUM_INCREASE";
 
 export const STORY_LOAD = "STORY_LOAD";
 export const STORY_LOAD_SUCCESS = "STORY_LOAD_SUCCESS";
@@ -33,17 +32,14 @@ const storyListLoadStart = () => {
   return { type: STORY_LIST_LOAD };
 };
 
-const storyListLoadSuccess = (list) => {
-  return { type: STORY_LIST_LOAD_SUCCESS, list: list };
+const storyListLoadSuccess = (list,status) => {
+  return { type: STORY_LIST_LOAD_SUCCESS, list: list,status:status };
 };
 
 const storyListLoadFailure = () => {
   return { type: STORY_LIST_LOAD_FAILURE };
 };
 
-export const storyListNumIncrease = () => {
-  return { type: STORY_LIST_NUM_INCREASE };
-};
 
 const storyLoadStart = () => {
   return { type: STORY_LOAD };
@@ -103,7 +99,9 @@ export const storyListLoader = (section) => async (dispatch) => {
   await axios
     .get(`/story/list/${section}`)
     .then((response) => {
-      dispatch(storyListLoadSuccess(response.data.list));
+      let status = true;
+      if(response.data.list.length!==18) status= false;
+      dispatch(storyListLoadSuccess(response.data.list,status));
     })
     .catch((error) => {
       console.log(error);
@@ -125,3 +123,8 @@ export const storyLoader = (id) => async (dispatch) => {
       dispatch(storyLoadFailure());
     });
 };
+
+// 게시물 조회수
+export const visit = (id) => async (dispatch) =>{
+  await axios.put('/story/visit',{story_id:id}).then((response)=>null).catch((error)=>console.log(error))
+}

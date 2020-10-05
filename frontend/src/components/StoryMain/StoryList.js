@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { storyListLoader, storyListNumIncrease } from "../../actions/story";
+import { storyListLoader, visit } from "../../actions/story";
 import { Link } from "react-router-dom";
+import {SyncLoader} from "react-spinners";
+import {css} from "@emotion/core";
 
 const StoryListStyle = styled.div`
   display: flex;
@@ -15,32 +17,41 @@ const StoryListStyle = styled.div`
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     gap: 30px;
+    
     a {
+      width: 290px;
       height: 290px;
-      display: flex;
-      justify-self: center;
-      align-self: center;
       text-decoration: none;
-      .story__thumbnail {
-        z-index: -1;
-        width: 100%;
-        height: 100%;
-      }
+      background-size: cover ;
+      background-position: center center;
+      background-repeat: no-repeat;
+
       .story__hashtag {
-        position: relative;
-        left: 260px;
-        top: 10px;
         color: orange;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        >p{
+          margin-right: 10px;
+          font-size: 14px;
+        }
       }
       .story__title {
         position: relative;
-        top: 220px;
-        right: 230px;
+        top: 180px;
+        left: 20px;
         font-size: 17px;
         color: white;
-        font-weight: bold;
       }
     }
+    
+    .more__info{
+    width: 290px;
+    height: 290px;
+    display: none;
+    }
+    
+    
   }
 `;
 
@@ -49,6 +60,11 @@ const StoryList = () => {
   const status = useSelector((state) => state.story.list.status);
   const list = useSelector((state) => state.story.list.data);
   const num = useSelector((state) => state.story.list.num);
+  const [hover,setHover] = useState({
+    key:0,
+    turn:"child",
+    status:false,
+  });
 
   useEffect(() => {
     dispatch(storyListLoader(1));
@@ -61,7 +77,6 @@ const StoryList = () => {
   }, []);
 
   const loadMore = () => {
-    dispatch(storyListNumIncrease());
     dispatch(storyListLoader(num));
   };
 
@@ -74,29 +89,52 @@ const StoryList = () => {
     }
   };
 
+  const Loader = () => {
+    if (status==="WAITING") return (
+        <SyncLoader
+            css={css`
+          height: 100%;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        `}
+            size={10}
+            color={"#f69a53"}
+            loading={true}
+        />
+    );
+  };
+
+  const visitHandler = (id) => {
+    dispatch(visit(id));
+  }
+
   return (
-    <StoryListStyle>
+    <StoryListStyle hover={hover}>
       <section>
         {list.map((story, key) => {
           return (
-            <Link key={key} to={`/story/${story.id}`}>
-              {story.Hashtags.map((tag, key) => {
-                return (
-                  <span key={key} className="story__hashtag">
-                    #{tag.hashtag}
-                  </span>
-                );
-              })}
-              <img
-                className="story__thumbnail"
-                src={
-                  "http://localhost:3000/uploads/" + story.Story_Files[0].file
-                }
-              />
-              <p className="story__title">{story.story_title}</p>
-            </Link>
+              <>
+                <Link onClick={()=>visitHandler(story.id)} key={key} to={`/story/${story.id}`} style={{backgroundImage:`url("http://localhost:3000/uploads/${story.Story_Files[0].file}") ` }}>
+                  <div className="story__hashtag">
+                    {story.Hashtags.map((tag, key) => {
+                      return (
+                          <p key={key} >
+                            #{tag.hashtag}
+                          </p>
+                      );
+                    })}
+                  </div>
+
+
+                  <p className="story__title">{story.story_title}</p>
+                </Link>
+                <div className="more__info" ></div>
+              </>
           );
         })}
+        {Loader()}
       </section>
     </StoryListStyle>
   );

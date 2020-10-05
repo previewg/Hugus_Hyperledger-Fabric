@@ -18,9 +18,11 @@ db.sequelize = sequelize;
 
 db.User = require("./user")(sequelize, Sequelize);
 db.Story = require("./story")(sequelize, Sequelize);
-db.Comment = require("./comment")(sequelize, Sequelize);
-db.Like = require("./like")(sequelize, Sequelize);
+db.Story_Comment = require("./story_comment")(sequelize, Sequelize);
+db.Story_Like = require("./story_like")(sequelize, Sequelize);
 db.Campaign = require("./campaign")(sequelize, Sequelize);
+db.Campaign_Comment = require("./campaign_comment")(sequelize, Sequelize);
+db.Campaign_Like = require("./campaign_like")(sequelize, Sequelize);
 db.Hashtag = require("./hashtag")(sequelize, Sequelize);
 db.Item = require("./item")(sequelize, Sequelize);
 db.Story_Hashtag = require("./story_hashtag")(sequelize, Sequelize);
@@ -29,12 +31,12 @@ db.Story_File = require("./story_file")(sequelize, Sequelize);
 
 // User
 db.User.hasMany(db.Story, { foreignKey: "user_email", sourceKey: "email" });
-db.User.hasMany(db.Comment, { foreignKey: "user_email", sourceKey: "email" });
+db.User.hasMany(db.Story_Comment, { foreignKey: "user_email", sourceKey: "email" });
 db.User.hasMany(db.Campaign, { foreignKey: "user_email", sourceKey: "email" });
 
 // Story
-db.Story.hasMany(db.Comment, { foreignKey: "story_id", sourceKey: "id" });
-db.Story.hasMany(db.Like, { foreignKey: "story_id", sourceKey: "id" });
+db.Story.hasMany(db.Story_Comment, { foreignKey: "story_id", sourceKey: "id" });
+db.Story.hasMany(db.Story_Like, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 db.Story.belongsToMany(db.Item, {
   through: "Story_Item",
@@ -49,22 +51,28 @@ db.Story.hasMany(db.Story_File, {
   sourceKey: "id",
 });
 
-// Comment
-db.Comment.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
-db.Comment.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
-db.Comment.belongsTo(db.Campaign, {
+// Story_Comment
+db.Story_Comment.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
+db.Story_Comment.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
+
+// Campaign_Comment
+db.Campaign_Comment.belongsTo(db.Campaign, {
   foreignKey: "campaign_id",
   targetKey: "id",
 });
+db.Campaign_Comment.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 
-// Like
-db.Like.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
-db.Like.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
-db.Like.belongsTo(db.Campaign, { foreignKey: "campaign_id", targetKey: "id" });
+// Story_Like
+db.Story_Like.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
+db.Story_Like.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
+
+// Campaign_Like
+db.Campaign_Like.belongsTo(db.Campaign, { foreignKey: "campaign_id", targetKey: "id" });
+db.Campaign_Like.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 
 // Campaign
-db.Campaign.hasMany(db.Comment, { foreignKey: "campaign_id", sourceKey: "id" });
-db.Campaign.hasMany(db.Like, { foreignKey: "campaign_id", sourceKey: "id" });
+db.Campaign.hasMany(db.Campaign_Comment, { foreignKey: "campaign_id", sourceKey: "id" });
+db.Campaign.hasMany(db.Campaign_Like, { foreignKey: "campaign_id", sourceKey: "id" });
 db.Campaign.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
@@ -92,7 +100,7 @@ db.Item.belongsToMany(db.Story, {
 db.Story_Item.belongsTo(db.Item, { foreignKey: "item_id", targetKey: "id" });
 db.Story_Item.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
 
-// File
+// Story_File
 db.Story_File.belongsTo(db.Story, {
   foreignKey: "story_id",
   targetKey: "id",
