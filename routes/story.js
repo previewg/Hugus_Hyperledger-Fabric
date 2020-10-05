@@ -9,7 +9,8 @@ const {
   Item,
   Story_Item,
   User,
-  Comment,
+  Story_Comment,
+  Story_Like,
 } = require("../models");
 
 // multer 설정
@@ -132,17 +133,18 @@ router.get("/list/:section", async (req, res) => {
   }
 });
 
-// 스토리 목록 조회
+// 스토리 상세 조회
 router.get("/:id", async (req, res) => {
   try {
     let id = req.params.id;
+    console.log(id)
     const data = await Story.findOne({
       where: { id: id },
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Item, attributes: ["item"] },
         { model: User, attributes: ["nickname"] },
-        { model: Comment, attributes: ["comments", "user_email"] },
+        { model: Story_Comment, attributes: ["comment", "user_email"] },
       ],
     });
 
@@ -151,5 +153,23 @@ router.get("/:id", async (req, res) => {
     res.status(400).json({ success: 3 });
   }
 });
+
+// 스토리 조회수
+router.put("/visit",async (req,res)=>{
+  try{
+    let id = req.body.story_id;
+    const visited = await Story.findOne({
+      attributes:["visited"],
+      where:{id:id}
+    })
+    await Story.update({
+      visited: visited.dataValues.visited+1},{
+    where:{id:id},
+    })
+    res.json({  success: 1 });
+  }catch (error){
+    res.status(400).json({ success: 3 });
+  }
+})
 
 module.exports = router;

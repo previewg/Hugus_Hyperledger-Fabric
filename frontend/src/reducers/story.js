@@ -65,24 +65,35 @@ export default function story(state = initialState, action) {
 
     case STORY_LIST_LOAD_SUCCESS:
       let newData = state.list.data.concat(action.list);
-      return update(state, {
-        list: {
-          status: { $set: "SUCCESS" },
-          data: { $set: newData },
-        },
-      });
+      if (action.status===true){
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: newData },
+            num:{$set:state.list.num +1}
+          },
+        });
+      }else if(state.list.num===1 && action.status===false){
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: action.list },
+          },
+        });
+      }
+      else{
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+          },
+        });
+      }
+
 
     case STORY_LIST_LOAD_FAILURE:
       return update(state, {
         list: {
           status: { $set: "FAILURE" },
-        },
-      });
-
-    case STORY_LIST_NUM_INCREASE:
-      return update(state, {
-        list: {
-          num: { $set: state.list.num + 1 },
         },
       });
 

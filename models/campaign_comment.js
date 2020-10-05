@@ -1,25 +1,21 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('Comment', {
+    return sequelize.define('Campaign_Comment', {
        user_email:{
             type: DataTypes.STRING,
-            allowNull:false,
-        },
-        story_id:{
-           type:DataTypes.INTEGER,
             allowNull:false,
         },
         campaign_id:{
            type:DataTypes.INTEGER,
             allowNull:false,
         },
-        comments:{
+        comment:{
             type: DataTypes.TEXT,
             allowNull:false,
         },
     },{
-        tableName:'comment',
+        tableName:'campaign_comment',
         freezeTableName: true,
         underscored: true,
         paranoid: true, //soft delete
