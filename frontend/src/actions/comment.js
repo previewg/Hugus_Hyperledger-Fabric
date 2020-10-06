@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 // Action Type
 export const COMMENT_ADD = "COMMENT_ADD";
 export const COMMENT_ADD_SUCCESS = "COMMENT_ADD_SUCCESS";
@@ -8,7 +7,6 @@ export const COMMENT_ADD_FAILURE = "COMMENT_ADD_FAILURE";
 export const COMMENT_LIST_LOAD = "COMMENT_LIST_LOAD";
 export const COMMENT_LIST_LOAD_SUCCESS = "COMMENT_LIST_LOAD_SUCCESS";
 export const COMMENT_LIST_LOAD_FAILURE = "COMMENT_LIST_LOAD_FAILURE";
-
 
 export const COMMEMT_DELETE = "COMMENT_DELETE";
 

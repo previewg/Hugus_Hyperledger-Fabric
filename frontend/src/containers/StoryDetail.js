@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { like, storyLike, storyLoader } from "../actions/story";
+import { storyLike, storyLoader } from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import { commentAdd, commentDelete, commentListLoader } from "../actions/comment";

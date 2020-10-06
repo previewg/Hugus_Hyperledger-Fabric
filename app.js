@@ -51,6 +51,7 @@ try {
 const authRouter = require("./routes/auth");
 const storyRouter = require("./routes/story");
 const commentRouter = require("./routes/comment");
+const hashtagRouter = require("./routes/hashtag");
 
 // sequelize MariaDB 연결
 models.sequelize
@@ -68,6 +69,7 @@ models.sequelize
 app.use("/auth", authRouter);
 app.use("/story", storyRouter);
 app.use("/comment", commentRouter);
+app.use("/hashtag", hashtagRouter);
 
 // 404 처리
 app.use((req, res) => {
