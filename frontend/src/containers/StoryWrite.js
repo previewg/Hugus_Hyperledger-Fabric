@@ -118,13 +118,20 @@ const StoryWriteStyle = styled.div`
       }
     }
     .items {
-      font-weight: bold;
       margin-top: 35px;
-      > div {
+      width: 100%;
+      > p {
+        font-weight: bold;
+      }
+
+      .item {
+        width: 90%;
         display: flex;
         align-items: center;
-        width: 100%;
-        height: 50px;
+        p {
+          margin-left: 5px;
+          font-size: 13px;
+        }
         input {
           padding: 5px;
           height: 20px;
@@ -136,31 +143,54 @@ const StoryWriteStyle = styled.div`
             border-bottom: solid 0.1px orange;
           }
         }
-        .added__item {
+        .item_name {
           display: flex;
-          .item {
-            padding: 10px;
-            border-radius: 20px;
+          flex-direction: column;
+          min-width: 200px;
+          margin-right: 10px;
+        }
+        .item_price {
+          display: flex;
+          flex-direction: column;
+          width: 90px;
+          min-width: 90px;
+          margin-right: 10px;
+        }
+        .item_quantity {
+          display: flex;
+          flex-direction: column;
+          width: 90px;
+          min-width: 90px;
+          margin-right: 10px;
+        }
+
+        button {
+          position: relative;
+          top: 20px;
+          left: 20px;
+          width: 50px;
+          min-width: 50px;
+          height: 30px;
+          margin-right: 5px;
+          background-color: transparent;
+          border-radius: 3px;
+          cursor: pointer;
+          outline: none;
+        }
+        .item_add {
+          border: solid orange 0.1px;
+          color: orange;
+          :hover {
             background-color: orange;
-            font-size: 12px;
-            margin: 5px;
             color: white;
-            font-weight: 200;
-            min-width: auto;
           }
-          .clear {
-            position: relative;
-            border-radius: 7.5px;
-            font-size: 12px;
-            right: 15px;
-            top: -10px;
-            height: 15px;
-            width: 15px;
+        }
+        .item_delete {
+          border: solid darkgray 0.1px;
+          color: darkgray;
+          :hover {
             background-color: darkgray;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
+            color: white;
           }
         }
       }
@@ -180,26 +210,26 @@ const StoryWriteStyle = styled.div`
           outline: none;
           border: none;
           transition: 0.3s ease-in-out;
+          border-bottom: solid 0.1px lightgray;
         }
         .added__hashtag {
           display: flex;
           .hashtag {
-            display: flex;
-            padding-top: 10px;
-            padding-bottom: -1px;
+            padding: 10px;
+            border-radius: 20px;
+            background-color: orange;
             font-size: 12px;
             margin: 5px;
-            color: orange;
+            color: white;
             font-weight: 200;
             min-width: auto;
-            border-bottom: solid 0.1px orange;
           }
           .clear {
             position: relative;
             border-radius: 7.5px;
-            font-size: 6px;
-            right: 6px;
-            top: -4px;
+            font-size: 12px;
+            right: 15px;
+            top: -10px;
             height: 15px;
             width: 15px;
             background-color: darkgray;
@@ -267,7 +297,10 @@ const errorMsg = [
   "제목을 입력 바랍니다",
   "소개를 입력 바랍니다",
   "내용을 입력 바랍니다",
-  "필요 품목을 입력 바랍니다",
+  "물품 내용을 입력 바랍니다",
+  "물품 금액을 입력 바랍니다",
+  "물품 수량을 입력 바랍니다",
+  "필요물품을 등록 바랍니다",
   "해시태그를 입력 바랍니다",
 ];
 
@@ -285,7 +318,9 @@ const StoryWrite = (props) => {
     info: "",
     content: "",
     files: null,
-    item: "",
+    item_name: "",
+    item_price: "",
+    item_quantity: "",
     hashtag: "",
     items: [],
     hashtags: [],
@@ -329,7 +364,7 @@ const StoryWrite = (props) => {
       });
       return false;
     } else if (data.items.length == 0) {
-      setErrorCode(4);
+      setErrorCode(7);
       items.current.focus();
       setFilled({
         ...filled,
@@ -337,7 +372,7 @@ const StoryWrite = (props) => {
       });
       return false;
     } else if (data.hashtags.length == 0) {
-      setErrorCode(5);
+      setErrorCode(8);
       hashtags.current.focus();
       setFilled({
         ...filled,
@@ -408,12 +443,22 @@ const StoryWrite = (props) => {
   };
 
   const addItem = (e) => {
-    if (e.target.value === "") setErrorCode(4);
+    if (data.item_name === "") setErrorCode(4);
+    else if (data.item_price === "") setErrorCode(5);
+    else if (data.item_quantity === "") setErrorCode(6);
     else {
-      let items = data.items.concat(e.target.value);
+      let item = {
+        item_name: data.item_name,
+        item_price: data.item_price,
+        item_quantity: data.item_quantity,
+      };
+
+      let items = data.items.concat(item);
       setData({
         ...data,
-        item: "",
+        item_name: "",
+        item_price: "",
+        item_quantity: "",
         items,
       });
       setFilled({
@@ -442,7 +487,7 @@ const StoryWrite = (props) => {
   };
 
   const onDeleteHandler = (key) => () => {
-    let items = data.items;
+    let items;
     if (key === 0) {
       items = data.items.slice(1, data.items.length);
     } else if (key === data.items.length - 1) {
@@ -459,7 +504,7 @@ const StoryWrite = (props) => {
   };
 
   const onTagDeleteHandler = (key) => () => {
-    let hashtags = data.hashtags;
+    let hashtags;
     if (key === 0) {
       hashtags = data.hashtags.slice(1, data.hashtags.length);
     } else if (key === data.hashtags.length - 1) {
@@ -472,6 +517,15 @@ const StoryWrite = (props) => {
     setData({
       ...data,
       hashtags,
+    });
+  };
+
+  const itemInputDelete = () => {
+    setData({
+      ...data,
+      item_name: "",
+      item_price: "",
+      item_quantity: "",
     });
   };
 
@@ -560,31 +614,62 @@ const StoryWrite = (props) => {
 
           <div className="items">
             <p>필요 물품</p>
-            <div>
-              <input
-                name="item"
-                ref={items}
-                value={data.item}
-                placeholder="물품입력"
-                onChange={onChangeHandler}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") addItem(e);
-                }}
-              />
+            <div className="item">
+              <div className="item_name">
+                <p>물품 내용</p>
+                <input
+                  name="item_name"
+                  ref={items}
+                  value={data.item_name}
+                  placeholder="물품 내용을 입력하세요."
+                  onChange={onChangeHandler}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addItem(e);
+                  }}
+                />
+              </div>
+              <div className="item_price">
+                <p>물품 금액(원)</p>
+                <input
+                  type="number"
+                  name="item_price"
+                  ref={items}
+                  value={data.item_price}
+                  placeholder="ex) 10000"
+                  onChange={onChangeHandler}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addItem(e);
+                  }}
+                />
+              </div>
+              <div className="item_quantity">
+                <p>물품 수량(개)</p>
+                <input
+                  type="number"
+                  name="item_quantity"
+                  ref={items}
+                  value={data.item_quantity}
+                  placeholder="ex) 3"
+                  onChange={onChangeHandler}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addItem(e);
+                  }}
+                />
+              </div>
+              <button className="item_add" onClick={addItem}>
+                등록
+              </button>
+              <button className="item_delete" onClick={itemInputDelete}>
+                취소
+              </button>
+            </div>
+            <div className="item_list">
               {data.items.map((item, key) => {
                 return (
-                  <div className="added__item">
-                    <p className="item" key={key}>
-                      {item}
-                    </p>
-                    <p
-                      className="clear"
-                      onClick={onDeleteHandler(key)}
-                      key={key + 100}
-                    >
-                      x
-                    </p>
-                  </div>
+                  <p key={key}>
+                    {key + 1} {item.item_name} ( {item.item_quantity} 개 X{" "}
+                    {item.item_price} 원 )
+                  </p>
                 );
               })}
             </div>
@@ -607,7 +692,7 @@ const StoryWrite = (props) => {
                 return (
                   <div className="added__hashtag">
                     <p className="hashtag" key={key}>
-                      #{hashtag}
+                      # {hashtag}
                     </p>
                     <p
                       className="clear"
