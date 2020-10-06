@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storyLoader } from "../actions/story";
+import { like, storyLike, storyLoader } from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
-import { commentAdd, commentDelete } from "../actions/comment";
+import { commentAdd, commentDelete, commentListLoader } from "../actions/comment";
+import { signInBtnIsClicked } from "../actions/user";
+
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -66,10 +68,25 @@ const StoryDetailStyle = styled.div`
     .hashtags {
       font-weight: bold;
       margin-top: 35px;
+      .tag {
+        margin-right: 10px;
+        font-weight: normal;
+        color: orange;
+      }
+    }
+
+    .visited {
+      margin-top: 50px;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 13px;
+      > p {
+        margin: 0;
+        margin-left: 10px;
+      }
     }
 
     .comment__false {
-      margin-top: 35px;
       font-weight: bold;
       display: flex;
       flex-direction: column;
@@ -79,6 +96,7 @@ const StoryDetailStyle = styled.div`
         .icon {
           display: flex;
           > img {
+            margin-left: 5px;
             cursor: pointer;
             width: 20px;
           }
@@ -94,7 +112,6 @@ const StoryDetailStyle = styled.div`
     }
 
     .comment__true {
-      margin-top: 35px;
       font-weight: bold;
       display: flex;
       flex-direction: column;
@@ -104,6 +121,7 @@ const StoryDetailStyle = styled.div`
         .icon {
           display: flex;
           > img {
+            margin-left: 5px;
             cursor: pointer;
             width: 20px;
           }
@@ -176,14 +194,14 @@ const StoryDetailStyle = styled.div`
     }
 
 
-.comment__line {
+.comment {
+  margin-top:10px;
   position: relative;
   overflow: hidden;
+  border-bottom: solid gray 0.1px;
 }
-.info {
-  overflow: hidden;
-}  
-.info button {
+
+.comment div button {
             width: 50px;
             height: 30px;
             cursor: pointer;
@@ -196,33 +214,13 @@ const StoryDetailStyle = styled.div`
                 color: orange;
               }
           }
-.lke:before {
-  color: #5890ff;
-  font-weight: bold
-}
-.info .time {
-  font-weight: 400; 
-  margin-right: 7px
-}
-.info a {
+
+.comment div a {
    color: orange;
   font-weight: bold
 }
-.info .ca {
-  display: block;
-  color: #90949c;
-  font-size: 14px;
-}
-.fa-chevron-down {
-  position: absolute;
-  right: 0;
-  color: #d1d2d5;
-  cursor: pointer;
-}
-.fa-chevron-down:hover, .fa-chevron-down:active{
-  color: #c3c3c3;
-}
-.comment__line p {
+
+.comment p {
   font-weight:normal;
 }
 
@@ -253,31 +251,34 @@ const ErrorBoxStyle = styled.p`
   font-size: 15px;
 `;
 
-
 const StoryDetail = ({ match }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.story.detail.data);
+  const commentList = useSelector((state) => state.comment.list.data);
   const status = useSelector((state) => state.story.detail.status);
+  const like = useSelector((state) => state.story.like);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
+  const loginStatus = useSelector((state) => state.authentication.login.status);
+    
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
-  }, []);
+    dispatch(commentListLoader(match.params.id));
+  }, [loginStatus === "SUCCESS"]);
 
+  
   const comment = useRef();
-  // const addStatus = useSelector((state) => state.comments.add.status);
   const errorMsg = "댓글을 입력하세요";
 
   const [comments, setComments] = useState("");
-  const [error,setError] = useState(false)
+  const [error, setError] = useState(false);
 
   const commentAddHandler = () => {
-    if (comments==="") {
+    if (comments === "") {
       comment.current.focus();
     } else {
       dispatch(commentAdd({comment:comments,story_id:data.id}))
-
     }
   };
 
@@ -303,8 +304,14 @@ const StoryDetail = ({ match }) => {
   }
 
   const commentDeleteHandler = () => {
-    dispatch(commentDelete({story_id:data.id}))
+    dispatch(commentDelete({comment:commentList.id}))
+
   }
+  
+  const likeHandler = (status) => {
+    dispatch(storyLike(data.id, status));
+  };
+
 
   const Comment = () => {
     if (!isLoggedIn) {
@@ -313,8 +320,12 @@ const StoryDetail = ({ match }) => {
           <div className="header">
             <p>댓글</p>
             <div className="icon">
-              <img alt="like" className="like" src="/icons/like.svg" />
-              <img alt="unlike" className="unlike" src="/icons/unlike.svg" />
+              <img
+                onClick={() => dispatch(signInBtnIsClicked())}
+                alt="unlike"
+                className="unlike"
+                src="/icons/unlike.svg"
+              />
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
@@ -328,34 +339,47 @@ const StoryDetail = ({ match }) => {
           <div className="header">
             <p>댓글</p>
             <div className="icon">
-              <img alt="like" className="like" src="/icons/like.svg" />
-              <img alt="unlike" className="unlike" src="/icons/unlike.svg" />
+              {like.user ? (
+                <img
+                  onClick={() => likeHandler(true)}
+                  alt="like"
+                  className="like"
+                  src="/icons/like.svg"
+                />
+              ) : (
+                <img
+                  onClick={() => likeHandler(false)}
+                  alt="unlike"
+                  className="unlike"
+                  src="/icons/unlike.svg"
+                />
+              )}
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
           <input ref={comment} value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
           <div className="comment__buttons">
-            <button className="comment__clear">취소</button>
-            <button
-            onClick={commentAddHandler}>등록</button>
+            <button className="comment__clear" onClick={commentDeleteHandler}>취소</button>
+            <button onClick={commentAddHandler}>등록</button>
           </div>
 
 
-          <div class='comment__line'>
-            {/* <i class="fa fa-chevron-down" href='#' data-value="ab"></i> */}
-            <div class='info'>
-              <img src='' title='' />
-              <a>nick</a> <button onClick={commentDeleteHandler}>삭제</button>
-              <span class='ca'>
-                <i class="fa fa-globe" title='public' aria-hidden="true"></i>
-              </span>
-            </div>
-            <p>도와드릴게요</p>
-          </div>
+          {commentList.map((commentList, key) => {
+                return (
+                  <span className="comment" key={key}>
+
+                    <div className="Top">
+                    <a>{commentList.User.nickname}</a> <button onClick={commentDeleteHandler}>삭제</button>
+                    </div>
+                    <br/>
+                    
+                    <p>{commentList.comment}</p>
+                  </span>
+                );
+              })}
 
 
         </div>
-        
       );
     }
   };
@@ -364,49 +388,56 @@ const StoryDetail = ({ match }) => {
   else
     return (
       <>
-      <StoryDetailStyle>
-        <div className="layout">
-          <div className="title">
-            <p>{data.story_title}</p>
-            <p>{data.User.nickname}님</p>
-          </div>
-          <div className="info">
-            <p>작성자 소개</p>
-            <p>{data.user_info}</p>
-          </div>
+        <StoryDetailStyle>
+          <div className="layout">
+            <div className="title">
+              <p>{data.story_title}</p>
+              <p>{data.User.nickname}님</p>
+            </div>
+            <div className="info">
+              <p>작성자 소개</p>
+              <p>{data.user_info}</p>
+            </div>
 
-          <div className="content">
-            <p>내용</p>
-            <p>{data.story_content}</p>
-          </div>
+            <div className="content">
+              <p>내용</p>
+              <p>{data.story_content}</p>
+            </div>
 
-          <div className="items">
-            <p>필요 물품</p>
-            {data.Items.map((item, key) => {
-              return (
-                <span className="item" key={key}>
-                  {item.item}
-                </span>
-              );
-            })}
-          </div>
+            <div className="items">
+              <p>저는 이런것들이 필요합니다</p>
+              {data.Items.map((item, key) => {
+                return (
+                  <span className="item" key={key}>
+                    {item.item}
+                  </span>
+                );
+              })}
+            </div>
 
-          <div className="hashtags">
-            <p>태그</p>
+            <div className="hashtags">
+              <p>태그</p>
+              {data.Hashtags.map((tag, key) => {
+                return (
+                  <span className="tag" key={key}>
+                    {tag.hashtag}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="visited">
+              <p>좋아요 {like.likeNum}</p>
+              <p>조회수 {data.visited}</p>
+            </div>
+            {Comment()}
+            <div className="back">
+              <Link className="back_btn" to="/story">
+                글목록
+              </Link>
+            </div>
           </div>
-          <div className="visited">
-            <p></p>
-            <p></p>
-          </div>
-          {Comment()}
-          <div className="back">
-            <Link className="back_btn" to="/story">
-              글목록
-            </Link>
-          </div>
-        </div>
-      </StoryDetailStyle>
-      <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
+        </StoryDetailStyle>
+        <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
       </>
     );
 };

@@ -17,7 +17,22 @@ router.post('/add', async (req,res) => {
     story_id: req.body.story_id,  
     comment: req.body.comment,
     });
-    res.json({ success: 1 });
+
+    const list = await Story_Comment.findAll({
+      where : {
+        story_id : req.body.story_id
+      },
+      order: [
+        [ "created_at","DESC" ]
+      ],
+      attributes: ["comment"],
+      include: [
+        { model: User, attributes: ["nickname"] },
+      ],
+
+    });
+
+    res.json({ list: list, success: 1 });
     } catch (error) {
         console.error(error);
         res.status(400).json({ success: 3 });
@@ -34,5 +49,25 @@ router.delete("/delete", async (req, res) => {
     }
   });
 
+  // 댓글 목록 조회
+router.get("/list/:story_id", async (req, res) => {
+  try {
+    let story_id = req.params.story_id;
+
+    const list = await Story_Comment.findAll({
+      where : {
+        story_id : story_id
+      },
+      attributes: ["comment"],
+      include: [
+        { model: User, attributes: ["nickname"] },
+      ],
+    });
+
+    res.json({ list: list, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
 
 module.exports = router;
