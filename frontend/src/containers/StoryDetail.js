@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { storyLoader } from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
-import { commentAdd } from "../actions/comment";
+import { commentAdd, commentDelete } from "../actions/comment";
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -174,9 +174,63 @@ const StoryDetailStyle = styled.div`
         }
       }
     }
+
+
+.comment__line {
+  position: relative;
+  overflow: hidden;
+}
+.info {
+  overflow: hidden;
+}  
+.info button {
+            width: 50px;
+            height: 30px;
+            cursor: pointer;
+            outline: none;
+            border: none;
+          color: black;
+            background-color:white;
+            transition: 0.2s ease-in-out;
+              :hover {
+                color: orange;
+              }
+          }
+.lke:before {
+  color: #5890ff;
+  font-weight: bold
+}
+.info .time {
+  font-weight: 400; 
+  margin-right: 7px
+}
+.info a {
+   color: orange;
+  font-weight: bold
+}
+.info .ca {
+  display: block;
+  color: #90949c;
+  font-size: 14px;
+}
+.fa-chevron-down {
+  position: absolute;
+  right: 0;
+  color: #d1d2d5;
+  cursor: pointer;
+}
+.fa-chevron-down:hover, .fa-chevron-down:active{
+  color: #c3c3c3;
+}
+.comment__line p {
+  font-weight:normal;
+}
+
   }
 `;
+
 const ErrorBoxStyle = styled.p`
+
   ${(props) => {
     if (props.error == false) {
       return "display:none;opacity:0";
@@ -198,6 +252,8 @@ const ErrorBoxStyle = styled.p`
   transition: 0.7s ease-in-out;
   font-size: 15px;
 `;
+
+
 const StoryDetail = ({ match }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.story.detail.data);
@@ -219,9 +275,9 @@ const StoryDetail = ({ match }) => {
   const commentAddHandler = () => {
     if (comments==="") {
       comment.current.focus();
-    }else{
+    } else {
       dispatch(commentAdd({comment:comments,story_id:data.id}))
-      
+
     }
   };
 
@@ -244,7 +300,10 @@ const StoryDetail = ({ match }) => {
 
   const onChangeHandler = (e) => {
        setComments(e.target.value)
-       console.log(e);
+  }
+
+  const commentDeleteHandler = () => {
+    dispatch(commentDelete({story_id:data.id}))
   }
 
   const Comment = () => {
@@ -274,7 +333,7 @@ const StoryDetail = ({ match }) => {
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
-          <input value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
+          <input ref={comment} value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
           <div className="comment__buttons">
             <button className="comment__clear">취소</button>
             <button
@@ -282,9 +341,19 @@ const StoryDetail = ({ match }) => {
           </div>
 
 
-          <div>
-
+          <div class='comment__line'>
+            {/* <i class="fa fa-chevron-down" href='#' data-value="ab"></i> */}
+            <div class='info'>
+              <img src='' title='' />
+              <a>nick</a> <button onClick={commentDeleteHandler}>삭제</button>
+              <span class='ca'>
+                <i class="fa fa-globe" title='public' aria-hidden="true"></i>
+              </span>
+            </div>
+            <p>도와드릴게요</p>
           </div>
+
+
         </div>
         
       );

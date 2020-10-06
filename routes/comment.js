@@ -12,11 +12,10 @@ router.post('/add', async (req,res) => {
     console.log(req.body);
     try {
     const user_email = req.session.loginInfo.user_email;
-    // const user_email = "moonnr94@gmail.com"
     await Story_Comment.create({
     user_email: user_email,
     story_id: req.body.story_id,  
-    comments: req.body.comment,
+    comment: req.body.comment,
     });
     res.json({ success: 1 });
     } catch (error) {
@@ -24,5 +23,16 @@ router.post('/add', async (req,res) => {
         res.status(400).json({ success: 3 });
     }
 });
+
+router.delete("/delete", async (req, res) => {
+    try {
+      await Story_Comment.destroy({ where: { id: req.body.id } });
+      res.json({ message: true });
+    } catch (err) {
+      console.log(err);
+      res.json({ message: false });
+    }
+  });
+
 
 module.exports = router;

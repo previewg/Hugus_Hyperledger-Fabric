@@ -22,7 +22,7 @@ const commentAddStart = () => {
   };
 
   
-// 게시물 등록
+// 댓글 등록
 export const commentAdd = (data) => async (dispatch) => {
     dispatch(commentAddStart());
     await axios
@@ -35,7 +35,7 @@ export const commentAdd = (data) => async (dispatch) => {
       });
   };
  
-  // 게시물 삭제
+  // 댓글 삭제
 export const commentDelete = () => async (dispatch) => {
     await axios
       .delete("/comment/delete")
