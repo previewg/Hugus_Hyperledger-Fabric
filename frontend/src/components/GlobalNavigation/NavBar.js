@@ -308,7 +308,16 @@ const NavBar = (props) => {
             </ul>
           </div>
           <div className="dropdown">
-            <Link to="/my">My</Link>
+            {isSignedIn ? (
+              <Link to="/my">My</Link>
+            ) : (
+              <a
+                style={{ cursor: "pointer" }}
+                onClick={() => dispatch(signInBtnIsClicked())}
+              >
+                My
+              </a>
+            )}
             <ul>
               <Link to="">캠페인 모금현황</Link>
               <Link to="">스토리 투표현황</Link>
@@ -324,13 +333,27 @@ const NavBar = (props) => {
           </div>
         </div>
         <div className="user">
-          <Link to="/my">
-            <img
-              className="user__icon"
-              alt="user__icon"
-              src="/icons/user.png"
-            />
-          </Link>
+          {isSignedIn ? (
+            <Link to="/my">
+              <img
+                className="user__icon"
+                alt="user__icon"
+                src="/icons/user.png"
+              />
+            </Link>
+          ) : (
+            <a
+              style={{ cursor: "pointer" }}
+              onClick={() => dispatch(signInBtnIsClicked())}
+            >
+              <img
+                className="user__icon"
+                alt="user__icon"
+                src="/icons/user.png"
+              />
+            </a>
+          )}
+
           {signedIn()}
           <Link to="/search">
             <img

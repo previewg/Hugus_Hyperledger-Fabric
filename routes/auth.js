@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+const axios = require("axios");
 
 // multer 설정
 const multer = require("multer");
@@ -47,6 +48,9 @@ router.post("/signup", async (req, res, next) => {
         code: 4,
       });
     }
+
+    // Fabric 통신
+    await axios.post("http://192.168.0.55:3000/hugus/registerUser", { email });
 
     const hash = await bcrypt.hash(password, 12);
     await User.create({

@@ -94,6 +94,7 @@ const TotalSearchStyle = styled.div`
           :hover {
             color: orange;
             font-weight: bold;
+            background-color: #faf4e7;
           }
         }
         img {
