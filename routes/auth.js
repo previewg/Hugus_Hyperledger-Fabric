@@ -49,9 +49,6 @@ router.post("/signup", async (req, res, next) => {
       });
     }
 
-    // Fabric 통신
-    await axios.post("http://192.168.0.55:3000/hugus/registerUser", { email });
-
     const hash = await bcrypt.hash(password, 12);
     await User.create({
       email,
