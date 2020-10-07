@@ -34,8 +34,8 @@ const commentAddStart = () => {
     return { type: COMMENT_LIST_LOAD_FAILURE };
   };
 
-  const commentDeleteSuccess = () => {
-    return { type : COMMENT_DELETE_SUCCESS };
+  const commentDeleteSuccess = (list) => {
+    return { type : COMMENT_DELETE_SUCCESS, list: list };
   }
 
 // 댓글 등록
@@ -52,13 +52,12 @@ export const commentAdd = (data) => async (dispatch) => {
   };
  
   // 댓글 삭제
-export const commentDelete = (id) => async (dispatch) => {
+export const commentDelete = (data) => async (dispatch) => {
     await axios
-      .delete("/comment/delete",id)
+      .post('/comment/delete', { ...data })
       .then((response) => {
         console.log("성공적으로 삭제되었습니다.");
-        console.log(response.data.id);
-        dispatch(commentDeleteSuccess(response.data.id));
+        dispatch(commentDeleteSuccess(response.data.list));
       })
       .catch((error) => {
         console.log("삭제에 실패하였습니다.");

@@ -5,6 +5,7 @@ import StoryDetail from "./StoryDetail";
 import TotalSearch from "./TotalSearch";
 import User from "./User";
 import UserInfo from "./UserInfo";
+import BlockInfo from "./BlockInfo";
 
 export {
     Home,
@@ -13,5 +14,6 @@ export {
     StoryDetail,
     TotalSearch,
     User,
-    UserInfo
+    UserInfo,
+    BlockInfo,
 };
