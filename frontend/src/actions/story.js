@@ -8,11 +8,14 @@ export const STORY_ADD_FAILURE = "STORY_ADD_FAILURE";
 export const STORY_LIST_LOAD = "STORY_LIST_LOAD";
 export const STORY_LIST_LOAD_SUCCESS = "STORY_LIST_LOAD_SUCCESS";
 export const STORY_LIST_LOAD_FAILURE = "STORY_LIST_LOAD_FAILURE";
-export const STORY_LIST_NUM_INCREASE = "STORY_LIST_NUM_INCREASE";
 
 export const STORY_LOAD = "STORY_LOAD";
 export const STORY_LOAD_SUCCESS = "STORY_LOAD_SUCCESS";
 export const STORY_LOAD_FAILURE = "STORY_LOAD_FAILURE";
+
+export const STORY_LIKE = "STORY_LIKE"
+export const STORY_LIKE_SUCCESS = "STORY_LIKE_SUCCESS"
+export const STORY_LIKE_FAILURE = "STORY_LIKE_FAILURE"
 
 export const STORY_DELETE = "STORY_DELETE";
 export const STORY_UPDATE = "STORY_UPDATE";
@@ -33,24 +36,33 @@ const storyListLoadStart = () => {
   return { type: STORY_LIST_LOAD };
 };
 
-const storyListLoadSuccess = (list) => {
-  return { type: STORY_LIST_LOAD_SUCCESS, list: list };
+const storyListLoadSuccess = (list,status) => {
+  return { type: STORY_LIST_LOAD_SUCCESS, list: list,status:status };
 };
 
 const storyListLoadFailure = () => {
   return { type: STORY_LIST_LOAD_FAILURE };
 };
 
-export const storyListNumIncrease = () => {
-  return { type: STORY_LIST_NUM_INCREASE };
+const storyLikeStart = () => {
+  return { type: STORY_LIKE };
 };
+
+const storyLikeSuccess = () => {
+  return { type: STORY_LIKE_SUCCESS };
+};
+
+const storyLikeFailure = () => {
+  return { type: STORY_LIKE_FAILURE };
+};
+
 
 const storyLoadStart = () => {
   return { type: STORY_LOAD };
 };
 
 const storyLoadSuccess = (data) => {
-  return { type: STORY_LOAD_SUCCESS, data: data };
+  return { type: STORY_LOAD_SUCCESS, data: data.data,like:data.like,likeNum:data.likeNum };
 };
 
 const storyLoadFailure = () => {
@@ -103,7 +115,9 @@ export const storyListLoader = (section) => async (dispatch) => {
   await axios
     .get(`/story/list/${section}`)
     .then((response) => {
-      dispatch(storyListLoadSuccess(response.data.list));
+      let status = true;
+      if(response.data.list.length!==18) status= false;
+      dispatch(storyListLoadSuccess(response.data.list,status));
     })
     .catch((error) => {
       console.log(error);
@@ -117,11 +131,27 @@ export const storyLoader = (id) => async (dispatch) => {
   await axios
     .get(`/story/${id}`)
     .then((response) => {
-      console.log(response);
-      dispatch(storyLoadSuccess(response.data.data));
+      console.log(response.data)
+      dispatch(storyLoadSuccess(response.data));
     })
     .catch((error) => {
       console.log(error);
       dispatch(storyLoadFailure());
     });
 };
+
+// 게시물 조회수
+export const storyVisit = (id) => async (dispatch) =>{
+  await axios.put('/story/visit',{story_id:id}).then((response)=>null).catch((error)=>console.log(error))
+}
+
+// 게시물 좋아요
+export const storyLike = (id,status) => async (dispatch) =>{
+  dispatch(storyLikeStart());
+  await axios.put('/story/like',{story_id:id,status:status}).then((response)=>{
+    dispatch(storyLikeSuccess())
+  }).catch((error)=>{
+    console.log(error);
+    dispatch(storyLikeFailure())
+  })
+}

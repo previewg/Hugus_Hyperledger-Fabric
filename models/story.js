@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       visited: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
+          defaultValue:0
       },
     },
     {

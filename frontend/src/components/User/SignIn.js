@@ -12,7 +12,7 @@ const SignInStyle = styled.div`
   height: 100vh;
   display: flex;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  z-index: 100;
   section {
     background-color: white;
     width: 400px;
