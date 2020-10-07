@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { storyAdd } from "../actions/story";
@@ -38,7 +38,7 @@ const StoryWriteStyle = styled.div`
         border: none;
         width: 300px;
         padding: 5px;
-        border-bottom: solid 0.1px gray;
+        border-bottom: solid 0.1px lightgray;
         transition: 0.3s ease-in-out;
         :focus {
           outline: none;
@@ -58,6 +58,7 @@ const StoryWriteStyle = styled.div`
         height: 150px;
         border-radius: 4px;
         resize: none;
+        border: solid 0.1px lightgray;
         transition: 0.3s ease-in-out;
         :focus {
           outline: none;
@@ -111,6 +112,8 @@ const StoryWriteStyle = styled.div`
         height: 400px;
         border-radius: 4px;
         transition: 0.3s ease-in-out;
+        border: solid 0.1px lightgray;
+
         :focus {
           outline: none;
           border: solid 0.1px orange;
@@ -194,12 +197,74 @@ const StoryWriteStyle = styled.div`
           }
         }
       }
-
+      .item_list {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        > div {
+          display: flex;
+          align-items: center;
+          > p {
+            font-size: 13px;
+          }
+          > button {
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 10px;
+            color: #f83c3c;
+            width: 40px;
+            height: 25px;
+            border: solid 0.1px #f83c3c;
+            background-color: transparent;
+            outline: none;
+            :hover {
+              background-color: #f83c3c;
+              color: white;
+            }
+          }
+        }
+      }
       .total_price {
-        text-align: end;
-        font-size: 14px;
+        border-top: solid 0.1px orange;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p:nth-child(1) {
+          font-size: 12px;
+          cursor: pointer;
+          transition: 0.3s ease-in-out;
+          :hover {
+            color: #f83c3c;
+          }
+        }
       }
     }
+
+    .warning {
+      margin-top: 30px;
+      width: 100%;
+      border: solid 0.1px lightgray;
+
+      margin-bottom: 30px;
+      font-size: 13px;
+      > p {
+        margin: 10px;
+        padding: 10px;
+        margin-left: 5px;
+      }
+      p:nth-child(1) {
+        font-weight: bold;
+      }
+      strong:nth-child(1) {
+        color: dodgerblue;
+      }
+      strong:nth-child(2) {
+        color: orange;
+      }
+    }
+
     .hashtags {
       font-weight: bold;
       margin-top: 20px;
@@ -216,6 +281,9 @@ const StoryWriteStyle = styled.div`
           border: none;
           transition: 0.3s ease-in-out;
           border-bottom: solid 0.1px lightgray;
+          :focus {
+            border-bottom: solid 0.1px orange;
+          }
         }
         .added__hashtag {
           display: flex;
@@ -502,6 +570,7 @@ const StoryWrite = (props) => {
   };
 
   const onDeleteHandler = (key) => () => {
+    console.log(key);
     let items;
     if (key === 0) {
       items = data.items.slice(1, data.items.length);
@@ -543,6 +612,13 @@ const StoryWrite = (props) => {
       item_quantity: "",
     });
   };
+
+  const clearItems = useCallback(() => {
+    setData({
+      ...data,
+      items: [],
+    });
+  }, []);
 
   useEffect(() => {
     if (addStatus === "SUCCESS") {
@@ -681,18 +757,35 @@ const StoryWrite = (props) => {
             <div className="item_list">
               {data.items.map((item, key) => {
                 return (
-                  <p key={key}>
-                    {item.item_name} ( {item.item_quantity} 개 X{" "}
-                    {Number(item.item_price).toLocaleString()} 원 )
-                  </p>
+                  <div key={key}>
+                    <p>
+                      {item.item_name} ( {item.item_quantity} 개 X{" "}
+                      {Number(item.item_price).toLocaleString()} 원 )
+                    </p>
+                    <button onClick={onDeleteHandler(key)}>삭제</button>
+                  </div>
                 );
               })}
             </div>
             {data.items.length !== 0 && (
-              <p className="total_price">
-                합계 {data.totalPrice.toLocaleString()}원
-              </p>
+              <div className="total_price">
+                <p onClick={clearItems}>일괄 삭제</p>
+                <p>합계 {data.totalPrice.toLocaleString()}원</p>
+              </div>
             )}
+          </div>
+
+          <div className="warning">
+            <p>
+              ※ 스토리 등록 이후, <strong>물품의 총액에 따라</strong> 캠페인
+              등록에 대한 필요 득표수가 다릅니다.
+            </p>
+            <p>✔ 기준</p>
+            <p>
+              100만원 <strong>미만</strong> : 50(필요 득표수), 100만원{" "}
+              <strong>이상</strong> : 총액/100(만원) 의 몫
+            </p>
+            <p>예) 199만원 -> 100, 201만원 -> 200</p>
           </div>
 
           <div className="hashtags">
