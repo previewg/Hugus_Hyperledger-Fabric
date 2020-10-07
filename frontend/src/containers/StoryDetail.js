@@ -68,9 +68,12 @@ const StoryDetailStyle = styled.div`
       font-weight: bold;
       margin-top: 35px;
       .item {
-        margin-right: 10px;
         font-weight: normal;
         font-size: 14px;
+        background-color: #fff7ef;
+        p {
+          padding: 1rem;
+        }
       }
     }
 
@@ -81,9 +84,10 @@ const StoryDetailStyle = styled.div`
         padding: 8px;
         padding-left: 13px;
         padding-right: 13px;
-        border-radius: 10px;
+        border-radius: 5px;
         margin-right: 10px;
         font-weight: normal;
+        font-size: 13px;
         color: #ffa400;
         background-color: #fff7ef;
         transition: 0.3s ease-in-out;
@@ -461,15 +465,16 @@ const StoryDetail = ({ match }) => {
 
             <div className="items">
               <p>저는 이런것들이 필요합니다</p>
-
-              {data.Story_Items.map((item, key) => {
-                return (
-                  <div className="item" key={key}>
-                    {item.item_name} ({item.item_quantity} 개 X{" "}
-                    {item.item_price.toLocaleString()} 원)
-                  </div>
-                );
-              })}
+              <div className="item">
+                {data.Story_Items.map((item, key) => {
+                  return (
+                    <p key={key}>
+                      {item.item_name} ({item.item_quantity} 개 X{" "}
+                      {item.item_price.toLocaleString()} 원)
+                    </p>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="hashtags">
