@@ -8,9 +8,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      item_id: {
+      item_name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      item_price: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+      },
+      item_quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
     {
