@@ -6,7 +6,6 @@ const {
   Story_File,
   Hashtag,
   Story_Hashtag,
-  Item,
   Story_Item,
   User,
   Story_Comment,
@@ -55,20 +54,16 @@ router.post("/add", upload.array("files"), async (req, res) => {
       });
     }
 
-    const items = req.body.items.split(",");
+    const items = JSON.parse(req.body.items);
     for (const item of items) {
-      const result = await Item.findOrCreate({
-        where: { item: item },
-      });
-
-      await Story_Item.findOrCreate({
-        where: {
-          story_id: story.dataValues.id,
-          item_id: result[0].dataValues.id,
-        },
+      console.log(item);
+      await Story_Item.create({
+        story_id: story.dataValues.id,
+        item_name: item.item_name,
+        item_price: item.item_price,
+        item_quantity: item.item_quantity,
       });
     }
-
     res.json({ success: 1 });
   } catch (error) {
     console.error(error);
@@ -145,7 +140,7 @@ router.get("/:id", async (req, res) => {
       where: { id: story_id },
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
-        { model: Item, attributes: ["item"] },
+        { model: Story_Item },
         { model: User, attributes: ["nickname"] },
       ],
     });

@@ -39,10 +39,19 @@ router.post('/add', async (req,res) => {
     }
 });
 
+
 router.delete("/delete", async (req, res) => {
+    const id = req.body;
     try {
-      await Story_Comment.destroy({ where: { id: req.body.id } });
-      res.json({ message: true });
+      await Story_Comment.destroy({
+         where: { 
+           id: id
+          } 
+        })
+        .then ((result) => {
+          res.json({ message: true }
+          );
+        })
     } catch (err) {
       console.log(err);
       res.json({ message: false });
@@ -58,6 +67,9 @@ router.get("/list/:story_id", async (req, res) => {
       where : {
         story_id : story_id
       },
+      order: [
+        [ "created_at","DESC" ]
+      ],
       attributes: ["comment"],
       include: [
         { model: User, attributes: ["nickname"] },

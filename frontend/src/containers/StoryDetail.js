@@ -5,9 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { storyLike, storyLoader } from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
-import { commentAdd, commentDelete, commentListLoader } from "../actions/comment";
+import {
+  commentAdd,
+  commentDelete,
+  commentListLoader,
+} from "../actions/comment";
 import { signInBtnIsClicked } from "../actions/user";
-
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -193,42 +196,39 @@ const StoryDetailStyle = styled.div`
       }
     }
 
+    .comment {
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: solid gray 0.1px;
+    }
 
-.comment {
-  margin-top:10px;
-  position: relative;
-  overflow: hidden;
-  border-bottom: solid gray 0.1px;
-}
+    .comment div button {
+      width: 50px;
+      height: 30px;
+      cursor: pointer;
+      outline: none;
+      border: none;
+      color: black;
+      background-color: white;
+      transition: 0.2s ease-in-out;
+      :hover {
+        color: orange;
+      }
+    }
 
-.comment div button {
-            width: 50px;
-            height: 30px;
-            cursor: pointer;
-            outline: none;
-            border: none;
-          color: black;
-            background-color:white;
-            transition: 0.2s ease-in-out;
-              :hover {
-                color: orange;
-              }
-          }
+    .comment div a {
+      color: orange;
+      font-weight: bold;
+    }
 
-.comment div a {
-   color: orange;
-  font-weight: bold
-}
-
-.comment p {
-  font-weight:normal;
-}
-
+    .comment p {
+      font-weight: normal;
+    }
   }
 `;
 
 const ErrorBoxStyle = styled.p`
-
   ${(props) => {
     if (props.error == false) {
       return "display:none;opacity:0";
@@ -261,13 +261,12 @@ const StoryDetail = ({ match }) => {
     (state) => state.authentication.status.isLoggedIn
   );
   const loginStatus = useSelector((state) => state.authentication.login.status);
-    
+
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id));
   }, [loginStatus === "SUCCESS"]);
 
-  
   const comment = useRef();
   const errorMsg = "댓글을 입력하세요";
 
@@ -278,7 +277,9 @@ const StoryDetail = ({ match }) => {
     if (comments === "") {
       comment.current.focus();
     } else {
-      dispatch(commentAdd({comment:comments,story_id:data.id}))
+      dispatch(commentAdd({comment:comments,story_id:data.id})).then(
+        setComments("")
+      )
     }
   };
 
@@ -300,18 +301,22 @@ const StoryDetail = ({ match }) => {
   };
 
   const onChangeHandler = (e) => {
-       setComments(e.target.value)
-  }
+    setComments(e.target.value);
+  };
 
   const commentDeleteHandler = () => {
-    dispatch(commentDelete({comment:commentList.id}))
+      dispatch(commentDelete({ comment: commentList.id }))
+        .then(
+          setComments(""))
+    } 
 
-  }
-  
+  const commentClear = () => {
+    setComments("")
+  }  
+    
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
   };
-
 
   const Comment = () => {
     if (!isLoggedIn) {
@@ -357,28 +362,31 @@ const StoryDetail = ({ match }) => {
               <img alt="share" className="share" src="/icons/share.svg" />
             </div>
           </div>
-          <input ref={comment} value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
+          <input
+            ref={comment}
+            value={comments}
+            onChange={onChangeHandler}
+            className="comment_input"
+            placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
+          />
           <div className="comment__buttons">
-            <button className="comment__clear" onClick={commentDeleteHandler}>취소</button>
+            <button className="comment__clear" onClick={commentClear}>취소</button>
             <button onClick={commentAddHandler}>등록</button>
           </div>
 
-
           {commentList.map((commentList, key) => {
-                return (
-                  <span className="comment" key={key}>
+            return (
+              <span className="comment" key={key}>
+                <div className="Top">
+                  <a>{commentList.User.nickname}</a>{" "}
+                  <button onClick={commentDeleteHandler}>삭제</button>
+                </div>
+                <br />
 
-                    <div className="Top">
-                    <a>{commentList.User.nickname}</a> <button onClick={commentDeleteHandler}>삭제</button>
-                    </div>
-                    <br/>
-                    
-                    <p>{commentList.comment}</p>
-                  </span>
-                );
-              })}
-
-
+                <p>{commentList.comment}</p>
+              </span>
+            );
+          })}
         </div>
       );
     }
@@ -406,13 +414,13 @@ const StoryDetail = ({ match }) => {
 
             <div className="items">
               <p>저는 이런것들이 필요합니다</p>
-              {data.Items.map((item, key) => {
-                return (
-                  <span className="item" key={key}>
-                    {item.item}
-                  </span>
-                );
-              })}
+              {/*{data.Items.map((item, key) => {*/}
+              {/*  return (*/}
+              {/*    <span className="item" key={key}>*/}
+              {/*      {item.item}*/}
+              {/*    </span>*/}
+              {/*  );*/}
+              {/*})}*/}
             </div>
 
             <div className="hashtags">
