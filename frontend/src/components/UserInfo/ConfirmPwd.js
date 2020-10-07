@@ -39,6 +39,9 @@ const ConfirmPwd = () => {
       username: nickname,
       [e.target.id]: e.target.value,
     });
+    if(e.key==="Enter"){
+        submitHandler()
+    }
   };
 
   const submitHandler = () => {
@@ -47,6 +50,7 @@ const ConfirmPwd = () => {
       username: nickname,
       password: "",
     });
+
   };
   useEffect(() => {
     dispatch(confirm());
@@ -79,6 +83,7 @@ const ConfirmPwd = () => {
               value={user.password}
               placeholder="비밀번호"
               onChange={onChangeHandler}
+              onKeyPress={onChangeHandler}
             />
             <button onClick={submitHandler}>확인</button>
           </article>

@@ -2,7 +2,17 @@ import {
   STORY_ADD,
   STORY_ADD_FAILURE,
   STORY_ADD_SUCCESS,
+  STORY_LIST_LOAD,
+  STORY_LIST_LOAD_SUCCESS,
+  STORY_LIST_LOAD_FAILURE,
+  STORY_LOAD,
+  STORY_LOAD_SUCCESS,
+  STORY_LOAD_FAILURE,
+  STORY_LIKE,
+  STORY_LIKE_SUCCESS,
+  STORY_LIKE_FAILURE,
 } from "../actions/story";
+import update from "react-addons-update";
 
 const initialState = {
   add: {
@@ -14,28 +24,141 @@ const initialState = {
   update: {
     status: "INIT",
   },
+  list: {
+    status: "INIT",
+    data: [],
+    num: 1,
+  },
+  detail: {
+    status: "INIT",
+    data: null,
+  },
+  like: {
+    user: false,
+    status: "INIT",
+    num: 0,
+  },
 };
 
 export default function story(state = initialState, action) {
   switch (action.type) {
     case STORY_ADD:
-      return {
+      return update(state, {
         add: {
-          status: "WAITING",
+          status: { $set: "WAITING" },
         },
-      };
+      });
+
     case STORY_ADD_SUCCESS:
-      return {
+      return update(state, {
         add: {
-          status: "SUCCESS",
+          status: { $set: "SUCCESS" },
         },
-      };
+      });
+
     case STORY_ADD_FAILURE:
-      return {
+      return update(state, {
         add: {
-          status: "FAILURE",
+          status: { $set: "FAILURE" },
         },
-      };
+      });
+
+    case STORY_LIST_LOAD:
+      return update(state, {
+        list: {
+          status: { $set: "WAITING" },
+        },
+        like: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_LIST_LOAD_SUCCESS:
+      let newData = state.list.data.concat(action.list);
+      if (action.status === true) {
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: newData },
+            num: { $set: state.list.num + 1 },
+          },
+        });
+      } else if (state.list.num === 1 && action.status === false) {
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: action.list },
+          },
+        });
+      } else {
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+          },
+        });
+      }
+
+    case STORY_LIST_LOAD_FAILURE:
+      return update(state, {
+        list: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_LOAD:
+      return update(state, {
+        detail: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_LOAD_SUCCESS:
+      return update(state, {
+        detail: {
+          status: { $set: "SUCCESS" },
+          data: { $set: action.data },
+        },
+        like: {
+          status: { $set: "SUCCESS" },
+          user: { $set: action.like },
+          likeNum: { $set: action.likeNum },
+        },
+      });
+
+    case STORY_LOAD_FAILURE:
+      return update(state, {
+        detail: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_LIKE:
+      return update(state, {
+        like: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_LIKE_SUCCESS:
+      let num;
+      if (state.like.user) num = state.like.likeNum - 1;
+      else num = state.like.likeNum + 1;
+
+      return update(state, {
+        like: {
+          status: { $set: "SUCCESS" },
+          user: { $set: !state.like.user },
+          likeNum: { $set: num },
+        },
+      });
+
+    case STORY_LIKE_FAILURE:
+      return update(state, {
+        like: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
     default:
       return state;
   }

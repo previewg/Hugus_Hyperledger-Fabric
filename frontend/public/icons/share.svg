@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <desc>Created with Lunacy</desc>
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
+    </filter>
+    <path d="M0 0L16 0L16 16L0 16L0 0Z" id="path_1" />
+    <clipPath id="mask_1">
+      <use xlink:href="#path_1" />
+    </clipPath>
+  </defs>
+  <g id="Share-icon" filter="url(#filter_1)">
+    <path d="M0 0L16 0L16 16L0 16L0 0Z" id="Background" fill="none" fill-rule="evenodd" stroke="none" />
+    <g clip-path="url(#mask_1)">
+      <path d="M11.5 0C10.125 0 9 1.125 9 2.5C9 2.67188 9.01953 2.83594 9.05078 3L4.51953 5.03906C4.0625 4.41406 3.32813 4 2.5 4C1.125 4 0 5.125 0 6.5C0 7.875 1.125 9 2.5 9C3.33203 9 4.07422 8.58203 4.52734 7.94922L9.0625 9.96484C9.02344 10.1367 9 10.3164 9 10.5C9 11.875 10.125 13 11.5 13C12.875 13 14 11.875 14 10.5C14 9.125 12.875 8 11.5 8C10.668 8 9.92578 8.41797 9.47266 9.05078L4.9375 7.03906C4.97656 6.86328 5 6.68359 5 6.5C5 6.3125 4.97656 6.12891 4.9375 5.95313L9.44531 3.91406C9.89844 4.57031 10.6523 5 11.5 5C12.875 5 14 3.875 14 2.5C14 1.125 12.875 0 11.5 0L11.5 0ZM11.5 1C12.3359 1 13 1.66406 13 2.5C13 3.33594 12.3359 4 11.5 4C10.6641 4 10 3.33594 10 2.5C10 1.66406 10.6641 1 11.5 1L11.5 1ZM2.5 5C3.33594 5 4 5.66406 4 6.5C4 7.33594 3.33594 8 2.5 8C1.66406 8 1 7.33594 1 6.5C1 5.66406 1.66406 5 2.5 5L2.5 5ZM11.5 9C12.3359 9 13 9.66406 13 10.5C13 11.3359 12.3359 12 11.5 12C10.6641 12 10 11.3359 10 10.5C10 9.66406 10.6641 9 11.5 9L11.5 9Z" transform="translate(1 1)" id="Shape" fill="#FFFFFF" fill-rule="evenodd" stroke="none" />
+    </g>
+  </g>
+</svg>
