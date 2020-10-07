@@ -137,7 +137,8 @@ export const profileUpload = (formData) => async (dispatch) => {
       headers: { "content-type": "multipart/form-data" },
     })
     .then((response) => {
-      dispatch(profilePathSuccess(response.data.profile_path));
+      dispatch(profilePathSuccess(response.data.path));
+      console.log(response.data.path)
       alert("프로필 업로드 완료");
     })
     .catch((error) => {
