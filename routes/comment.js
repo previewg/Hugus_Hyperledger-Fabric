@@ -58,6 +58,9 @@ router.get("/list/:story_id", async (req, res) => {
       where : {
         story_id : story_id
       },
+      order: [
+        [ "created_at","DESC" ]
+      ],
       attributes: ["comment"],
       include: [
         { model: User, attributes: ["nickname"] },

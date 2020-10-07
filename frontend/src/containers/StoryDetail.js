@@ -278,7 +278,9 @@ const StoryDetail = ({ match }) => {
     if (comments === "") {
       comment.current.focus();
     } else {
-      dispatch(commentAdd({comment:comments,story_id:data.id}))
+      dispatch(commentAdd({comment:comments,story_id:data.id})).then(
+        setComments("")
+      )
     }
   };
 
@@ -304,10 +306,15 @@ const StoryDetail = ({ match }) => {
   }
 
   const commentDeleteHandler = () => {
-    dispatch(commentDelete({comment:commentList.id}))
+      dispatch(commentDelete({ comment: commentList.id }))
+        .then(
+          setComments(""))
+    } 
 
-  }
-  
+  const commentClear = () => {
+    setComments("")
+  }  
+    
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
   };
@@ -359,7 +366,7 @@ const StoryDetail = ({ match }) => {
           </div>
           <input ref={comment} value={comments} onChange={onChangeHandler} className="comment_input" placeholder="따뜻한 말 한마디는 큰 힘이 됩니다." />
           <div className="comment__buttons">
-            <button className="comment__clear" onClick={commentDeleteHandler}>취소</button>
+            <button className="comment__clear" onClick={commentClear}>취소</button>
             <button onClick={commentAddHandler}>등록</button>
           </div>
 
