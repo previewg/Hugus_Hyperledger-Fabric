@@ -46,6 +46,9 @@ const StoryDetailStyle = styled.div`
         font-weight: bold;
       }
       p:nth-child(2) {
+        border: solid 0.1px lightgray;
+        padding: 15px;
+        padding-left: 20px;
       }
     }
 
@@ -55,6 +58,9 @@ const StoryDetailStyle = styled.div`
         font-weight: bold;
       }
       p:nth-child(2) {
+        border: solid 0.1px lightgray;
+        padding: 15px;
+        padding-left: 20px;
       }
     }
 
@@ -64,7 +70,7 @@ const StoryDetailStyle = styled.div`
       .item {
         margin-right: 10px;
         font-weight: normal;
-        color: orange;
+        font-size: 14px;
       }
     }
 
@@ -72,9 +78,20 @@ const StoryDetailStyle = styled.div`
       font-weight: bold;
       margin-top: 35px;
       .tag {
+        padding: 8px;
+        padding-left: 13px;
+        padding-right: 13px;
+        border-radius: 10px;
         margin-right: 10px;
         font-weight: normal;
-        color: orange;
+        color: #ffa400;
+        background-color: #fff7ef;
+        transition: 0.3s ease-in-out;
+        cursor: pointer;
+        :hover {
+          background-color: #ffc048;
+          color: white;
+        }
       }
     }
 
@@ -223,10 +240,10 @@ const StoryDetailStyle = styled.div`
     }
     .comment div div {
       width: 100%;
-      display:flex;
+      display: flex;
       justify-content: flex-end;
       font-weight: normal;
-      font-size:80%;
+      font-size: 80%;
     }
     .comment p {
       font-weight: normal;
@@ -286,9 +303,9 @@ const StoryDetail = ({ match }) => {
     if (comments === "") {
       comment.current.focus();
     } else {
-      dispatch(commentAdd({comment:comments,story_id:data.id})).then(
+      dispatch(commentAdd({ comment: comments, story_id: data.id })).then(
         setComments("")
-      )
+      );
     }
   };
 
@@ -314,20 +331,18 @@ const StoryDetail = ({ match }) => {
   };
 
   const commentDeleteHandler = (id) => {
-      dispatch(commentDelete({comment_id:id,story_id:data.id}))
-        .then(
-          setComments(""))
-    } 
+    dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
+      setComments("")
+    );
+  };
 
   const commentClear = () => {
-    setComments("")
-  }  
-    
+    setComments("");
+  };
+
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
   };
-
-
 
   const Comment = () => {
     if (!isLoggedIn) {
@@ -389,18 +404,15 @@ const StoryDetail = ({ match }) => {
             onChange={onChangeHandler}
             className="comment_input"
             placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
-            onKeyDown ={
-              (e) => {
-                if (e.key === "Enter") commentAddHandler(e)
-              }
-            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commentAddHandler(e);
+            }}
           />
           <div className="comment__buttons">
-            <button className="comment__clear" onClick={commentClear}>취소</button>
-            <button 
-            onClick={commentAddHandler}
-
-            >등록</button>
+            <button className="comment__clear" onClick={commentClear}>
+              취소
+            </button>
+            <button onClick={commentAddHandler}>등록</button>
           </div>
 
           {commentList.map((comment, key) => {
@@ -408,16 +420,14 @@ const StoryDetail = ({ match }) => {
               <span className="comment" key={key}>
                 <div className="Top">
                   <a>{comment.User.nickname}</a>
-                      
-                  {  ( current_user == comment.User.nickname ) &&  
-                      <button 
-                        onClick={
-                          ()=>commentDeleteHandler(comment.id)}
-                        >삭제</button>
-                  }
-                  
-                <div className="date">{comment.createdAt}</div>
 
+                  {current_user == comment.User.nickname && (
+                    <button onClick={() => commentDeleteHandler(comment.id)}>
+                      삭제
+                    </button>
+                  )}
+
+                  <div className="date">{comment.createdAt}</div>
                 </div>
 
                 <p>{comment.comment}</p>
@@ -452,15 +462,14 @@ const StoryDetail = ({ match }) => {
             <div className="items">
               <p>저는 이런것들이 필요합니다</p>
 
-               {/* {data.Items.map((item, key) => {
+              {data.Story_Items.map((item, key) => {
                 return (
-               <span className="item" key={key}>
-                    {item.item}
-                 </span>
+                  <div className="item" key={key}>
+                    {item.item_name} ({item.item_quantity} 개 X{" "}
+                    {item.item_price.toLocaleString()} 원)
+                  </div>
                 );
-              })
-            } */}
-
+              })}
             </div>
 
             <div className="hashtags">
@@ -468,7 +477,7 @@ const StoryDetail = ({ match }) => {
               {data.Hashtags.map((tag, key) => {
                 return (
                   <span className="tag" key={key}>
-                    {tag.hashtag}
+                    #{tag.hashtag}
                   </span>
                 );
               })}

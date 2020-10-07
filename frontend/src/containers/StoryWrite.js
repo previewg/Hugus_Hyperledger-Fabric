@@ -128,6 +128,7 @@ const StoryWriteStyle = styled.div`
       }
 
       .item {
+        margin-top: 40px;
         width: 90%;
         display: flex;
         align-items: center;
@@ -246,15 +247,15 @@ const StoryWriteStyle = styled.div`
       margin-top: 30px;
       width: 100%;
       border: solid 0.1px lightgray;
-
       margin-bottom: 30px;
       font-size: 13px;
-      > p {
-        margin: 10px;
-        padding: 10px;
-        margin-left: 5px;
+      display: flex;
+      flex-direction: column;
+      p {
+        margin: 15px;
+        margin-left: 20px;
       }
-      p:nth-child(1) {
+      > p:nth-child(1) {
         font-weight: bold;
       }
       strong:nth-child(1) {
@@ -262,6 +263,10 @@ const StoryWriteStyle = styled.div`
       }
       strong:nth-child(2) {
         color: orange;
+      }
+      div {
+        display: flex;
+        justify-content: space-between;
       }
     }
 
@@ -400,6 +405,7 @@ const StoryWrite = (props) => {
     items: [],
     hashtags: [],
     totalPrice: 0,
+    goal: 0,
   });
 
   const [filled, setFilled] = useState({
@@ -474,7 +480,7 @@ const StoryWrite = (props) => {
       } else {
         formData.append("files", "");
       }
-      dispatch(storyAdd(formData));
+      dispatch(storyAdd(formData, { ...props }));
     }
   };
 
@@ -535,12 +541,19 @@ const StoryWrite = (props) => {
         item_quantity: data.item_quantity,
       };
       let totalPrice = data.totalPrice + data.item_price * data.item_quantity;
+      let goal;
+      if (totalPrice < 1000000 && totalPrice > 0) {
+        goal = 50;
+      } else {
+        goal = parseInt(totalPrice / 1000000) * 100;
+      }
       let items = data.items.concat(item);
       setData({
         ...data,
         item_name: "",
         item_price: "",
         item_quantity: "",
+        goal: goal,
         items,
         totalPrice: totalPrice,
       });
@@ -572,6 +585,15 @@ const StoryWrite = (props) => {
   const onDeleteHandler = (key) => () => {
     console.log(key);
     let items;
+    let totalPrice =
+      data.totalPrice -
+      data.items[key].item_price * data.items[key].item_quantity;
+    let goal;
+    if (totalPrice < 1000000 && totalPrice > 0) {
+      goal = 50;
+    } else {
+      goal = parseInt(totalPrice / 1000000) * 100;
+    }
     if (key === 0) {
       items = data.items.slice(1, data.items.length);
     } else if (key === data.items.length - 1) {
@@ -584,6 +606,8 @@ const StoryWrite = (props) => {
     setData({
       ...data,
       items,
+      totalPrice: totalPrice,
+      goal: goal,
     });
   };
 
@@ -622,7 +646,6 @@ const StoryWrite = (props) => {
 
   useEffect(() => {
     if (addStatus === "SUCCESS") {
-      alert("등록에 성공하였습니다.");
       setData({
         title: "",
         info: "",
@@ -633,9 +656,6 @@ const StoryWrite = (props) => {
         items: [],
         hashtags: [],
       });
-      props.history.push("/story");
-    } else if (addStatus === "FAILURE") {
-      alert("등록에 실패 하였습니다.");
     }
   }, [errorCode, addStatus]);
 
@@ -783,9 +803,12 @@ const StoryWrite = (props) => {
             <p>✔ 기준</p>
             <p>
               100만원 <strong>미만</strong> : 50(필요 득표수), 100만원{" "}
-              <strong>이상</strong> : 총액/100(만원) 의 몫
+              <strong>이상</strong> : 총액(만원) / 100(만원) 의 몫
             </p>
-            <p>예) 199만원 -> 100, 201만원 -> 200</p>
+            <div>
+              <p>예) 199만원 -> 100, 201만원 -> 200</p>
+              <p>현재 필요 득표수 : {data.goal}</p>
+            </div>
           </div>
 
           <div className="hashtags">
