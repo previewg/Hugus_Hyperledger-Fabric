@@ -31,6 +31,12 @@ export const CONFIRM = "CONFIRM";
 export const CONFIRM_PWD = "CONFIRM_PWD";
 export const CONFIRM_PWD_ERROR = "CONFIRM_PWD_ERROR";
 
-//Profile Path
-export const PROFILE_PATH = "PROFILE_PATH";
-export const PROFILE_PATH_SUCCESS = "PROFILE_PATH_SUCCESS";
+//Profile Add
+export const PROFILE_ADD = "ADD_PROFILE";
+export const PROFILE_ADD_SUCCESS = "ADD_PROFILE_SUCCESS";
+export const PROFILE_ADD_FAILURE = "ADD_PROFILE_FAILURE";
+
+//Profile Display
+export const PROFILE_LOAD = 'PROFILE_LOAD';
+export const PROFILE_LOAD_SUCCESS = 'PROFILE_LOAD_SUCCESS';
+export const PROFILE_LOAD_FAILURE = 'PROFILE_LOAD_FAILURE';

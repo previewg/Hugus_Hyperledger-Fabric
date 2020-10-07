@@ -413,13 +413,13 @@ const StoryDetail = ({ match }) => {
 
             <div className="items">
               <p>저는 이런것들이 필요합니다</p>
-              {data.Items.map((item, key) => {
+              {/* {data.Items.map((item, key) => {
                 return (
                   <span className="item" key={key}>
                     {item.item}
                   </span>
                 );
-              })}
+              })} */}
             </div>
 
             <div className="hashtags">

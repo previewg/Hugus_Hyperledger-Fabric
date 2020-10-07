@@ -30,11 +30,13 @@ justify-content: center;
 `
 
 const EditInfo = () => {
+    const path = useSelector((state) => state.authentication.status.profile_path);
     const username = useSelector(state => state.authentication.status.currentUser);
     const dispatch = useDispatch();
     const [profile, setProfile] = useState({
         file: null,
     })
+    const [profile_Path, setProfile_Path] =useState(path);
 
     const [preImg, setPreImg] = useState([]);
     const onDeleteClick = async () => {
@@ -76,6 +78,8 @@ const EditInfo = () => {
 
     }
     const onChangeHandler = (e) => {
+        console.log(profile_Path)
+        console.log(path)
         e.preventDefault();
         if (e.target.name === 'file') {
             previewImg(e);
@@ -88,13 +92,16 @@ const EditInfo = () => {
 
     }
     useEffect(() => {
+console.log("렌더링됨")
+        console.log(path)
+            setProfile_Path(path)
 
-
-    }, [preImg])
+    }, [])
 
     return (
         <EditPage>
             <div>
+                <img className="profile_img" alt="" src={"../" + profile_Path} />
             </div>
             <div className="profile_picture">
                 프로필 사진 설정하기
