@@ -9,10 +9,10 @@ const axios = require("axios");
 // multer 설정
 const multer = require("multer");
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, "user_profile"),
-    filename: (req, file, cb) => cb(null, file.originalname + "_" + Date.now()),
-  }),
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => cb(null, "user_profile"),
+        filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname),
+    }),
 });
 
 router.post("/signup", async (req, res, next) => {
@@ -140,36 +140,49 @@ router.put("/update", (req, res, next) => {
 
 // 회원사진수정
 router.put("/profile", upload.single("file"), async (req, res) => {
-  const { username } = req.body;
-  try {
-    console.log(req.file);
-    let profile = req.file.path;
-    await User.update(
-      {
-        user_profile: profile,
-      },
-      { where: { nickname: username } }
-    );
-    res.json({ success: 1 });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ success: 3 });
-  }
+    const {username} = req.body;
+    try {
+        console.log(req.file);
+        let profile = req.file.filename;
+        await User.update(
+            {
+                user_profile: profile,
+            },
+            {where: {nickname: username}}
+        );
+        res.json({profile});
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({success: 3});
+    }
 });
+router.get("/profile/:id", async (req, res) => {
+    try {
+        const user_email = req.session.loginInfo.user_email;
+        const data = await User.findOne(
+            {where: {email:user_email }},
+            {attributes: []}
+        );
+        res.json({ data:data, success: 1});
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({failure: 3});
+    }
+})
 
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
   const { username, password } = req.body;
 
-  User.findOne({ where: { nickname: username } }).then((user) => {
-    bcrypt.compare(password, user.password).then((isMatched) => {
-      if (isMatched) {
-        return res.status(200).json({ success: true });
-      } else {
-        res.status(400).json({ password_incorrect: "PassWord Incorrect" });
-      }
+    User.findOne({where: {nickname: username}}).then((user) => {
+        bcrypt.compare(password, user.password).then((isMatched) => {
+            if (isMatched) {
+                return res.status(200).json({success: true});
+            } else {
+                res.status(400).json({password_incorrect: "PassWord Incorrect"});
+            }
+        });
     });
-  });
 });
 
 module.exports = router;

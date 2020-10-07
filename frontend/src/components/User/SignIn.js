@@ -125,6 +125,9 @@ const SignIn = () => {
       ...user,
       [e.target.id]: e.target.value,
     });
+    if(e.key==="Enter"){
+      signInHandler()
+    }
   };
 
   const signInHandler = () => {
@@ -161,6 +164,7 @@ const SignIn = () => {
             placeholder="이메일"
             value={user.email}
             onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
           />
           <input
             type="password"
@@ -168,6 +172,7 @@ const SignIn = () => {
             value={user.password}
             placeholder="비밀번호"
             onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
           />
           <div>
             <div className="checkbox">
