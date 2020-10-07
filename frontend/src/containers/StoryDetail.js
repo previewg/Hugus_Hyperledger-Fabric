@@ -221,7 +221,13 @@ const StoryDetailStyle = styled.div`
       color: orange;
       font-weight: bold;
     }
-
+    .comment div div {
+      width: 100%;
+      display:flex;
+      justify-content: flex-end;
+      font-weight: normal;
+      font-size:80%;
+    }
     .comment p {
       font-weight: normal;
     }
@@ -259,6 +265,9 @@ const StoryDetail = ({ match }) => {
   const like = useSelector((state) => state.story.like);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
+  );
+  const current_user = useSelector(
+    (state) => state.authentication.status.currentUser
   );
   const loginStatus = useSelector((state) => state.authentication.login.status);
 
@@ -304,8 +313,8 @@ const StoryDetail = ({ match }) => {
     setComments(e.target.value);
   };
 
-  const commentDeleteHandler = () => {
-      dispatch(commentDelete({ comment: commentList.id }))
+  const commentDeleteHandler = (id) => {
+      dispatch(commentDelete({comment_id:id,story_id:data.id}))
         .then(
           setComments(""))
     } 
@@ -317,6 +326,8 @@ const StoryDetail = ({ match }) => {
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
   };
+
+
 
   const Comment = () => {
     if (!isLoggedIn) {
@@ -335,7 +346,17 @@ const StoryDetail = ({ match }) => {
             </div>
           </div>
           <input disabled placeholder="로그인이 필요합니다." />
-          <div></div>
+          {commentList.map((comment, key) => {
+            return (
+              <span className="comment" key={key}>
+                <div className="Top">
+                  <a>{comment.User.nickname}</a>
+                </div>
+                <br />
+                <p>{comment.comment}</p>
+              </span>
+            );
+          })}
         </div>
       );
     } else {
@@ -368,22 +389,38 @@ const StoryDetail = ({ match }) => {
             onChange={onChangeHandler}
             className="comment_input"
             placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
+            onKeyDown ={
+              (e) => {
+                if (e.key === "Enter") commentAddHandler(e)
+              }
+            }
           />
           <div className="comment__buttons">
             <button className="comment__clear" onClick={commentClear}>취소</button>
-            <button onClick={commentAddHandler}>등록</button>
+            <button 
+            onClick={commentAddHandler}
+
+            >등록</button>
           </div>
 
-          {commentList.map((commentList, key) => {
+          {commentList.map((comment, key) => {
             return (
               <span className="comment" key={key}>
                 <div className="Top">
-                  <a>{commentList.User.nickname}</a>{" "}
-                  <button onClick={commentDeleteHandler}>삭제</button>
-                </div>
-                <br />
+                  <a>{comment.User.nickname}</a>
+                      
+                  {  ( current_user == comment.User.nickname ) &&  
+                      <button 
+                        onClick={
+                          ()=>commentDeleteHandler(comment.id)}
+                        >삭제</button>
+                  }
+                  
+                <div className="date">{comment.createdAt}</div>
 
-                <p>{commentList.comment}</p>
+                </div>
+
+                <p>{comment.comment}</p>
               </span>
             );
           })}
@@ -414,13 +451,16 @@ const StoryDetail = ({ match }) => {
 
             <div className="items">
               <p>저는 이런것들이 필요합니다</p>
-              {/*{data.Items.map((item, key) => {*/}
-              {/*  return (*/}
-              {/*    <span className="item" key={key}>*/}
-              {/*      {item.item}*/}
-              {/*    </span>*/}
-              {/*  );*/}
-              {/*})}*/}
+
+               {/* {data.Items.map((item, key) => {
+                return (
+               <span className="item" key={key}>
+                    {item.item}
+                 </span>
+                );
+              })
+            } */}
+
             </div>
 
             <div className="hashtags">

@@ -4,7 +4,10 @@
     "password": "simegats1004!",
     "database": "project",
     "host": "management-tutorial.cohjyjh51jft.ap-northeast-2.rds.amazonaws.com",
-    "dialect": "mysql"
+    "dialect": "mysql",
+   
+    "dialectOptions": { "dateStrings": true, "typeCast": true },
+    "timezone" : "+09:00"
   },
   "test": {
     "username": "root",

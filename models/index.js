@@ -4,12 +4,22 @@ const Sequelize = require("sequelize");
 const env = process.env.NODE_ENV || "development";
 //개발용인지 배포용(production)인지 나눔.
 const config = require("../config/config.json")[env];
-
+// const seqConfig = { 
+//   define:{
+//     timezone: config.database.timezone,
+//     dialect: 'mysql',
+//     dialectOptions: {  charset: 'utf8mb4',
+//     dateStrings: true, typeCast: true },
+//     timezone : '+09:00',
+//     timestamps: true
+//   }
+// }
 const sequelize = new Sequelize(
   config.database,
   config.username,
   config.password,
-  config
+  config,
+  // seqConfig
 );
 const db = {};
 

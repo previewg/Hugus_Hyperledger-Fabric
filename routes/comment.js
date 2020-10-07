@@ -7,9 +7,9 @@ const {
     User,
     Story_Comment,
   } = require("../models");
+  const { Sequelize, DataTypes } = require('sequelize');
 
 router.post('/add', async (req,res) => {
-    console.log(req.body);
     try {
     const user_email = req.session.loginInfo.user_email;
     await Story_Comment.create({
@@ -17,20 +17,19 @@ router.post('/add', async (req,res) => {
     story_id: req.body.story_id,  
     comment: req.body.comment,
     });
-
     const list = await Story_Comment.findAll({
+      
       where : {
         story_id : req.body.story_id
       },
       order: [
         [ "created_at","DESC" ]
       ],
-      attributes: ["comment"],
       include: [
         { model: User, attributes: ["nickname"] },
       ],
-
     });
+ 
 
     res.json({ list: list, success: 1 });
     } catch (error) {
@@ -40,18 +39,30 @@ router.post('/add', async (req,res) => {
 });
 
 
-router.delete("/delete", async (req, res) => {
-    const id = req.body;
+// 댓글 취소
+router.post("/delete", async (req, res) => {
+  const story_id = req.body.story_id;
+  const comment_id = req.body.comment_id;
+    console.log(req.body);
+
     try {
       await Story_Comment.destroy({
          where: { 
-           id: id
+           id : comment_id
           } 
         })
-        .then ((result) => {
-          res.json({ message: true }
-          );
-        })
+        const list = await Story_Comment.findAll({
+          where : {
+            story_id : story_id
+          },
+          order: [
+            [ "created_at","DESC" ]
+          ],
+          include: [
+            { model: User, attributes: ["nickname"] },
+          ],
+        });
+        res.json({ list: list , success: 1 });
     } catch (err) {
       console.log(err);
       res.json({ message: false });
@@ -70,13 +81,11 @@ router.get("/list/:story_id", async (req, res) => {
       order: [
         [ "created_at","DESC" ]
       ],
-      attributes: ["comment"],
       include: [
         { model: User, attributes: ["nickname"] },
       ],
     });
-
-    res.json({ list: list, success: 1 });
+    res.json({ list: list , success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }
