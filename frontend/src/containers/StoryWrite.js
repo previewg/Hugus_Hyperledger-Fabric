@@ -194,6 +194,11 @@ const StoryWriteStyle = styled.div`
           }
         }
       }
+
+      .total_price {
+        text-align: end;
+        font-size: 14px;
+      }
     }
     .hashtags {
       font-weight: bold;
@@ -309,7 +314,9 @@ const StoryWrite = (props) => {
   const title = useRef();
   const info = useRef();
   const content = useRef();
-  const items = useRef();
+  const itemName = useRef();
+  const itemPrice = useRef();
+  const itemQuantity = useRef();
   const hashtags = useRef();
   const addStatus = useSelector((state) => state.story.add.status);
 
@@ -324,6 +331,7 @@ const StoryWrite = (props) => {
     hashtag: "",
     items: [],
     hashtags: [],
+    totalPrice: 0,
   });
 
   const [filled, setFilled] = useState({
@@ -365,7 +373,7 @@ const StoryWrite = (props) => {
       return false;
     } else if (data.items.length == 0) {
       setErrorCode(7);
-      items.current.focus();
+      itemName.current.focus();
       setFilled({
         ...filled,
         items: false,
@@ -389,8 +397,8 @@ const StoryWrite = (props) => {
       formData.append("title", data.title);
       formData.append("info", data.info);
       formData.append("content", data.content);
-      formData.append("items", data.items);
       formData.append("hashtags", data.hashtags);
+      formData.append("items", JSON.stringify(data.items));
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -443,16 +451,22 @@ const StoryWrite = (props) => {
   };
 
   const addItem = (e) => {
-    if (data.item_name === "") setErrorCode(4);
-    else if (data.item_price === "") setErrorCode(5);
-    else if (data.item_quantity === "") setErrorCode(6);
-    else {
+    if (data.item_name === "") {
+      setErrorCode(4);
+      itemName.current.focus();
+    } else if (data.item_price === "") {
+      setErrorCode(5);
+      itemPrice.current.focus();
+    } else if (data.item_quantity === "") {
+      setErrorCode(6);
+      itemQuantity.current.focus();
+    } else {
       let item = {
         item_name: data.item_name,
         item_price: data.item_price,
         item_quantity: data.item_quantity,
       };
-
+      let totalPrice = data.totalPrice + data.item_price * data.item_quantity;
       let items = data.items.concat(item);
       setData({
         ...data,
@@ -460,6 +474,7 @@ const StoryWrite = (props) => {
         item_price: "",
         item_quantity: "",
         items,
+        totalPrice: totalPrice,
       });
       setFilled({
         ...filled,
@@ -619,7 +634,7 @@ const StoryWrite = (props) => {
                 <p>물품 내용</p>
                 <input
                   name="item_name"
-                  ref={items}
+                  ref={itemName}
                   value={data.item_name}
                   placeholder="물품 내용을 입력하세요."
                   onChange={onChangeHandler}
@@ -633,7 +648,7 @@ const StoryWrite = (props) => {
                 <input
                   type="number"
                   name="item_price"
-                  ref={items}
+                  ref={itemPrice}
                   value={data.item_price}
                   placeholder="ex) 10000"
                   onChange={onChangeHandler}
@@ -647,7 +662,7 @@ const StoryWrite = (props) => {
                 <input
                   type="number"
                   name="item_quantity"
-                  ref={items}
+                  ref={itemQuantity}
                   value={data.item_quantity}
                   placeholder="ex) 3"
                   onChange={onChangeHandler}
@@ -667,12 +682,17 @@ const StoryWrite = (props) => {
               {data.items.map((item, key) => {
                 return (
                   <p key={key}>
-                    {key + 1} {item.item_name} ( {item.item_quantity} 개 X{" "}
-                    {item.item_price} 원 )
+                    {item.item_name} ( {item.item_quantity} 개 X{" "}
+                    {Number(item.item_price).toLocaleString()} 원 )
                   </p>
                 );
               })}
             </div>
+            {data.items.length !== 0 && (
+              <p className="total_price">
+                합계 {data.totalPrice.toLocaleString()}원
+              </p>
+            )}
           </div>
 
           <div className="hashtags">
