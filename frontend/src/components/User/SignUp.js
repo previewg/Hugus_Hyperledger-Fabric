@@ -186,6 +186,9 @@ const SignUp = () => {
             ...user,
             [e.target.id]: e.target.value
         })
+        if(e.key==="Enter"){
+            signUpHandler()
+        }
     }
 
     useEffect(()=>{
@@ -210,9 +213,9 @@ const SignUp = () => {
                     <p>회원가입</p>
                 </article>
                 <article className='form'>
-                    <input id='email' value={user.email} placeholder='이메일' onChange={onChangeHandler}/>
-                    <input id='nickname' value={user.nickname} placeholder='닉네임' onChange={onChangeHandler}/>
-                    <input id='password' value={user.password} type='password' placeholder='비밀번호' onChange={onChangeHandler}/>
+                    <input id='email' value={user.email} placeholder='이메일' onChange={onChangeHandler} onKeyPress={onChangeHandler}/>
+                    <input id='nickname' value={user.nickname} placeholder='닉네임' onChange={onChangeHandler} onKeyPress={onChangeHandler}/>
+                    <input id='password' value={user.password} type='password' placeholder='비밀번호' onChange={onChangeHandler} onKeyPress={onChangeHandler}/>
                     <div className='agreement'>
                         <input type='checkbox'/>
                         <p onClick={onClickTerm}>개인정보 이용 동의</p>

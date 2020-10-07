@@ -142,7 +142,7 @@ router.get("/:id", async (req, res) => {
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Item, attributes: ["item"] },
         { model: User, attributes: ["nickname"] },
-        { model: Comment, attributes: ["comments", "user_email"] },
+        { model: Comment, attributes: ["comments", "user_email"]},
       ],
     });
 
