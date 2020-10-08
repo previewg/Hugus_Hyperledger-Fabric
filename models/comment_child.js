@@ -6,15 +6,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull:false,
         },
-        story_id:{
-           type:DataTypes.INTEGER,
-            allowNull:false,
-        },
         comment_id:{
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull:false,
         },
-        comment_child:{
+        comment:{
             type: DataTypes.TEXT,
             allowNull:false,
         },

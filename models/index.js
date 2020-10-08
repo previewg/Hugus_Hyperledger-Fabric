@@ -54,12 +54,13 @@ db.Story.belongsToMany(db.Hashtag, { through: "Story_Hashtag", foreignKey: "stor
 db.Story.hasMany(db.Story_File, { foreignKey: "story_id", sourceKey: "id" });
 
 // Story_Comment
+db.Story_Comment.hasMany(db.Comment_Child, { foreignKey: "comment_id", sourceKey: "id" });
 db.Story_Comment.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
 db.Story_Comment.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
-db.Story_Comment.belongsTo(db.Comment_Child, { foreignKey: "comment_id", targetKey: "id" });
+
 //Comment_child
-db.Comment_Child.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 db.Comment_Child.belongsTo(db.Story_Comment, { foreignKey: "comment_id", targetKey: "id" });
+db.Comment_Child.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 
 // Campaign_Comment
 db.Campaign_Comment.belongsTo(db.Campaign, { foreignKey: "campaign_id", targetKey: "id" });
