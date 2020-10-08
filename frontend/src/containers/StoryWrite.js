@@ -9,7 +9,7 @@ const StoryWriteStyle = styled.div`
   margin-bottom: 70px;
   .layout {
     margin-top: 100px;
-    width: 35%;
+    width: 700px;
     display: flex;
     flex-direction: column;
     .write_title {
@@ -78,13 +78,35 @@ const StoryWriteStyle = styled.div`
         justify-content: flex-end;
         align-items: flex-end;
         margin-bottom: 10px;
-        .preImg {
-          width: 9%;
-          height: 60px;
-          box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
-          margin: 5px;
+
+        > div {
+          display: flex;
+          margin: 0;
+          .preImg {
+            width: 60px;
+            height: 60px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+            margin: 5px;
+          }
+          .preImgClear {
+            position: relative;
+            right: 11px;
+            width: 15px;
+            height: 15px;
+            bottom: 46px;
+            background-color: gray;
+            border-radius: 7.5px;
+            font-size: 12px;
+            background-color: darkgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          }
         }
+
         label {
+          min-width: 50px;
           color: grey;
           font-size: small;
           cursor: pointer;
@@ -214,14 +236,14 @@ const StoryWriteStyle = styled.div`
             cursor: pointer;
             font-size: 13px;
             margin-left: 10px;
-            color: #f83c3c;
+            color: #fa6f6f;
             width: 40px;
             height: 25px;
-            border: solid 0.1px #f83c3c;
+            border: solid 0.1px #fa6f6f;
             background-color: transparent;
             outline: none;
             :hover {
-              background-color: #f83c3c;
+              background-color: #fa6f6f;
               color: white;
             }
           }
@@ -278,6 +300,7 @@ const StoryWriteStyle = styled.div`
         align-items: center;
         width: 100%;
         height: 50px;
+        overflow: paged-y;
         input {
           margin-right: 7px;
           padding: 5px;
@@ -419,7 +442,7 @@ const StoryWrite = (props) => {
   const [errorCode, setErrorCode] = useState(0);
 
   const [preImg, setPreImg] = useState([]);
-
+  const [fileReaderState, setFileReaderState] = useState("");
   const errorHandler = () => {
     if (!data.title) {
       setErrorCode(1);
@@ -495,6 +518,7 @@ const StoryWrite = (props) => {
           previewURL: reader.result,
         });
         setPreImg(newPreImg);
+        setFileReaderState(file);
       };
       reader.readAsDataURL(file);
     }
@@ -657,7 +681,7 @@ const StoryWrite = (props) => {
         hashtags: [],
       });
     }
-  }, [errorCode, addStatus]);
+  }, [errorCode, addStatus, fileReaderState]);
 
   return (
     <>
@@ -695,12 +719,17 @@ const StoryWrite = (props) => {
             <div>
               {preImg.map((item, key) => {
                 return (
-                  <img
-                    className="preImg"
-                    src={item.previewURL}
-                    key={key}
-                    alt="preview"
-                  />
+                  <div>
+                    <img
+                      className="preImg"
+                      src={item.previewURL}
+                      key={key}
+                      alt="preview"
+                    />
+                    <p className="preImgClear" key={key + 100}>
+                      x
+                    </p>
+                  </div>
                 );
               })}
               <label htmlFor="files">파일 첨부</label>
@@ -779,8 +808,9 @@ const StoryWrite = (props) => {
                 return (
                   <div key={key}>
                     <p>
-                      {item.item_name} ( {item.item_quantity} 개 X{" "}
-                      {Number(item.item_price).toLocaleString()} 원 )
+                      {item.item_name} ({" "}
+                      {Number(item.item_price).toLocaleString()} 원 X{" "}
+                      {item.item_quantity} 개 )
                     </p>
                     <button onClick={onDeleteHandler(key)}>삭제</button>
                   </div>
@@ -802,8 +832,8 @@ const StoryWrite = (props) => {
             </p>
             <p>✔ 기준</p>
             <p>
-              100만원 <strong>미만</strong> : 50(필요 득표수), 100만원{" "}
-              <strong>이상</strong> : 총액(만원) / 100(만원) 의 몫
+              <strong>100만원 미만</strong> : 50(필요 득표수),{" "}
+              <strong>100만원 이상</strong> : 총액(만원) / 100(만원) 의 몫
             </p>
             <div>
               <p>예) 199만원 -> 100, 201만원 -> 200</p>

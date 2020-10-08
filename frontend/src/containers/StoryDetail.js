@@ -68,9 +68,12 @@ const StoryDetailStyle = styled.div`
       font-weight: bold;
       margin-top: 35px;
       .item {
-        margin-right: 10px;
         font-weight: normal;
         font-size: 14px;
+        background-color: #fff7ef;
+        p {
+          padding: 1rem;
+        }
       }
     }
 
@@ -81,9 +84,10 @@ const StoryDetailStyle = styled.div`
         padding: 8px;
         padding-left: 13px;
         padding-right: 13px;
-        border-radius: 10px;
+        border-radius: 5px;
         margin-right: 10px;
         font-weight: normal;
+        font-size: 13px;
         color: #ffa400;
         background-color: #fff7ef;
         transition: 0.3s ease-in-out;
@@ -110,6 +114,8 @@ const StoryDetailStyle = styled.div`
       font-weight: bold;
       display: flex;
       flex-direction: column;
+      margin-bottom: 50px;
+
       .header {
         display: flex;
         justify-content: space-between;
@@ -135,6 +141,7 @@ const StoryDetailStyle = styled.div`
       font-weight: bold;
       display: flex;
       flex-direction: column;
+      margin-bottom: 50px;
       .header {
         display: flex;
         justify-content: space-between;
@@ -214,39 +221,76 @@ const StoryDetailStyle = styled.div`
     }
 
     .comment {
-      margin-top: 10px;
       position: relative;
       overflow: hidden;
-      border-bottom: solid gray 0.1px;
-    }
+      margin-bottom: 20px;
+      background-color: #fdfaf5;
+      padding: 15px;
+      padding-right: 20px;
+      padding-left: 20px;
 
-    .comment div button {
-      width: 50px;
-      height: 30px;
-      cursor: pointer;
-      outline: none;
-      border: none;
-      color: black;
-      background-color: white;
-      transition: 0.2s ease-in-out;
-      :hover {
+      .header {
+        font-size: 14px;
         color: orange;
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        align-items: center;
+        height: 15px;
+        div {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          button {
+            background-color: transparent;
+            font-size: 12px;
+            width: 50px;
+            height: 30px;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            color: black;
+            transition: 0.2s ease-in-out;
+            :hover {
+              color: orange;
+            }
+          }
+          .date {
+            color: #a5a5a5;
+            font-size: 13px;
+            font-weight: normal;
+            margin: 0;
+          }
+        }
       }
-    }
-
-    .comment div a {
-      color: orange;
-      font-weight: bold;
-    }
-    .comment div div {
-      width: 100%;
-      display: flex;
-      justify-content: flex-end;
-      font-weight: normal;
-      font-size: 80%;
-    }
-    .comment p {
-      font-weight: normal;
+      > p {
+        font-size: 14px;
+        margin: 0;
+        margin-top: 10px;
+      }
+      .like_group {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        height: 25px;
+        p {
+          font-size: 12px;
+          cursor: pointer;
+          color: grey;
+        }
+        > img {
+          width: 17px;
+          height: 17px;
+          cursor: pointer;
+          margin-right: 7px;
+        }
+        img:nth-child(2) {
+          display: none;
+        }
+        img:nth-child(4) {
+          display: none;
+        }
+      }
     }
   }
 `;
@@ -349,7 +393,7 @@ const StoryDetail = ({ match }) => {
       return (
         <div className="comment__false">
           <div className="header">
-            <p>댓글</p>
+            <p>댓글 {commentList.length}개</p>
             <div className="icon">
               <img
                 onClick={() => dispatch(signInBtnIsClicked())}
@@ -361,24 +405,13 @@ const StoryDetail = ({ match }) => {
             </div>
           </div>
           <input disabled placeholder="로그인이 필요합니다." />
-          {commentList.map((comment, key) => {
-            return (
-              <span className="comment" key={key}>
-                <div className="Top">
-                  <a>{comment.User.nickname}</a>
-                </div>
-                <br />
-                <p>{comment.comment}</p>
-              </span>
-            );
-          })}
         </div>
       );
     } else {
       return (
         <div className="comment__true">
           <div className="header">
-            <p>댓글</p>
+            <p>댓글 {commentList.length}개</p>
             <div className="icon">
               {like.user ? (
                 <img
@@ -414,26 +447,6 @@ const StoryDetail = ({ match }) => {
             </button>
             <button onClick={commentAddHandler}>등록</button>
           </div>
-
-          {commentList.map((comment, key) => {
-            return (
-              <span className="comment" key={key}>
-                <div className="Top">
-                  <a>{comment.User.nickname}</a>
-
-                  {current_user == comment.User.nickname && (
-                    <button onClick={() => commentDeleteHandler(comment.id)}>
-                      삭제
-                    </button>
-                  )}
-
-                  <div className="date">{comment.createdAt}</div>
-                </div>
-
-                <p>{comment.comment}</p>
-              </span>
-            );
-          })}
         </div>
       );
     }
@@ -461,15 +474,16 @@ const StoryDetail = ({ match }) => {
 
             <div className="items">
               <p>저는 이런것들이 필요합니다</p>
-
-              {data.Story_Items.map((item, key) => {
-                return (
-                  <div className="item" key={key}>
-                    {item.item_name} ({item.item_quantity} 개 X{" "}
-                    {item.item_price.toLocaleString()} 원)
-                  </div>
-                );
-              })}
+              <div className="item">
+                {data.Story_Items.map((item, key) => {
+                  return (
+                    <p key={key}>
+                      {item.item_name} ({item.item_quantity} 개 X{" "}
+                      {item.item_price.toLocaleString()} 원)
+                    </p>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="hashtags">
@@ -487,6 +501,39 @@ const StoryDetail = ({ match }) => {
               <p>조회수 {data.visited}</p>
             </div>
             {Comment()}
+            {commentList.map((comment, key) => {
+              return (
+                <div className="comment" key={key}>
+                  <div className="header">
+                    <a>{comment.User.nickname}</a>
+
+                    <div>
+                      {current_user == comment.User.nickname && (
+                        <button
+                          onClick={() => commentDeleteHandler(comment.id)}
+                        >
+                          삭제
+                        </button>
+                      )}
+
+                      <p className="date">{comment.createdAt}</p>
+                    </div>
+                  </div>
+
+                  <p>{comment.comment}</p>
+                  <div className="like_group">
+                    <img className="like_normal" src="/icons/like_normal.png" />
+                    <img className="liked" src="/icons/like.png" />
+                    <img
+                      className="disLike_normal"
+                      src="/icons/disLike_normal.png"
+                    />
+                    <img className="disLiked" src="/icons/disLike.png" />
+                    <p>답글</p>
+                  </div>
+                </div>
+              );
+            })}
             <div className="back">
               <Link className="back_btn" to="/story">
                 글목록
