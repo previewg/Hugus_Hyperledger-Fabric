@@ -99,6 +99,35 @@ const StoryDetailStyle = styled.div`
       }
     }
 
+    .vote {
+      padding: 20px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+      button {
+        width: 150px;
+        height: 35px;
+        background-color: transparent;
+        border: solid 0.1px dodgerblue;
+        cursor: pointer;
+        font-weight: bold;
+        color: dodgerblue;
+        transition: 0.3s ease-in-out;
+        border-radius: 5px;
+        outline: none;
+        :hover {
+          background-color: dodgerblue;
+          color: white;
+          transform: scale(1.2);
+        }
+      }
+      strong:nth-child(2) {
+        color: hotpink;
+      }
+    }
+
     .visited {
       margin-top: 50px;
       display: flex;
@@ -317,6 +346,32 @@ const ErrorBoxStyle = styled.p`
   transition: 0.7s ease-in-out;
   font-size: 15px;
 `;
+const BarStyle = styled.div`
+  width: 100%;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  div {
+    display: flex;
+    background-color: #e7e7e7;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    transition: width 1s ease-in-out;
+    > div {
+      background-color: orange;
+      border-radius: 10px;
+      font-size: 12px;
+      width: 80%;
+      padding-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: white;
+    }
+  }
+`;
 
 const StoryDetail = ({ match }) => {
   const dispatch = useDispatch();
@@ -386,6 +441,16 @@ const StoryDetail = ({ match }) => {
 
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
+  };
+
+  const progressBar = () => {
+    return (
+      <BarStyle>
+        <div>
+          <div>80%</div>
+        </div>
+      </BarStyle>
+    );
   };
 
   const Comment = () => {
@@ -495,6 +560,14 @@ const StoryDetail = ({ match }) => {
                   </span>
                 );
               })}
+            </div>
+            <div className="vote">
+              {progressBar()}
+              <button>후원을 희망합니다.</button>
+              <p>
+                <strong>필요 득표수</strong>를 충족할 시, 메인 캠페인으로
+                등록되며 <strong>실제 모금</strong>이 이루어집니다.
+              </p>
             </div>
             <div className="visited">
               <p>좋아요 {like.likeNum}</p>
