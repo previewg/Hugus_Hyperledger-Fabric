@@ -30,13 +30,13 @@ justify-content: center;
 `
 
 const EditInfo = () => {
-    const path = useSelector((state) => state.authentication.status.profile_path);
+    const profile_path = useSelector((state) => state.authentication.profile.data);
     const username = useSelector(state => state.authentication.status.currentUser);
     const dispatch = useDispatch();
     const [profile, setProfile] = useState({
         file: null,
     })
-    const [profile_Path, setProfile_Path] =useState(path);
+    const [profile_Path, setProfile_Path] =useState(profile_path);
 
     const [preImg, setPreImg] = useState([]);
     const onDeleteClick = async () => {
@@ -76,10 +76,9 @@ const EditInfo = () => {
         dispatch(profileUpload(formData))
 
 
+
     }
     const onChangeHandler = (e) => {
-        console.log(profile_Path)
-        console.log(path)
         e.preventDefault();
         if (e.target.name === 'file') {
             previewImg(e);
@@ -92,11 +91,9 @@ const EditInfo = () => {
 
     }
     useEffect(() => {
-console.log("렌더링됨")
-        console.log(path)
-            setProfile_Path(path)
+            setProfile_Path(profile_path)
 
-    }, [])
+    }, [profile_Path])
 
     return (
         <EditPage>
