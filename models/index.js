@@ -2,7 +2,7 @@
 const Sequelize = require("sequelize");
 
 const env = process.env.NODE_ENV || "development";
-//개발용인지 배포용(production)인지 나눔.
+
 const config = require("../config/config.json")[env];
 // const seqConfig = { 
 //   define:{
@@ -29,6 +29,7 @@ db.sequelize = sequelize;
 db.User = require("./user")(sequelize, Sequelize);
 db.Story = require("./story")(sequelize, Sequelize);
 db.Story_Comment = require("./story_comment")(sequelize, Sequelize);
+db.Comment_Child = require("./comment_child")(sequelize, Sequelize);
 db.Story_Like = require("./story_like")(sequelize, Sequelize);
 db.Campaign = require("./campaign")(sequelize, Sequelize);
 db.Campaign_Comment = require("./campaign_comment")(sequelize, Sequelize);
@@ -40,48 +41,30 @@ db.Story_File = require("./story_file")(sequelize, Sequelize);
 
 // User
 db.User.hasMany(db.Story, { foreignKey: "user_email", sourceKey: "email" });
-db.User.hasMany(db.Story_Comment, {
-  foreignKey: "user_email",
-  sourceKey: "email",
-});
+db.User.hasMany(db.Story_Comment, { foreignKey: "user_email", sourceKey: "email" });
+db.User.hasMany(db.Comment_Child, { foreignKey: "user_email", sourceKey: "email" });
 db.User.hasMany(db.Campaign, { foreignKey: "user_email", sourceKey: "email" });
 
 // Story
 db.Story.hasMany(db.Story_Comment, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Like, { foreignKey: "story_id", sourceKey: "id" });
-db.Story.hasMany(db.Story_Item, {
-  foreignKey: "story_id",
-  sourceKey: "id",
-});
+db.Story.hasMany(db.Story_Item, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
-db.Story.belongsToMany(db.Hashtag, {
-  through: "Story_Hashtag",
-  foreignKey: "story_id",
-});
-db.Story.hasMany(db.Story_File, {
-  foreignKey: "story_id",
-  sourceKey: "id",
-});
+db.Story.belongsToMany(db.Hashtag, { through: "Story_Hashtag", foreignKey: "story_id" });
+db.Story.hasMany(db.Story_File, { foreignKey: "story_id", sourceKey: "id" });
 
 // Story_Comment
-db.Story_Comment.belongsTo(db.Story, {
-  foreignKey: "story_id",
-  targetKey: "id",
-});
-db.Story_Comment.belongsTo(db.User, {
-  foreignKey: "user_email",
-  targetKey: "email",
-});
+db.Story_Comment.hasMany(db.Comment_Child, { foreignKey: "comment_id", sourceKey: "id" });
+db.Story_Comment.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
+db.Story_Comment.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
+
+//Comment_child
+db.Comment_Child.belongsTo(db.Story_Comment, { foreignKey: "comment_id", targetKey: "id" });
+db.Comment_Child.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 
 // Campaign_Comment
-db.Campaign_Comment.belongsTo(db.Campaign, {
-  foreignKey: "campaign_id",
-  targetKey: "id",
-});
-db.Campaign_Comment.belongsTo(db.User, {
-  foreignKey: "user_email",
-  targetKey: "email",
-});
+db.Campaign_Comment.belongsTo(db.Campaign, { foreignKey: "campaign_id", targetKey: "id" });
+db.Campaign_Comment.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 
 // Story_Like
 db.Story_Like.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
