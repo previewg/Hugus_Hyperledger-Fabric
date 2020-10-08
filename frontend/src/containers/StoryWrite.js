@@ -496,6 +496,7 @@ const StoryWrite = (props) => {
       formData.append("content", data.content);
       formData.append("hashtags", data.hashtags);
       formData.append("items", JSON.stringify(data.items));
+      formData.append("goal", data.goal);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -719,7 +720,7 @@ const StoryWrite = (props) => {
             <div>
               {preImg.map((item, key) => {
                 return (
-                  <div>
+                  <div key={key}>
                     <img
                       className="preImg"
                       src={item.previewURL}

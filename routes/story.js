@@ -29,7 +29,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
       story_title: req.body.title,
       user_info: req.body.info,
       story_content: req.body.content,
-      story_goal: 100,
+      story_goal: req.body.goal,
       user_email: user_email,
     });
 
