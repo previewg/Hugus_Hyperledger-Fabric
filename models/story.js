@@ -20,10 +20,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      story_vote: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       user_email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -31,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       visited: {
         type: DataTypes.INTEGER,
         allowNull: false,
-          defaultValue:0
+        defaultValue: 0,
       },
     },
     {

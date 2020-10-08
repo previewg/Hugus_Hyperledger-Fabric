@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { storyAdd } from "../actions/story";
@@ -9,7 +9,7 @@ const StoryWriteStyle = styled.div`
   margin-bottom: 70px;
   .layout {
     margin-top: 100px;
-    width: 35%;
+    width: 700px;
     display: flex;
     flex-direction: column;
     .write_title {
@@ -38,7 +38,7 @@ const StoryWriteStyle = styled.div`
         border: none;
         width: 300px;
         padding: 5px;
-        border-bottom: solid 0.1px gray;
+        border-bottom: solid 0.1px lightgray;
         transition: 0.3s ease-in-out;
         :focus {
           outline: none;
@@ -58,6 +58,7 @@ const StoryWriteStyle = styled.div`
         height: 150px;
         border-radius: 4px;
         resize: none;
+        border: solid 0.1px lightgray;
         transition: 0.3s ease-in-out;
         :focus {
           outline: none;
@@ -77,13 +78,35 @@ const StoryWriteStyle = styled.div`
         justify-content: flex-end;
         align-items: flex-end;
         margin-bottom: 10px;
-        .preImg {
-          width: 9%;
-          height: 60px;
-          box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
-          margin: 5px;
+
+        > div {
+          display: flex;
+          margin: 0;
+          .preImg {
+            width: 60px;
+            height: 60px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+            margin: 5px;
+          }
+          .preImgClear {
+            position: relative;
+            right: 11px;
+            width: 15px;
+            height: 15px;
+            bottom: 46px;
+            background-color: gray;
+            border-radius: 7.5px;
+            font-size: 12px;
+            background-color: darkgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          }
         }
+
         label {
+          min-width: 50px;
           color: grey;
           font-size: small;
           cursor: pointer;
@@ -111,6 +134,8 @@ const StoryWriteStyle = styled.div`
         height: 400px;
         border-radius: 4px;
         transition: 0.3s ease-in-out;
+        border: solid 0.1px lightgray;
+
         :focus {
           outline: none;
           border: solid 0.1px orange;
@@ -125,6 +150,7 @@ const StoryWriteStyle = styled.div`
       }
 
       .item {
+        margin-top: 40px;
         width: 90%;
         display: flex;
         align-items: center;
@@ -194,7 +220,78 @@ const StoryWriteStyle = styled.div`
           }
         }
       }
+      .item_list {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        > div {
+          display: flex;
+          align-items: center;
+          > p {
+            font-size: 13px;
+          }
+          > button {
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 10px;
+            color: #fa6f6f;
+            width: 40px;
+            height: 25px;
+            border: solid 0.1px #fa6f6f;
+            background-color: transparent;
+            outline: none;
+            :hover {
+              background-color: #fa6f6f;
+              color: white;
+            }
+          }
+        }
+      }
+      .total_price {
+        border-top: solid 0.1px orange;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p:nth-child(1) {
+          font-size: 12px;
+          cursor: pointer;
+          transition: 0.3s ease-in-out;
+          :hover {
+            color: #f83c3c;
+          }
+        }
+      }
     }
+
+    .warning {
+      margin-top: 30px;
+      width: 100%;
+      border: solid 0.1px lightgray;
+      margin-bottom: 30px;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      p {
+        margin: 15px;
+        margin-left: 20px;
+      }
+      > p:nth-child(1) {
+        font-weight: bold;
+      }
+      strong:nth-child(1) {
+        color: dodgerblue;
+      }
+      strong:nth-child(2) {
+        color: orange;
+      }
+      div {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
     .hashtags {
       font-weight: bold;
       margin-top: 20px;
@@ -203,6 +300,7 @@ const StoryWriteStyle = styled.div`
         align-items: center;
         width: 100%;
         height: 50px;
+        overflow: paged-y;
         input {
           margin-right: 7px;
           padding: 5px;
@@ -211,6 +309,9 @@ const StoryWriteStyle = styled.div`
           border: none;
           transition: 0.3s ease-in-out;
           border-bottom: solid 0.1px lightgray;
+          :focus {
+            border-bottom: solid 0.1px orange;
+          }
         }
         .added__hashtag {
           display: flex;
@@ -309,7 +410,9 @@ const StoryWrite = (props) => {
   const title = useRef();
   const info = useRef();
   const content = useRef();
-  const items = useRef();
+  const itemName = useRef();
+  const itemPrice = useRef();
+  const itemQuantity = useRef();
   const hashtags = useRef();
   const addStatus = useSelector((state) => state.story.add.status);
 
@@ -324,6 +427,8 @@ const StoryWrite = (props) => {
     hashtag: "",
     items: [],
     hashtags: [],
+    totalPrice: 0,
+    goal: 0,
   });
 
   const [filled, setFilled] = useState({
@@ -337,7 +442,7 @@ const StoryWrite = (props) => {
   const [errorCode, setErrorCode] = useState(0);
 
   const [preImg, setPreImg] = useState([]);
-
+  const [fileReaderState, setFileReaderState] = useState("");
   const errorHandler = () => {
     if (!data.title) {
       setErrorCode(1);
@@ -365,7 +470,7 @@ const StoryWrite = (props) => {
       return false;
     } else if (data.items.length == 0) {
       setErrorCode(7);
-      items.current.focus();
+      itemName.current.focus();
       setFilled({
         ...filled,
         items: false,
@@ -389,8 +494,9 @@ const StoryWrite = (props) => {
       formData.append("title", data.title);
       formData.append("info", data.info);
       formData.append("content", data.content);
-      formData.append("items", data.items);
       formData.append("hashtags", data.hashtags);
+      formData.append("items", JSON.stringify(data.items));
+      formData.append("goal", data.goal);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -398,7 +504,7 @@ const StoryWrite = (props) => {
       } else {
         formData.append("files", "");
       }
-      dispatch(storyAdd(formData));
+      dispatch(storyAdd(formData, { ...props }));
     }
   };
 
@@ -413,6 +519,7 @@ const StoryWrite = (props) => {
           previewURL: reader.result,
         });
         setPreImg(newPreImg);
+        setFileReaderState(file);
       };
       reader.readAsDataURL(file);
     }
@@ -443,23 +550,37 @@ const StoryWrite = (props) => {
   };
 
   const addItem = (e) => {
-    if (data.item_name === "") setErrorCode(4);
-    else if (data.item_price === "") setErrorCode(5);
-    else if (data.item_quantity === "") setErrorCode(6);
-    else {
+    if (data.item_name === "") {
+      setErrorCode(4);
+      itemName.current.focus();
+    } else if (data.item_price === "") {
+      setErrorCode(5);
+      itemPrice.current.focus();
+    } else if (data.item_quantity === "") {
+      setErrorCode(6);
+      itemQuantity.current.focus();
+    } else {
       let item = {
         item_name: data.item_name,
         item_price: data.item_price,
         item_quantity: data.item_quantity,
       };
-
+      let totalPrice = data.totalPrice + data.item_price * data.item_quantity;
+      let goal;
+      if (totalPrice < 1000000 && totalPrice > 0) {
+        goal = 50;
+      } else {
+        goal = parseInt(totalPrice / 1000000) * 100;
+      }
       let items = data.items.concat(item);
       setData({
         ...data,
         item_name: "",
         item_price: "",
         item_quantity: "",
+        goal: goal,
         items,
+        totalPrice: totalPrice,
       });
       setFilled({
         ...filled,
@@ -487,7 +608,17 @@ const StoryWrite = (props) => {
   };
 
   const onDeleteHandler = (key) => () => {
+    console.log(key);
     let items;
+    let totalPrice =
+      data.totalPrice -
+      data.items[key].item_price * data.items[key].item_quantity;
+    let goal;
+    if (totalPrice < 1000000 && totalPrice > 0) {
+      goal = 50;
+    } else {
+      goal = parseInt(totalPrice / 1000000) * 100;
+    }
     if (key === 0) {
       items = data.items.slice(1, data.items.length);
     } else if (key === data.items.length - 1) {
@@ -500,6 +631,8 @@ const StoryWrite = (props) => {
     setData({
       ...data,
       items,
+      totalPrice: totalPrice,
+      goal: goal,
     });
   };
 
@@ -529,9 +662,15 @@ const StoryWrite = (props) => {
     });
   };
 
+  const clearItems = useCallback(() => {
+    setData({
+      ...data,
+      items: [],
+    });
+  }, []);
+
   useEffect(() => {
     if (addStatus === "SUCCESS") {
-      alert("등록에 성공하였습니다.");
       setData({
         title: "",
         info: "",
@@ -542,11 +681,8 @@ const StoryWrite = (props) => {
         items: [],
         hashtags: [],
       });
-      props.history.push("/story");
-    } else if (addStatus === "FAILURE") {
-      alert("등록에 실패 하였습니다.");
     }
-  }, [errorCode, addStatus]);
+  }, [errorCode, addStatus, fileReaderState]);
 
   return (
     <>
@@ -584,12 +720,17 @@ const StoryWrite = (props) => {
             <div>
               {preImg.map((item, key) => {
                 return (
-                  <img
-                    className="preImg"
-                    src={item.previewURL}
-                    key={key}
-                    alt="preview"
-                  />
+                  <div key={key}>
+                    <img
+                      className="preImg"
+                      src={item.previewURL}
+                      key={key}
+                      alt="preview"
+                    />
+                    <p className="preImgClear" key={key + 100}>
+                      x
+                    </p>
+                  </div>
                 );
               })}
               <label htmlFor="files">파일 첨부</label>
@@ -619,7 +760,7 @@ const StoryWrite = (props) => {
                 <p>물품 내용</p>
                 <input
                   name="item_name"
-                  ref={items}
+                  ref={itemName}
                   value={data.item_name}
                   placeholder="물품 내용을 입력하세요."
                   onChange={onChangeHandler}
@@ -633,7 +774,7 @@ const StoryWrite = (props) => {
                 <input
                   type="number"
                   name="item_price"
-                  ref={items}
+                  ref={itemPrice}
                   value={data.item_price}
                   placeholder="ex) 10000"
                   onChange={onChangeHandler}
@@ -647,7 +788,7 @@ const StoryWrite = (props) => {
                 <input
                   type="number"
                   name="item_quantity"
-                  ref={items}
+                  ref={itemQuantity}
                   value={data.item_quantity}
                   placeholder="ex) 3"
                   onChange={onChangeHandler}
@@ -666,12 +807,38 @@ const StoryWrite = (props) => {
             <div className="item_list">
               {data.items.map((item, key) => {
                 return (
-                  <p key={key}>
-                    {key + 1} {item.item_name} ( {item.item_quantity} 개 X{" "}
-                    {item.item_price} 원 )
-                  </p>
+                  <div key={key}>
+                    <p>
+                      {item.item_name} ({" "}
+                      {Number(item.item_price).toLocaleString()} 원 X{" "}
+                      {item.item_quantity} 개 )
+                    </p>
+                    <button onClick={onDeleteHandler(key)}>삭제</button>
+                  </div>
                 );
               })}
+            </div>
+            {data.items.length !== 0 && (
+              <div className="total_price">
+                <p onClick={clearItems}>일괄 삭제</p>
+                <p>합계 {data.totalPrice.toLocaleString()}원</p>
+              </div>
+            )}
+          </div>
+
+          <div className="warning">
+            <p>
+              ※ 스토리 등록 이후, <strong>물품의 총액에 따라</strong> 캠페인
+              등록에 대한 필요 득표수가 다릅니다.
+            </p>
+            <p>✔ 기준</p>
+            <p>
+              <strong>100만원 미만</strong> : 50(필요 득표수),{" "}
+              <strong>100만원 이상</strong> : 총액(만원) / 100(만원) 의 몫
+            </p>
+            <div>
+              <p>예) 199만원 -> 100, 201만원 -> 200</p>
+              <p>현재 필요 득표수 : {data.goal}</p>
             </div>
           </div>
 

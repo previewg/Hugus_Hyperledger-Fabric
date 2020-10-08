@@ -17,6 +17,8 @@ import {
   TotalSearch,
   User,
   UserInfo,
+  BlockInfo,
+
 } from "containers";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { NavBar, ScrollTop } from "components";
@@ -46,6 +48,7 @@ ReactDOM.render(
         <Route path="/story/:id" component={Auth(StoryDetail, null)} />
         <Route path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
+        <Route path="/blockinfo" component={Auth(BlockInfo, true)} />
       </Switch>
     </BrowserRouter>
   </Provider>,
