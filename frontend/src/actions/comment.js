@@ -10,6 +10,10 @@ export const COMMENT_LIST_LOAD_FAILURE = "COMMENT_LIST_LOAD_FAILURE";
 
 export const COMMENT_DELETE_SUCCESS = "COMMENT_DELETE_SUCCESS";
 
+export const COMMENT_CHILD_ADD = "COMMENT_CHILD_ADD";
+export const COMMENT_CHILD_ADD_SUCCESS = "COMMENT_CHILD_ADD_SUCCESS";
+export const COMMENT_CHILD_ADD_FAILURE = "COMMENT_CHILD_ADD_FAILURE";
+
 const commentAddStart = () => {
     return { type: COMMENT_ADD };
   };
@@ -37,6 +41,17 @@ const commentAddStart = () => {
   const commentDeleteSuccess = (list) => {
     return { type : COMMENT_DELETE_SUCCESS, list: list };
   }
+  const commentChildAddStart = () => {
+    return { type : COMMENT_CHILD_ADD };
+  }
+  
+  const commentChildAddSuccess = () => {
+    return { type: COMMENT_CHILD_ADD_SUCCESS };
+  };
+  
+  const commentChildAddFailure = () => {
+    return { type: COMMENT_CHILD_ADD_FAILURE };
+  };
 
 // 댓글 등록
 export const commentAdd = (data) => async (dispatch) => {
@@ -71,10 +86,24 @@ export const commentListLoader = (story_id) => async (dispatch) => {
   await axios
     .get(`/comment/list/${story_id}`)
     .then((response) => {
+      console.log(response.data.list);
       dispatch(commentListLoadSuccess(response.data.list));
     })
     .catch((error) => {
       console.log(error);
       dispatch(commentListLoadFailure());
+    });
+};
+
+// 대댓글 등록
+export const commentChildAdd = (data) => async (dispatch) => {
+  dispatch(commentChildAddStart());
+  await axios
+    .post("/comment/child_add", {...data} )
+    .then((response) => {
+      dispatch(commentChildAddSuccess(response.data.list));
+    })
+    .catch((error) => {
+      dispatch(commentChildAddFailure());
     });
 };
