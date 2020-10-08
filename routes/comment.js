@@ -8,6 +8,7 @@ const {
     Comment_Child,
   } = require("../models");
   const { Sequelize, DataTypes } = require('sequelize');
+const comment_child = require("../models/comment_child");
 
 router.post('/add', async (req,res) => {
     try {
@@ -90,17 +91,15 @@ router.get("/list/:story_id", async (req, res) => {
 
 
 //대댓글 작성
-
 router.post('/child_add', async (req,res) => {
   try {
-  // const user_email = req.session.loginInfo.user_email;
+  const user_email = req.session.loginInfo.user_email;
   await Comment_Child.create({
-  user_email: "moonnr94@gmail.com",
+  user_email: user_email,
   comment_id: req.body.comment_id,  
   comment: req.body.comment,
   });
   // const list = await Story_Comment.findAll({
-    
   //   where : {
   //     story_id : req.body.story_id
   //   },
@@ -109,10 +108,10 @@ router.post('/child_add', async (req,res) => {
   //   ],
   //   include: [
   //     { model: User, attributes: ["nickname"] },
+  //     { model: Comment_Child, attributes: ["comment"]},
   //   ],
   // });
   // res.json({ list: list, success: 1 });
-  res.json({ message: 1 });
   } catch (error) {
       console.error(error);
       res.status(400).json({ success: 3 });

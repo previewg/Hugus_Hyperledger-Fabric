@@ -6,6 +6,9 @@ import {
     COMMENT_LIST_LOAD_SUCCESS,
     COMMENT_LIST_LOAD_FAILURE,
     COMMENT_DELETE_SUCCESS,
+    COMMENT_CHILD_ADD,
+    COMMENT_CHILD_ADD_SUCCESS,
+    COMMENT_CHILD_ADD_FAILURE,
   } from "../actions/comment";
   import update from "react-addons-update";
 
@@ -82,6 +85,31 @@ export default function comment(state = initialState, action) {
             data: { $set: action.list },
           },
         });
+        case COMMENT_CHILD_ADD:
+        return update(state, {
+          add: {
+            status: { $set: "WAITING" },
+          },
+        });
+  
+      case COMMENT_CHILD_ADD_SUCCESS:
+        return update(state, {
+          add: {
+            status: { $set: "SUCCESS" },
+          },
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: action.list },
+          },
+        });
+        
+      case COMMENT_CHILD_ADD_FAILURE:
+        return update(state, {
+          add: {
+            status: { $set: "FAILURE" },
+          },
+        });
+
         default:
             return state;
         }
