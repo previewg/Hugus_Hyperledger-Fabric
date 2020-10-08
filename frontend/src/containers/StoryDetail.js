@@ -506,9 +506,12 @@ const StoryDetail = ({ match }) => {
   };
 
   const commentDeleteHandler = (id) => {
-    dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
-      setComments("")
-    );
+    const ok = window.confirm("삭제하시겠습니까?")
+    if(ok){
+      dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
+          setComments("")
+      );
+    }
   };
 
   const commentClear = () => {
