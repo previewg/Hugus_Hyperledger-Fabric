@@ -419,17 +419,22 @@ const BarStyle = styled.div`
     border-radius: 10px;
     width: 100%;
     height: 100%;
-    transition: width 1s ease-in-out;
+    transition: all 0.7s ease-in-out;
     > div {
       background-color: orange;
       border-radius: 10px;
       font-size: 13px;
-      ${(props) => (props.ratio < 4 ? "width:30px" : `width:${props.ratio}%`)};
+      ${(props) =>
+        props.ratio < 4
+          ? props.ratio == 0
+            ? "width:0px;opacity:0"
+            : "width:35px;opacity:1"
+          : `width:${props.ratio}%`};
       padding-right: 10px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      color: black;
+      ${(props) => (props.ratio == 0 ? "color: transparent" : " color: black")};
     }
   }
   p {
@@ -506,10 +511,10 @@ const StoryDetail = ({ match }) => {
   };
 
   const commentDeleteHandler = (id) => {
-    const ok = window.confirm("삭제하시겠습니까?")
-    if(ok){
+    const ok = window.confirm("삭제하시겠습니까?");
+    if (ok) {
       dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
-          setComments("")
+        setComments("")
       );
     }
   };
@@ -528,12 +533,12 @@ const StoryDetail = ({ match }) => {
     );
   };
   const progressBar = () => {
-    let ratio = parseInt((vote.voteNum / data.story_goal) * 100);
+    let ratio = ((vote.voteNum / data.story_goal) * 100).toFixed(1);
     if (ratio > 100) ratio = 100;
     return (
       <BarStyle ratio={ratio}>
         <div>
-          <div>{parseInt((vote.voteNum / data.story_goal) * 100)}%</div>
+          <div>{((vote.voteNum / data.story_goal) * 100).toFixed(1)}%</div>
         </div>
         <p>
           ({vote.voteNum} / {data.story_goal})
