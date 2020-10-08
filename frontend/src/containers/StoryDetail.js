@@ -511,8 +511,8 @@ const StoryDetail = ({ match }) => {
     dispatch(storyLike(data.id, status));
   };
 
-  const commentChildAddHandler = (id) => {
-    dispatch(commentChildAdd({ comment_child: id, comment_id: commentList.comment_id }))
+  const commentChildAddHandler = () => {
+    dispatch(commentChildAdd({ comment_child: comments_child, comment_id: commentList.comment_id }))
   }
   const progressBar = () => {
     return (
