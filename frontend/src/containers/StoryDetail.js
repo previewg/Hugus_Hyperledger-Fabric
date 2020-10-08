@@ -665,8 +665,8 @@ const StoryDetail = ({ match }) => {
                 {data.Story_Items.map((item, key) => {
                   return (
                     <p key={key}>
-                      ✔ {item.item_name} ({item.item_quantity.toLocaleString()}{" "}
-                      개 X {item.item_price.toLocaleString()} 원)
+                      ✔ {item.item_name} ({item.item_price.toLocaleString()} 원
+                      X {item.item_quantity.toLocaleString()} 개)
                     </p>
                   );
                 })}
