@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const {
     Story,
-    Story_File,
     User,
     Story_Comment,
   } = require("../models");
@@ -37,7 +36,6 @@ router.post('/add', async (req,res) => {
         res.status(400).json({ success: 3 });
     }
 });
-
 
 // 댓글 취소
 router.post("/delete", async (req, res) => {
@@ -83,7 +81,7 @@ router.get("/list/:story_id", async (req, res) => {
       ],
       include: [
         { model: User, attributes: ["nickname"] },
-      ],
+      ],  
     });
     res.json({ list: list , success: 1 });
   } catch (error) {
