@@ -2,9 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {profileLoad, signOutRequest} from "../../actions/auth";
+import {profileViewer, signOutRequest} from "../../actions/auth";
 import {signInBtnIsClicked} from "../../actions/user";
-import ProfileImage from "./ProfileImage";
 
 const NavStyle = styled.nav`
   position: fixed;
@@ -128,23 +127,23 @@ const NavStyle = styled.nav`
       }
       span:nth-child(1) {
         ${(props) =>
-          props.menuClicked
-            ? "transform:rotate(-45deg); top:15px;right:1px;background-color:orange"
-            : "top:5px;right:1px"}
+    props.menuClicked
+        ? "transform:rotate(-45deg); top:15px;right:1px;background-color:orange"
+        : "top:5px;right:1px"}
       }
 
       span:nth-child(2) {
         ${(props) =>
-          props.menuClicked
-            ? "opacity: 0;top:15px;right:1px"
-            : "top:15px;right:1px"}
+    props.menuClicked
+        ? "opacity: 0;top:15px;right:1px"
+        : "top:15px;right:1px"}
       }
 
       span:nth-child(3) {
         ${(props) =>
-          props.menuClicked
-            ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
-            : "top:25px;right:1px"}
+    props.menuClicked
+        ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
+        : "top:25px;right:1px"}
       }
     }
     .user {
@@ -250,19 +249,22 @@ const ResNavStyle = styled.nav`
 `;
 
 const NavBar = (props) => {
-  const [menuClicked, setMenuClicked] = useState(false);
+    const [menuClicked, setMenuClicked] = useState(false);
 
-  const dispatch = useDispatch();
-  const username = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
-  const isSignedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
-  const path = useSelector((state) => state.authentication.status.profile_path);
-  const onClickHandler = () => {
-    menuClicked ? setMenuClicked(false) : setMenuClicked(true);
-  };
+    const dispatch = useDispatch();
+    const username = useSelector(
+        (state) => state.authentication.status.currentUser
+    );
+    const isSignedIn = useSelector(
+        (state) => state.authentication.status.isLoggedIn
+    );
+    const profile_Path = useSelector(
+        (state) => state.authentication.profile.data
+    );
+    const onClickHandler = () => {
+        menuClicked ? setMenuClicked(false) : setMenuClicked(true);
+    };
+
 
     const signedIn = () => {
         if (isSignedIn) {
@@ -288,149 +290,15 @@ const NavBar = (props) => {
             );
         }
     };
+    const profileLoader = () => {
+        dispatch(profileViewer({username}));
 
-  useEffect(() => {}, [username]);
+    }
 
-  return (
-    <>
-      <NavStyle menuClicked={menuClicked}>
-        <div className="nav__title">
-          <img className="logo" alt="hugus" src="/icons/hugus.svg" />
-          <Link to="/">HUGUS</Link>
-        </div>
-        <div className="nav__menus">
-          <div className="dropdown">
-            <Link to="/story">Story</Link>
-            <ul>
-              <Link to="">인기 스토리</Link>
-              <Link to="">최신 스토리</Link>
-              <Link to="">관심 스토리</Link>
-            </ul>
-          </div>
-          <div className="dropdown">
-            {isSignedIn ? (
-              <Link to="/my">My</Link>
-            ) : (
-              <a
-                style={{ cursor: "pointer" }}
-                onClick={() => dispatch(signInBtnIsClicked())}
-              >
-                My
-              </a>
-            )}
-            <ul>
-              <Link to="">캠페인 모금현황</Link>
-              <Link to="">스토리 투표현황</Link>
-            </ul>
-          </div>
-          <div className="dropdown">
-            <Link to="/act">Act</Link>
-            <ul>
-              <Link to="">물품 구매 인증</Link>
-              <Link to="">물품 전달 과정</Link>
-              <Link to="">수혜자의 이야기</Link>
-            </ul>
-          </div>
-        </div>
-        <div className="user">
-          {isSignedIn ? (
-            <Link to="/my">
-              <img
-                className="user__icon"
-                alt="user__icon"
-                src="/icons/user.png"
-              />
-            </Link>
-          ) : (
-            <a
-              style={{ cursor: "pointer" }}
-              onClick={() => dispatch(signInBtnIsClicked())}
-            >
-              <img
-                className="user__icon"
-                alt="user__icon"
-                src="/icons/user.png"
-              />
-            </a>
-          )}
+    useEffect(() => {
+        profileLoader()
+    }, [username,profile_Path]);
 
-          {signedIn()}
-          <Link to="/search">
-            <img
-              className="search__icon"
-              alt="search__icon"
-              src="/icons/Search.png"
-            />
-          </Link>
-        </div>
-        <div className="res__menu__btn" id="menu" onClick={onClickHandler}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </NavStyle>
-      <ResNavStyle menuClicked={menuClicked}>
-        <section>
-          <article className="res__menu__item">
-            <div>
-              <div>STORY</div>
-              <p>
-                인기
-                <br />
-                스토리
-              </p>
-              <p>
-                최신
-                <br />
-                스토리
-              </p>
-              <p>
-                관심
-                <br />
-                스토리
-              </p>
-            </div>
-            <div>
-              <div>MY</div>
-              <p>
-                캠페인
-                <br />
-                모금현황
-              </p>
-              <p className="hugus">HUGUS</p>
-              <p>
-                스토리
-                <br />
-                투표현황
-              </p>
-            </div>
-            <div>
-              <div>ACT</div>
-              <p>
-                물품
-                <br />
-                구매인증
-              </p>
-              <p>
-                물품
-                <br />
-                전달과정
-              </p>
-              <p>
-                수혜자의
-                <br />
-                이야기
-              </p>
-            </div>
-          </article>
-          <article className="res__menu__info">
-            {signedIn()}
-            <Link to="/search">검색</Link>
-          </article>
-        </section>
-      </ResNavStyle>
-    </>
-  );
     return (
         <>
             <NavStyle menuClicked={menuClicked}>
@@ -464,7 +332,20 @@ const NavBar = (props) => {
                     </div>
                 </div>
                 <div className="user">
-                    <ProfileImage/>
+
+                    {isSignedIn ? (<img
+                            className="user__icon"
+                            src={
+                                "http://localhost:3000/user_profile/" + profile_Path
+                            }
+                        />
+                    ) : (
+                        <img
+                            className="user__icon"
+                            alt="user__icon"
+                            src="/icons/user.png"
+                        />)}
+
                     {signedIn()}
                     <Link to="/search">
                         <img

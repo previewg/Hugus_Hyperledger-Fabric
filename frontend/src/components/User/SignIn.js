@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { signInBtnIsClicked, signUpBtnIsClicked } from "../../actions/user";
 import { signIn, signInRequest } from "../../actions/auth";
+import KakaoLo from "./KakaoLo";
 
 const SignInStyle = styled.div`
   position: fixed;
@@ -118,6 +119,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+
   const loginStatus = useSelector((state) => state.authentication.login.status);
 
   const onChangeHandler = (e) => {
@@ -184,7 +186,8 @@ const SignIn = () => {
         </article>
         <article className="buttons">
           <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
-          <button>카카오 계정으로 로그인</button>
+          {/*<button>카카오 계정으로 로그인</button>*/}
+          <KakaoLo/>
           <button>페이스북 계정으로 로그인</button>
           <div className="already">
             <p>회원이 아니신가요?</p>

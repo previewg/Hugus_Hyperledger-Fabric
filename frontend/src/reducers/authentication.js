@@ -36,6 +36,7 @@ const initialState = {
         valid: false,
         isLoggedIn: getCookie("hugus") || false,
         currentUser: parseJwt(getCookie("hugus")).nickname || "",
+
     },
     profile: {
         status: "INIT",
@@ -80,10 +81,34 @@ export default function authentication(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: {$set: true},
-                    currentUser: {$set: action.nickname},
+                    currentUser: {$set: action.session.user_nickname},
+                    profile_path: {$set: action.session.user_profile}
                 },
             });
         case types.AUTH_SIGNIN_FAILURE:
+            return update(state, {
+                login: {
+                    status: {$set: "FAILURE"},
+                },
+            });
+        //카카오 로그인
+        case types.AUTH_KAKAO_SIGNIN:
+            return update(state, {
+                login: {
+                    status: {$set: "WAITING"},
+                },
+            });
+        case types.AUTH_KAKAO_SUCCESS:
+            return update(state, {
+                login: {
+                    status: {$set: "SUCCESS"},
+                },
+                status: {
+                    currentUser: {$set: action.nickname},
+                    isLoggedIn: {$set: true},
+                },
+            });
+        case types.AUTH_KAKAO_FAILURE:
             return update(state, {
                 login: {
                     status: {$set: "FAILURE"},
@@ -100,6 +125,9 @@ export default function authentication(state = initialState, action) {
                     isLoggedIn: {$set: false},
                     currentUser: {$set: ""},
                 },
+                profile: {
+                    data: {$set: null}
+                }
             });
 
         case types.AUTH_SIGNOUT_ERROR:
@@ -142,10 +170,16 @@ export default function authentication(state = initialState, action) {
                     confirm_pwd: {$set: "FAILURE"},
                 },
             });
-        case types.PROFILE_ADD_SUCCESS:
 
+        case types.PROFILE_ADD_SUCCESS:
+            console.log(action)
             return update(state, {
-                status: {},
+                status: {
+                    profile_path: {$set: "SUCCESS"},
+                },
+                profile: {
+                    data: {$set: action.data}
+                }
             });
         case types.PROFILE_LOAD:
             return update(state, {
@@ -154,13 +188,12 @@ export default function authentication(state = initialState, action) {
                 },
             });
         case types.PROFILE_LOAD_SUCCESS:
-           return update(state, {
-
-               profile:{
-                   status: {$set:"SUCCESS"},
-                   data: {$set: action.data}
-               }
-           })
+            return update(state, {
+                profile: {
+                    status: {$set: "SUCCESS"},
+                    data: {$set: action.data.data.user_profile}
+                }
+            })
         case types.PROFILE_LOAD_FAILURE:
             return update(state, {
                 profile: {

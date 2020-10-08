@@ -9,13 +9,22 @@ export const signIn = () => {
 };
 
 // 로그인 성공
-export const signInSuccess = (nickname) => {
+export const signInSuccess = (session) => {
     return {
         type: types.AUTH_SIGNIN_SUCCESS,
-        nickname: nickname,
+        session: session
     };
 };
-
+// 카카오 로그인 시작
+export const kakao_SignIn = () => {
+    return {type: types.AUTH_KAKAO_SIGNIN};
+}
+export const kakao_Success = (data) => {
+    return {
+        type: types.AUTH_KAKAO_SUCCESS,
+        nickname: data
+    }
+}
 // 로그인 실패
 export const signInFailure = () => {
     return {type: types.AUTH_SIGNIN_FAILURE};
@@ -65,8 +74,11 @@ export const confirmPasswordError = () => {
 export const profileAdd = () => {
     return {type: types.PROFILE_ADD};
 };
-export const profileAddSuccess = (profile_path) => {
-    return {type: types.PROFILE_ADD_SUCCESS, profile_path: profile_path};
+export const profileAddSuccess = (data) => {
+    return {
+        type: types.PROFILE_ADD_SUCCESS,
+        data: data
+    };
 };
 export const profileAddFailure = () => {
     return {type: types.PROFILE_ADD_FAILURE};
@@ -76,7 +88,10 @@ export const profileLoad = () => {
     return {type: types.PROFILE_LOAD};
 };
 export const profileLoadSuccess = (data) => {
-    return {type: types.PROFILE_LOAD_SUCCESS, data: data};
+    return {
+        type: types.PROFILE_LOAD_SUCCESS,
+        data: data
+    };
 };
 export const profileLoadFailure = () => {
     return {type: types.PROFILE_LOAD_FAILURE};
@@ -101,8 +116,9 @@ export const signInRequest = ({user}) => async (dispatch) => {
     await axios
         .post("/auth/signIn", {...user})
         .then((response) => {
+            console.log(response)
             if (response.data.success === 1) {
-                dispatch(signInSuccess(response.data.nickname, response.data.password));
+                dispatch(signInSuccess(response.data.session));
                 dispatch(signInBtnIsClicked());
             }
         })
@@ -110,6 +126,23 @@ export const signInRequest = ({user}) => async (dispatch) => {
             dispatch(signInFailure(error));
         });
 };
+//카카오 로그인
+export const kakaosignInRequest = ({res}) => async (dispatch) => {
+    dispatch(kakao_SignIn());
+    await axios
+        .post("/auth/kakao", {...res})
+        .then((response) => {
+            if (response.data.success === 1) {
+                console.log(response.data)
+
+                dispatch(kakao_Success(response.data.nickname))
+            }
+            dispatch(signInBtnIsClicked());
+        })
+        .catch((error) => {
+            dispatch(signInFailure(error));
+        });
+}
 
 // 로그아웃
 export const signOutRequest = () => async (dispatch) => {
@@ -150,7 +183,7 @@ export const confirmPwd = ({user}) => async (dispatch) => {
     dispatch(confirm());
     await axios
         .post("auth/confirm", {...user})
-        .then((response) => {
+        .then(() => {
             dispatch(confirmPassword());
         })
         .catch((error) => {
@@ -159,13 +192,13 @@ export const confirmPwd = ({user}) => async (dispatch) => {
 };
 
 export const profileUpload = (formData) => async (dispatch) => {
-    // dispatch(profilePath())
+    dispatch(profileAdd())
     await axios
         .put("auth/profile", formData, {
             headers: {"content-type": "multipart/form-data"},
         })
         .then((response) => {
-            dispatch(profileAddSuccess());
+            dispatch(profileAddSuccess(response.data.profile));
             alert("프로필 업로드 완료");
         })
         .catch((error) => {
@@ -173,12 +206,16 @@ export const profileUpload = (formData) => async (dispatch) => {
             alert("실패!!!!!!!!!!!!!");
         });
 };
-export const ProfileViewer = () => async (dispatch) => {
+
+
+export const profileViewer = ({username}) => async (dispatch) => {
     dispatch(profileLoad());
     await axios
-        .get(`/auth/profile/id`)
+        .post("/auth/profile/view", {username})
         .then((response) => {
-            dispatch(profileLoadSuccess(response.data.data));
+            if (response.data.success === 1) {
+                dispatch(profileLoadSuccess(response.data));
+            }
         })
         .catch((error) => {
             console.log(error);
