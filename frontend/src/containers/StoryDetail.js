@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storyLike, storyLoader, storyVote } from "../actions/story";
+import {
+  storyLike,
+  storyLoader,
+  storyLoadInit,
+  storyVote,
+} from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import {
@@ -419,17 +424,22 @@ const BarStyle = styled.div`
     border-radius: 10px;
     width: 100%;
     height: 100%;
-    transition: width 1s ease-in-out;
+    transition: all 0.7s ease-in-out;
     > div {
       background-color: orange;
       border-radius: 10px;
       font-size: 13px;
-      ${(props) => (props.ratio < 4 ? "width:30px" : `width:${props.ratio}%`)};
+      ${(props) =>
+        props.ratio < 4
+          ? props.ratio == 0
+            ? "width:0px;opacity:0"
+            : "width:35px;opacity:1"
+          : `width:${props.ratio}%`};
       padding-right: 10px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      color: black;
+      ${(props) => (props.ratio == 0 ? "color: transparent" : " color: black")};
     }
   }
   p {
@@ -451,7 +461,6 @@ const StoryDetail = ({ match }) => {
   const current_user = useSelector(
     (state) => state.authentication.status.currentUser
   );
-  const loginStatus = useSelector((state) => state.authentication.login.status);
   const [error, setError] = useState(false);
   const [comments, setComments] = useState("");
   const [comments_child, setComments_child] = useState("");
@@ -463,7 +472,8 @@ const StoryDetail = ({ match }) => {
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id));
-  }, [loginStatus === "SUCCESS"]);
+    return () => dispatch(storyLoadInit());
+  }, []);
 
   const totalPrice = () => {
     let total = 0;
@@ -512,9 +522,12 @@ const StoryDetail = ({ match }) => {
   }
 
   const commentDeleteHandler = (id) => {
-    dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
-      setComments("")
-    );
+    const confirmed = window.confirm("삭제하시겠습니까?");
+    if (confirmed) {
+      dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
+        setComments("")
+      );
+    }
   };
 
   const commentClear = () => {
@@ -541,12 +554,12 @@ const StoryDetail = ({ match }) => {
 }
 
   const progressBar = () => {
-    let ratio = parseInt((vote.voteNum / data.story_goal) * 100);
+    let ratio = ((vote.voteNum / data.story_goal) * 100).toFixed(1);
     if (ratio > 100) ratio = 100;
     return (
       <BarStyle ratio={ratio}>
         <div>
-          <div>{parseInt((vote.voteNum / data.story_goal) * 100)}%</div>
+          <div>{((vote.voteNum / data.story_goal) * 100).toFixed(1)}%</div>
         </div>
         <p>
           ({vote.voteNum} / {data.story_goal})
@@ -681,8 +694,8 @@ const StoryDetail = ({ match }) => {
                 {data.Story_Items.map((item, key) => {
                   return (
                     <p key={key}>
-                      ✔ {item.item_name} ({item.item_quantity.toLocaleString()}{" "}
-                      개 X {item.item_price.toLocaleString()} 원)
+                      ✔ {item.item_name} ({item.item_price.toLocaleString()} 원
+                      X {item.item_quantity.toLocaleString()} 개)
                     </p>
                   );
                 })}

@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {profileLoad, signOutRequest} from "../../actions/auth";
-import {signInBtnIsClicked} from "../../actions/user";
-import ProfileImage from "./ProfileImage";
+import { useDispatch, useSelector } from "react-redux";
+import { profileViewer, signOutRequest } from "../../actions/auth";
+import { signInBtnIsClicked } from "../../actions/user";
 
 const NavStyle = styled.nav`
   position: fixed;
@@ -53,6 +52,9 @@ const NavStyle = styled.nav`
   .dropdown {
     display: flex;
     justify-content: center;
+    > a {
+      cursor: pointer;
+    }
     ul {
       visibility: hidden;
       display: flex;
@@ -106,6 +108,9 @@ const NavStyle = styled.nav`
     }
     .search__icon {
       width: 25px;
+    }
+    img {
+      cursor: pointer;
     }
   }
 
@@ -259,37 +264,41 @@ const NavBar = (props) => {
   const isSignedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
-  const path = useSelector((state) => state.authentication.status.profile_path);
+  const profile_Path = useSelector(
+    (state) => state.authentication.profile.data
+  );
   const onClickHandler = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
 
-    const signedIn = () => {
-        if (isSignedIn) {
-            return (
-                <>
-                    <p>{username}님</p>
-                    <div
-                        style={{cursor: "pointer"}}
-                        onClick={() => dispatch(signOutRequest())}
-                    >
-                        로그아웃
-                    </div>
-                </>
-            );
-        } else {
-            return (
-                <p
-                    style={{cursor: "pointer"}}
-                    onClick={() => dispatch(signInBtnIsClicked())}
-                >
-                    로그인
-                </p>
-            );
-        }
-    };
+  const signedIn = () => {
+    if (isSignedIn) {
+      return (
+        <>
+          <p>{username}님</p>
+          <div
+            style={{ cursor: "pointer" }}
+            onClick={() => dispatch(signOutRequest())}
+          >
+            로그아웃
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <p
+          style={{ cursor: "pointer" }}
+          onClick={() => dispatch(signInBtnIsClicked())}
+        >
+          로그인
+        </p>
+      );
+    }
+  };
 
-  useEffect(() => {}, [username]);
+  useEffect(() => {
+    dispatch(profileViewer({ username }));
+  }, [username]);
 
   return (
     <>
@@ -311,12 +320,7 @@ const NavBar = (props) => {
             {isSignedIn ? (
               <Link to="/my">My</Link>
             ) : (
-              <a
-                style={{ cursor: "pointer" }}
-                onClick={() => dispatch(signInBtnIsClicked())}
-              >
-                My
-              </a>
+              <a onClick={() => dispatch(signInBtnIsClicked())}>My</a>
             )}
             <ul>
               <Link to="">캠페인 모금현황</Link>
@@ -333,25 +337,20 @@ const NavBar = (props) => {
           </div>
         </div>
         <div className="user">
-          {isSignedIn ? (
+          {isSignedIn && profile_Path !== null ? (
             <Link to="/my">
               <img
                 className="user__icon"
-                alt="user__icon"
-                src="/icons/user.png"
+                src={"http://localhost:3000/user_profile/" + profile_Path}
               />
             </Link>
           ) : (
-            <a
-              style={{ cursor: "pointer" }}
+            <img
+              className="user__icon"
+              alt="user__icon"
+              src="/icons/user.png"
               onClick={() => dispatch(signInBtnIsClicked())}
-            >
-              <img
-                className="user__icon"
-                alt="user__icon"
-                src="/icons/user.png"
-              />
-            </a>
+            />
           )}
 
           {signedIn()}
@@ -431,117 +430,6 @@ const NavBar = (props) => {
       </ResNavStyle>
     </>
   );
-    return (
-        <>
-            <NavStyle menuClicked={menuClicked}>
-                <div className="nav__title">
-                    <img className="logo" alt="hugus" src="/icons/hugus.svg"/>
-                    <Link to="/">HUGUS</Link>
-                </div>
-                <div className="nav__menus">
-                    <div className="dropdown">
-                        <Link to="/story">Story</Link>
-                        <ul>
-                            <Link to="">인기 스토리</Link>
-                            <Link to="">최신 스토리</Link>
-                            <Link to="">관심 스토리</Link>
-                        </ul>
-                    </div>
-                    <div className="dropdown">
-                        <Link to="/my">My</Link>
-                        <ul>
-                            <Link to="">캠페인 모금현황</Link>
-                            <Link to="">스토리 투표현황</Link>
-                        </ul>
-                    </div>
-                    <div className="dropdown">
-                        <Link to="/act">Act</Link>
-                        <ul>
-                            <Link to="">물품 구매 인증</Link>
-                            <Link to="">물품 전달 과정</Link>
-                            <Link to="">수혜자의 이야기</Link>
-                        </ul>
-                    </div>
-                </div>
-                <div className="user">
-                    <ProfileImage/>
-                    {signedIn()}
-                    <Link to="/search">
-                        <img
-                            className="search__icon"
-                            alt="search__icon"
-                            src="/icons/Search.png"
-                        />
-                    </Link>
-                </div>
-                <div className="res__menu__btn" id="menu" onClick={onClickHandler}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </NavStyle>
-            <ResNavStyle menuClicked={menuClicked}>
-                <section>
-                    <article className="res__menu__item">
-                        <div>
-                            <div>STORY</div>
-                            <p>
-                                인기
-                                <br/>
-                                스토리
-                            </p>
-                            <p>
-                                최신
-                                <br/>
-                                스토리
-                            </p>
-                            <p>
-                                관심
-                                <br/>
-                                스토리
-                            </p>
-                        </div>
-                        <div>
-                            <div>MY</div>
-                            <p>
-                                캠페인
-                                <br/>
-                                모금현황
-                            </p>
-                            <p className="hugus">HUGUS</p>
-                            <p>
-                                스토리
-                                <br/>
-                                투표현황
-                            </p>
-                        </div>
-                        <div>
-                            <div>ACT</div>
-                            <p>
-                                물품
-                                <br/>
-                                구매인증
-                            </p>
-                            <p>
-                                물품
-                                <br/>
-                                전달과정
-                            </p>
-                            <p>
-                                수혜자의
-                                <br/>
-                                이야기
-                            </p>
-                        </div>
-                    </article>
-                    <article className="res__menu__info">
-                        {signedIn()}
-                        <Link to="/search">검색</Link>
-                    </article>
-                </section>
-            </ResNavStyle>
-        </>
-    );
 };
 
 export default NavBar;

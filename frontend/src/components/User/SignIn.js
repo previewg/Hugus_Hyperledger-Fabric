@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { signInBtnIsClicked, signUpBtnIsClicked } from "../../actions/user";
-import { signIn, signInRequest } from "../../actions/auth";
+import { signInRequest } from "../../actions/auth";
+import KakaoLo from "./KakaoLo";
 
 const SignInStyle = styled.div`
   position: fixed;
@@ -118,15 +119,18 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const loginStatus = useSelector((state) => state.authentication.login.status);
+
+  const signInStatus = useSelector(
+    (state) => state.authentication.signIn.status
+  );
 
   const onChangeHandler = (e) => {
     setUser({
       ...user,
       [e.target.id]: e.target.value,
     });
-    if(e.key==="Enter"){
-      signInHandler()
+    if (e.key === "Enter") {
+      signInHandler();
     }
   };
 
@@ -134,17 +138,16 @@ const SignIn = () => {
     dispatch(signInRequest({ user }));
   };
   useEffect(() => {
-    dispatch(signIn());
-    if (loginStatus === "SUCCESS") {
+    if (signInStatus === "SUCCESS") {
       alert("로그인성공");
       setUser({
         email: "",
         password: "",
       });
-    } else if (loginStatus === "FAILURE") {
+    } else if (signInStatus === "FAILURE") {
       alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
     }
-  }, [loginStatus]);
+  }, [signInStatus]);
 
   return (
     <SignInStyle>
@@ -184,7 +187,8 @@ const SignIn = () => {
         </article>
         <article className="buttons">
           <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
-          <button>카카오 계정으로 로그인</button>
+          {/*<button>카카오 계정으로 로그인</button>*/}
+          <KakaoLo />
           <button>페이스북 계정으로 로그인</button>
           <div className="already">
             <p>회원이 아니신가요?</p>

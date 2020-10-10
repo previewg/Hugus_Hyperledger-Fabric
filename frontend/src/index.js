@@ -18,8 +18,9 @@ import {
   User,
   UserInfo,
   BlockInfo,
-
+  SearchResult,
 } from "containers";
+
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { NavBar, ScrollTop } from "components";
 import Auth from "hoc/auth";
@@ -31,8 +32,6 @@ import "slick-carousel/slick/slick-theme.css";
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(ReduxThunk))
-  // window.__REDUX_DEVTOOLS_EXTENSION__ &&
-  // window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 ReactDOM.render(
@@ -46,7 +45,8 @@ ReactDOM.render(
         <Route exact path="/story" component={Auth(StoryMain, null)} />
         <Route path="/story/write" component={Auth(StoryWrite, true)} />
         <Route path="/story/:id" component={Auth(StoryDetail, null)} />
-        <Route path="/search" component={Auth(TotalSearch, null)} />
+        <Route exact path="/search" component={Auth(TotalSearch, null)} />
+        <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route path="/blockinfo" component={Auth(BlockInfo, true)} />
       </Switch>

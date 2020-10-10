@@ -5,6 +5,7 @@ import {
   STORY_LIST_LOAD,
   STORY_LIST_LOAD_SUCCESS,
   STORY_LIST_LOAD_FAILURE,
+  STORY_LOAD_INIT,
   STORY_LOAD,
   STORY_LOAD_SUCCESS,
   STORY_LOAD_FAILURE,
@@ -110,6 +111,13 @@ export default function story(state = initialState, action) {
       return update(state, {
         list: {
           status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_LOAD_INIT:
+      return update(state, {
+        detail: {
+          status: { $set: "INIT" },
         },
       });
 

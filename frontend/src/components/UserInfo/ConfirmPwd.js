@@ -39,8 +39,8 @@ const ConfirmPwd = () => {
       username: nickname,
       [e.target.id]: e.target.value,
     });
-    if(e.key==="Enter"){
-        submitHandler()
+    if (e.key === "Enter") {
+      submitHandler();
     }
   };
 
@@ -50,10 +50,8 @@ const ConfirmPwd = () => {
       username: nickname,
       password: "",
     });
-
   };
   useEffect(() => {
-    dispatch(confirm());
     if (pwd_status === "SUCCESS") {
       setUser({
         username: nickname,

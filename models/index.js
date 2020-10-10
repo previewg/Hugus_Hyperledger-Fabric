@@ -1,25 +1,13 @@
 "use strict";
 const Sequelize = require("sequelize");
-
 const env = process.env.NODE_ENV || "development";
-
 const config = require("../config/config.json")[env];
-// const seqConfig = {
-//   define:{
-//     timezone: config.database.timezone,
-//     dialect: 'mysql',
-//     dialectOptions: {  charset: 'utf8mb4',
-//     dateStrings: true, typeCast: true },
-//     timezone : '+09:00',
-//     timestamps: true
-//   }
-// }
+
 const sequelize = new Sequelize(
   config.database,
   config.username,
   config.password,
   config
-  // seqConfig
 );
 const db = {};
 

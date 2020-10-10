@@ -1,9 +1,13 @@
 # dependencies
 /node_modules
 
+# config
 /config
 
+# editor
 .idea
+.vscode
+
 # testing
 /coverage
 
