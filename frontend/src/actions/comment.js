@@ -45,8 +45,8 @@ const commentAddStart = () => {
     return { type : COMMENT_CHILD_ADD };
   }
   
-  const commentChildAddSuccess = () => {
-    return { type: COMMENT_CHILD_ADD_SUCCESS };
+  const commentChildAddSuccess = (reComment) => {
+    return { type: COMMENT_CHILD_ADD_SUCCESS, reComment : reComment };
   };
   
   const commentChildAddFailure = () => {
@@ -86,7 +86,7 @@ export const commentListLoader = (story_id) => async (dispatch) => {
   await axios
     .get(`/comment/list/${story_id}`)
     .then((response) => {
-      console.log(response.data.list);
+      // console.log(response.data.list);
       dispatch(commentListLoadSuccess(response.data.list));
     })
     .catch((error) => {
@@ -99,9 +99,9 @@ export const commentListLoader = (story_id) => async (dispatch) => {
 export const commentChildAdd = (data) => async (dispatch) => {
   dispatch(commentChildAddStart());
   await axios
-    .post("/comment/child_add", {...data} )
+    .post("/comment/child_add", { ...data })
     .then((response) => {
-      dispatch(commentChildAddSuccess(response.data.list));
+      dispatch(commentChildAddSuccess(response.data.reComment));
     })
     .catch((error) => {
       dispatch(commentChildAddFailure());

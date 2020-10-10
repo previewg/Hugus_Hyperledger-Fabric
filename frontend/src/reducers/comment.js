@@ -99,7 +99,7 @@ export default function comment(state = initialState, action) {
           },
           list: {
             status: { $set: "SUCCESS" },
-            data: { $set: action.list },
+            data: { $set: action.reComment },
           },
         });
         
