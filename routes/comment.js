@@ -1,15 +1,8 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const {
-    Story,
-    User,
-    Story_Comment,
-    Comment_Child,
-  } = require("../models");
-e  // const { Sequelize, DataTypes } = require('sequelize');
 const { User, Story_Comment, Comment_Child } = require("../models");
-const comment_child = require("../models/comment_child");
+// const comment_child = require("../models/comment_child");
 
 // 댓글 등록
 router.post("/add", async (req, res) => {

@@ -30,14 +30,6 @@ const commentAddFailure = () => {
     return { type: COMMENT_ADD_FAILURE };
   };
 
-const commentAddSuccess = (list) => {
-  return { type: COMMENT_ADD_SUCCESS, list: list };
-};
-
-const commentAddFailure = () => {
-  return { type: COMMENT_ADD_FAILURE };
-};
-
 // 댓글 리스트 로드
 const commentListLoadStart = () => {
   return { type: COMMENT_LIST_LOAD };
