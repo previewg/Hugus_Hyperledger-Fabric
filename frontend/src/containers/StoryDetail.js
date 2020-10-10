@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storyLike, storyLoader } from "../actions/story";
+import { storyLike, storyLoader, storyVote } from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import {
@@ -72,8 +72,16 @@ const StoryDetailStyle = styled.div`
         font-weight: normal;
         font-size: 14px;
         background-color: #fff7ef;
+        padding: 1rem;
         p {
-          padding: 1rem;
+          margin: 0;
+          margin-bottom: 10px;
+        }
+        p:nth-last-child(1) {
+          margin-bottom: 0px;
+        }
+        .total_price {
+          text-align: end;
         }
       }
     }
@@ -101,7 +109,6 @@ const StoryDetailStyle = styled.div`
     }
 
     .vote {
-      padding: 20px;
       font-size: 14px;
       display: flex;
       flex-direction: column;
@@ -122,6 +129,13 @@ const StoryDetailStyle = styled.div`
           background-color: dodgerblue;
           color: white;
           transform: scale(1.2);
+        }
+      }
+      .vote_true {
+        border: solid 0.1px #ff4949;
+        color: #ff4949;
+        :hover {
+          background-color: #ff4949;
         }
       }
       strong:nth-child(2) {
@@ -303,12 +317,12 @@ const StoryDetailStyle = styled.div`
         align-items: center;
         margin-top: 5px;
         height: 25px;
-      summary {
-        list-style: none;
-        font-size: 12px;
-        cursor: pointer;
-        color: grey;
-      }
+        summary {
+          list-style: none;
+          font-size: 12px;
+          cursor: pointer;
+          color: grey;
+        }
         summary::-webkit-details-marker {
           display: none;
         }
@@ -326,64 +340,46 @@ const StoryDetailStyle = styled.div`
         }
 
         input {
-        height: 15px;
-        padding: 10px;
-        outline: none;
-        transition: 0.4s ease-in-out;
-        border: none;
-        border-bottom: solid gray 0.1px;
-        :focus {
-          border-bottom: solid orange 0.1px;
-        }
-      }
-        .comment__buttons {
-        margin-top: 10px;
-        display: flex;
-        justify-content: flex-end;
-        > button {
-          background-color: transparent;
-          width: 50px;
-          height: 30px;
-          border-radius: 3px;
-          cursor: pointer;
+          height: 15px;
+          padding: 10px;
           outline: none;
-        }
-        button:nth-child(1) {
-          border: solid darkgray 0.1px;
-          color: darkgray;
-          :hover {
-            background-color: darkgray;
-            color: white;
+          transition: 0.4s ease-in-out;
+          border: none;
+          border-bottom: solid gray 0.1px;
+          :focus {
+            border-bottom: solid orange 0.1px;
           }
         }
-        button:nth-child(2) {
-          margin-left: 5px;
-          border: solid orange 0.1px;
-          color: orange;
-          :hover {
-            background-color: orange;
-            color: white;
+        .comment__buttons {
+          margin-top: 10px;
+          display: flex;
+          justify-content: flex-end;
+          > button {
+            background-color: transparent;
+            width: 50px;
+            height: 30px;
+            border-radius: 3px;
+            cursor: pointer;
+            outline: none;
+          }
+          button:nth-child(1) {
+            border: solid darkgray 0.1px;
+            color: darkgray;
+            :hover {
+              background-color: darkgray;
+              color: white;
+            }
+          }
+          button:nth-child(2) {
+            margin-left: 5px;
+            border: solid orange 0.1px;
+            color: orange;
+            :hover {
+              background-color: orange;
+              color: white;
+            }
           }
         }
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
     }
   }
@@ -413,10 +409,10 @@ const ErrorBoxStyle = styled.p`
 `;
 const BarStyle = styled.div`
   width: 100%;
-  height: 20px;
+  height: 80px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   div {
     display: flex;
     background-color: #e7e7e7;
@@ -427,14 +423,18 @@ const BarStyle = styled.div`
     > div {
       background-color: orange;
       border-radius: 10px;
-      font-size: 12px;
-      width: 80%;
+      font-size: 13px;
+      ${(props) => (props.ratio < 4 ? "width:30px" : `width:${props.ratio}%`)};
       padding-right: 10px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      color: white;
+      color: black;
     }
+  }
+  p {
+    text-align: end;
+    font-size: 12px;
   }
 `;
 
@@ -444,6 +444,7 @@ const StoryDetail = ({ match }) => {
   const commentList = useSelector((state) => state.comment.list.data);
   const status = useSelector((state) => state.story.detail.status);
   const like = useSelector((state) => state.story.like);
+  const vote = useSelector((state) => state.story.vote);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
@@ -451,20 +452,37 @@ const StoryDetail = ({ match }) => {
     (state) => state.authentication.status.currentUser
   );
   const loginStatus = useSelector((state) => state.authentication.login.status);
+  const [error, setError] = useState(false);
+  const [comments, setComments] = useState("");
+  const [comments_child, setComments_child] = useState("");
+  
+  const comment = useRef();
+  const comment_child = useRef();
+  const errorMsg = "댓글을 입력하세요";
 
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id));
   }, [loginStatus === "SUCCESS"]);
 
-  const comment = useRef();
-  const comment_child = useRef();
-  const errorMsg = "댓글을 입력하세요";
+  const totalPrice = () => {
+    let total = 0;
+    data.Story_Items.map((item) => {
+      total += item.item_price * item.item_quantity;
+    });
+    return total;
+  };
 
-
-  const [comments, setComments] = useState("");
-  const [comments_child, setComments_child] = useState("");
-  const [error, setError] = useState(false);
+  const commentAddHandler = () => {
+    if (comments === "") {
+      comment.current.focus();
+      setError(true);
+    } else {
+      dispatch(commentAdd({ comment: comments, story_id: data.id })).then(
+        setComments("")
+      );
+    }
+  };
 
   const Loader = () => {
     return (
@@ -483,19 +501,15 @@ const StoryDetail = ({ match }) => {
     );
   };
 
-  const commentAddHandler = () => {
-    if (comments === "") {
-      comment.current.focus();
-    } else {
-      dispatch(commentAdd({ comment: comments, story_id: data.id })).then(
-        setComments("")
-      );
-    }
-  };
-
   const onChangeHandler = (e) => {
     setComments(e.target.value);
+    setError(false);
   };
+
+  const onCommentChangeHandler = (e) => {
+    setComments_child(e.target.value);
+    setError(false);
+  }
 
   const commentDeleteHandler = (id) => {
     dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
@@ -507,21 +521,74 @@ const StoryDetail = ({ match }) => {
     setComments("");
   };
 
+  const commentChildClear = () => {
+    setComments_child("");
+  }
+
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
   };
 
-  const commentChildAddHandler = () => {
-    dispatch(commentChildAdd({ comment_child: comments_child, comment_id: commentList.comment_id }))
+  const commentChildAddHandler = (id) => {
+    if (comments_child === "") {
+      comment_child.current.focus();
+      setError(true);
+    } else {
+    dispatch(commentChildAdd({ comment: comments_child, comment_id: id }))
+    .then(
+      setComments_child(""))
   }
+}
+
   const progressBar = () => {
+    let ratio = parseInt((vote.voteNum / data.story_goal) * 100);
+    if (ratio > 100) ratio = 100;
     return (
-      <BarStyle>
+      <BarStyle ratio={ratio}>
         <div>
-          <div>80%</div>
+          <div>{parseInt((vote.voteNum / data.story_goal) * 100)}%</div>
         </div>
+        <p>
+          ({vote.voteNum} / {data.story_goal})
+        </p>
       </BarStyle>
     );
+  };
+
+  const voteHandler = () => {
+    if (!isLoggedIn) {
+      dispatch(signInBtnIsClicked());
+    } else {
+      if (vote.user) {
+        dispatch(storyVote(data.id, true));
+      } else {
+        dispatch(storyVote(data.id, false));
+      }
+    }
+  };
+
+  const voteButton = () => {
+    if (!isLoggedIn) {
+      return (
+        <button className="vote_false" onClick={voteHandler}>
+          후원을 희망합니다
+        </button>
+      );
+    } else {
+      if (vote.user) {
+        return (
+          <button className="vote_true" onClick={voteHandler}>
+            투표 취소하기
+          </button>
+        );
+      } else {
+        return (
+          <button className="vote_false" onClick={voteHandler}>
+            후원을 희망합니다
+          </button>
+        );
+      }
+    }
   };
 
   const Comment = () => {
@@ -614,11 +681,14 @@ const StoryDetail = ({ match }) => {
                 {data.Story_Items.map((item, key) => {
                   return (
                     <p key={key}>
-                      {item.item_name} ({item.item_quantity} 개 X{" "}
-                      {item.item_price.toLocaleString()} 원)
+                      ✔ {item.item_name} ({item.item_quantity.toLocaleString()}{" "}
+                      개 X {item.item_price.toLocaleString()} 원)
                     </p>
                   );
                 })}
+                <p className="total_price">
+                  합계 {totalPrice().toLocaleString()}원
+                </p>
               </div>
             </div>
 
@@ -634,7 +704,8 @@ const StoryDetail = ({ match }) => {
             </div>
             <div className="vote">
               {progressBar()}
-              <button>후원을 희망합니다.</button>
+              {voteButton()}
+
               <p>
                 <strong>필요 득표수</strong>를 충족할 시, 메인 캠페인으로
                 등록되며 <strong>실제 모금</strong>이 이루어집니다.
@@ -674,35 +745,30 @@ const StoryDetail = ({ match }) => {
                     />
                     <img className="disLiked" src="/icons/disLike.png" />
 
-                  {  (isLoggedIn)  && (
-                    <details>
-                     <summary>답글</summary>
+                    {isLoggedIn && (
+                      <details>
+                        <summary>답글</summary>
 
-                     <input
-                     ref={comment_child}
-                     value={comments_child}
-                     onChange={onChangeHandler}
-                     className="comment_input"
-                     placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
-                     onKeyDown={(e) => {
-                       if (e.key === "Enter") commentChildAddHandler(e);
-                     }}
-                    />
-                   <div className="comment__buttons">
-                     <button className="comment__clear" onClick={commentClear}>
-                       취소
-                     </button>
-                     <button onClick={commentChildAddHandler}>등록</button>
-                   </div>
-
-                     </details>
-                     
-
-                  ) 
-                  }
-                   
-
-
+                        <input
+                          ref={comment_child}
+                          value={comments_child}
+                          onChange={onCommentChangeHandler}
+                          className="comment_child_input"
+                          placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") commentChildAddHandler(e);
+                          }}
+                        />
+                        <div className="comment__buttons">
+                          <button
+                            className="commentChild__clear"
+                            onClick={commentChildClear}>
+                            취소
+                          </button>
+                          <button onClick={ () => commentChildAddHandler(comment.id)}>등록</button>
+                        </div>
+                      </details>
+                    )}
                   </div>
                 </div>
               );

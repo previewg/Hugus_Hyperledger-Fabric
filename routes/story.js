@@ -8,8 +8,8 @@ const {
   Story_Hashtag,
   Story_Item,
   User,
-  Story_Comment,
   Story_Like,
+  Story_Vote,
 } = require("../models");
 
 // multer 설정
@@ -144,6 +144,9 @@ router.get("/:id", async (req, res) => {
         { model: User, attributes: ["nickname"] },
       ],
     });
+    const voteNum = await Story_Vote.count({
+      where: { story_id: story_id, vote: true },
+    });
 
     const likeNum = await Story_Like.count({
       where: { story_id: story_id, like: true },
@@ -153,17 +156,24 @@ router.get("/:id", async (req, res) => {
         where: { story_id: story_id, user_email: user_email, like: true },
       });
 
+      const vote = await Story_Vote.findOne({
+        where: { story_id: story_id, user_email: user_email, vote: true },
+      });
       res.json({
         data: data,
         like: like ? true : false,
+        vote: vote ? true : false,
         likeNum: likeNum,
+        voteNum: voteNum,
         success: 1,
       });
     } else {
       res.json({
         data: data,
         like: false,
+        vote: false,
         likeNum: likeNum,
+        voteNum: voteNum,
         success: 1,
       });
     }
@@ -219,6 +229,40 @@ router.put("/like", async (req, res) => {
         story_id: story_id,
         user_email: user_email,
         like: !status,
+      });
+    }
+
+    res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// 스토리 투표
+router.put("/vote", async (req, res) => {
+  try {
+    const story_id = req.body.story_id;
+    const status = req.body.status;
+    const user_email = req.session.loginInfo.user_email;
+
+    const history = await Story_Vote.findOne({
+      where: { story_id: story_id, user_email: user_email },
+    });
+
+    if (history) {
+      await Story_Vote.update(
+        {
+          vote: !status,
+        },
+        {
+          where: { story_id: story_id, user_email: user_email },
+        }
+      );
+    } else {
+      await Story_Vote.create({
+        story_id: story_id,
+        user_email: user_email,
+        vote: !status,
       });
     }
 
