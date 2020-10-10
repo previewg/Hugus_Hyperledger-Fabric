@@ -20,6 +20,7 @@ import {
   BlockInfo,
   SearchResult,
 } from "containers";
+
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { NavBar, ScrollTop } from "components";
 import Auth from "hoc/auth";
@@ -31,8 +32,6 @@ import "slick-carousel/slick/slick-theme.css";
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(ReduxThunk))
-  // window.__REDUX_DEVTOOLS_EXTENSION__ &&
-  // window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 ReactDOM.render(

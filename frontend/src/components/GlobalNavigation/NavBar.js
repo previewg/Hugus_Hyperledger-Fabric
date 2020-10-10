@@ -52,6 +52,9 @@ const NavStyle = styled.nav`
   .dropdown {
     display: flex;
     justify-content: center;
+    > a {
+      cursor: pointer;
+    }
     ul {
       visibility: hidden;
       display: flex;
@@ -292,13 +295,10 @@ const NavBar = (props) => {
       );
     }
   };
-  const profileLoader = () => {
-    dispatch(profileViewer({ username }));
-  };
 
   useEffect(() => {
-    profileLoader();
-  }, [username, profile_Path]);
+    dispatch(profileViewer({ username }));
+  }, [username]);
 
   return (
     <>
@@ -317,7 +317,11 @@ const NavBar = (props) => {
             </ul>
           </div>
           <div className="dropdown">
-            <Link to="/my">My</Link>
+            {isSignedIn ? (
+              <Link to="/my">My</Link>
+            ) : (
+              <a onClick={() => dispatch(signInBtnIsClicked())}>My</a>
+            )}
             <ul>
               <Link to="">캠페인 모금현황</Link>
               <Link to="">스토리 투표현황</Link>

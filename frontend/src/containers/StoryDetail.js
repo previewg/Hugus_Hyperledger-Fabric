@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storyLike, storyLoader, storyVote } from "../actions/story";
+import {
+  storyLike,
+  storyLoader,
+  storyLoadInit,
+  storyVote,
+} from "../actions/story";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
 import {
@@ -456,7 +461,6 @@ const StoryDetail = ({ match }) => {
   const current_user = useSelector(
     (state) => state.authentication.status.currentUser
   );
-  const loginStatus = useSelector((state) => state.authentication.login.status);
   const [error, setError] = useState(false);
   const [comments, setComments] = useState("");
   const [comments_child, setComments_child] = useState("");
@@ -467,7 +471,8 @@ const StoryDetail = ({ match }) => {
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id));
-  }, [loginStatus === "SUCCESS"]);
+    return () => dispatch(storyLoadInit());
+  }, []);
 
   const totalPrice = () => {
     let total = 0;
@@ -511,8 +516,8 @@ const StoryDetail = ({ match }) => {
   };
 
   const commentDeleteHandler = (id) => {
-    const ok = window.confirm("삭제하시겠습니까?");
-    if (ok) {
+    const confirmed = window.confirm("삭제하시겠습니까?");
+    if (confirmed) {
       dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
         setComments("")
       );

@@ -150,9 +150,9 @@ const SignUpStyle = styled.div`
 `;
 const SignUp = () => {
   const dispatch = useDispatch();
-  const errorCode = useSelector((state) => state.authentication.register.error);
+  const errorCode = useSelector((state) => state.authentication.signUp.error);
   const registerStatus = useSelector(
-    (state) => state.authentication.register.status
+    (state) => state.authentication.signUp.status
   );
   const [user, setUser] = useState({
     email: "",
@@ -178,15 +178,15 @@ const SignUp = () => {
     setOpenTerm(false);
   };
 
-    const onChangeHandler = (e) => {
-        setUser({
-            ...user,
-            [e.target.id]: e.target.value
-        })
-        if(e.key==="Enter"){
-            signUpHandler()
-        }
+  const onChangeHandler = (e) => {
+    setUser({
+      ...user,
+      [e.target.id]: e.target.value,
+    });
+    if (e.key === "Enter") {
+      signUpHandler();
     }
+  };
 
   useEffect(() => {
     if (registerStatus === "SUCCESS") {
@@ -202,21 +202,45 @@ const SignUp = () => {
     }
   }, [registerStatus]);
 
-    return (
-        <SignUpStyle >
-            <section>
-                <article className='header'>
-                    <p className='close__btn' onClick={() => dispatch(signUpBtnIsClicked())}>닫기</p>
-                    <p>회원가입</p>
-                </article>
-                <article className='form'>
-                    <input id='email' value={user.email} placeholder='이메일' onChange={onChangeHandler} onKeyPress={onChangeHandler}/>
-                    <input id='nickname' value={user.nickname} placeholder='닉네임' onChange={onChangeHandler} onKeyPress={onChangeHandler}/>
-                    <input id='password' value={user.password} type='password' placeholder='비밀번호' onChange={onChangeHandler} onKeyPress={onChangeHandler}/>
-                    <div className='agreement'>
-                        <input type='checkbox'/>
-                        <p onClick={onClickTerm}>개인정보 이용 동의</p>
-                    </div>
+  return (
+    <SignUpStyle>
+      <section>
+        <article className="header">
+          <p
+            className="close__btn"
+            onClick={() => dispatch(signUpBtnIsClicked())}
+          >
+            닫기
+          </p>
+          <p>회원가입</p>
+        </article>
+        <article className="form">
+          <input
+            id="email"
+            value={user.email}
+            placeholder="이메일"
+            onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
+          />
+          <input
+            id="nickname"
+            value={user.nickname}
+            placeholder="닉네임"
+            onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
+          />
+          <input
+            id="password"
+            value={user.password}
+            type="password"
+            placeholder="비밀번호"
+            onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
+          />
+          <div className="agreement">
+            <input type="checkbox" />
+            <p onClick={onClickTerm}>개인정보 이용 동의</p>
+          </div>
 
           <button onClick={signUpHandler}>가입하기</button>
         </article>

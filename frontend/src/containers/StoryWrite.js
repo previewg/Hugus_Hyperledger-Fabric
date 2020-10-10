@@ -442,8 +442,10 @@ const StoryWrite = (props) => {
   const [errorCode, setErrorCode] = useState(0);
 
   const [preImg, setPreImg] = useState([]);
+
   const [fileReaderState, setFileReaderState] = useState("");
-  const errorHandler = () => {
+
+  const errorHandler = useCallback(() => {
     if (!data.title) {
       setErrorCode(1);
       title.current.focus();
@@ -486,17 +488,17 @@ const StoryWrite = (props) => {
       return false;
     }
     return true;
-  };
+  }, [filled]);
 
   const storyAddHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("info", data.info);
-      formData.append("content", data.content);
+      formData.append("story_title", data.title);
+      formData.append("user_info", data.info);
+      formData.append("story_content", data.content);
       formData.append("hashtags", data.hashtags);
       formData.append("items", JSON.stringify(data.items));
-      formData.append("goal", data.goal);
+      formData.append("story_goal", data.goal);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -527,7 +529,6 @@ const StoryWrite = (props) => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-
     if (e.target.name === "files") {
       previewImg(e);
       setData({
@@ -549,7 +550,7 @@ const StoryWrite = (props) => {
     }
   };
 
-  const addItem = (e) => {
+  const addItem = () => {
     if (data.item_name === "") {
       setErrorCode(4);
       itemName.current.focus();
@@ -570,7 +571,7 @@ const StoryWrite = (props) => {
       if (totalPrice < 1000000 && totalPrice > 0) {
         goal = 50;
       } else {
-        goal = parseInt(totalPrice / 1000000) * 100;
+        goal = Math.floor(totalPrice / 1000000) * 100;
       }
       let items = data.items.concat(item);
       setData({
@@ -607,67 +608,72 @@ const StoryWrite = (props) => {
     }
   };
 
-  const onDeleteHandler = (key) => () => {
-    console.log(key);
-    let items;
-    let totalPrice =
-      data.totalPrice -
-      data.items[key].item_price * data.items[key].item_quantity;
-    let goal;
-    if (totalPrice < 1000000 && totalPrice > 0) {
-      goal = 50;
-    } else {
-      goal = parseInt(totalPrice / 1000000) * 100;
-    }
-    if (key === 0) {
-      items = data.items.slice(1, data.items.length);
-    } else if (key === data.items.length - 1) {
-      items = data.items.slice(0, key);
-    } else {
-      items = data.items
-        .slice(0, key)
-        .concat(data.items.slice(key + 1, data.items.length));
-    }
-    setData({
-      ...data,
-      items,
-      totalPrice: totalPrice,
-      goal: goal,
-    });
-  };
+  const onDeleteHandler = useCallback(
+    (key) => () => {
+      let items;
+      let totalPrice =
+        data.totalPrice -
+        data.items[key].item_price * data.items[key].item_quantity;
+      let goal;
+      if (totalPrice < 1000000 && totalPrice > 0) {
+        goal = 50;
+      } else {
+        goal = Math.floor(totalPrice / 1000000) * 100;
+      }
+      if (key === 0) {
+        items = data.items.slice(1, data.items.length);
+      } else if (key === data.items.length - 1) {
+        items = data.items.slice(0, key);
+      } else {
+        items = data.items
+          .slice(0, key)
+          .concat(data.items.slice(key + 1, data.items.length));
+      }
+      setData({
+        ...data,
+        items,
+        totalPrice: totalPrice,
+        goal: goal,
+      });
+    },
+    [data]
+  );
 
-  const onTagDeleteHandler = (key) => () => {
-    let hashtags;
-    if (key === 0) {
-      hashtags = data.hashtags.slice(1, data.hashtags.length);
-    } else if (key === data.hashtags.length - 1) {
-      hashtags = data.hashtags.slice(0, key);
-    } else {
-      hashtags = data.hashtags
-        .slice(0, key)
-        .concat(data.hashtags.slice(key + 1, data.hashtags.length));
-    }
-    setData({
-      ...data,
-      hashtags,
-    });
-  };
+  const onTagDeleteHandler = useCallback(
+    (key) => () => {
+      let hashtags;
+      if (key === 0) {
+        hashtags = data.hashtags.slice(1, data.hashtags.length);
+      } else if (key === data.hashtags.length - 1) {
+        hashtags = data.hashtags.slice(0, key);
+      } else {
+        hashtags = data.hashtags
+          .slice(0, key)
+          .concat(data.hashtags.slice(key + 1, data.hashtags.length));
+      }
+      setData({
+        ...data,
+        hashtags,
+      });
+    },
+    [data]
+  );
 
-  const itemInputDelete = () => {
+  const itemInputDelete = useCallback(() => {
     setData({
       ...data,
       item_name: "",
       item_price: "",
       item_quantity: "",
     });
-  };
+  }, [data]);
 
   const clearItems = useCallback(() => {
     setData({
       ...data,
       items: [],
     });
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     if (addStatus === "SUCCESS") {

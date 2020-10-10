@@ -20,11 +20,10 @@
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
-    "react-virtualized": "^9.22.2",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.3.5",
+    "bcrypt": "^5.0.0"
   },
   "devDependencies": {
-    "bcrypt": "^5.0.0",
     "nodemon": "^2.0.4"
   }
 }
