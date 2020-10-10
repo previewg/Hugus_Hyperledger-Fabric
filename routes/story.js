@@ -121,6 +121,7 @@ router.get("/list/:section", async (req, res) => {
         "story_vote",
         "story_like",
         "user_info",
+        "story_comment",
       ],
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
@@ -182,7 +183,7 @@ router.get("/:id", async (req, res) => {
 // 스토리 조회수 추가
 router.put("/visit", async (req, res) => {
   try {
-    const story_id = req.body.story_id;
+    const { story_id } = req.body;
     await Story.increment(
       {
         visited: 1,

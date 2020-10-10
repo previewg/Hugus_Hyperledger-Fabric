@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0,
       },
+      story_comment: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       user_email: {
         type: DataTypes.STRING,
         allowNull: false,

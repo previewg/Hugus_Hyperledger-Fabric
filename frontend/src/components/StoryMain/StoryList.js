@@ -191,12 +191,10 @@ const StoryList = () => {
                 style={{
                   backgroundImage: `url("http://localhost:3000/uploads/${story.Story_Files[0].file}") `,
                 }}
+                onClick={() => visitHandler(story.id)}
+                key={key}
               >
-                <div
-                  onClick={() => visitHandler(story.id)}
-                  key={key}
-                  to={`/story/${story.id}`}
-                >
+                <div>
                   <div className="story__hashtag">
                     {story.Hashtags.map((tag, key) => {
                       return <p key={key}>#{tag.hashtag}</p>;
@@ -211,6 +209,7 @@ const StoryList = () => {
                     <img src="/icons/love.svg" />
                     <p>{story.story_like}</p>
                     <img src="/icons/comment.svg" />
+                    <p>{story.story_comment}</p>
                   </div>
                   <p>{story.user_info}</p>
                 </div>
@@ -223,8 +222,10 @@ const StoryList = () => {
                 style={{
                   backgroundImage: `url("http://localhost:3000/HUGUS.png") `,
                 }}
+                onClick={() => visitHandler(story.id)}
+                key={key}
               >
-                <div onClick={() => visitHandler(story.id)} key={key}>
+                <div>
                   <div className="story__hashtag">
                     {story.Hashtags.map((tag, key) => {
                       return <p key={key}>#{tag.hashtag}</p>;
@@ -238,8 +239,8 @@ const StoryList = () => {
                   <div>
                     <img src="/icons/love.svg" />
                     <p>{story.story_like}</p>
-
                     <img src="/icons/comment.svg" />
+                    <p>{story.story_comment}</p>
                   </div>
                   <p>{story.user_info}</p>
                 </div>
