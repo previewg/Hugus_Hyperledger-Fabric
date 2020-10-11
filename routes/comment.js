@@ -75,13 +75,13 @@ router.get("/list/:story_id", async (req, res) => {
 //대댓글 작성
 router.post("/child_add", async (req, res) => {
   try {
-  const user_email = req.session.loginInfo.user_email;
-  await Comment_Child.create({
-  user_email: user_email,
-  comment_id: req.body.comment_id,  
-  comment: req.body.comment,
+    const user_email = req.session.loginInfo.user_email;
+    const { comment_id, comment } = req.body;
+    await Comment_Child.create({
+      user_email: user_email,
+      comment_id: comment_id,  
+      comment: comment,
   });
-  console.log(req.body.comment_id);
   const reComment = await Comment_Child.findAll({
     where : {
       comment_id : req.body.comment_id

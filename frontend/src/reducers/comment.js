@@ -77,17 +77,6 @@ export default function comment(state = initialState, action) {
               status: { $set: "WAITING" },
             },
           });
-    
-        case COMMENT_DELETE_SUCCESS:
-          return update(state, {
-            delete: {
-              status: { $set: "SUCCESS" },
-            },
-            list: {
-              status: { $set: "SUCCESS" },
-              data: { $set: action.list },
-            },
-          });
       case COMMENT_DELETE_SUCCESS:
         return update(state, {
           delete: {
@@ -98,6 +87,12 @@ export default function comment(state = initialState, action) {
             data: { $set: action.list },
           },
         });
+        case COMMENT_DELETE_FAILURE:
+          return update(state, {
+            list: {
+              status: { $set: "FAILURE" },
+            },
+          });
         case COMMENT_CHILD_ADD:
         return update(state, {
           add: {
@@ -120,33 +115,6 @@ export default function comment(state = initialState, action) {
             status: { $set: "FAILURE" },
           },
         });
-
-
-    case COMMENT_CHILD_ADD:
-      return update(state, {
-        add: {
-          status: { $set: "WAITING" },
-        },
-      });
-
-    case COMMENT_CHILD_ADD_SUCCESS:
-      return update(state, {
-        add: {
-          status: { $set: "SUCCESS" },
-        },
-        list: {
-          status: { $set: "SUCCESS" },
-          data: { $set: action.list },
-        },
-      });
-
-    case COMMENT_CHILD_ADD_FAILURE:
-      return update(state, {
-        add: {
-          status: { $set: "FAILURE" },
-        },
-      });
-
     default:
       return state;
   }

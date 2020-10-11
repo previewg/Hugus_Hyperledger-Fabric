@@ -389,7 +389,6 @@ const StoryDetailStyle = styled.div`
     }
   }
 `;
-
 const ErrorBoxStyle = styled.p`
   ${(props) => {
     if (props.error == false) {
@@ -782,6 +781,10 @@ const StoryDetail = ({ match }) => {
                         </div>
                       </details>
                     )}
+                    <div>
+                        <p>{comment.User.nickname}</p>
+                        <p>{commentList[0].comment}</p>
+                    </div>
                   </div>
                 </div>
               );

@@ -61,8 +61,8 @@ const commentChildAddStart = () => {
   return { type: COMMENT_CHILD_ADD };
 };
 
-const commentChildAddSuccess = () => {
-  return { type: COMMENT_CHILD_ADD_SUCCESS };
+const commentChildAddSuccess = (reComment) => {
+  return { type: COMMENT_CHILD_ADD_SUCCESS, reComment: reComment };
 };
 
 const commentChildAddFailure = () => {
