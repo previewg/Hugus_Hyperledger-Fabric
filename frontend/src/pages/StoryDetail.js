@@ -1,13 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { css } from "@emotion/core";
-import { SyncLoader } from "react-spinners";
-import { storyLoader, storyLoadInit } from "../actions/story";
-import { commentListLoader } from "../actions/comment";
-import StoryContents from "../components/StoryDetail/StoryContents";
-import Comments from "../components/StoryDetail/Comments";
-import Back from "../components/StoryDetail/Back";
+import { storyLoader, storyLoadInit } from "actions/story";
+import { commentListLoader } from "actions/comment";
+import { StoryContents, Comments, Back, StoryDetailLoader } from "components";
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -28,24 +24,7 @@ const StoryDetail = ({ match }) => {
     return () => dispatch(storyLoadInit());
   }, []);
 
-  const Loader = () => {
-    return (
-      <SyncLoader
-        css={css`
-          height: 100vh;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        `}
-        size={10}
-        color={"#f69a53"}
-        loading={true}
-      />
-    );
-  };
-
-  if (status !== "SUCCESS") return Loader();
+  if (status !== "SUCCESS") return <StoryDetailLoader />;
   return (
     <StoryDetailStyle>
       <StoryContents data={data} />

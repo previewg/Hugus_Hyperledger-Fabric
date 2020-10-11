@@ -6,16 +6,33 @@ import { useDispatch, useSelector } from "react-redux";
 
 const BarStyle = styled.div`
   width: 100%;
-  height: 50px;
+  height: 80px;
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
-  div {
+
+  :hover {
+    .ratio {
+      opacity: 1;
+      transform: translateY(-20px);
+    }
+  }
+  .ratio {
+    transition: 0.3s ease-in-out;
+    opacity: 0;
+    font-size: 17px;
+    position: relative;
+    top: 20px;
+    ${(props) => `left:${props.ratio}%`};
+    color: orange;
+    font-weight: bold;
+  }
+  .bar {
     display: flex;
     background-color: #e7e7e7;
     border-radius: 10px;
     width: 100%;
-    height: 100%;
+    height: 10px;
     transition: all 0.7s ease-in-out;
     > div {
       background-color: orange;
@@ -30,7 +47,7 @@ const BarStyle = styled.div`
       ${(props) => (props.ratio == 0 ? "color: transparent" : " color: black")};
     }
   }
-  p {
+  .total {
     text-align: end;
     font-size: 12px;
   }
@@ -43,15 +60,16 @@ const StoryVote = ({ data }) => {
     (state) => state.authentication.status.isLoggedIn
   );
 
-  const progressBar = () => {
+  const ProgressBar = () => {
     let ratio = (vote.voteNum / data.story_goal) * 100;
     if (ratio > 100) ratio = 100;
     return (
       <BarStyle ratio={ratio}>
-        <div>
+        <p className="ratio">{(vote.voteNum / data.story_goal) * 100}%</p>
+        <div className="bar">
           <div></div>
         </div>
-        <p>
+        <p className="total">
           ({vote.voteNum} / {data.story_goal})
         </p>
       </BarStyle>
@@ -70,7 +88,7 @@ const StoryVote = ({ data }) => {
     }
   };
 
-  const voteButton = () => {
+  const VoteButton = () => {
     if (!isLoggedIn) {
       return (
         <button className="vote_false" onClick={voteHandler}>
@@ -96,8 +114,8 @@ const StoryVote = ({ data }) => {
 
   return (
     <div className="vote">
-      {progressBar()}
-      {voteButton()}
+      <ProgressBar />
+      <VoteButton />
       <p>
         <strong>필요 득표수</strong>를 충족할 시, 메인 캠페인으로 등록되며{" "}
         <strong>실제 모금</strong>이 이루어집니다.

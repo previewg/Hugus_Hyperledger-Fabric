@@ -18,6 +18,7 @@ import CommentInput from "./StoryDetail/CommentInput";
 import CommentList from "./StoryDetail/CommentList";
 import StoryContents from "./StoryDetail/StoryContents";
 import StoryVote from "./StoryDetail/StoryVote";
+import StoryDetailLoader from "./StoryDetail/Loader";
 export {
   NavBar,
   SignIn,
@@ -39,4 +40,5 @@ export {
   CommentList,
   CommentInput,
   Comments,
+  StoryDetailLoader,
 };

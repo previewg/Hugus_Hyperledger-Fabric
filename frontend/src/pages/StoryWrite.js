@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { storyAdd } from "../actions/story";
+import { storyAdd } from "actions/story";
 
 const StoryWriteStyle = styled.div`
   display: flex;

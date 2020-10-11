@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { hashtagAll } from "../actions/hashtag";
+import styled from "styled-components";
+import { hashtagAll } from "actions/hashtag";
 import * as Hangul from "hangul-js";
 
 const TotalSearchStyle = styled.div`
@@ -140,10 +140,6 @@ const TotalSearch = () => {
   const dispatch = useDispatch();
   const list = useSelector((state) => state.hashtag.list.data);
   const [search, setSearch] = useState("");
-  console.log(list);
-  useEffect(() => {
-    dispatch(hashtagAll());
-  }, []);
 
   const onChangeHandler = (e) => {
     e.preventDefault();
@@ -155,6 +151,10 @@ const TotalSearch = () => {
     if (hashtag.match(search) || dis.includes(search)) return true;
     else return false;
   };
+
+  useEffect(() => {
+    dispatch(hashtagAll());
+  }, []);
 
   return (
     <TotalSearchStyle search={search}>

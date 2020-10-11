@@ -261,7 +261,7 @@ const NavBar = (props) => {
   const username = useSelector(
     (state) => state.authentication.status.currentUser
   );
-  const isSignedIn = useSelector(
+  const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
   const profile_Path = useSelector(
@@ -272,7 +272,7 @@ const NavBar = (props) => {
   };
 
   const signedIn = () => {
-    if (isSignedIn) {
+    if (isLoggedIn) {
       return (
         <>
           <p>{username}님</p>
@@ -297,8 +297,8 @@ const NavBar = (props) => {
   };
 
   useEffect(() => {
-    dispatch(profileViewer({ username }));
-  }, [username]);
+    if (isLoggedIn) dispatch(profileViewer({ username }));
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -317,7 +317,7 @@ const NavBar = (props) => {
             </ul>
           </div>
           <div className="dropdown">
-            {isSignedIn ? (
+            {isLoggedIn ? (
               <Link to="/my">My</Link>
             ) : (
               <a onClick={() => dispatch(signInBtnIsClicked())}>My</a>
@@ -337,7 +337,7 @@ const NavBar = (props) => {
           </div>
         </div>
         <div className="user">
-          {isSignedIn && profile_Path !== null ? (
+          {isLoggedIn && profile_Path !== null ? (
             <Link to="/my">
               <img
                 className="user__icon"

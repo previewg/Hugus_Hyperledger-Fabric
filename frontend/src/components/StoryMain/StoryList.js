@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { storyListLoader, storyVisit } from "../../actions/story";
 import { Link } from "react-router-dom";
-import { SyncLoader } from "react-spinners";
-import { css } from "@emotion/core";
+import Loader from "./Loader";
 
 const StoryListStyle = styled.div`
   display: flex;
@@ -146,24 +145,6 @@ const StoryList = () => {
     }
   };
 
-  const Loader = () => {
-    if (status === "WAITING")
-      return (
-        <SyncLoader
-          css={css`
-            height: 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          `}
-          size={10}
-          color={"#f69a53"}
-          loading={true}
-        />
-      );
-  };
-
   const visitHandler = (id) => {
     dispatch(storyVisit(id));
   };
@@ -248,7 +229,7 @@ const StoryList = () => {
             );
           }
         })}
-        {Loader()}
+        {status === "WAITING" && <Loader />}
       </section>
     </StoryListStyle>
   );

@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
-import StorySlider from "../components/Home/CampaignSlider";
-import StoryNav from "../components/StoryMain/StoryNav";
-import StoryList from "../components/StoryMain/StoryList";
-import MoreBtn from "../components/Home/MoreBtn";
-import { signInBtnIsClicked } from "../actions/user";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
+import { signInBtnIsClicked } from "actions/user";
+import { StoryNav, StoryList } from "components";
 
 const StoryMainStyle = styled.div`
   display: flex;

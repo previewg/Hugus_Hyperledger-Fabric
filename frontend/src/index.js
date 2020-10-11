@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 // Redux
 import rootReducer from "reducers/index";
@@ -8,7 +9,7 @@ import { applyMiddleware, createStore } from "redux";
 import ReduxThunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-// Router
+// Pages
 import {
   Home,
   StoryDetail,
@@ -19,10 +20,12 @@ import {
   UserInfo,
   BlockInfo,
   SearchResult,
-} from "containers";
+} from "pages";
 
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+// Common components
 import { NavBar, ScrollTop } from "components";
+
+// HOC
 import Auth from "hoc/auth";
 
 // Slick css
