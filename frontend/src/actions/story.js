@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 // Action Types
 export const STORY_ADD = "STORY_ADD";
@@ -24,7 +23,12 @@ export const STORY_VOTE_SUCCESS = "STORY_VOTE_SUCCESS";
 export const STORY_VOTE_FAILURE = "STORY_VOTE_FAILURE";
 
 export const STORY_DELETE = "STORY_DELETE";
+export const STORY_DELETE_SUCCESS = "STORY_ADD_SUCCESS";
+export const STORY_DELETE_FAILURE = "STORY_ADD_FAILURE";
+
 export const STORY_UPDATE = "STORY_UPDATE";
+export const STORY_UPDATE_SUCCESS = "STORY_ADD_SUCCESS";
+export const STORY_UPDATE_FAILURE = "STORY_ADD_FAILURE";
 
 // 게시물 등록
 const storyAddStart = () => {
@@ -37,6 +41,19 @@ const storyAddSuccess = () => {
 
 const storyAddFailure = () => {
   return { type: STORY_ADD_FAILURE };
+};
+
+// 게시물 삭제
+const storyDeleteStart = () => {
+  return { type: STORY_DELETE };
+};
+
+const storyDeleteSuccess = () => {
+  return { type: STORY_DELETE_SUCCESS };
+};
+
+const storyDeleteFailure = () => {
+  return { type: STORY_DELETE_FAILURE };
 };
 
 // 게시물 목록 조회
@@ -113,7 +130,7 @@ export const storyAdd = (data, props) => async (dispatch) => {
     .post("/story/add", data, {
       headers: { "content-type": "multipart/form-data" },
     })
-    .then((response) => {
+    .then(() => {
       alert("성공적으로 등록되었습니다.");
       props.history.push("/story");
       dispatch(storyAddSuccess());
@@ -126,25 +143,29 @@ export const storyAdd = (data, props) => async (dispatch) => {
 };
 
 // 게시물 삭제 요청
-export const storyDelete = () => async (dispatch) => {
+export const storyDelete = (id, history) => async (dispatch) => {
+  dispatch(storyDeleteStart());
   await axios
-    .delete("/story/delete")
-    .then((response) => {
+    .post(`/story/delete`, { id: id })
+    .then(() => {
       alert("성공적으로 삭제되었습니다.");
+      history.push("/story");
+      dispatch(storyDeleteSuccess());
     })
     .catch((error) => {
       alert("삭제에 실패하였습니다.");
+      dispatch(storyDeleteFailure());
       console.error(error);
     });
 };
 
 // 게시물 수정 요청
-export const storyUpdate = (data) => async (dispatch) => {
+export const storyUpdate = (data) => async () => {
   await axios
     .put("/story/update", data, {
       headers: { "content-type": "multipart/form-data" },
     })
-    .then((response) => {
+    .then(() => {
       alert("성공적으로 수정되었습니다.");
     })
     .catch((error) => {
@@ -184,10 +205,10 @@ export const storyLoader = (id) => async (dispatch) => {
 };
 
 // 게시물 조회수 추가 요청
-export const storyVisit = (id) => async (dispatch) => {
+export const storyVisit = (id) => async () => {
   await axios
     .put("/story/visit", { story_id: id })
-    .then((response) => null)
+    .then(() => null)
     .catch((error) => console.error(error));
 };
 
@@ -196,7 +217,7 @@ export const storyLike = (id, status) => async (dispatch) => {
   dispatch(storyLikeStart());
   await axios
     .put("/story/like", { story_id: id, status: status })
-    .then((response) => {
+    .then(() => {
       dispatch(storyLikeSuccess());
     })
     .catch((error) => {
@@ -210,7 +231,7 @@ export const storyVote = (id, status) => async (dispatch) => {
   dispatch(storyVoteStart());
   await axios
     .put("/story/vote", { story_id: id, status: status })
-    .then((response) => {
+    .then(() => {
       dispatch(storyVoteSuccess());
     })
     .catch((error) => {

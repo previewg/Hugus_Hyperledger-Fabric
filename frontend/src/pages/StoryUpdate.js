@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { storyAdd } from "actions/story";
 
-const StoryWriteStyle = styled.div`
+const StoryUpdateStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
@@ -416,6 +416,8 @@ const StoryWrite = (props) => {
   const itemQuantity = useRef();
   const hashtags = useRef();
   const addStatus = useSelector((state) => state.story.add.status);
+  const predata = useSelector((state) => state.story.detail.data);
+  console.log(predata);
   const [data, setData] = useState({
     title: "",
     info: "",
@@ -490,7 +492,7 @@ const StoryWrite = (props) => {
     return true;
   }, [filled]);
 
-  const storyAddHandler = () => {
+  const storyUpdateHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
       formData.append("story_title", data.title);
@@ -692,7 +694,7 @@ const StoryWrite = (props) => {
 
   return (
     <>
-      <StoryWriteStyle>
+      <StoryUpdateStyle>
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -860,8 +862,10 @@ const StoryWrite = (props) => {
               />
               {data.hashtags.map((hashtag, key) => {
                 return (
-                  <div className="added__hashtag" key={key}>
-                    <p className="hashtag"># {hashtag}</p>
+                  <div className="added__hashtag">
+                    <p className="hashtag" key={key}>
+                      # {hashtag}
+                    </p>
                     <p
                       className="clear"
                       onClick={onTagDeleteHandler(key)}
@@ -876,13 +880,13 @@ const StoryWrite = (props) => {
           </div>
 
           <div className="submit">
-            <button onClick={storyAddHandler}>
-              제출하기
+            <button onClick={storyUpdateHandler}>
+              수정하기
               <img alt="submit" src="/icons/PaperPlane.png" />
             </button>
           </div>
         </div>
-      </StoryWriteStyle>
+      </StoryUpdateStyle>
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );

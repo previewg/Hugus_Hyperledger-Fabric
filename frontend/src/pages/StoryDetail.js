@@ -13,7 +13,7 @@ const StoryDetailStyle = styled.div`
   flex-direction: column;
 `;
 
-const StoryDetail = ({ match }) => {
+const StoryDetail = ({ match, history }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.story.detail.data);
   const status = useSelector((state) => state.story.detail.status);
@@ -27,7 +27,7 @@ const StoryDetail = ({ match }) => {
   if (status !== "SUCCESS") return <StoryDetailLoader />;
   return (
     <StoryDetailStyle>
-      <StoryContents data={data} />
+      <StoryContents data={data} history={history} />
       <Comments data={data} />
       <Back />
     </StoryDetailStyle>

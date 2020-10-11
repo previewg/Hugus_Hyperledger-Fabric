@@ -20,6 +20,7 @@ import {
   UserInfo,
   BlockInfo,
   SearchResult,
+  StoryUpdate,
 } from "pages";
 
 // Common components
@@ -47,6 +48,7 @@ ReactDOM.render(
         <Route exact path="/" component={Auth(Home, null)} />
         <Route exact path="/story" component={Auth(StoryMain, null)} />
         <Route path="/story/write" component={Auth(StoryWrite, true)} />
+        <Route path="/story/update" component={Auth(StoryUpdate, true)} />
         <Route path="/story/:id" component={Auth(StoryDetail, null)} />
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/search/result" component={Auth(SearchResult, null)} />

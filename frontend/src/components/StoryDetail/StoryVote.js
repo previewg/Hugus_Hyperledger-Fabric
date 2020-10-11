@@ -14,7 +14,10 @@ const BarStyle = styled.div`
   :hover {
     .ratio {
       opacity: 1;
-      transform: translateY(-20px);
+      transform: translate(-13px, -20px);
+    }
+    .bar > div {
+      box-shadow: 0 0 10px 1px rgba(255, 165, 0, 1);
     }
   }
   .ratio {
@@ -24,7 +27,7 @@ const BarStyle = styled.div`
     position: relative;
     top: 20px;
     ${(props) => `left:${props.ratio}%`};
-    color: orange;
+    color: #ffa500;
     font-weight: bold;
   }
   .bar {
@@ -33,18 +36,11 @@ const BarStyle = styled.div`
     border-radius: 10px;
     width: 100%;
     height: 10px;
-    transition: all 0.7s ease-in-out;
+    transition: width 0.7s ease-in-out;
     > div {
       background-color: orange;
       border-radius: 10px;
-      font-size: 13px;
-      ${(props) =>
-        props.ratio == 0 ? "width:0px;opacity:0" : `width:${props.ratio}%`};
-      padding-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      ${(props) => (props.ratio == 0 ? "color: transparent" : " color: black")};
+      ${(props) => (props.ratio == 0 ? "width:0px;" : `width:${props.ratio}%`)};
     }
   }
   .total {

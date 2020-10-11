@@ -1,6 +1,7 @@
 import Home from "./Home";
 import StoryMain from "./StoryMain";
 import StoryWrite from "./StoryWrite";
+import StoryUpdate from "./StoryUpdate";
 import StoryDetail from "./StoryDetail";
 import TotalSearch from "./TotalSearch";
 import SearchResult from "./SearchResult";
@@ -12,6 +13,7 @@ export {
   Home,
   StoryMain,
   StoryWrite,
+  StoryUpdate,
   StoryDetail,
   TotalSearch,
   User,
