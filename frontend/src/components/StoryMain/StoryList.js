@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { storyListLoader, storyVisit } from "../../actions/story";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import CountUp, { useCountUp } from "react-countup";
+import { storyListLoader, storyVisit } from "../../actions/story";
 import Loader from "./Loader";
 
 const StoryListStyle = styled.div`
@@ -26,33 +27,41 @@ const StoryListStyle = styled.div`
       background-position: center center;
       background-repeat: no-repeat;
       > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         min-width: 100%;
         height: 100%;
+        align-items: center;
+        background: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.6),
+          rgba(0, 0, 0, 0.5) 10%,
+          rgba(0, 0, 0, 0.4) 20%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.2) 40%,
+          rgba(0, 0, 0, 0.1) 50%,
+          transparent
+        );
         .story__hashtag {
           color: orange;
           display: flex;
           justify-content: flex-end;
           width: 100%;
+          height: 20%;
           > p {
             margin-right: 10px;
             font-size: 14px;
           }
         }
         .story__title {
-          position: relative;
-          top: 180px;
-          left: 20px;
+          margin: 0;
           font-size: 17px;
           color: white;
-        }
-        .background {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          top: -106px;
-          left: 0;
-          background: black;
-          opacity: 0;
+          width: 90%;
+          height: 60%;
+          display: flex;
+          align-items: flex-end;
         }
       }
       .more__info {
@@ -65,18 +74,20 @@ const StoryListStyle = styled.div`
           display: flex;
           align-items: center;
           justify-content: flex-end;
-          padding: 5px;
+          width: 90%;
+          height: 20%;
           img {
             width: 20px;
           }
-          p {
+          > p {
             font-size: 12px;
             padding: 5px;
           }
         }
         > p {
-          padding-left: 15px;
-          padding-right: 15px;
+          width: 90%;
+          height: 60%;
+          margin: 0;
         }
       }
 
@@ -87,6 +98,8 @@ const StoryListStyle = styled.div`
         .more__info {
           display: flex;
           flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
         }
       }
     }
@@ -95,20 +108,31 @@ const StoryListStyle = styled.div`
 
 const BarStyle = styled.div`
   width: 100%;
+  height: 20%;
   display: flex;
-  justify-content: center;
-  position: relative;
-  top: 170px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  .count {
+    width: 90%;
+    height: 5%;
+    margin: 0;
+    font-size: 13px;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+  }
   div {
     width: 90%;
     display: flex;
-    background-color: #e7e7e7;
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     height: 5px;
     transition: all 0.7s ease-in-out;
+
     > div {
       height: 5px;
-      background-color: orange;
+      background-color: white;
       border-radius: 10px;
       font-size: 13px;
       ${(props) => `width:${props.ratio}%`};
@@ -149,16 +173,29 @@ const StoryList = () => {
     dispatch(storyVisit(id));
   };
 
-  const progressBar = (vote, goal) => {
+  const ProgressBar = ({ vote, goal }) => {
     let ratio = (vote / goal) * 100;
     if (ratio > 100) ratio = 100;
+
+    const { countUp } = useCountUp({
+      start: 0,
+      end: ratio,
+      duration: 5,
+    });
     return (
       <BarStyle ratio={ratio}>
+        <p className="count">{countUp}%</p>
         <div>
           <div></div>
         </div>
       </BarStyle>
     );
+  };
+
+  const UserInfo = ({ story }) => {
+    if (story.user_info.length > 100)
+      return <p>{story.user_info.substr(0, 100)}...</p>;
+    return <p>{story.user_info}</p>;
   };
 
   return (
@@ -177,13 +214,16 @@ const StoryList = () => {
               >
                 <div>
                   <div className="story__hashtag">
-                    {story.Hashtags.map((tag, key) => {
+                    {story.Hashtags.slice(0, 3).map((tag, key) => {
                       return <p key={key}>#{tag.hashtag}</p>;
                     })}
                   </div>
 
                   <p className="story__title">{story.story_title}</p>
-                  {progressBar(story.story_vote, story.story_goal)}
+                  <ProgressBar
+                    vote={story.story_vote}
+                    goal={story.story_goal}
+                  />
                 </div>
                 <div className="more__info">
                   <div>
@@ -192,7 +232,7 @@ const StoryList = () => {
                     <img src="/icons/comment.svg" />
                     <p>{story.story_comment}</p>
                   </div>
-                  <p>{story.user_info}</p>
+                  <UserInfo story={story} />
                 </div>
               </Link>
             );
@@ -208,13 +248,16 @@ const StoryList = () => {
               >
                 <div>
                   <div className="story__hashtag">
-                    {story.Hashtags.map((tag, key) => {
+                    {story.Hashtags.slice(0, 3).map((tag, key) => {
                       return <p key={key}>#{tag.hashtag}</p>;
                     })}
                   </div>
 
                   <p className="story__title">{story.story_title}</p>
-                  {progressBar(story.story_vote, story.story_goal)}
+                  <ProgressBar
+                    vote={story.story_vote}
+                    goal={story.story_goal}
+                  />
                 </div>
                 <div className="more__info">
                   <div>
@@ -223,7 +266,7 @@ const StoryList = () => {
                     <img src="/icons/comment.svg" />
                     <p>{story.story_comment}</p>
                   </div>
-                  <p>{story.user_info}</p>
+                  <UserInfo story={story} />
                 </div>
               </Link>
             );
