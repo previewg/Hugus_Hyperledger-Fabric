@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { storyAdd } from "../actions/story";
+import { storyAdd } from "actions/story";
 
-const StoryWriteStyle = styled.div`
+const StoryUpdateStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
@@ -85,7 +85,7 @@ const StoryWriteStyle = styled.div`
           .preImg {
             width: 60px;
             height: 60px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
             margin: 5px;
           }
           .preImgClear {
@@ -142,6 +142,7 @@ const StoryWriteStyle = styled.div`
         }
       }
     }
+
     .items {
       margin-top: 35px;
       width: 100%;
@@ -415,7 +416,8 @@ const StoryWrite = (props) => {
   const itemQuantity = useRef();
   const hashtags = useRef();
   const addStatus = useSelector((state) => state.story.add.status);
-
+  const predata = useSelector((state) => state.story.detail.data);
+  console.log(predata);
   const [data, setData] = useState({
     title: "",
     info: "",
@@ -442,8 +444,10 @@ const StoryWrite = (props) => {
   const [errorCode, setErrorCode] = useState(0);
 
   const [preImg, setPreImg] = useState([]);
+
   const [fileReaderState, setFileReaderState] = useState("");
-  const errorHandler = () => {
+
+  const errorHandler = useCallback(() => {
     if (!data.title) {
       setErrorCode(1);
       title.current.focus();
@@ -468,7 +472,7 @@ const StoryWrite = (props) => {
         content: false,
       });
       return false;
-    } else if (data.items.length == 0) {
+    } else if (data.items.length === 0) {
       setErrorCode(7);
       itemName.current.focus();
       setFilled({
@@ -476,7 +480,7 @@ const StoryWrite = (props) => {
         items: false,
       });
       return false;
-    } else if (data.hashtags.length == 0) {
+    } else if (data.hashtags.length === 0) {
       setErrorCode(8);
       hashtags.current.focus();
       setFilled({
@@ -486,17 +490,17 @@ const StoryWrite = (props) => {
       return false;
     }
     return true;
-  };
+  }, [filled]);
 
-  const storyAddHandler = () => {
+  const storyUpdateHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("info", data.info);
-      formData.append("content", data.content);
+      formData.append("story_title", data.title);
+      formData.append("user_info", data.info);
+      formData.append("story_content", data.content);
       formData.append("hashtags", data.hashtags);
       formData.append("items", JSON.stringify(data.items));
-      formData.append("goal", data.goal);
+      formData.append("story_goal", data.goal);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -527,7 +531,6 @@ const StoryWrite = (props) => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-
     if (e.target.name === "files") {
       previewImg(e);
       setData({
@@ -549,7 +552,7 @@ const StoryWrite = (props) => {
     }
   };
 
-  const addItem = (e) => {
+  const addItem = () => {
     if (data.item_name === "") {
       setErrorCode(4);
       itemName.current.focus();
@@ -570,7 +573,7 @@ const StoryWrite = (props) => {
       if (totalPrice < 1000000 && totalPrice > 0) {
         goal = 50;
       } else {
-        goal = parseInt(totalPrice / 1000000) * 100;
+        goal = Math.floor(totalPrice / 1000000) * 100;
       }
       let items = data.items.concat(item);
       setData({
@@ -607,67 +610,72 @@ const StoryWrite = (props) => {
     }
   };
 
-  const onDeleteHandler = (key) => () => {
-    console.log(key);
-    let items;
-    let totalPrice =
-      data.totalPrice -
-      data.items[key].item_price * data.items[key].item_quantity;
-    let goal;
-    if (totalPrice < 1000000 && totalPrice > 0) {
-      goal = 50;
-    } else {
-      goal = parseInt(totalPrice / 1000000) * 100;
-    }
-    if (key === 0) {
-      items = data.items.slice(1, data.items.length);
-    } else if (key === data.items.length - 1) {
-      items = data.items.slice(0, key);
-    } else {
-      items = data.items
-        .slice(0, key)
-        .concat(data.items.slice(key + 1, data.items.length));
-    }
-    setData({
-      ...data,
-      items,
-      totalPrice: totalPrice,
-      goal: goal,
-    });
-  };
+  const onDeleteHandler = useCallback(
+    (key) => () => {
+      let items;
+      let totalPrice =
+        data.totalPrice -
+        data.items[key].item_price * data.items[key].item_quantity;
+      let goal;
+      if (totalPrice < 1000000 && totalPrice > 0) {
+        goal = 50;
+      } else {
+        goal = Math.floor(totalPrice / 1000000) * 100;
+      }
+      if (key === 0) {
+        items = data.items.slice(1, data.items.length);
+      } else if (key === data.items.length - 1) {
+        items = data.items.slice(0, key);
+      } else {
+        items = data.items
+          .slice(0, key)
+          .concat(data.items.slice(key + 1, data.items.length));
+      }
+      setData({
+        ...data,
+        items,
+        totalPrice: totalPrice,
+        goal: goal,
+      });
+    },
+    [data]
+  );
 
-  const onTagDeleteHandler = (key) => () => {
-    let hashtags;
-    if (key === 0) {
-      hashtags = data.hashtags.slice(1, data.hashtags.length);
-    } else if (key === data.hashtags.length - 1) {
-      hashtags = data.hashtags.slice(0, key);
-    } else {
-      hashtags = data.hashtags
-        .slice(0, key)
-        .concat(data.hashtags.slice(key + 1, data.hashtags.length));
-    }
-    setData({
-      ...data,
-      hashtags,
-    });
-  };
+  const onTagDeleteHandler = useCallback(
+    (key) => () => {
+      let hashtags;
+      if (key === 0) {
+        hashtags = data.hashtags.slice(1, data.hashtags.length);
+      } else if (key === data.hashtags.length - 1) {
+        hashtags = data.hashtags.slice(0, key);
+      } else {
+        hashtags = data.hashtags
+          .slice(0, key)
+          .concat(data.hashtags.slice(key + 1, data.hashtags.length));
+      }
+      setData({
+        ...data,
+        hashtags,
+      });
+    },
+    [data]
+  );
 
-  const itemInputDelete = () => {
+  const itemInputDelete = useCallback(() => {
     setData({
       ...data,
       item_name: "",
       item_price: "",
       item_quantity: "",
     });
-  };
+  }, [data]);
 
   const clearItems = useCallback(() => {
     setData({
       ...data,
       items: [],
     });
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     if (addStatus === "SUCCESS") {
@@ -686,7 +694,7 @@ const StoryWrite = (props) => {
 
   return (
     <>
-      <StoryWriteStyle>
+      <StoryUpdateStyle>
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -712,7 +720,7 @@ const StoryWrite = (props) => {
               required
               placeholder="본인을 마음껏 표현해주세요."
               onChange={onChangeHandler}
-            ></textarea>
+            />
           </div>
 
           <div className="content">
@@ -727,9 +735,6 @@ const StoryWrite = (props) => {
                       key={key}
                       alt="preview"
                     />
-                    <p className="preImgClear" key={key + 100}>
-                      x
-                    </p>
                   </div>
                 );
               })}
@@ -750,7 +755,7 @@ const StoryWrite = (props) => {
               required
               placeholder="내용을 입력하세요. "
               onChange={onChangeHandler}
-            ></textarea>
+            />
           </div>
 
           <div className="items">
@@ -875,13 +880,13 @@ const StoryWrite = (props) => {
           </div>
 
           <div className="submit">
-            <button onClick={storyAddHandler}>
-              제출하기
-              <img src="/icons/PaperPlane.png" />
+            <button onClick={storyUpdateHandler}>
+              수정하기
+              <img alt="submit" src="/icons/PaperPlane.png" />
             </button>
           </div>
         </div>
-      </StoryWriteStyle>
+      </StoryUpdateStyle>
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );

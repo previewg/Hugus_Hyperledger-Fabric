@@ -152,7 +152,7 @@ const SignUp = () => {
     const dispatch = useDispatch();
     const errorCode = useSelector((state) => state.authentication.register.error);
     const registerStatus = useSelector(
-        (state) => state.authentication.register.status
+        (state) => state.authentication.signUp.status
     );
     const [user, setUser] = useState({
         email: "",
@@ -190,7 +190,7 @@ const SignUp = () => {
         else {
             alert("이용약관에 동의해 주세요")
         }
-       
+
     };
 
     const onClickTerm = () => {
@@ -205,7 +205,7 @@ const SignUp = () => {
             ...user,
             [e.target.id]: e.target.value
         })
-        if (e.key === "Enter") {
+        if(e.key==="Enter"){
             signUpHandler()
         }
     }

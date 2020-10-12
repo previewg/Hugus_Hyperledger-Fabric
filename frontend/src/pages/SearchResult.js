@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { hashtagAll } from "../actions/hashtag";
+import { hashtagAll } from "actions/hashtag";
 import * as Hangul from "hangul-js";
 
-const TotalSearchStyle = styled.div`
+const SearchResultStyle = styled.section`
   display: flex;
   justify-content: center;
   padding-top: 50px;
@@ -14,27 +14,6 @@ const TotalSearchStyle = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    .content {
-      height: 250px;
-      width: 40%;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      .logo {
-        height: 140px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .title_text {
-        p:nth-child(1) {
-          font-weight: bold;
-          font-size: 25px;
-        }
-        p:nth-child(2) {
-        }
-      }
-    }
 
     .search__bar {
       margin-top: 20px;
@@ -105,38 +84,10 @@ const TotalSearchStyle = styled.div`
         }
       }
     }
-
-    .suggestion {
-      margin-top: 15px;
-      display: flex;
-      p {
-        color: gray;
-        font-size: 13px;
-        border: none;
-        margin-right: 15px;
-        cursor: pointer;
-        transition: 0.3s ease-in-out;
-        :hover {
-          color: orange;
-          transform: scale(1.2);
-        }
-      }
-    }
-  }
-
-  @media (max-width: 1000px) {
-    .layout {
-      .content {
-        width: 80%;
-        .logo {
-          display: none;
-        }
-      }
-    }
   }
 `;
 
-const TotalSearch = () => {
+const SearchResult = () => {
   const dispatch = useDispatch();
   const list = useSelector((state) => state.hashtag.list.data);
   const [search, setSearch] = useState("");
@@ -157,24 +108,8 @@ const TotalSearch = () => {
   };
 
   return (
-    <TotalSearchStyle search={search}>
+    <SearchResultStyle search={search}>
       <div className="layout">
-        <div className="content">
-          <img className="logo" alt="hugus" src="/icons/hugus.svg" />
-          <div className="title_text">
-            <p>
-              마음을 담는 기부
-              <br />
-              허그에 담기다
-            </p>
-            <p>
-              따뜻하게 안아줄 수 있는
-              <br />
-              투명하고 자율적인 기부 플랫폼
-            </p>
-          </div>
-        </div>
-
         <div className="search__bar">
           <input
             name="search"
@@ -186,7 +121,6 @@ const TotalSearch = () => {
           />
           <img alt="search__icon" src="/icons/search.png" />
         </div>
-
         <div className="live__suggestion">
           {list.map((row) => {
             if (compare(row.hashtag))
@@ -198,13 +132,9 @@ const TotalSearch = () => {
               );
           })}
         </div>
-        <div className="suggestion">
-          <p>#추천태그1</p>
-          <p>#추천태그2</p>
-        </div>
       </div>
-    </TotalSearchStyle>
+    </SearchResultStyle>
   );
 };
 
-export default TotalSearch;
+export default SearchResult;

@@ -6,17 +6,17 @@ const fs = require("fs");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 
-require("cookie-parser")();
-require("morgan")("dev");
 require("dotenv").config();
+require("morgan")("dev");
 require("cors")();
+require("cookie-parser")();
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// MongoDB 설정
+// MongoDB 설정 ( 배포시 secret 변경 및 .env처리 )
 app.use(
   session({
     secret: "Molrang~$1$234",
@@ -47,23 +47,23 @@ try {
   fs.mkdirSync("user_profile");
 }
 
-// Router 설정
-const authRouter = require("./routes/auth");
-const storyRouter = require("./routes/story");
-const commentRouter = require("./routes/comment");
-const hashtagRouter = require("./routes/hashtag");
-
-// sequelize MariaDB 연결
 models.sequelize
+  // sequelize MariaDB 연결
   .sync()
   .then(() => {
     console.log("✓ DB 연결 성공");
   })
   .catch((err) => {
-    console.error(err);
     console.log("✗ DB 연결 에러");
+    console.error(err);
     process.exit();
   });
+
+// Router 설정
+const authRouter = require("./routes/auth");
+const storyRouter = require("./routes/story");
+const commentRouter = require("./routes/comment");
+const hashtagRouter = require("./routes/hashtag");
 
 // Router 사용
 app.use("/auth", authRouter);

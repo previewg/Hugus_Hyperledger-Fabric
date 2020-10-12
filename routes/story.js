@@ -24,13 +24,14 @@ const upload = multer({
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
-    const user_email = req.session.loginInfo.user_email;
+    const { user_email } = req.session.loginInfo;
+    const { story_title, user_info, story_content, story_goal } = req.body;
     const story = await Story.create({
-      story_title: req.body.title,
-      user_info: req.body.info,
-      story_content: req.body.content,
-      story_goal: req.body.goal,
-      user_email: user_email,
+      story_title,
+      user_info,
+      story_content,
+      story_goal,
+      user_email,
     });
 
     for (const file of req.files) {
@@ -46,17 +47,14 @@ router.post("/add", upload.array("files"), async (req, res) => {
         where: { hashtag: hashtag },
       });
 
-      await Story_Hashtag.findOrCreate({
-        where: {
-          story_id: story.dataValues.id,
-          hashtag_id: result[0].dataValues.id,
-        },
+      await Story_Hashtag.create({
+        story_id: story.dataValues.id,
+        hashtag_id: result[0].dataValues.id,
       });
     }
 
     const items = JSON.parse(req.body.items);
     for (const item of items) {
-      console.log(item);
       await Story_Item.create({
         story_id: story.dataValues.id,
         item_name: item.item_name,
@@ -71,14 +69,15 @@ router.post("/add", upload.array("files"), async (req, res) => {
   }
 });
 
-// 스토리 삭제
-router.delete("/delete", async (req, res) => {
+// 스토리 삭제 ( 일단 soft delete로 연관 테이블 정보들은 보존 / 추후에 복구 가능 )
+router.post("/delete", async (req, res) => {
   try {
-    await Story.destroy({ where: { id: req.body.id } });
-    res.json({ message: true });
+    const { id } = req.body;
+    await Story.destroy({ where: { id } });
+    res.json({ success: 1 });
   } catch (err) {
-    console.log(err);
-    res.json({ message: false });
+    console.error(err);
+    res.status(400).json({ success: 3 });
   }
 });
 
@@ -109,17 +108,27 @@ router.get("/list/:section", async (req, res) => {
     let section = req.params.section;
     let offset = 0;
 
+    // 18개씩 조회
     if (section > 1) {
       offset = 18 * (section - 1);
     }
+
     const list = await Story.findAll({
-      attributes: ["story_title", "id"],
+      attributes: [
+        "story_title",
+        "id",
+        "story_goal",
+        "story_vote",
+        "story_like",
+        "user_info",
+        "story_comment",
+      ],
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Story_File, attributes: ["file"], limit: 1 },
       ],
       offset: offset,
-      limit: section * 18 - 1,
+      limit: section * 18,
     });
 
     res.json({ list: list, success: 1 });
@@ -144,13 +153,6 @@ router.get("/:id", async (req, res) => {
         { model: User, attributes: ["nickname"] },
       ],
     });
-    const voteNum = await Story_Vote.count({
-      where: { story_id: story_id, vote: true },
-    });
-
-    const likeNum = await Story_Like.count({
-      where: { story_id: story_id, like: true },
-    });
     if (user_email) {
       const like = await Story_Like.findOne({
         where: { story_id: story_id, user_email: user_email, like: true },
@@ -163,8 +165,6 @@ router.get("/:id", async (req, res) => {
         data: data,
         like: like ? true : false,
         vote: vote ? true : false,
-        likeNum: likeNum,
-        voteNum: voteNum,
         success: 1,
       });
     } else {
@@ -172,8 +172,6 @@ router.get("/:id", async (req, res) => {
         data: data,
         like: false,
         vote: false,
-        likeNum: likeNum,
-        voteNum: voteNum,
         success: 1,
       });
     }
@@ -182,20 +180,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 스토리 조회수
+// 스토리 조회수 추가
 router.put("/visit", async (req, res) => {
   try {
-    const id = req.body.story_id;
-    const visited = await Story.findOne({
-      attributes: ["visited"],
-      where: { id: id },
-    });
-    await Story.update(
+    const { story_id } = req.body;
+    await Story.increment(
       {
-        visited: visited.dataValues.visited + 1,
+        visited: 1,
       },
       {
-        where: { id: id },
+        where: {
+          id: story_id,
+        },
       }
     );
     res.json({ success: 1 });
@@ -204,15 +200,14 @@ router.put("/visit", async (req, res) => {
   }
 });
 
-// 스토리 좋아요
+// 스토리 좋아요 등록/삭제
 router.put("/like", async (req, res) => {
   try {
-    const story_id = req.body.story_id;
-    const status = req.body.status;
-    const user_email = req.session.loginInfo.user_email;
+    const { story_id, status } = req.body;
+    const { user_email } = req.session.loginInfo;
 
     const history = await Story_Like.findOne({
-      where: { story_id: story_id, user_email: user_email },
+      where: { story_id, user_email },
     });
 
     if (history) {
@@ -221,32 +216,54 @@ router.put("/like", async (req, res) => {
           like: !status,
         },
         {
-          where: { story_id: story_id, user_email: user_email },
+          where: { story_id, user_email },
         }
       );
     } else {
       await Story_Like.create({
-        story_id: story_id,
-        user_email: user_email,
+        story_id,
+        user_email,
         like: !status,
       });
     }
 
+    if (status) {
+      await Story.decrement(
+        {
+          story_like: 1,
+        },
+        {
+          where: {
+            id: story_id,
+          },
+        }
+      );
+    } else {
+      await Story.increment(
+        {
+          story_like: 1,
+        },
+        {
+          where: {
+            id: story_id,
+          },
+        }
+      );
+    }
     res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }
 });
 
-// 스토리 투표
+// 스토리 투표 등록/삭제
 router.put("/vote", async (req, res) => {
   try {
-    const story_id = req.body.story_id;
-    const status = req.body.status;
-    const user_email = req.session.loginInfo.user_email;
+    const { story_id, status } = req.body;
+    const { user_email } = req.session.loginInfo;
 
     const history = await Story_Vote.findOne({
-      where: { story_id: story_id, user_email: user_email },
+      where: { story_id, user_email },
     });
 
     if (history) {
@@ -255,17 +272,40 @@ router.put("/vote", async (req, res) => {
           vote: !status,
         },
         {
-          where: { story_id: story_id, user_email: user_email },
+          where: { story_id, user_email },
         }
       );
     } else {
       await Story_Vote.create({
-        story_id: story_id,
-        user_email: user_email,
+        story_id,
+        user_email,
         vote: !status,
       });
     }
 
+    if (status) {
+      await Story.decrement(
+        {
+          story_vote: 1,
+        },
+        {
+          where: {
+            id: story_id,
+          },
+        }
+      );
+    } else {
+      await Story.increment(
+        {
+          story_vote: 1,
+        },
+        {
+          where: {
+            id: story_id,
+          },
+        }
+      );
+    }
     res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });

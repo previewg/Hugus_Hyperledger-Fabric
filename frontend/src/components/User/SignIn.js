@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { signInBtnIsClicked, signUpBtnIsClicked } from "../../actions/user";
-import { signIn, signInRequest } from "../../actions/auth";
+import { signInRequest } from "../../actions/auth";
 import KakaoLo from "./KakaoLo";
 
 const SignInStyle = styled.div`
@@ -120,16 +120,16 @@ const SignIn = () => {
     password: "",
   });
 
-  const loginStatus = useSelector((state) => state.authentication.login.status);
-  const errorCode = useSelector((state) => state.authentication.login.error);
+  const loginStatus = useSelector((state) => state.authentication.signIn.status);
+  const errorCode = useSelector((state) => state.authentication.signIn.error);
 
   const onChangeHandler = (e) => {
     setUser({
       ...user,
       [e.target.id]: e.target.value,
     });
-    if(e.key==="Enter"){
-      signInHandler()
+    if (e.key === "Enter") {
+      signInHandler();
     }
   };
 
@@ -142,18 +142,17 @@ const SignIn = () => {
   ];
 
   useEffect(() => {
-    dispatch(signIn());
-    if (loginStatus === "SUCCESS") {
+    if (signInStatus === "SUCCESS") {
       alert("로그인성공");
       setUser({
         email: "",
         password: "",
       });
     }
-    else if (loginStatus === "FAILURE") {
+    else if (signInStatus === "FAILURE") {
       alert(errorMessage[errorCode -1]);
     }
-  }, [loginStatus]);
+  }, [signInStatus]);
 
   return (
     <SignInStyle>
@@ -194,7 +193,7 @@ const SignIn = () => {
         <article className="buttons">
           <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
           {/*<button>카카오 계정으로 로그인</button>*/}
-          <KakaoLo/>
+          <KakaoLo />
           <button>페이스북 계정으로 로그인</button>
           <div className="already">
             <p>회원이 아니신가요?</p>
