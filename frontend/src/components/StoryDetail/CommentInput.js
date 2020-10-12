@@ -129,9 +129,8 @@ const CommentInput = ({ commentList, data }) => {
       comment.current.focus();
       setError(true);
     } else {
-      dispatch(commentAdd({ comment: comments, story_id: data.id })).then(
-        setComments("")
-      );
+      dispatch(commentAdd({ comment: comments, story_id: data.id }))
+      
     }
   };
 

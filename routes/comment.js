@@ -9,7 +9,6 @@ router.post("/add", async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
     const { story_id, comment } = req.body;
-
     await Story_Comment.create({
       user_email,
       story_id,
