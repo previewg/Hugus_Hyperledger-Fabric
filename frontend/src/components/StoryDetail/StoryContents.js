@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import StoryVote from "./StoryVote";
+import { storyDelete } from "../../actions/story";
 
 const StoryContentsStyle = styled.div`
   margin-top: 100px;
@@ -24,6 +24,23 @@ const StoryContentsStyle = styled.div`
     }
     p:nth-child(2) {
       text-align: right;
+    }
+  }
+
+  .if_owner {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      margin-left: 5px;
+      background: none;
+      :hover {
+        font-weight: bold;
+        color: orange;
+      }
     }
   }
 
@@ -64,7 +81,7 @@ const StoryContentsStyle = styled.div`
         margin-bottom: 10px;
       }
       p:nth-last-child(1) {
-        margin-bottom: 0px;
+        margin-bottom: 0;
       }
       .total_price {
         text-align: end;
@@ -141,9 +158,12 @@ const StoryContentsStyle = styled.div`
   }
 `;
 
-const StoryContents = ({ data }) => {
+const StoryContents = ({ data, history }) => {
+  const dispatch = useDispatch();
   const likeNum = useSelector((state) => state.story.like.likeNum);
-
+  const currentUser = useSelector(
+    (state) => state.authentication.status.currentUser
+  );
   const totalPrice = () => {
     let total = 0;
     data.Story_Items.map((item) => {
@@ -152,12 +172,31 @@ const StoryContents = ({ data }) => {
     return total;
   };
 
+  const IfOwner = () => {
+    const onDeleteHandler = () => {
+      const confirmed = window.confirm("삭제하시겠습니까?");
+      if (confirmed) {
+        dispatch(storyDelete(data.id, history));
+      }
+    };
+
+    if (data.User.nickname === currentUser)
+      return (
+        <div className="if_owner">
+          <button>수정</button>
+          <button onClick={onDeleteHandler}>삭제</button>
+        </div>
+      );
+    return null;
+  };
+
   return (
     <StoryContentsStyle>
       <div className="title">
         <p>{data.story_title}</p>
         <p>{data.User.nickname}님</p>
       </div>
+      <IfOwner />
       <div className="info">
         <p>작성자 소개</p>
         <p>{data.user_info}</p>

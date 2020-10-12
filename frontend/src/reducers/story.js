@@ -2,6 +2,9 @@ import {
   STORY_ADD,
   STORY_ADD_FAILURE,
   STORY_ADD_SUCCESS,
+  STORY_DELETE,
+  STORY_DELETE_SUCCESS,
+  STORY_DELETE_FAILURE,
   STORY_LIST_LOAD,
   STORY_LIST_LOAD_SUCCESS,
   STORY_LIST_LOAD_FAILURE,
@@ -68,6 +71,27 @@ export default function story(state = initialState, action) {
     case STORY_ADD_FAILURE:
       return update(state, {
         add: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_DELETE:
+      return update(state, {
+        delete: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_DELETE_SUCCESS:
+      return update(state, {
+        delete: {
+          status: { $set: "SUCCESS" },
+        },
+      });
+
+    case STORY_DELETE_FAILURE:
+      return update(state, {
+        delete: {
           status: { $set: "FAILURE" },
         },
       });

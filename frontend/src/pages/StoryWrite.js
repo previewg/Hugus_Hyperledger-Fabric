@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { storyAdd } from "../actions/story";
+import { storyAdd } from "actions/story";
 
 const StoryWriteStyle = styled.div`
   display: flex;
@@ -85,7 +85,7 @@ const StoryWriteStyle = styled.div`
           .preImg {
             width: 60px;
             height: 60px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
             margin: 5px;
           }
           .preImgClear {
@@ -142,6 +142,7 @@ const StoryWriteStyle = styled.div`
         }
       }
     }
+
     .items {
       margin-top: 35px;
       width: 100%;
@@ -415,7 +416,6 @@ const StoryWrite = (props) => {
   const itemQuantity = useRef();
   const hashtags = useRef();
   const addStatus = useSelector((state) => state.story.add.status);
-
   const [data, setData] = useState({
     title: "",
     info: "",
@@ -470,7 +470,7 @@ const StoryWrite = (props) => {
         content: false,
       });
       return false;
-    } else if (data.items.length == 0) {
+    } else if (data.items.length === 0) {
       setErrorCode(7);
       itemName.current.focus();
       setFilled({
@@ -478,7 +478,7 @@ const StoryWrite = (props) => {
         items: false,
       });
       return false;
-    } else if (data.hashtags.length == 0) {
+    } else if (data.hashtags.length === 0) {
       setErrorCode(8);
       hashtags.current.focus();
       setFilled({
@@ -718,7 +718,7 @@ const StoryWrite = (props) => {
               required
               placeholder="본인을 마음껏 표현해주세요."
               onChange={onChangeHandler}
-            ></textarea>
+            />
           </div>
 
           <div className="content">
@@ -733,9 +733,6 @@ const StoryWrite = (props) => {
                       key={key}
                       alt="preview"
                     />
-                    <p className="preImgClear" key={key + 100}>
-                      x
-                    </p>
                   </div>
                 );
               })}
@@ -756,7 +753,7 @@ const StoryWrite = (props) => {
               required
               placeholder="내용을 입력하세요. "
               onChange={onChangeHandler}
-            ></textarea>
+            />
           </div>
 
           <div className="items">
@@ -863,10 +860,8 @@ const StoryWrite = (props) => {
               />
               {data.hashtags.map((hashtag, key) => {
                 return (
-                  <div className="added__hashtag">
-                    <p className="hashtag" key={key}>
-                      # {hashtag}
-                    </p>
+                  <div className="added__hashtag" key={key}>
+                    <p className="hashtag"># {hashtag}</p>
                     <p
                       className="clear"
                       onClick={onTagDeleteHandler(key)}
@@ -883,7 +878,7 @@ const StoryWrite = (props) => {
           <div className="submit">
             <button onClick={storyAddHandler}>
               제출하기
-              <img src="/icons/PaperPlane.png" />
+              <img alt="submit" src="/icons/PaperPlane.png" />
             </button>
           </div>
         </div>

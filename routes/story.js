@@ -10,7 +10,6 @@ const {
   User,
   Story_Like,
   Story_Vote,
-  sequelize,
 } = require("../models");
 
 // multer 설정
@@ -70,14 +69,15 @@ router.post("/add", upload.array("files"), async (req, res) => {
   }
 });
 
-// 스토리 삭제
-router.delete("/delete", async (req, res) => {
+// 스토리 삭제 ( 일단 soft delete로 연관 테이블 정보들은 보존 / 추후에 복구 가능 )
+router.post("/delete", async (req, res) => {
   try {
-    await Story.destroy({ where: { id: req.body.id } });
-    res.json({ message: true });
+    const { id } = req.body;
+    await Story.destroy({ where: { id } });
+    res.json({ success: 1 });
   } catch (err) {
-    console.log(err);
-    res.json({ message: false });
+    console.error(err);
+    res.status(400).json({ success: 3 });
   }
 });
 

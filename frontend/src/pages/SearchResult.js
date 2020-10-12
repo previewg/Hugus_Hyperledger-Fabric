@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { hashtagAll } from "../actions/hashtag";
+import { hashtagAll } from "actions/hashtag";
 import * as Hangul from "hangul-js";
 
 const SearchResultStyle = styled.section`
