@@ -17,7 +17,6 @@ export default (Component, option, adminRoute = null) => {
       if (!isLoggedIn) {
         // 로그인을 하지 않은 상태
         if (option) {
-          alert("로그인이 필요합니다.");
           setIsAllowed(false);
         }
       } else {

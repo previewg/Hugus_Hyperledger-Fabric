@@ -1,28 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  storyLike,
-  storyLoader,
-  storyLoadInit,
-  storyVote,
-} from "../actions/story";
+import styled from "styled-components";
 import { css } from "@emotion/core";
 import { SyncLoader } from "react-spinners";
-import {
-  commentAdd,
-  commentDelete,
-  commentListLoader,
-  commentChildAdd,
-} from "../actions/comment";
-import { signInBtnIsClicked } from "../actions/user";
+import { storyLoader, storyLoadInit } from "../actions/story";
+import { commentListLoader } from "../actions/comment";
+import StoryContents from "../components/StoryDetail/StoryContents";
+import Comments from "../components/StoryDetail/Comments";
+import Back from "../components/StoryDetail/Back";
 
 const StoryDetailStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
   align-items: center;
+<<<<<<< HEAD
   .layout {
     margin-top: 100px;
     width: 700px;
@@ -415,83 +407,21 @@ const BarStyle = styled.div`
   width: 100%;
   height: 80px;
   display: flex;
+=======
+>>>>>>> 19a31e08e139c0740863417238fe0cdfc5370a03
   flex-direction: column;
-  margin-bottom: 40px;
-  div {
-    display: flex;
-    background-color: #e7e7e7;
-    border-radius: 10px;
-    width: 100%;
-    height: 100%;
-    transition: all 0.7s ease-in-out;
-    > div {
-      background-color: orange;
-      border-radius: 10px;
-      font-size: 13px;
-      ${(props) =>
-        props.ratio < 4
-          ? props.ratio == 0
-            ? "width:0px;opacity:0"
-            : "width:35px;opacity:1"
-          : `width:${props.ratio}%`};
-      padding-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      ${(props) => (props.ratio == 0 ? "color: transparent" : " color: black")};
-    }
-  }
-  p {
-    text-align: end;
-    font-size: 12px;
-  }
 `;
 
 const StoryDetail = ({ match }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.story.detail.data);
-  const commentList = useSelector((state) => state.comment.list.data);
   const status = useSelector((state) => state.story.detail.status);
-  const like = useSelector((state) => state.story.like);
-  const vote = useSelector((state) => state.story.vote);
-  const isLoggedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
-  const current_user = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
-  const [error, setError] = useState(false);
-  const [comments, setComments] = useState("");
-  const [comments_child, setComments_child] = useState("");
-  
-  const comment = useRef();
-  const comment_child = useRef();
-  const errorMsg = "댓글을 입력하세요";
 
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id));
     return () => dispatch(storyLoadInit());
   }, []);
-
-  const totalPrice = () => {
-    let total = 0;
-    data.Story_Items.map((item) => {
-      total += item.item_price * item.item_quantity;
-    });
-    return total;
-  };
-
-  const commentAddHandler = () => {
-    if (comments === "") {
-      comment.current.focus();
-      setError(true);
-    } else {
-      dispatch(commentAdd({ comment: comments, story_id: data.id })).then(
-        setComments("")
-      );
-    }
-  };
 
   const Loader = () => {
     return (
@@ -510,164 +440,8 @@ const StoryDetail = ({ match }) => {
     );
   };
 
-  const onChangeHandler = (e) => {
-    setComments(e.target.value);
-    setError(false);
-  };
-
-  const onCommentChangeHandler = (e) => {
-    setComments_child(e.target.value);
-    setError(false);
-  }
-
-  const commentDeleteHandler = (id) => {
-    const confirmed = window.confirm("삭제하시겠습니까?");
-    if (confirmed) {
-      dispatch(commentDelete({ comment_id: id, story_id: data.id })).then(
-        setComments("")
-      );
-    }
-  };
-
-  const commentClear = () => {
-    setComments("");
-  };
-
-  const commentChildClear = () => {
-    setComments_child("");
-  }
-
-  const likeHandler = (status) => {
-    dispatch(storyLike(data.id, status));
-  };
-
-  const commentChildAddHandler = (id) => {
-    if (comments_child === "") {
-      comment_child.current.focus();
-      setError(true);
-    } else {
-    dispatch(commentChildAdd({ comment: comments_child, comment_id: id }))
-    .then(
-      setComments_child(""))
-  }
-}
-
-  const progressBar = () => {
-    let ratio = ((vote.voteNum / data.story_goal) * 100).toFixed(1);
-    if (ratio > 100) ratio = 100;
-    return (
-      <BarStyle ratio={ratio}>
-        <div>
-          <div>{((vote.voteNum / data.story_goal) * 100).toFixed(1)}%</div>
-        </div>
-        <p>
-          ({vote.voteNum} / {data.story_goal})
-        </p>
-      </BarStyle>
-    );
-  };
-
-  const voteHandler = () => {
-    if (!isLoggedIn) {
-      dispatch(signInBtnIsClicked());
-    } else {
-      if (vote.user) {
-        dispatch(storyVote(data.id, true));
-      } else {
-        dispatch(storyVote(data.id, false));
-      }
-    }
-  };
-
-  const voteButton = () => {
-    if (!isLoggedIn) {
-      return (
-        <button className="vote_false" onClick={voteHandler}>
-          후원을 희망합니다
-        </button>
-      );
-    } else {
-      if (vote.user) {
-        return (
-          <button className="vote_true" onClick={voteHandler}>
-            투표 취소하기
-          </button>
-        );
-      } else {
-        return (
-          <button className="vote_false" onClick={voteHandler}>
-            후원을 희망합니다
-          </button>
-        );
-      }
-    }
-  };
-
-  const Comment = () => {
-    if (!isLoggedIn) {
-      return (
-        <div className="comment__false">
-          <div className="header">
-            <p>댓글 {commentList.length}개</p>
-            <div className="icon">
-              <img
-                onClick={() => dispatch(signInBtnIsClicked())}
-                alt="unlike"
-                className="unlike"
-                src="/icons/unlike.svg"
-              />
-              <img alt="share" className="share" src="/icons/share.svg" />
-            </div>
-          </div>
-          <input disabled placeholder="로그인이 필요합니다." />
-        </div>
-      );
-    } else {
-      return (
-        <div className="comment__true">
-          <div className="header">
-            <p>댓글 {commentList.length}개</p>
-            <div className="icon">
-              {like.user ? (
-                <img
-                  onClick={() => likeHandler(true)}
-                  alt="like"
-                  className="like"
-                  src="/icons/like.svg"
-                />
-              ) : (
-                <img
-                  onClick={() => likeHandler(false)}
-                  alt="unlike"
-                  className="unlike"
-                  src="/icons/unlike.svg"
-                />
-              )}
-              <img alt="share" className="share" src="/icons/share.svg" />
-            </div>
-          </div>
-          <input
-            ref={comment}
-            value={comments}
-            onChange={onChangeHandler}
-            className="comment_input"
-            placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
-            onKeyDown={(e) => {
-              if (e.key === "Enter") commentAddHandler(e);
-            }}
-          />
-          <div className="comment__buttons">
-            <button className="comment__clear" onClick={commentClear}>
-              취소
-            </button>
-            <button onClick={commentAddHandler}>등록</button>
-          </div>
-        </div>
-      );
-    }
-  };
-
   if (status !== "SUCCESS") return Loader();
+<<<<<<< HEAD
   else
     return (
       <>
@@ -799,5 +573,14 @@ const StoryDetail = ({ match }) => {
         <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
       </>
     );
+=======
+  return (
+    <StoryDetailStyle>
+      <StoryContents data={data} />
+      <Comments data={data} />
+      <Back />
+    </StoryDetailStyle>
+  );
+>>>>>>> 19a31e08e139c0740863417238fe0cdfc5370a03
 };
 export default StoryDetail;

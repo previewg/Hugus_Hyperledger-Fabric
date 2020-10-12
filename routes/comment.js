@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { User, Story_Comment, Comment_Child } = require("../models");
+const { User, Story_Comment, Comment_Child, Story } = require("../models");
 // const comment_child = require("../models/comment_child");
 
 // 댓글 등록
@@ -15,6 +15,17 @@ router.post("/add", async (req, res) => {
       story_id,
       comment,
     });
+
+    await Story.increment(
+      {
+        story_comment: 1,
+      },
+      {
+        where: {
+          id: story_id,
+        },
+      }
+    );
 
     const list = await Story_Comment.findAll({
       where: {
@@ -41,6 +52,16 @@ router.post("/delete", async (req, res) => {
         id: comment_id,
       },
     });
+    await Story.decrement(
+      {
+        story_comment: 1,
+      },
+      {
+        where: {
+          id: story_id,
+        },
+      }
+    );
     const list = await Story_Comment.findAll({
       where: {
         story_id,
