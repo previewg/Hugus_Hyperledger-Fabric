@@ -14,17 +14,17 @@ const crypto = require('crypto')
 // multer 설정
 const multer = require("multer");
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, "user_profile"),
-    filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname),
-  }),
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => cb(null, "user_profile"),
+        filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname),
+    }),
 });
 
 // 회원가입
 router.post("/signup", async (req, res, next) => {
-  const { email, nickname, password } = req.body;
-  let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  let regPassword = /^[a-zA-Z0-9]{10,15}$/;
+        const {email, nickname, password} = req.body;
+        let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        let regPassword = /^[a-zA-Z0-9]{10,15}$/;
 
         let key_one = crypto.randomBytes(256).toString('hex').substr(100, 5);
         let key_two = crypto.randomBytes(256).toString('base64').substr(50, 5);
@@ -91,35 +91,6 @@ router.post("/signup", async (req, res, next) => {
                     code: 4,
                 });
             }
-  try {
-    const exUser = await User.findOne({ where: { email } });
-    const exNick = await User.findOne({ where: { nickname } });
-    //중복방지
-    if (exUser) {
-      return res.status(400).json({
-        error: "EMAIL EXISTS",
-        code: 1,
-      });
-    }
-    if (!regEmail.test(req.body.email)) {
-      return res.status(400).json({
-        error: "BAD EMAIL EXP",
-        code: 2,
-      });
-    }
-    if (exNick) {
-      return res.status(400).json({
-        error: "NICKNAME EXISTS",
-        code: 3,
-      });
-    }
-    if (!regPassword.test(req.body.password)) {
-      return res.status(400).json({
-        error: "BAD PASSWORD",
-        code: 4,
-      });
-    }
-
             const hash = await bcrypt.hash(password, 12);
             await User.create({
                 email,
@@ -235,8 +206,8 @@ router.delete("/destroy", (req, res, next) => {
 
 // 회원정보수정
 router.put("/update", (req, res, next) => {
-  const { email, nickname, password } = req.body;
-  User.update({ nickname: nickname }, { where: { nickname } });
+    const {email, nickname, password} = req.body;
+    User.update({nickname: nickname}, {where: {nickname}});
 });
 
 // 회원사진수정
@@ -297,10 +268,6 @@ router.post("/kakao", async (req, res) => {
     const payload = {
         nickname: req.body.profile.properties.nickname,
     };
-    await KakaoUser.create({
-        id_value: req.body.profile.id,
-        nickname: req.body.profile.properties.nickname,
-    });
     jwt.sign(
         payload,
         process.env.JWT_SECRET,

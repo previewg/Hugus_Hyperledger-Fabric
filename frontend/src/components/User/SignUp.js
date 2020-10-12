@@ -150,7 +150,7 @@ const SignUpStyle = styled.div`
 `;
 const SignUp = () => {
     const dispatch = useDispatch();
-    const errorCode = useSelector((state) => state.authentication.register.error);
+    const errorCode = useSelector((state) => state.authentication.signUp.error);
     const registerStatus = useSelector(
         (state) => state.authentication.signUp.status
     );

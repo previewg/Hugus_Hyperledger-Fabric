@@ -71,9 +71,9 @@ export const signInSuccess = (data) => {
     data: data,
   };
 };
-
-export const signInFailure = () => {
-  return { type: AUTH_SIGNIN_FAILURE };
+// 로그인 실패
+export const signInFailure = (error) => {
+    return {type: AUTH_SIGNIN_FAILURE, error: error};
 };
 
 // 카카오 로그인
@@ -90,10 +90,7 @@ export const kakao_Success = (data) => {
         nickname: data
     }
 }
-// 로그인 실패
-export const signInFailure = (error) => {
-    return {type: AUTH_SIGNIN_FAILURE, error: error};
-};
+
 
 // 로그아웃
 export const signOutStart = () => {
