@@ -147,9 +147,9 @@ const NavStyle = styled.nav`
 
       span:nth-child(3) {
         ${(props) =>
-    props.menuClicked
-        ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
-        : "top:25px;right:1px"}
+          props.menuClicked
+            ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
+            : "top:25px;right:1px"}
       }
     }
     .user {
@@ -261,11 +261,12 @@ const NavBar = (props) => {
   const username = useSelector(
     (state) => state.authentication.status.currentUser
   );
+  console.log(username);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
-  const profile_Path = useSelector(
-    (state) => state.authentication.profile.data
+  const profile_path = useSelector(
+    (state) => state.authentication.status.profile_path
   );
   const onClickHandler = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
@@ -298,12 +299,12 @@ const NavBar = (props) => {
 
   const UserIcon = () => {
     if (isLoggedIn) {
-      if (profile_Path) {
+      if (profile_path) {
         return (
           <Link to="/my">
             <img
               className="user__icon"
-              src={"http://localhost:3000/user_profile/" + profile_Path}
+              src={"http://localhost:3000/user_profile/" + profile_path}
             />
           </Link>
         );
@@ -328,10 +329,6 @@ const NavBar = (props) => {
       />
     );
   };
-
-  useEffect(() => {
-    if (isLoggedIn) dispatch(profileViewer({ username }));
-  }, [isLoggedIn]);
 
   return (
     <>

@@ -84,18 +84,62 @@ router.post("/delete", async (req, res) => {
 // 스토리 수정
 router.put("/update", async (req, res) => {
   try {
+    const {
+      story_title,
+      user_info,
+      story_content,
+      story_goal,
+      id,
+      hashtags,
+      items,
+    } = req.body;
     await Story.update(
       {
-        story_title: req.body.title,
-        user_info: req.body.user_info,
-        story_content: req.body.content,
-        story_hashtag: req.body.hashtag,
+        story_title,
+        user_info,
+        story_content,
+        story_goal,
       },
       {
-        where: { id: req.body.id },
+        where: { id },
       }
     );
-    res.json({ message: "게시글이 수정 되었습니다." });
+
+    // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
+    await Story_File.destroy({
+      where: { story_id: id },
+    });
+    for (const file of req.files) {
+      await Story_File.create({
+        story_id: id,
+        file: file.filename,
+      });
+    }
+
+    const hashtagList = hashtags.split(",");
+
+    await Story_Hashtag.destroy({ where: { story_id: id } });
+    for (const hashtag of hashtagList) {
+      const result = await Hashtag.findOrCreate({
+        where: { hashtag: hashtag },
+      });
+
+      await Story_Hashtag.create({
+        story_id: story.dataValues.id,
+        hashtag_id: result[0].dataValues.id,
+      });
+    }
+
+    const itemList = JSON.parse(items);
+    for (const item of itemList) {
+      await Story_Item.create({
+        story_id: story.dataValues.id,
+        item_name: item.item_name,
+        item_price: item.item_price,
+        item_quantity: item.item_quantity,
+      });
+    }
+    res.json({ success: 1 });
   } catch (err) {
     console.log(err);
     res.json({ message: false });

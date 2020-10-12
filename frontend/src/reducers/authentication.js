@@ -53,8 +53,7 @@ function parseJwt(token) {
 const initialState = {
   signIn: {
     status: "INIT",
-      error: -1,
-
+    error: -1,
   },
   signUp: {
     status: "INIT",
@@ -62,7 +61,7 @@ const initialState = {
   },
   status: {
     confirm_pwd: "INIT",
-    profile_path: null,
+    profile_path: parseJwt(getCookie("hugus")).profile || null,
     valid: false,
     isLoggedIn: getCookie("hugus") || false,
     currentUser: parseJwt(getCookie("hugus")).nickname || "",
@@ -124,7 +123,7 @@ export default function authentication(state = initialState, action) {
       return update(state, {
         signIn: {
           status: { $set: "FAILURE" },
-            error: {$set: action.error},
+          error: { $set: action.error },
         },
       });
 
@@ -239,7 +238,9 @@ export default function authentication(state = initialState, action) {
       return update(state, {
         profile: {
           status: { $set: "SUCCESS" },
-          data: { $set: action.data },
+        },
+        status: {
+          profile_path: { $set: action.data },
         },
       });
 

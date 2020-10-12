@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { storyAdd, storyLoader } from "actions/story";
-import { load } from "dotenv";
+import { storyLoader, storyUpdate } from "actions/story";
 
 const StoryUpdateStyle = styled.div`
   display: flex;
@@ -416,6 +415,7 @@ const StoryWrite = (props) => {
   const itemPrice = useRef();
   const itemQuantity = useRef();
   const hashtags = useRef();
+  const load = useRef(true);
   const addStatus = useSelector((state) => state.story.add.status);
   const preData = useSelector((state) => state.story.detail.data);
   const loadStatus = useSelector((state) => state.story.detail.status);
@@ -492,11 +492,12 @@ const StoryWrite = (props) => {
       return false;
     }
     return true;
-  }, [filled]);
+  }, [filled, data]);
 
   const storyUpdateHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
+      formData.append("id", props.match.params.id);
       formData.append("story_title", data.title);
       formData.append("user_info", data.info);
       formData.append("story_content", data.content);
@@ -510,7 +511,7 @@ const StoryWrite = (props) => {
       } else {
         formData.append("files", "");
       }
-      dispatch(storyAdd(formData, { ...props }));
+      dispatch(storyUpdate(formData, { ...props }));
     }
   };
 
@@ -707,9 +708,12 @@ const StoryWrite = (props) => {
   };
 
   useEffect(() => {
-    dispatch(storyLoader(props.match.params.id));
+    if (load.current) {
+      dispatch(storyLoader(props.match.params.id));
+      load.current = false;
+    }
     if (loadStatus === "SUCCESS") init();
-  }, [loadStatus === "SUCCESS"]);
+  }, [loadStatus]);
 
   return (
     <>

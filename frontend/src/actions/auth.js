@@ -73,7 +73,7 @@ export const signInSuccess = (data) => {
 };
 // 로그인 실패
 export const signInFailure = (error) => {
-    return {type: AUTH_SIGNIN_FAILURE, error: error};
+  return { type: AUTH_SIGNIN_FAILURE, error: error };
 };
 
 // 카카오 로그인
@@ -85,12 +85,11 @@ export const kakao_Success = (data) => {
     type: AUTH_KAKAO_SUCCESS,
     nickname: data,
   };
-    return {
-        type: AUTH_KAKAO_SUCCESS,
-        nickname: data
-    }
-}
-
+  return {
+    type: AUTH_KAKAO_SUCCESS,
+    nickname: data,
+  };
+};
 
 // 로그아웃
 export const signOutStart = () => {
@@ -182,19 +181,19 @@ export const signUpRequest = ({ user }) => async (dispatch) => {
 };
 
 // 로그인
-export const signInRequest = ({user}) => async (dispatch) => {
-    dispatch(signInStart());
-    await axios
-        .post("/auth/signIn", {...user})
-        .then((response) => {
-            if (response.data.success === 1) {
-                dispatch(signInSuccess(response.data.session));
-                dispatch(signInBtnIsClicked());
-            }
-        })
-        .catch((error) => {
-            dispatch(signInFailure(error.response.data.code));
-        });
+export const signInRequest = ({ user }) => async (dispatch) => {
+  dispatch(signInStart());
+  await axios
+    .post("/auth/signIn", { ...user })
+    .then((response) => {
+      if (response.data.success === 1) {
+        dispatch(signInSuccess(response.data));
+        dispatch(signInBtnIsClicked());
+      }
+    })
+    .catch((error) => {
+      dispatch(signInFailure(error.response.data.code));
+    });
 };
 // 카카오 로그인 요청
 export const kakaosignInRequest = ({ res }) => async (dispatch) => {
@@ -266,6 +265,7 @@ export const confirmPwd = ({ user }) => async (dispatch) => {
 
 // 프로필사진 수정요청
 export const profileUpload = (formData) => async (dispatch) => {
+  document.cookie = "hugus=; expires=Thu, 01 Jan 1999 00:00:10 GMT;";
   dispatch(profileAddStart());
   await axios
     .put("auth/profile", formData, {
