@@ -69,35 +69,44 @@ const CommentChildStyle = styled.div`
       }
 `;
 
-const CommentChild = ({ commentList }) => {
+const CommentChild = ({ id }) => {
   const dispatch = useDispatch();
   // const reComment = useSelector((state) => state.comment.list.reComment);
 
-  const [error, setError] = useState(false);
-  const [comments_child, setComments_child] = useState("");
-  const comment_child = useRef();
-  const onCommentChangeHandler = (e) => {
-    setComments_child(e.target.value);
-    setError(false);
-  };
-  const commentChildClear = () => {
-    setComments_child("");
-  };
+  // const [error, setError] = useState(false);
+  // const [comments_child, setComments_child] = useState("");
+  // const comment_child = useRef();
+  // const onCommentChangeHandler = (e) => {
+  //   setComments_child(e.target.value);
+  //   setError(false);
+  // };
+  // const commentChildClear = () => {
+  //   setComments_child("");
+  // };
 
-  const commentChildAddHandler = (id) => {
-    if (comments_child === "") {
-      comment_child.current.focus();
-      setError(true);
-    } else {
-      dispatch(
-        commentChildAdd({ comment: comments_child, comment_id: id })
-      ).then(setComments_child(""));
-    }
-  };
+  // const commentChildAddHandler = (id) => {
+  //   if (comments_child === "") {
+  //     comment_child.current.focus();
+  //     setError(true);
+  //   } else {
+  //     dispatch(
+  //       commentChildAdd({ comment: comments_child, comment_id: id })
+  //     ).then(setComments_child(""));
+  //   }
+  // };
 
   return (
     <CommentChildStyle>
-      <input
+      {reComment.map(( comment,key ) => {
+        return (
+          <div key>
+
+          </div>
+        );
+      })
+      
+      }
+      {/* <input
         ref={comment_child}
         value={comments_child}
         onChange={onCommentChangeHandler}
@@ -111,9 +120,8 @@ const CommentChild = ({ commentList }) => {
         <button className="commentChild__clear" onClick={commentChildClear}>
           취소
         </button>
-        <button onClick={() => commentChildAddHandler()}>등록</button>
-      </div>
-      
+        <button onClick={() => commentChildAddHandler(id)}>등록</button>
+      </div> */}
       
     </CommentChildStyle>
   );
