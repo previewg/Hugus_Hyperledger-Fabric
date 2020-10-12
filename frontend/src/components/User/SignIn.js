@@ -121,6 +121,7 @@ const SignIn = () => {
   });
 
   const loginStatus = useSelector((state) => state.authentication.login.status);
+  const errorCode = useSelector((state) => state.authentication.login.error);
 
   const onChangeHandler = (e) => {
     setUser({
@@ -135,6 +136,11 @@ const SignIn = () => {
   const signInHandler = () => {
     dispatch(signInRequest({ user }));
   };
+  const errorMessage = [
+    "아이디 혹은 비밀번호가 일치하지 않습니다.",
+    "이메일 인증이 필요합니다.",
+  ];
+
   useEffect(() => {
     dispatch(signIn());
     if (loginStatus === "SUCCESS") {
@@ -143,8 +149,9 @@ const SignIn = () => {
         email: "",
         password: "",
       });
-    } else if (loginStatus === "FAILURE") {
-      alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+    }
+    else if (loginStatus === "FAILURE") {
+      alert(errorMessage[errorCode -1]);
     }
   }, [loginStatus]);
 

@@ -27,6 +27,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.User = require("./user")(sequelize, Sequelize);
+db.KakaoUser = require("./kakaoUser")(sequelize, Sequelize);
 db.Story = require("./story")(sequelize, Sequelize);
 db.Story_Comment = require("./story_comment")(sequelize, Sequelize);
 db.Comment_Child = require("./comment_child")(sequelize, Sequelize);

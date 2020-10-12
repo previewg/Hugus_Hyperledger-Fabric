@@ -26,8 +26,8 @@ export const kakao_Success = (data) => {
     }
 }
 // 로그인 실패
-export const signInFailure = () => {
-    return {type: types.AUTH_SIGNIN_FAILURE};
+export const signInFailure = (error) => {
+    return {type: types.AUTH_SIGNIN_FAILURE, error: error};
 };
 
 export const signUp = () => {
@@ -116,14 +116,13 @@ export const signInRequest = ({user}) => async (dispatch) => {
     await axios
         .post("/auth/signIn", {...user})
         .then((response) => {
-            console.log(response)
             if (response.data.success === 1) {
                 dispatch(signInSuccess(response.data.session));
                 dispatch(signInBtnIsClicked());
             }
         })
         .catch((error) => {
-            dispatch(signInFailure(error));
+            dispatch(signInFailure(error.response.data.code));
         });
 };
 //카카오 로그인
@@ -217,8 +216,7 @@ export const profileViewer = ({username}) => async (dispatch) => {
                 dispatch(profileLoadSuccess(response.data));
             }
         })
-        .catch((error) => {
-            console.log(error);
+        .catch(() => {
             dispatch(profileLoadFailure());
         });
 };

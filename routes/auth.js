@@ -4,7 +4,12 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {User} = require("../models");
+const {KakaoUser} = require("../models");
 const axios = require("axios");
+const nodemailer = require("nodemailer");
+const smtpTransporter = require('nodemailer-smtp-transport');
+const crypto = require('crypto')
+
 
 // multer 설정
 const multer = require("multer");
@@ -16,67 +21,132 @@ const upload = multer({
 });
 
 router.post("/signup", async (req, res, next) => {
-    const {email, nickname, password} = req.body;
-    let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-    let regPassword = /^[a-zA-Z0-9]{10,15}$/;
 
-    try {
-        const exUser = await User.findOne({where: {email}});
-        const exNick = await User.findOne({where: {nickname}});
-        //중복방지
-        if (exUser) {
-            return res.status(400).json({
-                error: "EMAIL EXISTS",
-                code: 1,
-            });
-        }
-        if (!regEmail.test(req.body.email)) {
-            return res.status(400).json({
-                error: "BAD EMAIL EXP",
-                code: 2,
-            });
-        }
-        if (exNick) {
-            return res.status(400).json({
-                error: "NICKNAME EXISTS",
-                code: 3,
-            });
-        }
-        if (!regPassword.test(req.body.password)) {
-            return res.status(400).json({
-                error: "BAD PASSWORD",
-                code: 4,
-            });
-        }
+        const {email, nickname, password} = req.body;
+        let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        let regPassword = /^[a-zA-Z0-9]{10,15}$/;
 
-        const hash = await bcrypt.hash(password, 12);
-        await User.create({
-            email,
-            nickname,
-            password: hash,
-        });
-        return res.status(200).json({success: "true"});
-    } catch (err) {
-        console.error(err);
-        return next(err);
+        let key_one = crypto.randomBytes(256).toString('hex').substr(100, 5);
+        let key_two = crypto.randomBytes(256).toString('base64').substr(50, 5);
+        let key_for_verify = key_one + key_two;
+
+        try {
+            const exUser = await User.findOne({where: {email}});
+            const exNick = await User.findOne({where: {nickname}});
+
+            //중복방지
+
+            let smtpTransport = nodemailer.createTransport(smtpTransporter({
+                service: 'Gmail',
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: 'yh9407@gmail.com',
+                    pass: 'nazgbplzumjbaozs'
+                }
+            }))
+
+
+            let url = 'http://127.0.0.1:3000' + '/auth' + '/confirmEmail' + '?key=' + key_for_verify;
+
+            let mailOpt = {
+                from: 'yh9407@gmail.com',
+                to: email,
+                subject: '이메일 인증을 진행해주세요.',
+                html: '<p>아래의 링크를 클릭해주세요 !</p>' + url
+
+            };
+            await smtpTransport.sendMail(mailOpt, function (err, res) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('email has been sent.');
+                }
+                smtpTransport.close();
+
+            });
+
+            if (exUser) {
+                return res.status(400).json({
+                    error: "EMAIL EXISTS",
+                    code: 1,
+                });
+            }
+            if (!regEmail.test(req.body.email)) {
+                return res.status(400).json({
+                    error: "BAD EMAIL EXP",
+                    code: 2,
+                });
+            }
+            if (exNick) {
+                return res.status(400).json({
+                    error: "NICKNAME EXISTS",
+                    code: 3,
+                });
+            }
+            if (!regPassword.test(req.body.password)) {
+                return res.status(400).json({
+                    error: "BAD PASSWORD",
+                    code: 4,
+                });
+            }
+
+            const hash = await bcrypt.hash(password, 12);
+            await User.create({
+                email,
+                nickname,
+                password: hash,
+                key_for_verify: key_for_verify
+            });
+
+            return res.status(200).json({success: "true"});
+
+        } catch
+            (err) {
+            console.error(err);
+            return next(err);
+        }
+    }
+);
+router.get('/confirmEmail', async (req, res) => {
+
+    const data = await User.findOne(
+        {where: {key_for_verify: req.query.key}},
+        {attributes: []}
+    );
+    if (data) {
+        await User.update({email_verified: true}, {where: {key_for_verify: req.query.key}})
+        res.send("Successful the email_confirm ")
+    } else {
+        console.error();
     }
 });
 
 // 로그인
 router.post("/signIn", async (req, res) => {
     const {email, password} = req.body;
-    User.findOne({where: {email}}).then((user) => {
+
+
+    await User.findOne({where: {email}}).then((user) => {
         if (!user) {
-            return res.status(400).json({success: 2});
+            return res.status(400).json({
+                success: 2,
+                code: 1
+            });
+        }
+        console.log(user.email_verified)
+        if (!user.email_verified === true) {
+            return res.status(400).json({success: 2, code: 2})
         }
         bcrypt.compare(password, user.password).then((isMatched) => {
             if (isMatched) {
-
                 let session = req.session;
                 session.loginInfo = {
                     user_email: user.email,
-                    user_profile:user.user_profile,
-                    user_nickname:user.nickname,
+                    user_profile: user.user_profile,
+                    user_nickname: user.nickname,
+                    email_verified: user.email_verified
                 };
                 console.log(session)
                 const payload = {
@@ -95,12 +165,12 @@ router.post("/signIn", async (req, res) => {
                         res.json({
                             success: 1,
                             nickname: user.nickname,
-                            session:session.loginInfo
+                            session: session.loginInfo
                         });
                     }
                 );
             } else {
-                return res.status(400).json({success: 2});
+                return res.status(400).json({success: 2, code: 1});
             }
         });
     });
@@ -168,7 +238,7 @@ router.post("/profile/view", async (req, res) => {
             {where: {nickname: user_name}},
             {attributes: []}
         );
-        res.json({data:data, success: 1});
+        res.json({data: data, success: 1});
 
 
     } catch (error) {
@@ -197,6 +267,10 @@ router.post("/kakao", async (req, res) => {
     const payload = {
         nickname: req.body.profile.properties.nickname,
     };
+    await KakaoUser.create({
+        id_value: req.body.profile.id,
+        nickname: req.body.profile.properties.nickname,
+    });
     jwt.sign(
         payload,
         process.env.JWT_SECRET,

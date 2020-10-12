@@ -333,7 +333,7 @@ const NavBar = (props) => {
                 </div>
                 <div className="user">
 
-                    {isSignedIn ? (<img
+                    {isSignedIn && profile_Path!==null? (<img
                             className="user__icon"
                             src={
                                 "http://localhost:3000/user_profile/" + profile_Path

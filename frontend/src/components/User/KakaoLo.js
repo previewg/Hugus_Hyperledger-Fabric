@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
+import React, {useEffect} from "react";
 import KakaoLogin from "react-kakao-login";
 import {kakao_SignIn, kakaosignInRequest} from "../../actions/auth";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,12 +9,11 @@ const KakaoLo = () => {
 
     const responseKakao = async (res) => {
         console.log(res)
-       await dispatch(kakaosignInRequest({res}));
+        await dispatch(kakaosignInRequest({res}));
     }
     const responseFail = (err) => {
         alert(err)
     }
-    //console.log(data)
 
     useEffect(() => {
         dispatch(kakao_SignIn())
@@ -23,13 +21,13 @@ const KakaoLo = () => {
 
     return (
         <>
-                <KakaoLogin
-                    jsKey={'aa70349a6dc59493a45fc12e6ca3a220'}
-                    buttonText={"KAKAO"}
-                    onSuccess={responseKakao}
-                    onFailure={responseFail}
-                    getProfile={true}
-                />
+            <KakaoLogin
+                jsKey={'aa70349a6dc59493a45fc12e6ca3a220'}
+                buttonText={"KAKAO"}
+                onSuccess={responseKakao}
+                onFailure={responseFail}
+                getProfile={true}
+            />
 
 
         </>

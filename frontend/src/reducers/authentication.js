@@ -25,6 +25,8 @@ function parseJwt(token) {
 const initialState = {
     login: {
         status: "INIT",
+        error: -1,
+
     },
     register: {
         status: "INIT",
@@ -69,6 +71,7 @@ export default function authentication(state = initialState, action) {
 
         // 로그인
         case types.AUTH_SIGNIN:
+
             return update(state, {
                 login: {
                     status: {$set: "WAITING"},
@@ -86,9 +89,11 @@ export default function authentication(state = initialState, action) {
                 },
             });
         case types.AUTH_SIGNIN_FAILURE:
+
             return update(state, {
                 login: {
                     status: {$set: "FAILURE"},
+                    error: {$set: action.error},
                 },
             });
         //카카오 로그인
@@ -172,7 +177,7 @@ export default function authentication(state = initialState, action) {
             });
 
         case types.PROFILE_ADD_SUCCESS:
-            console.log(action)
+
             return update(state, {
                 status: {
                     profile_path: {$set: "SUCCESS"},
