@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import KakaoLogin from "react-kakao-login";
 import { kakao_SignIn, kakaosignInRequest } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +16,7 @@ const KakaoLo = () => {
   const responseFail = (err) => {
     alert(err);
   };
-  //console.log(data)
+
 
   useEffect(() => {
     dispatch(kakao_SignIn());

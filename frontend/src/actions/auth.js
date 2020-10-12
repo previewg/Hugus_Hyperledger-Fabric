@@ -71,9 +71,9 @@ export const signInSuccess = (data) => {
     data: data,
   };
 };
-
-export const signInFailure = () => {
-  return { type: AUTH_SIGNIN_FAILURE };
+// 로그인 실패
+export const signInFailure = (error) => {
+    return {type: AUTH_SIGNIN_FAILURE, error: error};
 };
 
 // 카카오 로그인
@@ -85,7 +85,12 @@ export const kakao_Success = (data) => {
     type: AUTH_KAKAO_SUCCESS,
     nickname: data,
   };
-};
+    return {
+        type: AUTH_KAKAO_SUCCESS,
+        nickname: data
+    }
+}
+
 
 // 로그아웃
 export const signOutStart = () => {
@@ -176,22 +181,20 @@ export const signUpRequest = ({ user }) => async (dispatch) => {
     });
 };
 
-// 로그인요청
-export const signInRequest = ({ user }) => async (dispatch) => {
-  dispatch(signInStart());
-  await axios
-    .post("/auth/signIn", { ...user })
-    .then((response) => {
-      if (response.data.success === 1) {
-        dispatch(signInSuccess(response.data));
-        dispatch(signInBtnIsClicked());
-      } else {
-        console.error("로그인실패");
-      }
-    })
-    .catch((error) => {
-      dispatch(signInFailure(error));
-    });
+// 로그인
+export const signInRequest = ({user}) => async (dispatch) => {
+    dispatch(signInStart());
+    await axios
+        .post("/auth/signIn", {...user})
+        .then((response) => {
+            if (response.data.success === 1) {
+                dispatch(signInSuccess(response.data.session));
+                dispatch(signInBtnIsClicked());
+            }
+        })
+        .catch((error) => {
+            dispatch(signInFailure(error.response.data.code));
+        });
 };
 // 카카오 로그인 요청
 export const kakaosignInRequest = ({ res }) => async (dispatch) => {
