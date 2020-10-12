@@ -18,6 +18,9 @@ import {
   STORY_VOTE,
   STORY_VOTE_SUCCESS,
   STORY_VOTE_FAILURE,
+  STORY_UPDATE,
+  STORY_UPDATE_SUCCESS,
+  STORY_UPDATE_FAILURE,
 } from "../actions/story";
 import update from "react-addons-update";
 
@@ -71,6 +74,27 @@ export default function story(state = initialState, action) {
     case STORY_ADD_FAILURE:
       return update(state, {
         add: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_UPDATE:
+      return update(state, {
+        update: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_UPDATE_SUCCESS:
+      return update(state, {
+        update: {
+          status: { $set: "SUCCESS" },
+        },
+      });
+
+    case STORY_UPDATE_FAILURE:
+      return update(state, {
+        update: {
           status: { $set: "FAILURE" },
         },
       });

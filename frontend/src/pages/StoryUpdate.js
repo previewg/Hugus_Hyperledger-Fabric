@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { storyAdd } from "actions/story";
+import { storyAdd, storyLoader } from "actions/story";
+import { load } from "dotenv";
 
 const StoryUpdateStyle = styled.div`
   display: flex;
@@ -416,8 +417,9 @@ const StoryWrite = (props) => {
   const itemQuantity = useRef();
   const hashtags = useRef();
   const addStatus = useSelector((state) => state.story.add.status);
-  const predata = useSelector((state) => state.story.detail.data);
-  console.log(predata);
+  const preData = useSelector((state) => state.story.detail.data);
+  const loadStatus = useSelector((state) => state.story.detail.status);
+
   const [data, setData] = useState({
     title: "",
     info: "",
@@ -677,20 +679,37 @@ const StoryWrite = (props) => {
     });
   }, [data]);
 
-  useEffect(() => {
-    if (addStatus === "SUCCESS") {
-      setData({
-        title: "",
-        info: "",
-        content: "",
-        files: null,
-        item: "",
-        hashtag: "",
-        items: [],
-        hashtags: [],
+  const init = () => {
+    let pre = {
+      title: preData.story_title,
+      info: preData.user_info,
+      content: preData.story_content,
+      files: null,
+      items: [],
+      item_name: "",
+      item_price: "",
+      item_quantity: "",
+      hashtag: "",
+      hashtags: [],
+      totalPrice: 0,
+      goal: preData.story_goal,
+    };
+    preData.Story_Items.map((item) => {
+      pre.items.push({
+        item_name: item.item_name,
+        item_price: item.item_price,
+        item_quantity: item.item_quantity,
       });
-    }
-  }, [errorCode, addStatus, fileReaderState]);
+      pre.totalPrice += item.item_price * item.item_quantity;
+    });
+    preData.Hashtags.map((tag) => pre.hashtags.push(tag.hashtag));
+    setData(pre);
+  };
+
+  useEffect(() => {
+    dispatch(storyLoader(props.match.params.id));
+    if (loadStatus === "SUCCESS") init();
+  }, [loadStatus === "SUCCESS"]);
 
   return (
     <>

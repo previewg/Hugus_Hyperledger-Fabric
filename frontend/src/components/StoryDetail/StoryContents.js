@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import StoryVote from "./StoryVote";
-import { storyDelete } from "../../actions/story";
+import { storyDelete, storyUpdateStatusChanged } from "../../actions/story";
 
 const StoryContentsStyle = styled.div`
   margin-top: 100px;
@@ -180,10 +180,14 @@ const StoryContents = ({ data, history }) => {
       }
     };
 
+    const onUpdateHandler = () => {
+      history.push(`/story/update/${data.id}`);
+    };
+
     if (data.User.nickname === currentUser)
       return (
         <div className="if_owner">
-          <button>수정</button>
+          <button onClick={onUpdateHandler}>수정</button>
           <button onClick={onDeleteHandler}>삭제</button>
         </div>
       );

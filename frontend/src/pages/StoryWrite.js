@@ -675,21 +675,6 @@ const StoryWrite = (props) => {
     });
   }, [data]);
 
-  useEffect(() => {
-    if (addStatus === "SUCCESS") {
-      setData({
-        title: "",
-        info: "",
-        content: "",
-        files: null,
-        item: "",
-        hashtag: "",
-        items: [],
-        hashtags: [],
-      });
-    }
-  }, [errorCode, addStatus, fileReaderState]);
-
   return (
     <>
       <StoryWriteStyle>

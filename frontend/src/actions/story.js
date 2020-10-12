@@ -43,6 +43,19 @@ const storyAddFailure = () => {
   return { type: STORY_ADD_FAILURE };
 };
 
+// 게시물 수정
+const storyUpdateStart = () => {
+  return { type: STORY_UPDATE };
+};
+
+const storyUpdateSuccess = () => {
+  return { type: STORY_UPDATE_SUCCESS };
+};
+
+const storyUpdateFailure = () => {
+  return { type: STORY_UPDATE_FAILURE };
+};
+
 // 게시물 삭제
 const storyDeleteStart = () => {
   return { type: STORY_DELETE };
@@ -160,16 +173,20 @@ export const storyDelete = (id, history) => async (dispatch) => {
 };
 
 // 게시물 수정 요청
-export const storyUpdate = (data) => async () => {
+export const storyUpdate = (data, props) => async (dispatch) => {
+  dispatch(storyUpdateStart());
   await axios
-    .put("/story/update", data, {
+    .post("/story/add", data, {
       headers: { "content-type": "multipart/form-data" },
     })
     .then(() => {
       alert("성공적으로 수정되었습니다.");
+      props.history.push("/story");
+      dispatch(storyUpdateSuccess());
     })
     .catch((error) => {
-      alert("수정에 실패하였습니다.");
+      alert("수정에 실패했습니다.");
+      dispatch(storyUpdateFailure());
       console.error(error);
     });
 };
