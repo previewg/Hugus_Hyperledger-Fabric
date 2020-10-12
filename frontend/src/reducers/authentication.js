@@ -53,6 +53,8 @@ function parseJwt(token) {
 const initialState = {
   signIn: {
     status: "INIT",
+      error: -1,
+
   },
   signUp: {
     status: "INIT",
@@ -122,6 +124,7 @@ export default function authentication(state = initialState, action) {
       return update(state, {
         signIn: {
           status: { $set: "FAILURE" },
+            error: {$set: action.error},
         },
       });
 

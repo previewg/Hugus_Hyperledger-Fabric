@@ -147,9 +147,9 @@ const NavStyle = styled.nav`
 
       span:nth-child(3) {
         ${(props) =>
-          props.menuClicked
-            ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
-            : "top:25px;right:1px"}
+    props.menuClicked
+        ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
+        : "top:25px;right:1px"}
       }
     }
     .user {
