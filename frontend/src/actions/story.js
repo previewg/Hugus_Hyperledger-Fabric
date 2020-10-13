@@ -200,6 +200,7 @@ export const storyListLoader = (section) => async (dispatch) => {
       let status = true;
       if (response.data.list.length !== 18) status = false;
       dispatch(storyListLoadSuccess(response.data.list, status));
+      console.log(response.data.list)
     })
     .catch((error) => {
       dispatch(storyListLoadFailure());

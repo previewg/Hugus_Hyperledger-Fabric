@@ -150,6 +150,7 @@ router.post("/signIn", async (req, res) => {
                 console.log(session)
                 const payload = {
                     nickname: user.nickname,
+                    email: user.email
                 };
                 jwt.sign(
                     payload,
@@ -232,7 +233,6 @@ router.put("/profile", upload.single("file"), async (req, res) => {
 // 회원 기본 정보
 router.post("/profile/view", async (req, res) => {
     try {
-        console.log(req.body)
         const user_name = req.body.username;
 
         const data = await User.findOne(
@@ -265,6 +265,12 @@ router.post("/confirm", async (req, res) => {
 
 //카카오 로그인
 router.post("/kakao", async (req, res) => {
+
+    KakaoUser.create({
+        id_Value: req.body.profile.id,
+        nickname: req.body.profile.properties.nickname
+
+    });
     const payload = {
         nickname: req.body.profile.properties.nickname,
     };
@@ -276,7 +282,6 @@ router.post("/kakao", async (req, res) => {
             expiresIn: "24h",
         },
         (err, token) => {
-            console.log(payload)
             // res.cookie(key,value) cookie에 key값을 넣는 방식
             res.cookie("hugus", token);
             res.json({
