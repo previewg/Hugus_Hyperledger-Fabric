@@ -17,6 +17,10 @@ export const COMMENT_CHILD_ADD = "COMMENT_CHILD_ADD";
 export const COMMENT_CHILD_ADD_SUCCESS = "COMMENT_CHILD_ADD_SUCCESS";
 export const COMMENT_CHILD_ADD_FAILURE = "COMMENT_CHILD_ADD_FAILURE";
 
+// export const COMMENT_CHILD_LIST_LOAD = "COMMENT_CHILD_LIST_LOAD";
+// export const COMMENT_CHILD_LIST_LOAD_SUCCESS = "COMMENT_CHILD_LIST_LOAD_SUCCESS";
+// export const COMMENT_CHILD_LIST_LOAD_FAILURE = "COMMENT_CHILD_LIST_LOAD_FAILURE";
+
 // 댓글 등록
 const commentAddStart = () => {
     return { type: COMMENT_ADD };
@@ -68,6 +72,20 @@ const commentChildAddSuccess = (reComment) => {
 const commentChildAddFailure = () => {
   return { type: COMMENT_CHILD_ADD_FAILURE };
 };
+
+// // 대댓글 리스트 로드
+// const commentChildListLoadStart = () => {
+//   return { type: COMMENT_CHILD_LIST_LOAD };
+// };
+
+// const commentChildListLoadSuccess = (reComment) => {
+//   return { type: COMMENT_CHILD_LIST_LOAD_SUCCESS, reComment: reComment };
+// };
+
+// const commentChildListLoadFailure = () => {
+//   return { type: COMMENT_CHILD_LIST_LOAD_FAILURE };
+// };
+
 
 // 댓글 등록 요청
 export const commentAdd = (data) => async (dispatch) => {
@@ -123,3 +141,18 @@ export const commentChildAdd = (data) => async (dispatch) => {
       dispatch(commentChildAddFailure());
     });
 };
+
+
+// // 대댓글 목록 조회 요청
+// export const commentChildListLoader = (comment_id) => async (dispatch) => {
+//   await axios
+//     .get(`/comment/list/${comment_id}`)
+//     .then((response) => {
+//       dispatch(commentChildListLoadSuccess(response.data.reComment));
+//     })
+//     .catch((error) => {
+//       dispatch(commentChildListLoadFailure());
+//       console.error(error);
+//     });
+//   dispatch(commentChildListLoadStart());
+// };

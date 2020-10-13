@@ -120,4 +120,22 @@ router.post("/child_add", async (req, res) => {
   }
 });
 
+// 대댓글 목록 조회
+router.get("/childList/:comment_id", async (req, res) => {
+  try {
+    const comment_id = req.params.comment_id;
+    const reComment = await Comment_Child.findAll({
+      where: {
+        comment_id: comment_id,
+      },
+      order: [["created_at", "DESC"]],
+      include: [{ model: User, attributes: ["nickname"] }],
+    });
+    res.json({ reComment: reComment, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+
 module.exports = router;
