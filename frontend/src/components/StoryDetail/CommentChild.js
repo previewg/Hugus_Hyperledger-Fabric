@@ -103,7 +103,7 @@ const CommentChild = ({id}) => {
   return (
     <CommentChildStyle>
       <p onClick={onClickHandler}>답글 몇개</p>
-      <List/>
+      {/* <List/> */}
     </CommentChildStyle>
   );
 };
