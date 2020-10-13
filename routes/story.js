@@ -23,16 +23,16 @@ const upload = multer({
 
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
-  try {
-    const { user_email } = req.session.loginInfo;
-    const { story_title, user_info, story_content, story_goal } = req.body;
-    const story = await Story.create({
-      story_title,
-      user_info,
-      story_content,
-      story_goal,
-      user_email,
-    });
+    try {
+        const {user_email} = req.session.loginInfo;
+        const {story_title, user_info, story_content, story_goal} = req.body;
+        const story = await Story.create({
+            story_title,
+            user_info,
+            story_content,
+            story_goal,
+            user_email,
+        });
 
     for (const file of req.files) {
       await Story_File.create({
@@ -207,6 +207,7 @@ router.get("/list/:section", async (req, res) => {
         "story_like",
         "user_info",
         "story_comment",
+        "user_email"
       ],
       include: [
         { model: Hashtag, attributes: ["hashtag"] },

@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { commentChildAdd,commentDelete } from "../../actions/comment";
+import CommentChild  from "../../components/StoryDetail/CommentChild";
+
 const CommentListStyle = styled.div`
   .comment {
     position: relative;
@@ -194,6 +196,7 @@ const CommentListStyle = styled.div`
 
 const CommentList = ({ commentList, data }) => {
   const dispatch = useDispatch();
+  // const reComment = useSelector((state) => state.comment.list.reComment);
   const [error, setError] = useState(false);
   const [comments_child, setComments_child] = useState("");
   const comment_child = useRef();
@@ -224,7 +227,6 @@ const CommentList = ({ commentList, data }) => {
   };
 
   const commentChildInput = () => {
-
   };
 
   return (
@@ -275,8 +277,7 @@ const CommentList = ({ commentList, data }) => {
                   </div>
 
 
-
-
+                  <CommentChild id={comment.id}/>
             </div>
 
 

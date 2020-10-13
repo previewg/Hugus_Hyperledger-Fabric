@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import styled from "styled-components";
-import { commentChildAdd } from "../../actions/comment";
+import axios from 'axios';
 
 const CommentChildStyle = styled.div`
       summary {
@@ -69,61 +69,43 @@ const CommentChildStyle = styled.div`
       }
 `;
 
-const CommentChild = ({ id }) => {
+const CommentChild = ({id}) => {
   const dispatch = useDispatch();
   // const reComment = useSelector((state) => state.comment.list.reComment);
-
   // const [error, setError] = useState(false);
-  // const [comments_child, setComments_child] = useState("");
   // const comment_child = useRef();
-  // const onCommentChangeHandler = (e) => {
-  //   setComments_child(e.target.value);
-  //   setError(false);
-  // };
-  // const commentChildClear = () => {
-  //   setComments_child("");
-  // };
+  const [comments_child, setComments_child] = useState("");
 
-  // const commentChildAddHandler = (id) => {
-  //   if (comments_child === "") {
-  //     comment_child.current.focus();
-  //     setError(true);
-  //   } else {
-  //     dispatch(
-  //       commentChildAdd({ comment: comments_child, comment_id: id })
-  //     ).then(setComments_child(""));
-  //   }
-  // };
+  const onClickHandler = async () => {
+    await axios
+    .get(`/comment/childList/${id}`)
+    .then((response) => {
+      setComments_child(response.data)
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+  
+
+  const List = () => {
+    return (comments_child.map((reComment,key) => {
+    return (
+      <div className="comment" key={key}>
+        <a>{reComment[0].comment}</a>
+        <p>bbbbbbbbbbb</p>
+      </div>
+    );
+  })
+  );
+ };
 
   return (
     <CommentChildStyle>
-      {reComment.map(( comment,key ) => {
-        return (
-          <div key>
-
-          </div>
-        );
-      })
-      
-      }
-      {/* <input
-        ref={comment_child}
-        value={comments_child}
-        onChange={onCommentChangeHandler}
-        className="comment_child_input"
-        placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
-        onKeyDown={(e) => {
-          if (e.key === "Enter") commentChildAddHandler(e);
-        }}
-      />
-      <div className="comment__buttons">
-        <button className="commentChild__clear" onClick={commentChildClear}>
-          취소
-        </button>
-        <button onClick={() => commentChildAddHandler(id)}>등록</button>
-      </div> */}
-      
+      <p onClick={onClickHandler}>답글 몇개</p>
+      {/* <List/> */}
     </CommentChildStyle>
   );
 };
+
 export default CommentChild;
