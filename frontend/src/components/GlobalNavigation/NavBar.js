@@ -147,9 +147,9 @@ const NavStyle = styled.nav`
 
       span:nth-child(3) {
         ${(props) =>
-    props.menuClicked
-        ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
-        : "top:25px;right:1px"}
+          props.menuClicked
+            ? "transform: rotate(45deg);top:15px;right:1px;background-color:orange"
+            : "top:25px;right:1px"}
       }
     }
     .user {
@@ -261,17 +261,18 @@ const NavBar = (props) => {
   const username = useSelector(
     (state) => state.authentication.status.currentUser
   );
+  console.log(username);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
-  const profile_Path = useSelector(
-    (state) => state.authentication.profile.data
+  const profile_path = useSelector(
+    (state) => state.authentication.status.profile_path
   );
   const onClickHandler = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
 
-  const signedIn = () => {
+  const SignedIn = () => {
     if (isLoggedIn) {
       return (
         <>
@@ -296,9 +297,38 @@ const NavBar = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (isLoggedIn) dispatch(profileViewer({ username }));
-  }, [isLoggedIn]);
+  const UserIcon = () => {
+    if (isLoggedIn) {
+      if (profile_path) {
+        return (
+          <Link to="/my">
+            <img
+              className="user__icon"
+              src={"http://localhost:3000/user_profile/" + profile_path}
+            />
+          </Link>
+        );
+      } else {
+        return (
+          <Link to="/my">
+            <img
+              className="user__icon"
+              alt="user__icon"
+              src="/icons/user.png"
+            />
+          </Link>
+        );
+      }
+    }
+    return (
+      <img
+        className="user__icon"
+        alt="user__icon"
+        src="/icons/user.png"
+        onClick={() => dispatch(signInBtnIsClicked())}
+      />
+    );
+  };
 
   return (
     <>
@@ -337,23 +367,8 @@ const NavBar = (props) => {
           </div>
         </div>
         <div className="user">
-          {isLoggedIn && profile_Path !== null ? (
-            <Link to="/my">
-              <img
-                className="user__icon"
-                src={"http://localhost:3000/user_profile/" + profile_Path}
-              />
-            </Link>
-          ) : (
-            <img
-              className="user__icon"
-              alt="user__icon"
-              src="/icons/user.png"
-              onClick={() => dispatch(signInBtnIsClicked())}
-            />
-          )}
-
-          {signedIn()}
+          <UserIcon />
+          <SignedIn />
           <Link to="/search">
             <img
               className="search__icon"
@@ -423,7 +438,8 @@ const NavBar = (props) => {
             </div>
           </article>
           <article className="res__menu__info">
-            {signedIn()}
+            <UserIcon />
+            <SignedIn />
             <Link to="/search">검색</Link>
           </article>
         </section>

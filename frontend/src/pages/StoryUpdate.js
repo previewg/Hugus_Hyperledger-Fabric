@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { storyAdd } from "actions/story";
+import { storyLoader, storyUpdate } from "actions/story";
 
 const StoryUpdateStyle = styled.div`
   display: flex;
@@ -415,9 +415,11 @@ const StoryWrite = (props) => {
   const itemPrice = useRef();
   const itemQuantity = useRef();
   const hashtags = useRef();
+  const load = useRef(true);
   const addStatus = useSelector((state) => state.story.add.status);
-  const predata = useSelector((state) => state.story.detail.data);
-  console.log(predata);
+  const preData = useSelector((state) => state.story.detail.data);
+  const loadStatus = useSelector((state) => state.story.detail.status);
+
   const [data, setData] = useState({
     title: "",
     info: "",
@@ -490,11 +492,12 @@ const StoryWrite = (props) => {
       return false;
     }
     return true;
-  }, [filled]);
+  }, [filled, data]);
 
   const storyUpdateHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
+      formData.append("id", props.match.params.id);
       formData.append("story_title", data.title);
       formData.append("user_info", data.info);
       formData.append("story_content", data.content);
@@ -508,7 +511,7 @@ const StoryWrite = (props) => {
       } else {
         formData.append("files", "");
       }
-      dispatch(storyAdd(formData, { ...props }));
+      dispatch(storyUpdate(formData, { ...props }));
     }
   };
 
@@ -677,20 +680,40 @@ const StoryWrite = (props) => {
     });
   }, [data]);
 
-  useEffect(() => {
-    if (addStatus === "SUCCESS") {
-      setData({
-        title: "",
-        info: "",
-        content: "",
-        files: null,
-        item: "",
-        hashtag: "",
-        items: [],
-        hashtags: [],
+  const init = () => {
+    let pre = {
+      title: preData.story_title,
+      info: preData.user_info,
+      content: preData.story_content,
+      files: null,
+      items: [],
+      item_name: "",
+      item_price: "",
+      item_quantity: "",
+      hashtag: "",
+      hashtags: [],
+      totalPrice: 0,
+      goal: preData.story_goal,
+    };
+    preData.Story_Items.map((item) => {
+      pre.items.push({
+        item_name: item.item_name,
+        item_price: item.item_price,
+        item_quantity: item.item_quantity,
       });
+      pre.totalPrice += item.item_price * item.item_quantity;
+    });
+    preData.Hashtags.map((tag) => pre.hashtags.push(tag.hashtag));
+    setData(pre);
+  };
+
+  useEffect(() => {
+    if (load.current) {
+      dispatch(storyLoader(props.match.params.id));
+      load.current = false;
     }
-  }, [errorCode, addStatus, fileReaderState]);
+    if (loadStatus === "SUCCESS") init();
+  }, [loadStatus]);
 
   return (
     <>

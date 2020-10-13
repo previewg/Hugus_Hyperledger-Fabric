@@ -29,6 +29,9 @@ import {
 } from "../actions/auth";
 import update from "react-addons-update";
 
+
+
+
 function getCookie(name) {
   let value = "; " + document.cookie;
   let parts = value.split("; " + name + "=");
@@ -53,8 +56,7 @@ function parseJwt(token) {
 const initialState = {
   signIn: {
     status: "INIT",
-      error: -1,
-
+    error: -1,
   },
   signUp: {
     status: "INIT",
@@ -62,10 +64,11 @@ const initialState = {
   },
   status: {
     confirm_pwd: "INIT",
-    profile_path: null,
+    profile_path: parseJwt(getCookie("hugus")).profile || null,
     valid: false,
     isLoggedIn: getCookie("hugus") || false,
     currentUser: parseJwt(getCookie("hugus")).nickname || "",
+    currentUser_Email:parseJwt(getCookie("hugus")).email || "",
   },
   profile: {
     status: "INIT",
@@ -110,21 +113,23 @@ export default function authentication(state = initialState, action) {
         },
       });
     case AUTH_SIGNIN_SUCCESS:
+      console.log(action)
       return update(state, {
         signIn: {
           status: { $set: "SUCCESS" },
         },
         status: {
           isLoggedIn: { $set: true },
-          currentUser: { $set: action.data.nickname },
-          profile_path: { $set: action.data.profile },
+          currentUser: { $set: action.data.user_nickname },
+          profile_path: { $set: action.data.user_profile },
+          currentUser_Email:{$set:action.data.user_email}
         },
       });
     case AUTH_SIGNIN_FAILURE:
       return update(state, {
         signIn: {
           status: { $set: "FAILURE" },
-            error: {$set: action.error},
+          error: { $set: action.error },
         },
       });
 
@@ -239,7 +244,9 @@ export default function authentication(state = initialState, action) {
       return update(state, {
         profile: {
           status: { $set: "SUCCESS" },
-          data: { $set: action.data },
+        },
+        status: {
+          profile_path: { $set: action.data },
         },
       });
 
