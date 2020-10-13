@@ -261,7 +261,6 @@ const NavBar = (props) => {
   const username = useSelector(
     (state) => state.authentication.status.currentUser
   );
-  console.log(username);
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );

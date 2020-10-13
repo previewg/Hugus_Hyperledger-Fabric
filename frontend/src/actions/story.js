@@ -176,7 +176,7 @@ export const storyDelete = (id, history) => async (dispatch) => {
 export const storyUpdate = (data, props) => async (dispatch) => {
   dispatch(storyUpdateStart());
   await axios
-    .post("/story/add", data, {
+    .post("/story/update", data, {
       headers: { "content-type": "multipart/form-data" },
     })
     .then(() => {

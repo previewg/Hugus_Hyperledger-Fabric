@@ -265,7 +265,7 @@ export const confirmPwd = ({ user }) => async (dispatch) => {
 
 // 프로필사진 수정요청
 export const profileUpload = (formData) => async (dispatch) => {
-  document.cookie = "hugus=; expires=Thu, 01 Jan 1999 00:00:10 GMT;";
+  // document.cookie = "hugus=; expires=Thu, 01 Jan 1999 00:00:10 GMT;";
   dispatch(profileAddStart());
   await axios
     .put("auth/profile", formData, {

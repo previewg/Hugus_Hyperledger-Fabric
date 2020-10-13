@@ -416,7 +416,6 @@ const StoryWrite = (props) => {
   const itemQuantity = useRef();
   const hashtags = useRef();
   const load = useRef(true);
-  const addStatus = useSelector((state) => state.story.add.status);
   const preData = useSelector((state) => state.story.detail.data);
   const loadStatus = useSelector((state) => state.story.detail.status);
 
@@ -430,7 +429,9 @@ const StoryWrite = (props) => {
     item_quantity: "",
     hashtag: "",
     items: [],
+    del_items: [],
     hashtags: [],
+    del_hashtags: [],
     totalPrice: 0,
     goal: 0,
   });
@@ -448,6 +449,8 @@ const StoryWrite = (props) => {
   const [preImg, setPreImg] = useState([]);
 
   const [fileReaderState, setFileReaderState] = useState("");
+
+  const [removedItems, setRemovedItems] = useState([]);
 
   const errorHandler = useCallback(() => {
     if (!data.title) {
@@ -501,8 +504,10 @@ const StoryWrite = (props) => {
       formData.append("story_title", data.title);
       formData.append("user_info", data.info);
       formData.append("story_content", data.content);
-      formData.append("hashtags", data.hashtags);
+      formData.append("hashtags", JSON.stringify(data.hashtags));
       formData.append("items", JSON.stringify(data.items));
+      formData.append("del_items", data.del_items);
+      formData.append("del_hashtags", JSON.stringify(data.del_hashtags));
       formData.append("story_goal", data.goal);
       if (data.files !== null) {
         for (const file of data.files) {
@@ -570,6 +575,7 @@ const StoryWrite = (props) => {
         item_name: data.item_name,
         item_price: data.item_price,
         item_quantity: data.item_quantity,
+        new: true,
       };
       let totalPrice = data.totalPrice + data.item_price * data.item_quantity;
       let goal;
@@ -599,7 +605,7 @@ const StoryWrite = (props) => {
   const addHashtag = (e) => {
     if (e.target.value === "") setErrorCode(5);
     else {
-      let hashtags = data.hashtags.concat(e.target.value);
+      let hashtags = data.hashtags.concat({ tag: e.target.value, new: true });
       setData({
         ...data,
         hashtag: "",
@@ -615,6 +621,7 @@ const StoryWrite = (props) => {
 
   const onDeleteHandler = useCallback(
     (key) => () => {
+      const del_items = data.del_items.concat(data.items[key].id);
       let items;
       let totalPrice =
         data.totalPrice -
@@ -639,6 +646,7 @@ const StoryWrite = (props) => {
         items,
         totalPrice: totalPrice,
         goal: goal,
+        del_items: del_items,
       });
     },
     [data]
@@ -646,6 +654,10 @@ const StoryWrite = (props) => {
 
   const onTagDeleteHandler = useCallback(
     (key) => () => {
+      const del_hashtags = data.del_hashtags.concat({
+        id: data.hashtags[key].id,
+        hashtag: data.hashtags[key].tag,
+      });
       let hashtags;
       if (key === 0) {
         hashtags = data.hashtags.slice(1, data.hashtags.length);
@@ -659,6 +671,7 @@ const StoryWrite = (props) => {
       setData({
         ...data,
         hashtags,
+        del_hashtags: del_hashtags,
       });
     },
     [data]
@@ -692,6 +705,8 @@ const StoryWrite = (props) => {
       item_quantity: "",
       hashtag: "",
       hashtags: [],
+      del_items: [],
+      del_hashtags: [],
       totalPrice: 0,
       goal: preData.story_goal,
     };
@@ -700,10 +715,18 @@ const StoryWrite = (props) => {
         item_name: item.item_name,
         item_price: item.item_price,
         item_quantity: item.item_quantity,
+        new: false,
+        id: item.id,
       });
       pre.totalPrice += item.item_price * item.item_quantity;
     });
-    preData.Hashtags.map((tag) => pre.hashtags.push(tag.hashtag));
+    preData.Hashtags.map((tag) =>
+      pre.hashtags.push({
+        tag: tag.hashtag,
+        new: false,
+        id: tag.Story_Hashtag.hashtag_id,
+      })
+    );
     setData(pre);
   };
 
@@ -720,7 +743,7 @@ const StoryWrite = (props) => {
       <StoryUpdateStyle>
         <div className="layout">
           <div className="write_title">
-            <p>글쓰기</p>
+            <p>수정하기</p>
           </div>
           <div className="title">
             <p>제목</p>
@@ -885,10 +908,8 @@ const StoryWrite = (props) => {
               />
               {data.hashtags.map((hashtag, key) => {
                 return (
-                  <div className="added__hashtag">
-                    <p className="hashtag" key={key}>
-                      # {hashtag}
-                    </p>
+                  <div className="added__hashtag" key={key}>
+                    <p className="hashtag"># {hashtag.tag}</p>
                     <p
                       className="clear"
                       onClick={onTagDeleteHandler(key)}

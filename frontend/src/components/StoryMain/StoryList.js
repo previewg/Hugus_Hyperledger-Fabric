@@ -182,6 +182,7 @@ const StoryList = () => {
       end: ratio,
       duration: 5,
     });
+
     return (
       <BarStyle ratio={ratio}>
         <p className="count">{countUp}%</p>

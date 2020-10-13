@@ -82,7 +82,7 @@ router.post("/delete", async (req, res) => {
 });
 
 // 스토리 수정
-router.put("/update", async (req, res) => {
+router.post("/update", upload.array("files"), async (req, res) => {
   try {
     const {
       story_title,
@@ -92,7 +92,71 @@ router.put("/update", async (req, res) => {
       id,
       hashtags,
       items,
+      del_items,
+      del_hashtags,
     } = req.body;
+
+    for (const file of req.files) {
+      await Story_File.create({
+        story_id: story.dataValues.id,
+        file: file.filename,
+      });
+    }
+
+    const delHashtagList = JSON.parse(del_hashtags);
+    for (const del of delHashtagList) {
+      console.log(del);
+      const count = await Story_Hashtag.count({
+        where: { hashtag_id: del.id },
+      });
+
+      await Story_Hashtag.destroy({
+        where: { hashtag_id: del.id },
+      });
+
+      if (count === 1) {
+        await Hashtag.destroy({
+          where: {
+            hashtag: del.hashtag,
+          },
+        });
+      }
+    }
+
+    const hashtagList = JSON.parse(hashtags);
+    for (const hashtag of hashtagList) {
+      if (hashtag.new) {
+        const result = await Hashtag.findOrCreate({
+          where: { hashtag: hashtag.tag },
+        });
+
+        await Story_Hashtag.findOrCreate({
+          where: {
+            story_id: id,
+            hashtag_id: result[0].dataValues.id,
+          },
+        });
+      }
+    }
+
+    for (const id of del_items.split(",")) {
+      await Story_Item.destroy({
+        where: { id: id },
+      });
+    }
+
+    const itemList = JSON.parse(items);
+    for (const item of itemList) {
+      if (item.new) {
+        await Story_Item.create({
+          story_id: id,
+          item_name: item.item_name,
+          item_price: item.item_price,
+          item_quantity: item.item_quantity,
+        });
+      }
+    }
+
     await Story.update(
       {
         story_title,
@@ -105,40 +169,17 @@ router.put("/update", async (req, res) => {
       }
     );
 
-    // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
-    await Story_File.destroy({
-      where: { story_id: id },
-    });
-    for (const file of req.files) {
-      await Story_File.create({
-        story_id: id,
-        file: file.filename,
-      });
-    }
+    // // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
+    // await Story_File.destroy({
+    //   where: { story_id: id },
+    // });
+    // for (const file of req.files) {
+    //   await Story_File.create({
+    //     story_id: id,
+    //     file: file.filename,
+    //   });
+    // }
 
-    const hashtagList = hashtags.split(",");
-
-    await Story_Hashtag.destroy({ where: { story_id: id } });
-    for (const hashtag of hashtagList) {
-      const result = await Hashtag.findOrCreate({
-        where: { hashtag: hashtag },
-      });
-
-      await Story_Hashtag.create({
-        story_id: story.dataValues.id,
-        hashtag_id: result[0].dataValues.id,
-      });
-    }
-
-    const itemList = JSON.parse(items);
-    for (const item of itemList) {
-      await Story_Item.create({
-        story_id: story.dataValues.id,
-        item_name: item.item_name,
-        item_price: item.item_price,
-        item_quantity: item.item_quantity,
-      });
-    }
     res.json({ success: 1 });
   } catch (err) {
     console.log(err);

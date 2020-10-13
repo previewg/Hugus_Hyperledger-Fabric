@@ -18,7 +18,6 @@ const StoryDetail = ({ match, history }) => {
   const data = useSelector((state) => state.story.detail.data);
   const status = useSelector((state) => state.story.detail.status);
 
-  console.log(data);
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id));

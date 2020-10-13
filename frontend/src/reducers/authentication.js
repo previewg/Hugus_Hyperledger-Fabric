@@ -68,7 +68,6 @@ const initialState = {
   },
   profile: {
     status: "INIT",
-    data: null,
   },
   signOut: {
     status: "INIT",
