@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { commentChildAdd,commentDelete } from "../../actions/comment";
-import CommentChild  from "../../components/StoryDetail/CommentChild";
+import { commentChildAdd, commentDelete } from "../../actions/comment";
+import CommentChild from "../../components/StoryDetail/CommentChild";
 
 const CommentListStyle = styled.div`
   .comment {
@@ -52,6 +52,13 @@ const CommentListStyle = styled.div`
       font-size: 14px;
       margin: 0;
       margin-top: 10px;
+    }
+
+    .child_count {
+      color: #0088ff;
+      font-size: 13px;
+      cursor: pointer;
+      width: 100px;
     }
     .like_group {
       display: flex;
@@ -123,80 +130,74 @@ const CommentListStyle = styled.div`
       }
       p {
         background-color: transparent;
-          margin-left: 7px;
-          font-size: 14px;
-          width: 50px;
-          height: 15px;
-          cursor: pointer;
-          outline: none;
-          border: none;
-          color: gray;
-          transition: 0.2s ease-in-out;
-          :hover {
-            color: orange;
-          }
+        margin-left: 7px;
+        font-size: 14px;
+        width: 50px;
+        height: 15px;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        color: gray;
+        transition: 0.2s ease-in-out;
+        :hover {
+          color: orange;
+        }
       }
     }
     .comment_group {
-          
-            div {
-              display: flex;
-              width:100%;
-            >input {
-              width:100%;
-              padding: 10px;
-              height: 15px;
-              padding: 7px;
-              outline: none;
-              transition: 0.4s ease-in-out;
-              border: none;
-              border-bottom: solid gray 0.1px;
-              :focus {
-                border-bottom: solid orange 0.1px;
-                 }
-              }
-            }
-            div {
-                margin-top:10px;
-                display: flex;
-                justify-content: flex-end;
-                > button {
-                  background-color: transparent;
-                  width: 50px;
-                  height: 30px;
-                  border-radius: 3px;
-                  cursor: pointer;
-                  outline: none;
-                }
-                button:nth-child(1) {
-                  border: solid darkgray 0.1px;
-                  color: darkgray;
-                  :hover {
-                    background-color: darkgray;
-                    color: white;
-                  }
-                }
-                button:nth-child(2) {
-                  margin-left: 5px;
-                  border: solid orange 0.1px;
-                  color: orange;
-                  :hover {
-                    background-color: orange;
-                    color: white;
-                  }
-                }
-              }
-          
-
-
-
+      div {
+        display: flex;
+        width: 100%;
+        > input {
+          width: 100%;
+          padding: 10px;
+          height: 15px;
+          padding: 7px;
+          outline: none;
+          transition: 0.4s ease-in-out;
+          border: none;
+          border-bottom: solid gray 0.1px;
+          :focus {
+            border-bottom: solid orange 0.1px;
+          }
+        }
+      }
+      div {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+        > button {
+          background-color: transparent;
+          width: 50px;
+          height: 30px;
+          border-radius: 3px;
+          cursor: pointer;
+          outline: none;
+        }
+        button:nth-child(1) {
+          border: solid darkgray 0.1px;
+          color: darkgray;
+          :hover {
+            background-color: darkgray;
+            color: white;
+          }
+        }
+        button:nth-child(2) {
+          margin-left: 5px;
+          border: solid orange 0.1px;
+          color: orange;
+          :hover {
+            background-color: orange;
+            color: white;
+          }
+        }
+      }
     }
   }
 `;
 
 const CommentList = ({ commentList, data }) => {
   const dispatch = useDispatch();
-  // const reComment = useSelector((state) => state.comment.list.reComment);
   const [error, setError] = useState(false);
   const [comments_child, setComments_child] = useState("");
   const comment_child = useRef();
@@ -221,12 +222,34 @@ const CommentList = ({ commentList, data }) => {
   };
 
   const commentChildAddHandler = (id) => {
-      dispatch(
-        commentChildAdd({ comment: comments_child, comment_id: id })
-      ).then(setComments_child(""));
+    dispatch(commentChildAdd({ comment: comments_child, comment_id: id })).then(
+      setComments_child("")
+    );
   };
 
-  const commentChildInput = () => {
+  const CommentChildMain = ({ comment }) => {
+    const [status, setStatus] = useState(false);
+
+    const onClickHandler = () => {
+      if (status) setStatus(false);
+      else setStatus(true);
+    };
+
+    return (
+      <>
+        {comment.child_count !== 0 && !status && (
+          <p className="child_count" onClick={onClickHandler}>
+            답글 {comment.child_count}개 보기
+          </p>
+        )}
+        {comment.child_count !== 0 && status && (
+          <p className="child_count" onClick={onClickHandler}>
+            답글 {comment.child_count}개 숨기기
+          </p>
+        )}
+        {status && <CommentChild id={comment.id} />}
+      </>
+    );
   };
 
   return (
@@ -251,37 +274,34 @@ const CommentList = ({ commentList, data }) => {
               <img className="liked" src="/icons/like.png" />
               <img className="disLike_normal" src="/icons/disLike_normal.png" />
               <img className="disLiked" src="/icons/disLike.png" />
-              <p onClick={commentChildInput}
-              >답글</p>
+              <p>답글</p>
             </div>
+            <CommentChildMain comment={comment} />
 
-            <div className="comment_group">
-                  <img/>
-                  
-                  <div className="댓글추가">
-                  <input 
-                  ref={comment_child}
-                  value={comments_child}
-                  onChange={onCommentChangeHandler}
-                  placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
-                  onKeyDown={(id) => {
-                  if (id.key === "Enter") commentChildAddHandler(comment.id);
-                  }}
-                  placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."
-                  />
-                  </div>
+            {/*  <div className="comment_group">*/}
+            {/*    <img />*/}
 
-                  <div className="취소랑 등록버튼">
-                  <button onClick={commentChildClear}>취소</button>
-                  <button onClick={() => commentChildAddHandler(comment.id)}>등록</button>
-                  </div>
+            {/*    <div className="댓글추가">*/}
+            {/*      <input*/}
+            {/*        ref={comment_child}*/}
+            {/*        value={comments_child}*/}
+            {/*        onChange={onCommentChangeHandler}*/}
+            {/*        placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."*/}
+            {/*        onKeyDown={(id) => {*/}
+            {/*          if (id.key === "Enter") commentChildAddHandler(comment.id);*/}
+            {/*        }}*/}
+            {/*        placeholder="따뜻한 말 한마디는 큰 힘이 됩니다."*/}
+            {/*      />*/}
+            {/*    </div>*/}
 
+            {/*    <div className="취소랑 등록버튼">*/}
+            {/*      <button onClick={commentChildClear}>취소</button>*/}
+            {/*      <button onClick={() => commentChildAddHandler(comment.id)}>*/}
+            {/*        등록*/}
+            {/*      </button>*/}
+            {/*    </div>*/}
 
-                  <CommentChild id={comment.id}/>
-            </div>
-
-
-
+            {/*  </div>*/}
           </div>
         );
       })}

@@ -53,7 +53,8 @@ ReactDOM.render(
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
-        <Route path="/blockinfo" component={Auth(BlockInfo, true)} />
+        {/*<Route exact path="/info" component={Auth(UserInfo, true)} />*/}
+        <Route path="/info/block" component={Auth(BlockInfo, true)} />
       </Switch>
     </BrowserRouter>
   </Provider>,

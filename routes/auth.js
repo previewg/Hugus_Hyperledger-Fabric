@@ -94,6 +94,7 @@ router.post("/signup", async (req, res, next) => {
         code: 4,
       });
     }
+
     const hash = await bcrypt.hash(password, 12);
     await User.create({
       email,
@@ -273,32 +274,29 @@ router.post("/confirm", async (req, res) => {
 
 //카카오 로그인
 router.post("/kakao", async (req, res) => {
-
-    KakaoUser.create({
-        id_Value: req.body.profile.id,
-        nickname: req.body.profile.properties.nickname
-
-    });
-    const payload = {
-        nickname: req.body.profile.properties.nickname,
-    };
-    jwt.sign(
-        payload,
-        process.env.JWT_SECRET,
-        {
-            //token 지속시간
-            expiresIn: "24h",
-        },
-        (err, token) => {
-            // res.cookie(key,value) cookie에 key값을 넣는 방식
-            res.cookie("hugus", token);
-            res.json({
-                success: 1,
-                nickname: payload.nickname
-            });
-
-        }
-    );
-})
+  KakaoUser.create({
+    id_Value: req.body.profile.id,
+    nickname: req.body.profile.properties.nickname,
+  });
+  const payload = {
+    nickname: req.body.profile.properties.nickname,
+  };
+  jwt.sign(
+    payload,
+    process.env.JWT_SECRET,
+    {
+      //token 지속시간
+      expiresIn: "24h",
+    },
+    (err, token) => {
+      // res.cookie(key,value) cookie에 key값을 넣는 방식
+      res.cookie("hugus", token);
+      res.json({
+        success: 1,
+        nickname: payload.nickname,
+      });
+    }
+  );
+});
 
 module.exports = router;

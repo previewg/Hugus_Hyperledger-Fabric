@@ -129,8 +129,7 @@ const CommentInput = ({ commentList, data }) => {
       comment.current.focus();
       setError(true);
     } else {
-      dispatch(commentAdd({ comment: comments, story_id: data.id }))
-      
+      dispatch(commentAdd({ comment: comments, story_id: data.id }));
     }
   };
 
@@ -147,7 +146,7 @@ const CommentInput = ({ commentList, data }) => {
     dispatch(storyLike(data.id, status));
   };
 
-  const input = () => {
+  const Input = () => {
     if (!isLoggedIn) {
       return (
         <CommentFalseStyle>
@@ -212,7 +211,7 @@ const CommentInput = ({ commentList, data }) => {
 
   return (
     <>
-      {input()}
+      <Input />
       <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
     </>
   );

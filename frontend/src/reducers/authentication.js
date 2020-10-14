@@ -29,9 +29,6 @@ import {
 } from "../actions/auth";
 import update from "react-addons-update";
 
-
-
-
 function getCookie(name) {
   let value = "; " + document.cookie;
   let parts = value.split("; " + name + "=");
@@ -68,7 +65,6 @@ const initialState = {
     valid: false,
     isLoggedIn: getCookie("hugus") || false,
     currentUser: parseJwt(getCookie("hugus")).nickname || "",
-    currentUser_Email:parseJwt(getCookie("hugus")).email || "",
   },
   profile: {
     status: "INIT",
@@ -112,7 +108,7 @@ export default function authentication(state = initialState, action) {
         },
       });
     case AUTH_SIGNIN_SUCCESS:
-      console.log(action)
+      console.log(action);
       return update(state, {
         signIn: {
           status: { $set: "SUCCESS" },
@@ -121,7 +117,7 @@ export default function authentication(state = initialState, action) {
           isLoggedIn: { $set: true },
           currentUser: { $set: action.data.user_nickname },
           profile_path: { $set: action.data.user_profile },
-          currentUser_Email:{$set:action.data.user_email}
+          currentUser_Email: { $set: action.data.user_email },
         },
       });
     case AUTH_SIGNIN_FAILURE:

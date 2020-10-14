@@ -131,8 +131,10 @@ export default function story(state = initialState, action) {
       });
 
     case STORY_LIST_LOAD_SUCCESS:
-      let newData = state.list.data.concat(action.list);
       if (action.status === true) {
+        let len = (state.list.num - 1) * 9;
+        let newData = state.list.data.slice(0, len).concat(action.list);
+        console.log("더있음");
         return update(state, {
           list: {
             status: { $set: "SUCCESS" },
@@ -140,19 +142,26 @@ export default function story(state = initialState, action) {
             num: { $set: state.list.num + 1 },
           },
         });
-      } else if (state.list.num === 1 && action.status === false) {
-        return update(state, {
-          list: {
-            status: { $set: "SUCCESS" },
-            data: { $set: action.list },
-          },
-        });
       } else {
-        return update(state, {
-          list: {
-            status: { $set: "SUCCESS" },
-          },
-        });
+        if (action.list.length !== state.list.data.length % 9) {
+          console.log("더 없고 몇개 추가");
+          let len = (state.list.num - 1) * 9;
+          let newData = state.list.data.slice(0, len).concat(action.list);
+          return update(state, {
+            list: {
+              status: { $set: "SUCCESS" },
+              data: { $set: newData },
+            },
+          });
+        } else {
+          console.log("똑같음");
+
+          return update(state, {
+            list: {
+              status: { $set: "SUCCESS" },
+            },
+          });
+        }
       }
 
     case STORY_LIST_LOAD_FAILURE:

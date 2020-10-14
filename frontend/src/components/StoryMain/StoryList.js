@@ -12,6 +12,7 @@ const StoryListStyle = styled.div`
   align-items: center;
   margin-top: 70px;
   section {
+    margin-bottom: 50px;
     width: 900px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -148,7 +149,7 @@ const StoryList = () => {
   const init = useRef(true);
 
   useEffect(() => {
-    if (init.current) dispatch(storyListLoader(1));
+    if (init.current) dispatch(storyListLoader(num));
     init.current = false;
     // scroll event listener 등록
     window.addEventListener("scroll", handleScroll);
