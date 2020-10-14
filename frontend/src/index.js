@@ -21,6 +21,7 @@ import {
   BlockInfo,
   SearchResult,
   StoryUpdate,
+  Act,
 } from "pages";
 
 // Common components
@@ -54,6 +55,7 @@ ReactDOM.render(
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route path="/blockinfo" component={Auth(BlockInfo, true)} />
+        <Route path="/act" component={Auth(Act, null)} />
       </Switch>
     </BrowserRouter>
   </Provider>,
