@@ -10,17 +10,15 @@ const KakaoLo = () => {
   );
 
   const responseKakao = async (res) => {
-    console.log(res);
     await dispatch(kakaosignInRequest({ res }));
   };
   const responseFail = (err) => {
     alert(err);
   };
 
-
-  useEffect(() => {
-    dispatch(kakao_SignIn());
-  }, [loginStatus]);
+  // useEffect(() => {
+  //   dispatch(kakao_SignIn());
+  // }, [loginStatus]);
 
   return (
     <>

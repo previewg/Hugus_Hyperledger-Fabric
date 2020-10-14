@@ -103,8 +103,19 @@ const NavStyle = styled.nav`
       display: flex;
       align-items: center;
     }
+    a:nth-child(1) {
+      width: 40px;
+      height: 40px;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      border-radius: 20px;
+    }
     .user__icon {
-      width: 35px;
+      width: auto;
+      height: auto;
+      max-width: 40px;
+      max-height: 40px;
     }
     .search__icon {
       width: 25px;
@@ -254,7 +265,7 @@ const ResNavStyle = styled.nav`
   }
 `;
 
-const NavBar = (props) => {
+const NavBar = () => {
   const [menuClicked, setMenuClicked] = useState(false);
 
   const dispatch = useDispatch();
@@ -300,12 +311,12 @@ const NavBar = (props) => {
     if (isLoggedIn) {
       if (profile_path) {
         return (
-          <Link to="/my">
-            <img
-              className="user__icon"
-              src={"http://localhost:3000/user_profile/" + profile_path}
-            />
-          </Link>
+          <Link
+            to="/my"
+            style={{
+              backgroundImage: `url("http://localhost:3000/user_profile/${profile_path}") `,
+            }}
+          ></Link>
         );
       } else {
         return (
