@@ -65,6 +65,7 @@ const myPageRouter = require("./routes/mypage");
 const storyRouter = require("./routes/story");
 const commentRouter = require("./routes/comment");
 const hashtagRouter = require("./routes/hashtag");
+const actRouter = require("./routes/act");
 
 // Router 사용
 app.use("/auth", authRouter);
@@ -72,7 +73,7 @@ app.use("/myPage", myPageRouter);
 app.use("/story", storyRouter);
 app.use("/comment", commentRouter);
 app.use("/hashtag", hashtagRouter);
-
+app.use("/act", actRouter);
 // 404 처리
 app.use((req, res) => {
     new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

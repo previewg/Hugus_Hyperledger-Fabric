@@ -5,6 +5,7 @@ import story from "./story";
 import comment from "./comment";
 import hashtag from "./hashtag";
 import myPage from "./myPage";
+import act from "./act";
 
 
 export default combineReducers({
@@ -14,4 +15,5 @@ export default combineReducers({
     comment,
     hashtag,
     myPage: myPage,
+    act,
 });
