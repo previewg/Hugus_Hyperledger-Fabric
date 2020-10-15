@@ -1,38 +1,40 @@
 import {
-    AUTH_SIGNUP,
-    AUTH_SIGNUP_SUCCESS,
-    AUTH_SIGNUP_FAILURE,
-    AUTH_SIGNIN,
-    AUTH_SIGNIN_SUCCESS,
-    AUTH_SIGNIN_FAILURE,
-    AUTH_SIGNOUT,
-    AUTH_SIGNOUT_SUCCESS,
-    AUTH_SIGNOUT_FAILURE,
-    AUTH_KAKAO_SIGNIN,
-    AUTH_KAKAO_SUCCESS,
-    AUTH_KAKAO_FAILURE,
-    AUTH_SIGN_DESTROY,
-    AUTH_SIGN_DESTROY_SUCCESS,
-    AUTH_SIGN_DESTROY_FAILURE,
-    AUTH_SIGN_UPDATE,
-    AUTH_SIGN_UPDATE_SUCCESS,
-    AUTH_SIGN_UPDATE_FAILURE,
-    CONFIRM,
-    CONFIRM_PWD,
-    CONFIRM_PWD_ERROR,
-    PROFILE_ADD,
-    PROFILE_ADD_SUCCESS,
-    PROFILE_ADD_FAILURE,
-    PROFILE_LOAD,
-    PROFILE_LOAD_SUCCESS,
-    PROFILE_LOAD_FAILURE,
+  AUTH_SIGNUP,
+  AUTH_SIGNUP_SUCCESS,
+  AUTH_SIGNUP_FAILURE,
+  AUTH_SIGNIN,
+  AUTH_SIGNIN_SUCCESS,
+  AUTH_SIGNIN_FAILURE,
+  AUTH_SIGNOUT,
+  AUTH_SIGNOUT_SUCCESS,
+  AUTH_SIGNOUT_FAILURE,
+  AUTH_KAKAO_SIGNIN,
+  AUTH_KAKAO_SUCCESS,
+  AUTH_KAKAO_FAILURE,
+  AUTH_SIGN_DESTROY,
+  AUTH_SIGN_DESTROY_SUCCESS,
+  AUTH_SIGN_DESTROY_FAILURE,
+  AUTH_SIGN_UPDATE,
+  AUTH_SIGN_UPDATE_SUCCESS,
+  AUTH_SIGN_UPDATE_FAILURE,
+  CONFIRM,
+  CONFIRM_PWD,
+  CONFIRM_PWD_ERROR,
+  PROFILE_ADD,
+  PROFILE_ADD_SUCCESS,
+  PROFILE_ADD_FAILURE,
+  PROFILE_LOAD,
+  PROFILE_LOAD_SUCCESS,
+  PROFILE_LOAD_FAILURE,
 } from "../actions/auth";
 import {
-    EMAIL_SEND,
-    EMAIL_SEND_SUCCESS, EMAIL_SEND_FAILURE,
-    EMAIL_CONFIRM, EMAIL_CONFIRM_SUCCESS, EMAIL_CONFIRM_FAILURE
-
-} from "../actions/user"
+  EMAIL_SEND,
+  EMAIL_SEND_SUCCESS,
+  EMAIL_SEND_FAILURE,
+  EMAIL_CONFIRM,
+  EMAIL_CONFIRM_SUCCESS,
+  EMAIL_CONFIRM_FAILURE,
+} from "../actions/user";
 import update from "react-addons-update";
 
 function getCookie(name) {
@@ -57,36 +59,35 @@ function parseJwt(token) {
 }
 
 const initialState = {
-    signIn: {
-        status: "INIT",
-        error: -1,
-    },
-    signUp: {
-        status: "INIT",
-        error: -1,
-    },
-    status: {
-        confirm_pwd: "INIT",
-        profile_path: parseJwt(getCookie("hugus")).profile || null,
-        valid: false,
-        isLoggedIn: getCookie("hugus") || false,
-        currentUser: parseJwt(getCookie("hugus")).nickname || "",
-        currentUser_Email: parseJwt(getCookie("hugus")).email || "",
-    },
-    profile: {
-        status: "INIT",
-    },
-    signOut: {
-        status: "INIT",
-    },
-    signDestroy: {
-        status: "INIT",
-    },
-    emailConfirm: {
-        send_status: "INIT",
-        status: "INIT",
-        key: parseJwt(getCookie("hugus_check")).key_for_verify || "",
-    }
+  signIn: {
+    status: "INIT",
+    error: -1,
+  },
+  signUp: {
+    status: "INIT",
+    error: -1,
+  },
+  status: {
+    confirm_pwd: "INIT",
+    valid: false,
+    isLoggedIn: getCookie("hugus") || false,
+    currentUser: parseJwt(getCookie("hugus")).nickname || "",
+    profile_path: parseJwt(getCookie("hugus")).profile || null,
+  },
+  profile: {
+    status: "INIT",
+  },
+  signOut: {
+    status: "INIT",
+  },
+  signDestroy: {
+    status: "INIT",
+  },
+  emailConfirm: {
+    send_status: "INIT",
+    status: "INIT",
+    key: parseJwt(getCookie("hugus_check")).key_for_verify || "",
+  },
 };
 
 export default function authentication(state = initialState, action) {
@@ -112,57 +113,56 @@ export default function authentication(state = initialState, action) {
         },
       });
 
-        // 로그인
-        case AUTH_SIGNIN:
-            return update(state, {
-                signIn: {
-                    status: {$set: "WAITING"},
-                },
-            });
-        case AUTH_SIGNIN_SUCCESS:
-            console.log(action)
-            return update(state, {
-                signIn: {
-                    status: {$set: "SUCCESS"},
-                },
-                status: {
-                    isLoggedIn: {$set: true},
-                    currentUser: {$set: action.data.user_nickname},
-                    profile_path: {$set: action.data.user_profile},
-                    currentUser_Email: {$set: action.data.user_email}
-                },
-            });
-        case AUTH_SIGNIN_FAILURE:
-            return update(state, {
-                signIn: {
-                    status: {$set: "FAILURE"},
-                    error: {$set: action.error},
-                },
-            });
+    // 로그인
+    case AUTH_SIGNIN:
+      return update(state, {
+        signIn: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case AUTH_SIGNIN_SUCCESS:
+      console.log(action);
+      return update(state, {
+        signIn: {
+          status: { $set: "SUCCESS" },
+        },
+        status: {
+          isLoggedIn: { $set: true },
+          currentUser: { $set: action.data.nickname },
+          profile_path: { $set: action.data.profile },
+        },
+      });
+    case AUTH_SIGNIN_FAILURE:
+      return update(state, {
+        signIn: {
+          status: { $set: "FAILURE" },
+          error: { $set: action.error },
+        },
+      });
 
-        //카카오 로그인
-        case AUTH_KAKAO_SIGNIN:
-            return update(state, {
-                signIn: {
-                    status: {$set: "WAITING"},
-                },
-            });
-        case AUTH_KAKAO_SUCCESS:
-            return update(state, {
-                signIn: {
-                    status: {$set: "SUCCESS"},
-                },
-                status: {
-                    currentUser: {$set: action.nickname},
-                    isLoggedIn: {$set: true},
-                },
-            });
-        case AUTH_KAKAO_FAILURE:
-            return update(state, {
-                signIn: {
-                    status: {$set: "FAILURE"},
-                },
-            });
+    //카카오 로그인
+    case AUTH_KAKAO_SIGNIN:
+      return update(state, {
+        signIn: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case AUTH_KAKAO_SUCCESS:
+      return update(state, {
+        signIn: {
+          status: { $set: "SUCCESS" },
+        },
+        status: {
+          currentUser: { $set: action.nickname },
+          isLoggedIn: { $set: true },
+        },
+      });
+    case AUTH_KAKAO_FAILURE:
+      return update(state, {
+        signIn: {
+          status: { $set: "FAILURE" },
+        },
+      });
 
     // 로그아웃
     case AUTH_SIGNOUT:

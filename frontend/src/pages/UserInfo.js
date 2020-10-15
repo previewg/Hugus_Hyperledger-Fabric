@@ -104,11 +104,20 @@ const UserInfo = () => {
       <section className="side">
         <article>
           <div className="side__user">
-            <div
-              style={{
-                backgroundImage: `url("http://localhost:3000/user_profile/${profile_path}") `,
-              }}
-            ></div>
+            {profile_path ? (
+              <div
+                style={{
+                  backgroundImage: `url("http://localhost:3000/user_profile/${profile_path}") `,
+                }}
+              ></div>
+            ) : (
+              <div
+                style={{
+                  backgroundImage: `url("/icons/hugus_icon.png") `,
+                }}
+              ></div>
+            )}
+
             <p>{currentUser}님</p>
           </div>
           <div className="side__menu">

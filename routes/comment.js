@@ -1,13 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const {
-  User,
-  Story_Comment,
-  Comment_Child,
-  Story,
-  sequelize,
-} = require("../models");
+const { User, Story_Comment, Comment_Child, sequelize } = require("../models");
 
 // 댓글 등록
 router.post("/add", async (req, res) => {
@@ -19,17 +13,6 @@ router.post("/add", async (req, res) => {
       story_id,
       comment,
     });
-
-    await Story.increment(
-      {
-        story_comment: 1,
-      },
-      {
-        where: {
-          id: story_id,
-        },
-      }
-    );
 
     const list = await Story_Comment.findAll({
       attributes: [

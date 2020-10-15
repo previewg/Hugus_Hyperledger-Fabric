@@ -320,13 +320,13 @@ const NavBar = () => {
         );
       } else {
         return (
-          <Link to="/my">
-            <img
-              className="user__icon"
-              alt="user__icon"
-              src="/icons/user.png"
-            />
-          </Link>
+          <Link
+            to="/my"
+            to="/my"
+            style={{
+              backgroundImage: `url("/icons/hugus_icon.png") `,
+            }}
+          ></Link>
         );
       }
     }
