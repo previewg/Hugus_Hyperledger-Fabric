@@ -1,7 +1,4 @@
 import {
-  AUTH_SIGNUP,
-  AUTH_SIGNUP_SUCCESS,
-  AUTH_SIGNUP_FAILURE,
   AUTH_SIGNIN,
   AUTH_SIGNIN_SUCCESS,
   AUTH_SIGNIN_FAILURE,
@@ -27,14 +24,7 @@ import {
   PROFILE_LOAD_SUCCESS,
   PROFILE_LOAD_FAILURE,
 } from "../actions/auth";
-import {
-  EMAIL_SEND,
-  EMAIL_SEND_SUCCESS,
-  EMAIL_SEND_FAILURE,
-  EMAIL_CONFIRM,
-  EMAIL_CONFIRM_SUCCESS,
-  EMAIL_CONFIRM_FAILURE,
-} from "../actions/user";
+
 import update from "react-addons-update";
 
 function getCookie(name) {
@@ -63,10 +53,6 @@ const initialState = {
     status: "INIT",
     error: -1,
   },
-  signUp: {
-    status: "INIT",
-    error: -1,
-  },
   status: {
     confirm_pwd: "INIT",
     valid: false,
@@ -92,27 +78,6 @@ const initialState = {
 
 export default function authentication(state = initialState, action) {
   switch (action.type) {
-    // 회원가입
-    case AUTH_SIGNUP:
-      return update(state, {
-        signUp: {
-          status: { $set: "WAITING" },
-        },
-      });
-    case AUTH_SIGNUP_SUCCESS:
-      return update(state, {
-        signUp: {
-          status: { $set: "SUCCESS" },
-        },
-      });
-    case AUTH_SIGNUP_FAILURE:
-      return update(state, {
-        signUp: {
-          status: { $set: "FAILURE" },
-          error: { $set: action.error },
-        },
-      });
-
     // 로그인
     case AUTH_SIGNIN:
       return update(state, {

@@ -415,7 +415,6 @@ const StoryWrite = (props) => {
   const itemPrice = useRef();
   const itemQuantity = useRef();
   const hashtags = useRef();
-  const addStatus = useSelector((state) => state.story.add.status);
   const [data, setData] = useState({
     title: "",
     info: "",

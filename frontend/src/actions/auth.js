@@ -1,12 +1,6 @@
 import axios from "axios";
 import { signInBtnIsClicked } from "./user";
 
-// Action Types
-// SignUp
-export const AUTH_SIGNUP = "AUTH_SIGNUP";
-export const AUTH_SIGNUP_SUCCESS = "AUTH_SIGNUP_SUCCESS";
-export const AUTH_SIGNUP_FAILURE = "AUTH_SIGNUP_FAILURE";
-
 // SignIn
 export const AUTH_SIGNIN = "AUTH_SIGNIN";
 export const AUTH_SIGNIN_SUCCESS = "AUTH_SIGNIN_SUCCESS";
@@ -46,19 +40,6 @@ export const PROFILE_ADD_FAILURE = "ADD_PROFILE_FAILURE";
 export const PROFILE_LOAD = "PROFILE_LOAD";
 export const PROFILE_LOAD_SUCCESS = "PROFILE_LOAD_SUCCESS";
 export const PROFILE_LOAD_FAILURE = "PROFILE_LOAD_FAILURE";
-
-// 회원가입
-export const signUpStart = () => {
-  return { type: AUTH_SIGNUP };
-};
-
-export const signUpSuccess = () => {
-  return { type: AUTH_SIGNUP_SUCCESS };
-};
-
-export const signUpFailure = (error) => {
-  return { type: AUTH_SIGNUP_FAILURE, error: error };
-};
 
 // 로그인
 export const signInStart = () => {
@@ -167,19 +148,6 @@ export const profileLoadFailure = () => {
   return { type: PROFILE_LOAD_FAILURE };
 };
 
-// 회원가입요청
-export const signUpRequest = ({ user }) => async (dispatch) => {
-  dispatch(signUpStart());
-  await axios
-    .post("/auth/signup", { ...user })
-    .then((response) => {
-      dispatch(signUpSuccess());
-    })
-    .catch((error) => {
-      dispatch(signUpFailure(error.response.data.code));
-    });
-};
-
 // 로그인
 export const signInRequest = ({ user }) => async (dispatch) => {
   dispatch(signInStart());
@@ -195,6 +163,7 @@ export const signInRequest = ({ user }) => async (dispatch) => {
       dispatch(signInFailure(error.response.data.code));
     });
 };
+
 // 카카오 로그인 요청
 export const kakaosignInRequest = ({ res }) => async (dispatch) => {
   dispatch(kakao_SignIn());

@@ -13,7 +13,7 @@ const MyHomeStyle = styled.section`
     border: orange solid 0.1px;
     .header__left {
       margin: 10px;
-      flex-grow: 1;
+      width: 50%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -35,8 +35,9 @@ const MyHomeStyle = styled.section`
     }
     .header__right {
       margin: 10px;
+      padding: 10px;
       border-left: solid #e6e6e6 0.2px;
-      flex-grow: 1;
+      width: 50%;
       display: flex;
       justify-content: space-around;
       align-items: center;

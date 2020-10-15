@@ -9,6 +9,10 @@ import { applyMiddleware, createStore } from "redux";
 import ReduxThunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
+// Slick css
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 // Pages
 import {
   Home,
@@ -30,10 +34,6 @@ import { NavBar, ScrollTop } from "components";
 
 // HOC
 import Auth from "hoc/auth";
-
-// Slick css
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const store = createStore(
   rootReducer,
