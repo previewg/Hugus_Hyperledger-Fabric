@@ -8,6 +8,7 @@ import SearchResult from "./SearchResult";
 import User from "./User";
 import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
+import Act from "./Act";
 
 export {
   Home,
@@ -20,4 +21,5 @@ export {
   UserInfo,
   BlockInfo,
   SearchResult,
+  Act,
 };

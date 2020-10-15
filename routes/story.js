@@ -23,16 +23,16 @@ const upload = multer({
 
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
-    try {
-        const {user_email} = req.session.loginInfo;
-        const {story_title, user_info, story_content, story_goal} = req.body;
-        const story = await Story.create({
-            story_title,
-            user_info,
-            story_content,
-            story_goal,
-            user_email,
-        });
+  try {
+    const { user_email } = req.session.loginInfo;
+    const { story_title, user_info, story_content, story_goal } = req.body;
+    const story = await Story.create({
+      story_title,
+      user_info,
+      story_content,
+      story_goal,
+      user_email,
+    });
 
     for (const file of req.files) {
       await Story_File.create({
@@ -195,9 +195,10 @@ router.get("/list/:section", async (req, res) => {
 
     // 18개씩 조회
     if (section > 1) {
-      offset = 18 * (section - 1);
+      offset = 9 * (section - 1);
     }
-
+    console.log(section);
+    console.log(offset);
     const list = await Story.findAll({
       attributes: [
         "story_title",
@@ -207,14 +208,14 @@ router.get("/list/:section", async (req, res) => {
         "story_like",
         "user_info",
         "story_comment",
-        "user_email"
+        "user_email",
       ],
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Story_File, attributes: ["file"], limit: 1 },
       ],
       offset: offset,
-      limit: section * 18,
+      limit: 9,
     });
 
     res.json({ list: list, success: 1 });

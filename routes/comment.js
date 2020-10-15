@@ -1,8 +1,13 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { User, Story_Comment, Comment_Child, Story } = require("../models");
-// const comment_child = require("../models/comment_child");
+const {
+  User,
+  Story_Comment,
+  Comment_Child,
+  Story,
+  sequelize,
+} = require("../models");
 
 // 댓글 등록
 router.post("/add", async (req, res) => {
@@ -27,11 +32,23 @@ router.post("/add", async (req, res) => {
     );
 
     const list = await Story_Comment.findAll({
+      attributes: [
+        "id",
+        "user_email",
+        "comment",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+          ),
+          "child_count",
+        ],
+      ],
       where: {
         story_id: req.body.story_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
     });
 
     res.json({ list: list, success: 1 });
@@ -62,11 +79,23 @@ router.post("/delete", async (req, res) => {
       }
     );
     const list = await Story_Comment.findAll({
+      attributes: [
+        "id",
+        "user_email",
+        "comment",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+          ),
+          "child_count",
+        ],
+      ],
       where: {
         story_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
     });
     res.json({ list: list, success: 1 });
   } catch (err) {
@@ -79,15 +108,29 @@ router.post("/delete", async (req, res) => {
 router.get("/list/:story_id", async (req, res) => {
   try {
     let story_id = req.params.story_id;
+
     const list = await Story_Comment.findAll({
+      attributes: [
+        "id",
+        "user_email",
+        "comment",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+          ),
+          "child_count",
+        ],
+      ],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
       where: {
         story_id: story_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
     });
     res.json({ list: list, success: 1 });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ success: 3 });
   }
 });
@@ -99,21 +142,17 @@ router.post("/child_add", async (req, res) => {
     const { comment_id, comment } = req.body;
     await Comment_Child.create({
       user_email: user_email,
-      comment_id: comment_id,  
+      comment_id: comment_id,
       comment: comment,
-  });
-  const reComment = await Comment_Child.findAll({
-    where : {
-      comment_id : req.body.comment_id
-    },
-    order: [
-      [ "created_at","DESC" ]
-    ],
-    include : [
-    { model: User, attributes: ["nickname"] },
-    ],
-  });
-    res.json({ reComment: reComment , success : 1 });
+    });
+    const reComment = await Comment_Child.findAll({
+      where: {
+        comment_id: req.body.comment_id,
+      },
+      order: [["created_at", "DESC"]],
+      include: [{ model: User, attributes: ["nickname"] }],
+    });
+    res.json({ reComment: reComment, success: 1 });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
@@ -124,18 +163,17 @@ router.post("/child_add", async (req, res) => {
 router.get("/childList/:comment_id", async (req, res) => {
   try {
     const comment_id = req.params.comment_id;
-    const reComment = await Comment_Child.findAll({
+    const list = await Comment_Child.findAll({
       where: {
         comment_id: comment_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
     });
-    res.json({ reComment: reComment, success: 1 });
+    res.json({ list: list, success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }
 });
-
 
 module.exports = router;

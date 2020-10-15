@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import CountUp, { useCountUp } from "react-countup";
+import CountUp from "react-countup";
 import { storyListLoader, storyVisit } from "../../actions/story";
 import Loader from "./Loader";
 
@@ -12,6 +12,7 @@ const StoryListStyle = styled.div`
   align-items: center;
   margin-top: 70px;
   section {
+    margin-bottom: 50px;
     width: 900px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -115,7 +116,7 @@ const BarStyle = styled.div`
   justify-content: space-around;
   .count {
     width: 90%;
-    height: 5%;
+    background: transparent;
     margin: 0;
     font-size: 13px;
     color: white;
@@ -128,7 +129,7 @@ const BarStyle = styled.div`
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     height: 5px;
-    transition: all 0.7s ease-in-out;
+    transition: all 2s ease-in-out;
 
     > div {
       height: 5px;
@@ -145,18 +146,21 @@ const StoryList = () => {
   const status = useSelector((state) => state.story.list.status);
   const list = useSelector((state) => state.story.list.data);
   const num = useSelector((state) => state.story.list.num);
+  const init = useRef(true);
 
   useEffect(() => {
-    dispatch(storyListLoader(1));
+    if (init.current) dispatch(storyListLoader(num));
+    init.current = false;
     // scroll event listener 등록
     window.addEventListener("scroll", handleScroll);
     return () => {
       // scroll event listener 해제
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [num]);
 
   const loadMore = () => {
+    console.log(num);
     dispatch(storyListLoader(num));
   };
 
@@ -174,18 +178,23 @@ const StoryList = () => {
   };
 
   const ProgressBar = ({ vote, goal }) => {
-    let ratio = (vote / goal) * 100;
-    if (ratio > 100) ratio = 100;
+    const [ratio, setRatio] = useState(0);
 
-    const { countUp } = useCountUp({
-      start: 0,
-      end: ratio,
-      duration: 5,
-    });
+    useEffect(() => {
+      const init = setTimeout(() => {
+        if (vote > goal) setRatio(100);
+        setRatio((vote / goal) * 100);
+      });
+      return () => clearTimeout(init);
+    }, []);
 
     return (
       <BarStyle ratio={ratio}>
-        <p className="count">{countUp}%</p>
+        <div className="count">
+          <CountUp end={ratio} duration={2} />
+          <span> %</span>
+        </div>
+
         <div>
           <div></div>
         </div>

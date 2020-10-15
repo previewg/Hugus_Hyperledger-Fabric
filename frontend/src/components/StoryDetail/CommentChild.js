@@ -1,109 +1,143 @@
-import React, { useRef, useState } from "react";
-import { useDispatch,useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import axios from 'axios';
+import axios from "axios";
+import { ClipLoader } from "react-spinners";
+import { css } from "@emotion/core";
+import { useSelector } from "react-redux";
 
-const CommentChildStyle = styled.div`
-      summary {
-        list-style: none;
-        font-size: 12px;
-        cursor: pointer;
-        color: grey;
-      }
-      summary::-webkit-details-marker {
-        display: none;
-      }
-      > img {
-        width: 17px;
-        height: 17px;
-        cursor: pointer;
-        margin-right: 7px;
-      }
-      img:nth-child(2) {
-        display: none;
-      }
-      img:nth-child(4) {
-        display: none;
-      }
+const CommentChildStyle = styled.section`
+  .comment_child {
+    display: flex;
+    margin: 0;
+    align-items: center;
+    .comment_child_icon {
+      width: 40px;
+      height: 40px;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      border-radius: 20px;
+      margin-right: 10px;
+    }
 
-      input {
-        height: 15px;
-        padding: 10px;
-        outline: none;
-        transition: 0.4s ease-in-out;
-        border: none;
-        border-bottom: solid gray 0.1px;
-        :focus {
-          border-bottom: solid orange 0.1px;
-        }
-      }
-      .comment__buttons {
-        margin-top: 10px;
+    .comment_child_content {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      justify-content: space-around;
+      height: 45px;
+      .header {
         display: flex;
-        justify-content: flex-end;
-        > button {
-          background-color: transparent;
-          width: 50px;
-          height: 30px;
-          border-radius: 3px;
-          cursor: pointer;
-          outline: none;
+        width: 80px;
+        > p {
+          color: black;
+          font-weight: normal;
         }
-        button:nth-child(1) {
-          border: solid darkgray 0.1px;
-          color: darkgray;
-          :hover {
-            background-color: darkgray;
-            color: white;
-          }
-        }
-        button:nth-child(2) {
-          margin-left: 5px;
-          border: solid orange 0.1px;
-          color: orange;
-          :hover {
-            background-color: orange;
-            color: white;
-          }
+        > p:nth-child(2) {
+          color: gray;
+          font-size: 12px;
         }
       }
+      > p {
+        margin: 0;
+      }
+    }
+  }
 `;
 
-const CommentChild = ({id}) => {
-  const dispatch = useDispatch();
-  // const reComment = useSelector((state) => state.comment.list.reComment);
-  // const [error, setError] = useState(false);
-  // const comment_child = useRef();
-  const [comments_child, setComments_child] = useState("");
-
-  const onClickHandler = async () => {
-    await axios
-    .get(`/comment/childList/${id}`)
-    .then((response) => {
-      setComments_child(response.data)
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-  
-
-  const List = () => {
-    return (comments_child.map((reComment,key) => {
-    return (
-      <div className="comment" key={key}>
-        <a>{reComment[0].comment}</a>
-        <p>bbbbbbbbbbb</p>
-      </div>
-    );
-  })
+const Loader = () => {
+  return (
+    <ClipLoader
+      css={css`
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      `}
+      size={15}
+      color={"#f69a53"}
+      loading={true}
+    />
   );
- };
+};
 
+const time = (value) => {
+  const now = new Date();
+  const timeValue = new Date(value);
+
+  const betweenTime = Math.floor(
+    (now.getTime() - timeValue.getTime()) / 1000 / 60
+  );
+  if (betweenTime < 1) return "방금전";
+  if (betweenTime < 60) {
+    return `${betweenTime}분전`;
+  }
+
+  const betweenTimeHour = Math.floor(betweenTime / 60);
+  if (betweenTimeHour < 24) {
+    return `${betweenTimeHour}시간전`;
+  }
+
+  const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+  if (betweenTimeDay < 365) {
+    return `${betweenTimeDay}일전`;
+  }
+
+  return `${Math.floor(betweenTimeDay / 365)}년전`;
+};
+
+const CommentChild = ({ id }) => {
+  const [comments, setComments] = useState({
+    status: "WAITING",
+    list: [],
+  });
+  const flag = useRef(true);
+  const childAddStatus = useSelector((state) => state.comment.child_add.status);
+
+  useEffect(() => {
+    if (flag.current || childAddStatus === "SUCCESS") {
+      const init = async () => {
+        const result = await axios.get(`/comment/childList/${id}`);
+        setComments({ status: "SUCCESS", list: result.data.list });
+      };
+      init();
+    }
+    return () => {
+      flag.current = false;
+    };
+  }, [childAddStatus]);
+
+  if (comments.status === "WAITING") return <Loader />;
   return (
     <CommentChildStyle>
-      <p onClick={onClickHandler}>답글 몇개</p>
-      {/* <List/> */}
+      {comments.list.map((re, key) => {
+        return (
+          <article className="comment_child" key={key}>
+            {re.User.user_profile ? (
+              <div
+                className="comment_child_icon"
+                style={{
+                  backgroundImage: `url("http://localhost:3000/user_profile/${re.User.user_profile}") `,
+                }}
+              ></div>
+            ) : (
+              <img
+                className="comment_child_icon"
+                alt="comment_icon"
+                src="/icons/hugus_icon.png"
+              />
+            )}
+            <div className="comment_child_content">
+              <div className="header">
+                <p>{re.User.nickname}</p>
+                <p>{time(re.createdAt)}</p>
+              </div>
+              <p>{re.comment}</p>
+            </div>
+          </article>
+        );
+      })}
     </CommentChildStyle>
   );
 };

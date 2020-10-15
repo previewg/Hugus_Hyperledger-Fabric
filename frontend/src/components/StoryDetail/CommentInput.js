@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { commentAdd, commentDelete } from "../../actions/comment";
+import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
 import { storyLike } from "../../actions/story";
-import { useDispatch, useSelector } from "react-redux";
 
 const CommentFalseStyle = styled.div`
   font-weight: bold;
@@ -121,33 +121,30 @@ const CommentInput = ({ commentList, data }) => {
   const like = useSelector((state) => state.story.like.user);
 
   const [error, setError] = useState(false);
-  const [comments, setComments] = useState("");
   const comment = useRef();
-
-  const commentAddHandler = () => {
-    if (comments === "") {
-      comment.current.focus();
-      setError(true);
-    } else {
-      dispatch(commentAdd({ comment: comments, story_id: data.id }))
-      
-    }
-  };
-
-  const commentChangeHandler = (e) => {
-    setComments(e.target.value);
-    setError(false);
-  };
-
-  const commentClearHandler = () => {
-    setComments("");
-  };
 
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
   };
 
-  const input = () => {
+  const Input = () => {
+    const [comments, setComments] = useState("");
+    const commentChangeHandler = (e) => {
+      setComments(e.target.value);
+      setError(false);
+    };
+    const commentAddHandler = () => {
+      if (comments === "") {
+        comment.current.focus();
+        setError(true);
+      } else {
+        dispatch(commentAdd({ comment: comments, story_id: data.id }));
+      }
+    };
+    const commentClearHandler = () => {
+      setComments("");
+    };
+
     if (!isLoggedIn) {
       return (
         <CommentFalseStyle>
@@ -212,7 +209,7 @@ const CommentInput = ({ commentList, data }) => {
 
   return (
     <>
-      {input()}
+      <Input />
       <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
     </>
   );

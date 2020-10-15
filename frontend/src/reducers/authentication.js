@@ -35,26 +35,25 @@ import {
 } from "../actions/user"
 import update from "react-addons-update";
 
-
 function getCookie(name) {
-    let value = "; " + document.cookie;
-    let parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
 function parseJwt(token) {
-    if (!token) return {nickname: ""};
-    let base64Url = token.split(".")[1];
-    let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    let jsonPayload = decodeURIComponent(
-        atob(base64)
-            .split("")
-            .map(function (c) {
-                return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join("")
-    );
-    return JSON.parse(jsonPayload);
+  if (!token) return { nickname: "" };
+  let base64Url = token.split(".")[1];
+  let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  let jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+  return JSON.parse(jsonPayload);
 }
 
 const initialState = {
@@ -91,27 +90,27 @@ const initialState = {
 };
 
 export default function authentication(state = initialState, action) {
-    switch (action.type) {
-        // 회원가입
-        case AUTH_SIGNUP:
-            return update(state, {
-                signUp: {
-                    status: {$set: "WAITING"},
-                },
-            });
-        case AUTH_SIGNUP_SUCCESS:
-            return update(state, {
-                signUp: {
-                    status: {$set: "SUCCESS"},
-                },
-            });
-        case AUTH_SIGNUP_FAILURE:
-            return update(state, {
-                signUp: {
-                    status: {$set: "FAILURE"},
-                    error: {$set: action.error},
-                },
-            });
+  switch (action.type) {
+    // 회원가입
+    case AUTH_SIGNUP:
+      return update(state, {
+        signUp: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case AUTH_SIGNUP_SUCCESS:
+      return update(state, {
+        signUp: {
+          status: { $set: "SUCCESS" },
+        },
+      });
+    case AUTH_SIGNUP_FAILURE:
+      return update(state, {
+        signUp: {
+          status: { $set: "FAILURE" },
+          error: { $set: action.error },
+        },
+      });
 
         // 로그인
         case AUTH_SIGNIN:
@@ -165,156 +164,120 @@ export default function authentication(state = initialState, action) {
                 },
             });
 
-        // 로그아웃
-        case AUTH_SIGNOUT:
-            return update(state, {
-                signOut: {
-                    status: {$set: "WAITING"},
-                },
-            });
-        case AUTH_SIGNOUT_SUCCESS:
-            return update(state, {
-                signIn: {
-                    status: {$set: "INIT"},
-                },
-                status: {
-                    isLoggedIn: {$set: false},
-                    currentUser: {$set: ""},
-                },
-                profile: {
-                    status: {$set: "INIT"},
-                    data: {$set: null},
-                },
-                signOut: {
-                    status: {$set: "SUCCESS"},
-                },
-            });
+    // 로그아웃
+    case AUTH_SIGNOUT:
+      return update(state, {
+        signOut: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case AUTH_SIGNOUT_SUCCESS:
+      return update(state, {
+        signIn: {
+          status: { $set: "INIT" },
+        },
+        status: {
+          isLoggedIn: { $set: false },
+          currentUser: { $set: "" },
+        },
+        profile: {
+          status: { $set: "INIT" },
+          data: { $set: null },
+        },
+        signOut: {
+          status: { $set: "SUCCESS" },
+        },
+      });
 
-        case AUTH_SIGNOUT_FAILURE:
-            return update(state, {
-                signOut: {
-                    status: {$set: "FAILURE"},
-                },
-            });
+    case AUTH_SIGNOUT_FAILURE:
+      return update(state, {
+        signOut: {
+          status: { $set: "FAILURE" },
+        },
+      });
 
-        //회원탈퇴
-        case AUTH_SIGN_DESTROY:
-            return update(state, {
-                signDestroy: {
-                    status: {$set: "WAITING"},
-                },
-            });
+    //회원탈퇴
+    case AUTH_SIGN_DESTROY:
+      return update(state, {
+        signDestroy: {
+          status: { $set: "WAITING" },
+        },
+      });
 
-        case AUTH_SIGN_DESTROY_SUCCESS:
-            return update(state, {
-                status: {
-                    isLoggedIn: {$set: false},
-                    currentUser: {$set: ""},
-                },
-                signDestroy: {
-                    status: {$set: "SUCCESS"},
-                },
-            });
-        case AUTH_SIGN_DESTROY_FAILURE:
-            return update(state, {
-                signDestroy: {
-                    status: {$set: "FAILURE"},
-                },
-            });
+    case AUTH_SIGN_DESTROY_SUCCESS:
+      return update(state, {
+        status: {
+          isLoggedIn: { $set: false },
+          currentUser: { $set: "" },
+        },
+        signDestroy: {
+          status: { $set: "SUCCESS" },
+        },
+      });
+    case AUTH_SIGN_DESTROY_FAILURE:
+      return update(state, {
+        signDestroy: {
+          status: { $set: "FAILURE" },
+        },
+      });
 
-        case CONFIRM:
-            return update(state, {
-                status: {
-                    confirm_pwd: {$set: "WAITING"},
-                },
-            });
-        case CONFIRM_PWD:
-            return update(state, {
-                status: {
-                    confirm_pwd: {$set: "SUCCESS"},
-                },
-            });
-        case CONFIRM_PWD_ERROR:
-            return update(state, {
-                status: {
-                    confirm_pwd: {$set: "FAILURE"},
-                },
-            });
+    case CONFIRM:
+      return update(state, {
+        status: {
+          confirm_pwd: { $set: "WAITING" },
+        },
+      });
+    case CONFIRM_PWD:
+      return update(state, {
+        status: {
+          confirm_pwd: { $set: "SUCCESS" },
+        },
+      });
+    case CONFIRM_PWD_ERROR:
+      return update(state, {
+        status: {
+          confirm_pwd: { $set: "FAILURE" },
+        },
+      });
 
-        // 프로필 업로드
-        case PROFILE_ADD:
-            return update(state, {
-                profile: {
-                    status: {$set: "WAITING"},
-                },
-            });
-        case PROFILE_ADD_SUCCESS:
-            return update(state, {
-                profile: {
-                    status: {$set: "SUCCESS"},
-                },
-                status: {
-                    profile_path: {$set: action.data},
-                },
-            });
+    // 프로필 업로드
+    case PROFILE_ADD:
+      return update(state, {
+        profile: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case PROFILE_ADD_SUCCESS:
+      return update(state, {
+        profile: {
+          status: { $set: "SUCCESS" },
+        },
+        status: {
+          profile_path: { $set: action.data },
+        },
+      });
 
-        case PROFILE_LOAD:
-            return update(state, {
-                profile: {
-                    status: {$set: "WAITING"},
-                },
-            });
-        case PROFILE_LOAD_SUCCESS:
-            return update(state, {
-                profile: {
-                    status: {$set: "SUCCESS"},
-                    data: {$set: action.data.data.user_profile},
-                },
-            });
-        case PROFILE_LOAD_FAILURE:
-            return update(state, {
-                profile: {
-                    status: {$set: "FAILURE"},
-                },
-            });
-        case EMAIL_SEND:
-            return update(state, {
-                emailConfirm: {
-                    send_status: {$set: "WAITING"}
-                }
-            });
-        case EMAIL_SEND_SUCCESS:
-            return update(state, {
-                emailConfirm: {
-                    send_status: {$set: "SUCCESS"}
-                }
-            })
-        case EMAIL_SEND_FAILURE:
-            return update(state, {})
+    case PROFILE_LOAD:
+      return update(state, {
+        profile: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case PROFILE_LOAD_SUCCESS:
+      return update(state, {
+        profile: {
+          status: { $set: "SUCCESS" },
+          data: { $set: action.data.data.user_profile },
+        },
+      });
+    case PROFILE_LOAD_FAILURE:
+      return update(state, {
+        profile: {
+          status: { $set: "FAILURE" },
+        },
+      });
 
-        case EMAIL_CONFIRM:
-            return update(state, {
-                emailConfirm: {
-                    status: {$set: "WAITING"},
-                    send_status: {$set: "load"}
-                }
-            });
-        case EMAIL_CONFIRM_SUCCESS:
-            return update(state, {
-                emailConfirm: {
-                    status: {$set: "SUCCESS"},
-                    send_status: {$set: "load.."}
-                }
-            })
-        case EMAIL_CONFIRM_FAILURE:
-            return update(state, {
-                emailConfirm: {
-                    status: {$set: "FAILURE"},
-
-                }
-            })
-
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 }

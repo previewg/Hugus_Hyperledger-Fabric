@@ -19,6 +19,7 @@ import CommentList from "./StoryDetail/CommentList";
 import StoryContents from "./StoryDetail/StoryContents";
 import StoryVote from "./StoryDetail/StoryVote";
 import StoryDetailLoader from "./StoryDetail/Loader";
+import ActList from "./Act/actList";
 export {
   NavBar,
   SignIn,
@@ -41,4 +42,5 @@ export {
   CommentInput,
   Comments,
   StoryDetailLoader,
+  ActList,
 };

@@ -29,6 +29,7 @@ db.Story_Hashtag = require("./story_hashtag")(sequelize, Sequelize);
 db.Story_Item = require("./story_item")(sequelize, Sequelize);
 db.Story_File = require("./story_file")(sequelize, Sequelize);
 db.Story_Vote = require("./story_vote")(sequelize, Sequelize);
+db.Act = require("./act")(sequelize, Sequelize);
 
 // User
 db.User.hasMany(db.Story, { foreignKey: "user_email", sourceKey: "email" });
@@ -49,6 +50,10 @@ db.User.hasMany(db.Story_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
+db.User.hasMany(db.Act, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+})
 
 // Story
 db.Story.hasMany(db.Story_Comment, { foreignKey: "story_id", sourceKey: "id" });
@@ -153,5 +158,8 @@ db.Story_File.belongsTo(db.Story, {
 //Story_Vote
 db.Story_Vote.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
 db.Story_Vote.belongsTo(db.User, { foreignKey: "user_id", targetKey: "id" });
+
+//Act
+db.Act.belongsTo(db.User, {foreignKey: "user_email",targetKey: "email"});
 
 module.exports = db;
