@@ -1,9 +1,6 @@
-'use strict';
-const bcrypt = require('bcrypt');
-
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('User', {
-            email: {
+    return sequelize.define('Kakao_User', {
+            id_value: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 unique: true,
@@ -13,16 +10,8 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 unique: true,
             },
-            password: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            user_profile: {
-                type: DataTypes.STRING,
-                allowNull: true,
-            },
         }, {
-            tableName: 'user',
+            tableName: 'kakao_user',
             freezeTableName: true,
             underscored: true,
             paranoid: true, //soft delete
