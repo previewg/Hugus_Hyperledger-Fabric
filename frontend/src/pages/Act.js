@@ -9,19 +9,57 @@ const ActStyle = styled.section`
     justify-content:center;
     .layout {
     margin-top: 100px;
-    width:80%;
+    width:75%;
         >div:nth-child(1) {
-        } 
+            width:18%;
+            .title {
+            font-size:30px;
+            border-bottom:solid orange 3px;
+            padding-bottom:3px;
+            }
+        }
         >div:nth-child(2) {
         display:flex;
         justify-content:flex-end;
-        .input {
+            .search_form {
+            width:180px;
+            height:23px;
+            border-radius:3px;
+            border:solid gray 1px;
+            transition: 0.3s ease-in-out;
+            border: solid orange 2px;
+                :focus {
+                outline: none;
+                }
+            }
+            .search__bar {
+            width:60px;
+            height:29px;
+            margin-left:20px;
+            background-color:orange;
+            border:none;
+            color:white;
+            border-radius:3px;
+            transition: 0.2s ease-in-out;
+            outline:none;
+            cursor: pointer;
+                :hover {
+                color:black;
+                }
+            }
+        }
+
+        >section {
+        margin-top:20px;
+        width:100%;
+        display:flex;
+        justify-content:center;
+        .page__number {
         
+            }
         }
-        .search__bar {
-        background-color:white;
-        }
-        }   
+
+
     }
 `;
 
@@ -34,19 +72,12 @@ const Act = () => {
         setSearch(e.target.value);
       };
 
-
-
-
-
-
-
-
   return (
     <ActStyle>
         <div className="layout">
 
             <div className="title">
-                <a>시이밸</a>
+                <p className="title">전달 스토리</p>
             </div>
 
             <div>
@@ -60,9 +91,22 @@ const Act = () => {
             <button className="search__bar">검색</button>    
             </div>
 
-            <div></div>
+            <ActList/>
 
-            <div></div>
+            <section>
+            <div className="page__number">
+            <p>1</p>
+            <p>2</p>
+            <p>3</p>
+            <p>4</p>
+            <p>5</p>
+            <p>6</p>
+            <p>7</p>
+            <p>8</p>
+            <p>9</p>
+            </div>
+            </section>
+
 
         </div>
     </ActStyle>

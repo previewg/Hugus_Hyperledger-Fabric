@@ -9,6 +9,23 @@ import { actListLoader, actVisit } from "../../actions/act";
 const ActListStyle = styled.div`
     display:flex;
     justify-content:flex-start;
+    .list_tit {
+    border-bottom: solid 1px #ababab;
+    color : #ababab;
+}
+
+.list_grid {
+    display: grid;
+    grid-template-columns: 70% 15% 15%;
+}
+
+.list_data {
+    line-height: 40px;
+}
+
+.acenter {
+    text-align: center;
+}
 `;
 
 const BarStyle = styled.div`
@@ -111,13 +128,22 @@ const ActList = () => {
 
   return (
     <ActListStyle>
+       <div className='list_grid list_tit'>
+                <div> 제목 </div>
+                <div> 조회수 </div>
+                <div className='acenter'> 날짜 </div>
+              </div>
+
         {list.map((act, key) => {
             return (
+
               <Link
                 to={`/act/${act.id}`}
                 onClick={() => visitHandler(act.id)}
                 key={key}
               >
+                
+             
                 <div>
                   <p className="act__title">{act.act_title}</p>
                 </div>
@@ -130,9 +156,12 @@ const ActList = () => {
                 <div>
                   <p className="act_title">{act.created_at}</p>
                 </div>
+
               </Link>
             );
-        })}
+        }
+        
+        )}
         {/* {status === "WAITING" && <Loader />} */}
     </ActListStyle>
   );
