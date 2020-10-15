@@ -8,17 +8,22 @@ const ActStyle = styled.section`
     display:flex;
     justify-content:center;
     .layout {
+    display:flex;
+    align-items:center;
+    flex-direction:column;
     margin-top: 100px;
     width:75%;
-        >div:nth-child(1) {
-            width:18%;
-            .title {
+        .title {
+        width:100%;
+            >span {
             font-size:30px;
             border-bottom:solid orange 3px;
             padding-bottom:3px;
             }
         }
-        >div:nth-child(2) {
+        .inputAndButton {
+        margin-top:20px;
+        width:100%;
         display:flex;
         justify-content:flex-end;
             .search_form {
@@ -49,13 +54,19 @@ const ActStyle = styled.section`
             }
         }
 
-        >section {
-        margin-top:20px;
-        width:100%;
-        display:flex;
-        justify-content:center;
         .page__number {
-        
+        width:380px;
+        display:flex;
+        justify-content:space-around;
+            >p {
+                cursor: pointer;
+                display:flex;
+                justify-content:center;
+                width:25px;
+                padding-top:4px;
+                border:none;
+                background-color: rgba(0, 0, 0, 0.1);
+                border-radius: 50%;
             }
         }
 
@@ -72,15 +83,22 @@ const Act = () => {
         setSearch(e.target.value);
       };
 
+    const backPageHandler = () => {
+
+    }; 
+
+    const nextPageHandler = () => {
+        
+    };
   return (
     <ActStyle>
         <div className="layout">
 
             <div className="title">
-                <p className="title">전달 스토리</p>
+                <span>전달 스토리</span>
             </div>
 
-            <div>
+            <div className="inputAndButton">
             <input
             name="search"
             value={search}
@@ -93,8 +111,8 @@ const Act = () => {
 
             <ActList/>
 
-            <section>
             <div className="page__number">
+            <p onClick={backPageHandler}>&lt;</p>
             <p>1</p>
             <p>2</p>
             <p>3</p>
@@ -104,8 +122,8 @@ const Act = () => {
             <p>7</p>
             <p>8</p>
             <p>9</p>
+            <p onClick={nextPageHandler}>&gt;</p>
             </div>
-            </section>
 
 
         </div>

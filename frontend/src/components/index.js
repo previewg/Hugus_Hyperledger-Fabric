@@ -19,7 +19,8 @@ import CommentList from "./StoryDetail/CommentList";
 import StoryContents from "./StoryDetail/StoryContents";
 import StoryVote from "./StoryDetail/StoryVote";
 import StoryDetailLoader from "./StoryDetail/Loader";
-import ActList from "./Act/actList";
+import ActList from "./ActMain/ActList";
+import ActContents from "./ActDetail/ActContents";
 export {
   NavBar,
   SignIn,
@@ -43,4 +44,5 @@ export {
   Comments,
   StoryDetailLoader,
   ActList,
+  ActContents,
 };

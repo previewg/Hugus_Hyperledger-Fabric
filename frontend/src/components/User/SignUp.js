@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {signUpRequest} from "../../actions/auth";
-import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
+import {emailConfirmRequest, emailSendRequest, signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
 
 const SignUpStyle = styled.div`
   position: fixed;
@@ -151,6 +151,9 @@ const SignUpStyle = styled.div`
 const SignUp = () => {
     const dispatch = useDispatch();
     const errorCode = useSelector((state) => state.authentication.signUp.error);
+    const confirmed_Status = useSelector((state) => state.authentication.emailConfirm.status);
+    const send_Status = useSelector((state) => state.authentication.emailConfirm.send_status);
+    const confirmed_key = useSelector((state) => state.authentication.emailConfirm.key);
     const registerStatus = useSelector(
         (state) => state.authentication.signUp.status
     );
@@ -160,6 +163,7 @@ const SignUp = () => {
         password: "",
         password_Confirm: "",
     });
+    const [try_Confirm, setTry_Confirm] = useState(0)
     const [openTerm, setOpenTerm] = useState(false);
     const [checkTerm, setCheckTerm] = useState(false);
 
@@ -168,26 +172,35 @@ const SignUp = () => {
         "이메일 형식에 맞게 입력해주세요",
         "닉네임이 이미 존재합니다.",
         "패스워드는 영문,숫자 포함 10자리 이상 입력해주세요",
+        "이메일 인증을 완료해주세요",
     ];
 
     const checkHandler = () => {
         if (checkTerm === false) {
             setCheckTerm(true)
-        }
-        else {
+        } else {
             setCheckTerm(false)
         }
     }
+    const emailConfirmHandler = async () => {
+        await setTry_Confirm(1)
+        if (try_Confirm === 0) {
+            await dispatch(emailSendRequest({user}))
+            alert("이메일을 확인 해 주세요")
+        } else {
+            alert("이미 발송되었습니다")
+        }
+    }
+
 
     const signUpHandler = () => {
-        if(checkTerm===true){
+        if (checkTerm === true) {
             if (user.password === user.password_Confirm) {
                 dispatch(signUpRequest({user}));
             } else {
                 alert("비밀번호가 일치하지 않습니다.")
             }
-        }
-        else {
+        } else {
             alert("이용약관에 동의해 주세요")
         }
 
@@ -205,12 +218,13 @@ const SignUp = () => {
             ...user,
             [e.target.id]: e.target.value
         })
-        if(e.key==="Enter"){
+        if (e.key === "Enter") {
             signUpHandler()
         }
     }
 
     useEffect(() => {
+
         if (registerStatus === "SUCCESS") {
             alert("회원가입성공");
             dispatch(signInBtnIsClicked());
@@ -220,6 +234,7 @@ const SignUp = () => {
                 password: "",
                 password_Confirm: "",
             });
+
         } else if (registerStatus === "FAILURE") {
             alert(errorMessage[errorCode - 1]);
         }
@@ -235,6 +250,12 @@ const SignUp = () => {
                 <article className='form'>
                     <input id='email' value={user.email} placeholder='이메일' onChange={onChangeHandler}
                            onKeyPress={onChangeHandler}/>
+                    <div>
+                        <button onClick={emailConfirmHandler}>
+                            이메일 인증하기
+                        </button>
+                    </div>
+
                     <input id='nickname' value={user.nickname} placeholder='닉네임' onChange={onChangeHandler}
                            onKeyPress={onChangeHandler}/>
                     <input id='password' value={user.password} type='password' placeholder='비밀번호'
