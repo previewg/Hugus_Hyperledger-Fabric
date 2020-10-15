@@ -1,86 +1,141 @@
-import React, {useState} from "react";
-import styled from 'styled-components';
-import {EditInfo, History, MyHome, MyNews} from "../components";
-import ConfirmPwd from "../components/UserInfo/ConfirmPwd";
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import { EditInfo, History, MyHome, MyNews } from "components";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-
-
-const UserInfoSideBar = styled.div`
-display: flex;
-align-items: center;
-height: 100vh;
-    section {
-    margin-left: 70px;
+const UserInfoStyle = styled.div`
+  display: flex;
+  height: 100vh;
+  padding-top: 200px;
+  .side {
     display: flex;
-    flex-direction: column;
     align-content: center;
-    font-size: x-large;
-    
-        li{
-        border-radius: 40px;
-        margin-top: 20px;
+    justify-content: center;
+    width: 20%;
+    article {
+      min-width: 170px;
+      .side__user {
+        height: 170px;
+        background-color: #9c9c9c;
+        border-bottom: orange 5px solid;
         display: flex;
-        list-style: none;
-        background: #CCCCCC;
-        padding: 15px;
-        border-bottom-color: black;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        align-content: center;
-       
+        > div {
+          width: 50px;
+          height: 50px;
+          background-size: cover;
+          background-position: center center;
+          background-repeat: no-repeat;
+          border-radius: 25px;
         }
-        .profile_image{
-            background:#808080;
-            height: 140px;
-
+        > p {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          margin-bottom: 0px;
         }
+      }
+      .side__menu {
+        background-color: #f1f1f1;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        > p {
+          margin: 10px;
+          width: 130px;
+          padding: 5px;
+          padding-bottom: 10px;
+          display: flex;
+          justify-content: flex-start;
+          align-content: center;
+          color: #454545;
+          border-bottom: solid lightgray 0.1px;
+          transition: color 0.2s ease-in-out;
+          cursor: pointer;
+          :hover {
+            color: orange;
+          }
+        }
+      }
     }
-`
-const InfoMains = styled.div`
-
-`
-
+  }
+  .main {
+    width: 80%;
+  }
+`;
 
 const UserInfo = () => {
-    const [infoType, setInfoType] = useState('my_home')
+  const [infoType, setInfoType] = useState("my__home");
+  const [myHome, setMyHome] = useState({
+    story: null,
+  });
+  const flag = useRef(true);
+  const profile_path = useSelector(
+    (state) => state.authentication.status.profile_path
+  );
+  const currentUser = useSelector(
+    (state) => state.authentication.status.currentUser
+  );
 
-    const typeChange = (e) => {
-        e.preventDefault();
-        setInfoType(e.target.getAttribute('name'));
+  const typeChangeHandler = (e) => {
+    setInfoType(e.target.id);
+  };
+
+  useEffect(() => {
+    if (flag.current) {
+      const init = async () => {
+        const result = await axios.get(`/story?user=${currentUser}`);
+        setMyHome({ story: result.data.list });
+      };
+      init();
     }
+    return () => {
+      flag.current = false;
+    };
+  }, []);
 
+  return (
+    <UserInfoStyle>
+      <section className="side">
+        <article>
+          <div className="side__user">
+            <div
+              style={{
+                backgroundImage: `url("http://localhost:3000/user_profile/${profile_path}") `,
+              }}
+            ></div>
+            <p>{currentUser}님</p>
+          </div>
+          <div className="side__menu">
+            <p id="my__home" onClick={typeChangeHandler}>
+              MY홈
+            </p>
+            <p id="my__news" onClick={typeChangeHandler}>
+              내 소식
+            </p>
+            <p id="my__history" onClick={typeChangeHandler}>
+              후원 이력
+            </p>
+            <p id="edit__profile" onClick={typeChangeHandler}>
+              회원 정보 수정
+            </p>
+          </div>
+        </article>
+      </section>
 
-    return (<>
-            <UserInfoSideBar type={infoType}>
-                <section>
-
-                    <li name="my_home" onClick={(e) => typeChange(e)}>MY홈
-                    </li>
-                    <li name="my_news" onClick={(e) => typeChange(e)}>내 소식
-                    </li>
-                    <li name="my_history" onClick={(e) => typeChange(e)}>후원 이력
-                    </li>
-                    <li name="edit_profile" onClick={(e) => typeChange(e)}>회원 정보 수정
-                    </li>
-                </section>
-
-                <InfoMains>
-                    <div>
-                        {infoType === "my_home" ? <MyHome/> : null}
-                    </div>
-                    <div>
-                        {infoType === "my_news" ? <MyNews/> : null}
-                    </div>
-                    <div>
-                        {infoType === "my_history" ? <History/> : null}
-                    </div>
-                    <div>
-                        {infoType === "edit_profile" ? <ConfirmPwd/> : null}
-                    </div>
-                </InfoMains>
-            </UserInfoSideBar>
-        </>
-    )
-}
-
+      <section className="main">
+        {infoType === "my__home" && <MyHome currentUser={currentUser} />}
+        {infoType === "my__news" && <MyNews />}
+        {infoType === "my__history" && <History />}
+        {infoType === "edit__profile" && <EditInfo />}
+      </section>
+    </UserInfoStyle>
+  );
+};
 
 export default UserInfo;

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { profileViewer, signOutRequest } from "../../actions/auth";
+import { signOutRequest } from "../../actions/auth";
 import { signInBtnIsClicked } from "../../actions/user";
 
 const NavStyle = styled.nav`

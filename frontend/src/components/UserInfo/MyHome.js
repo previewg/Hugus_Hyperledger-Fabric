@@ -1,77 +1,78 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { myListRequest } from "../../actions/myPage";
 
-const User_Info = styled.div`
-  display: flex;
-  font-size: large;
-  background-color: antiquewhite;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50px;
-  border-radius: 30px;
-  margin-left: 70px;
-`;
-const MyHome_Main = styled.div`
+const MyHomeStyle = styled.section`
   display: flex;
   flex-direction: column;
-  margin-left: 170px;
-  padding: 20px 20px;
-
-  .section_item {
-    padding: 20px;
-    font-size: x-large;
-  }
-  .section_big_item {
-    font-size: x-large;
+  width: 100%;
+  margin-left: 200px;
+  .my__home__header {
+    display: flex;
+    width: 700px;
+    justify-content: space-around;
+    border: orange solid 0.1px;
+    .header__left {
+      margin: 10px;
+      flex-grow: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      > div {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        > p {
+          color: gray;
+          font-size: 20px;
+        }
+        > strong {
+          color: orange;
+          font-size: 25px;
+          font-weight: normal;
+        }
+      }
+    }
+    .header__right {
+      margin: 10px;
+      border-left: solid #e6e6e6 0.2px;
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      > p {
+        color: gray;
+        font-size: 20px;
+      }
+      > strong {
+        color: orange;
+        font-size: 25px;
+        font-weight: normal;
+      }
+    }
   }
 `;
 
-const MyHome = () => {
-  const username = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
-  const writingList = useSelector((state) => state.myPage.pageList.list);
-  const currentUser = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
-
-  const dispatch = useDispatch();
-
-  const [openList, setOpenList] = useState(false);
-
-  const onClickWritingList = () => {
-    if (openList === false) {
-      setOpenList(true);
-    } else {
-      setOpenList(false);
-    }
-  };
-  useEffect(() => {
-    dispatch(myListRequest(currentUser));
-  }, []);
-
+const MyHome = ({ currentUser }) => {
   return (
-    <>
-      <User_Info>{username} 님의 정보입니다.</User_Info>
-      <MyHome_Main>
-        <div className="section_item">기부 건수</div>
-        <div className="section_item" onClick={onClickWritingList}>
-          내가 쓴 글 {writingList.length}건
-          {openList ? (
-            <div>
-              {writingList.map((title, key) => {
-                return <div key={key}>{title.story_title}</div>;
-              })}
-            </div>
-          ) : null}
+    <MyHomeStyle>
+      <article className="my__home__header">
+        <div className="header__left">
+          <div>
+            <p>기부 건수</p>
+            <strong>1건</strong>
+          </div>
+          <div>
+            <p>내가 쓴 글</p>
+            <strong>1건</strong>
+          </div>
         </div>
-        <div className="section_item">총 후원금액</div>
-      </MyHome_Main>
-      <div></div>
-    </>
+        <div className="header__right">
+          <p>총 후원금액</p>
+          <strong>100,000원</strong>
+        </div>
+      </article>
+    </MyHomeStyle>
   );
 };
 

@@ -68,16 +68,13 @@ router.post("/delete", async (req, res) => {
         id: comment_id,
       },
     });
-    await Story.decrement(
-      {
-        story_comment: 1,
+
+    await Comment_Child.destroy({
+      where: {
+        id: comment_id,
       },
-      {
-        where: {
-          id: story_id,
-        },
-      }
-    );
+    });
+
     const list = await Story_Comment.findAll({
       attributes: [
         "id",

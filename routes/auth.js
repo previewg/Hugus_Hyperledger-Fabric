@@ -3,8 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
-const { KakaoUser } = require("../models");
+const { User, Kakao_User } = require("../models");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
 const smtpTransporter = require("nodemailer-smtp-transport");
@@ -273,7 +272,7 @@ router.post("/confirm", async (req, res) => {
 
 //카카오 로그인
 router.post("/kakao", async (req, res) => {
-  KakaoUser.create({
+  Kakao_User.create({
     id_Value: req.body.profile.id,
     nickname: req.body.profile.properties.nickname,
   });
