@@ -108,16 +108,14 @@ export default function authentication(state = initialState, action) {
         },
       });
     case AUTH_SIGNIN_SUCCESS:
-      console.log(action);
       return update(state, {
         signIn: {
           status: { $set: "SUCCESS" },
         },
         status: {
           isLoggedIn: { $set: true },
-          currentUser: { $set: action.data.user_nickname },
-          profile_path: { $set: action.data.user_profile },
-          currentUser_Email: { $set: action.data.user_email },
+          currentUser: { $set: action.data.nickname },
+          profile_path: { $set: action.data.profile },
         },
       });
     case AUTH_SIGNIN_FAILURE:

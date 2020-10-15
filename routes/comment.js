@@ -32,11 +32,23 @@ router.post("/add", async (req, res) => {
     );
 
     const list = await Story_Comment.findAll({
+      attributes: [
+        "id",
+        "user_email",
+        "comment",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+          ),
+          "child_count",
+        ],
+      ],
       where: {
         story_id: req.body.story_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
     });
 
     res.json({ list: list, success: 1 });
@@ -67,11 +79,23 @@ router.post("/delete", async (req, res) => {
       }
     );
     const list = await Story_Comment.findAll({
+      attributes: [
+        "id",
+        "user_email",
+        "comment",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+          ),
+          "child_count",
+        ],
+      ],
       where: {
         story_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
     });
     res.json({ list: list, success: 1 });
   } catch (err) {
@@ -98,7 +122,7 @@ router.get("/list/:story_id", async (req, res) => {
           "child_count",
         ],
       ],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
       where: {
         story_id: story_id,
       },
@@ -144,7 +168,7 @@ router.get("/childList/:comment_id", async (req, res) => {
         comment_id: comment_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
     });
     res.json({ list: list, success: 1 });
   } catch (error) {

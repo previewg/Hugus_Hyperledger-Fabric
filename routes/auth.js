@@ -145,7 +145,6 @@ router.post("/signIn", async (req, res) => {
         let session = req.session;
         session.loginInfo = {
           user_email: user.email,
-          user_profile: user.user_profile,
           user_nickname: user.nickname,
           email_verified: user.email_verified,
         };
