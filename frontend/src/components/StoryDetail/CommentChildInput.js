@@ -49,9 +49,13 @@ const CommentChildInput = ({ comment, story_id }) => {
       commentChild.current.focus();
       setError(true);
     } else {
-      dispatch(commentChildAdd({ comment: comments, comment_id: id })).then(
-        setComments("")
-      );
+      dispatch(
+        commentChildAdd({
+          comment: comments,
+          comment_id: id,
+          story_id: story_id,
+        })
+      ).then(setComments(""));
     }
   };
 

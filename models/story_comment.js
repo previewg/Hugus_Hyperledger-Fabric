@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "story_Comment",
+    "Story_Comment",
     {
       user_email: {
         type: DataTypes.STRING,

@@ -1,9 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CountUp from "react-countup";
-import { storyListLoader, storyVisit } from "../../actions/story";
+import {
+  storyListLoader,
+  storyListLoaderInit,
+  storyVisit,
+} from "../../actions/story";
 import Loader from "./Loader";
 
 const StoryListStyle = styled.div`
@@ -149,7 +153,7 @@ const StoryList = () => {
   const init = useRef(true);
 
   useEffect(() => {
-    if (init.current) dispatch(storyListLoader(num));
+    if (init.current) dispatch(storyListLoaderInit(num));
     init.current = false;
     // scroll event listener 등록
     window.addEventListener("scroll", handleScroll);
@@ -160,7 +164,6 @@ const StoryList = () => {
   }, [num]);
 
   const loadMore = () => {
-    console.log(num);
     dispatch(storyListLoader(num));
   };
 

@@ -8,6 +8,9 @@ import {
   STORY_LIST_LOAD,
   STORY_LIST_LOAD_SUCCESS,
   STORY_LIST_LOAD_FAILURE,
+  STORY_LIST_LOAD_INIT,
+  STORY_LIST_LOAD_INIT_SUCCESS,
+  STORY_LIST_LOAD_INIT_FAILURE,
   STORY_LOAD_INIT,
   STORY_LOAD,
   STORY_LOAD_SUCCESS,
@@ -134,7 +137,6 @@ export default function story(state = initialState, action) {
       if (action.status === true) {
         let len = (state.list.num - 1) * 9;
         let newData = state.list.data.slice(0, len).concat(action.list);
-        console.log("더있음");
         return update(state, {
           list: {
             status: { $set: "SUCCESS" },
@@ -144,7 +146,6 @@ export default function story(state = initialState, action) {
         });
       } else {
         if (action.list.length !== state.list.data.length % 9) {
-          console.log("더 없고 몇개 추가");
           let len = (state.list.num - 1) * 9;
           let newData = state.list.data.slice(0, len).concat(action.list);
           return update(state, {
@@ -154,8 +155,6 @@ export default function story(state = initialState, action) {
             },
           });
         } else {
-          console.log("똑같음");
-
           return update(state, {
             list: {
               status: { $set: "SUCCESS" },
@@ -165,6 +164,37 @@ export default function story(state = initialState, action) {
       }
 
     case STORY_LIST_LOAD_FAILURE:
+      return update(state, {
+        list: {
+          status: { $set: "FAILURE" },
+        },
+      });
+    case STORY_LIST_LOAD_INIT:
+      return update(state, {
+        list: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_LIST_LOAD_INIT_SUCCESS:
+      if (action.status === true) {
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: action.list },
+            num: { $set: state.list.num + 1 },
+          },
+        });
+      } else {
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: action.list },
+          },
+        });
+      }
+
+    case STORY_LIST_LOAD_INIT_FAILURE:
       return update(state, {
         list: {
           status: { $set: "FAILURE" },

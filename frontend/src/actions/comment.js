@@ -56,7 +56,7 @@ const commentDeleteSuccess = (list) => {
   return { type: COMMENT_DELETE_SUCCESS, list: list };
 };
 
-const commentDeleteFailure = (list) => {
+const commentDeleteFailure = () => {
   return { type: COMMENT_DELETE_FAILURE };
 };
 
@@ -65,8 +65,8 @@ const commentChildAddStart = () => {
   return { type: COMMENT_CHILD_ADD };
 };
 
-const commentChildAddSuccess = () => {
-  return { type: COMMENT_CHILD_ADD_SUCCESS };
+const commentChildAddSuccess = (list) => {
+  return { type: COMMENT_CHILD_ADD_SUCCESS, list: list };
 };
 
 const commentChildAddFailure = () => {
@@ -119,9 +119,9 @@ export const commentListLoader = (story_id) => async (dispatch) => {
 export const commentChildAdd = (data) => async (dispatch) => {
   dispatch(commentChildAddStart());
   await axios
-    .post("/comment/child_add", { ...data })
+    .post("/comment/child/add", { ...data })
     .then((response) => {
-      dispatch(commentChildAddSuccess());
+      dispatch(commentChildAddSuccess(response.data.list));
     })
     .catch((error) => {
       dispatch(commentChildAddFailure());

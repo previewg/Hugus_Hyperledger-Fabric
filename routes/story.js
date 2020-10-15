@@ -10,6 +10,7 @@ const {
   User,
   Story_Like,
   Story_Vote,
+  sequelize,
 } = require("../models");
 
 // multer 설정
@@ -197,18 +198,33 @@ router.get("/list/:section", async (req, res) => {
     if (section > 1) {
       offset = 9 * (section - 1);
     }
-    console.log(section);
-    console.log(offset);
     const list = await Story.findAll({
       attributes: [
-        "story_title",
         "id",
-        "story_goal",
-        "story_vote",
-        "story_like",
+        "story_title",
         "user_info",
-        "story_comment",
+        "story_content",
+        "story_goal",
         "user_email",
+        "visited",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+          ),
+          "story_like",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+          ),
+          "story_vote",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+          ),
+          "story_comment",
+        ],
       ],
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
@@ -233,6 +249,33 @@ router.get("/:id", async (req, res) => {
     else user_email = null;
 
     const data = await Story.findOne({
+      attributes: [
+        "id",
+        "story_title",
+        "user_info",
+        "story_content",
+        "story_goal",
+        "user_email",
+        "visited",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+          ),
+          "story_like",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+          ),
+          "story_vote",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+          ),
+          "story_comment",
+        ],
+      ],
       where: { id: story_id },
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
@@ -314,29 +357,6 @@ router.put("/like", async (req, res) => {
       });
     }
 
-    if (status) {
-      await Story.decrement(
-        {
-          story_like: 1,
-        },
-        {
-          where: {
-            id: story_id,
-          },
-        }
-      );
-    } else {
-      await Story.increment(
-        {
-          story_like: 1,
-        },
-        {
-          where: {
-            id: story_id,
-          },
-        }
-      );
-    }
     res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
@@ -370,29 +390,6 @@ router.put("/vote", async (req, res) => {
       });
     }
 
-    if (status) {
-      await Story.decrement(
-        {
-          story_vote: 1,
-        },
-        {
-          where: {
-            id: story_id,
-          },
-        }
-      );
-    } else {
-      await Story.increment(
-        {
-          story_vote: 1,
-        },
-        {
-          where: {
-            id: story_id,
-          },
-        }
-      );
-    }
     res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });

@@ -9,6 +9,10 @@ export const STORY_LIST_LOAD = "STORY_LIST_LOAD";
 export const STORY_LIST_LOAD_SUCCESS = "STORY_LIST_LOAD_SUCCESS";
 export const STORY_LIST_LOAD_FAILURE = "STORY_LIST_LOAD_FAILURE";
 
+export const STORY_LIST_LOAD_INIT = "STORY_LIST_LOAD_INIT";
+export const STORY_LIST_LOAD_INIT_SUCCESS = "STORY_LIST_LOAD_INIT_SUCCESS";
+export const STORY_LIST_LOAD_INIT_FAILURE = "STORY_LIST_LOAD_INIT_FAILURE";
+
 export const STORY_LOAD_INIT = "STORY_LOAD_INIT";
 export const STORY_LOAD = "STORY_LOAD";
 export const STORY_LOAD_SUCCESS = "STORY_LOAD_SUCCESS";
@@ -67,6 +71,23 @@ const storyDeleteSuccess = () => {
 
 const storyDeleteFailure = () => {
   return { type: STORY_DELETE_FAILURE };
+};
+
+// 게시물 목록 조회
+const storyListLoadInitStart = () => {
+  return { type: STORY_LIST_LOAD_INIT };
+};
+
+const storyListLoadInitSuccess = (list, status) => {
+  return {
+    type: STORY_LIST_LOAD_INIT_SUCCESS,
+    list: list,
+    status: status,
+  };
+};
+
+const storyListLoadInitFailure = () => {
+  return { type: STORY_LIST_LOAD_INIT_FAILURE };
 };
 
 // 게시물 목록 조회
@@ -187,6 +208,22 @@ export const storyUpdate = (data, props) => async (dispatch) => {
     .catch((error) => {
       alert("수정에 실패했습니다.");
       dispatch(storyUpdateFailure());
+      console.error(error);
+    });
+};
+
+// 게시물 목록 조회 (처음만)
+export const storyListLoaderInit = (section) => async (dispatch) => {
+  dispatch(storyListLoadInitStart());
+  await axios
+    .get(`/story/list/${section}?init=true`)
+    .then((response) => {
+      let status = true;
+      if (response.data.list.length !== 9) status = false;
+      dispatch(storyListLoadInitSuccess(response.data.list, status));
+    })
+    .catch((error) => {
+      dispatch(storyListLoadInitFailure());
       console.error(error);
     });
 };

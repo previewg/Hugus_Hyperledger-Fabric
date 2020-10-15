@@ -107,6 +107,10 @@ export default function comment(state = initialState, action) {
         child_add: {
           status: { $set: "SUCCESS" },
         },
+        list: {
+          status: { $set: "SUCCESS" },
+          data: { $set: action.list },
+        },
       });
     case COMMENT_CHILD_ADD_FAILURE:
       return update(state, {

@@ -39,7 +39,7 @@ router.post("/add", async (req, res) => {
         "createdAt",
         [
           sequelize.literal(
-            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `Story_Comment`.id)"
           ),
           "child_count",
         ],
@@ -58,7 +58,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-// 댓글 취소
+// 댓글 삭제
 router.post("/delete", async (req, res) => {
   const { story_id, comment_id } = req.body;
 
@@ -86,7 +86,7 @@ router.post("/delete", async (req, res) => {
         "createdAt",
         [
           sequelize.literal(
-            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `Story_Comment`.id)"
           ),
           "child_count",
         ],
@@ -117,7 +117,7 @@ router.get("/list/:story_id", async (req, res) => {
         "createdAt",
         [
           sequelize.literal(
-            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `story_Comment`.id)"
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `Story_Comment`.id)"
           ),
           "child_count",
         ],
@@ -136,23 +136,36 @@ router.get("/list/:story_id", async (req, res) => {
 });
 
 //대댓글 작성
-router.post("/child_add", async (req, res) => {
+router.post("/child/add", async (req, res) => {
   try {
     const user_email = req.session.loginInfo.user_email;
-    const { comment_id, comment } = req.body;
+    const { comment_id, comment, story_id } = req.body;
     await Comment_Child.create({
       user_email: user_email,
       comment_id: comment_id,
       comment: comment,
     });
-    const reComment = await Comment_Child.findAll({
+
+    const list = await Story_Comment.findAll({
+      attributes: [
+        "id",
+        "user_email",
+        "comment",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `Story_Comment`.id)"
+          ),
+          "child_count",
+        ],
+      ],
+      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
       where: {
-        comment_id: req.body.comment_id,
+        story_id,
       },
       order: [["created_at", "DESC"]],
-      include: [{ model: User, attributes: ["nickname"] }],
     });
-    res.json({ reComment: reComment, success: 1 });
+    res.json({ list: list, success: 1 });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
