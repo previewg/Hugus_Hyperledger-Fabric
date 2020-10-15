@@ -8,8 +8,8 @@ import SearchResult from "./SearchResult";
 import User from "./User";
 import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
-import Act from "./Act";
-
+import ActMain from "./ActMain";
+import ActDetail from "./ActDetail";
 export {
   Home,
   StoryMain,
@@ -21,5 +21,6 @@ export {
   UserInfo,
   BlockInfo,
   SearchResult,
-  Act,
+  ActMain,
+  ActDetail,
 };

@@ -2,20 +2,12 @@ import {
     ACT_LIST_LOAD,
     ACT_LIST_LOAD_SUCCESS,
     ACT_LIST_LOAD_FAILURE,
+    ACT_VISIT,
 } from "../actions/act";
 import update from "react-addons-update";
 
 
 const initialState = {
-    add: {
-        status: "INIT",
-      },
-      delete: {
-        status: "INIT",
-      },
-      update: {
-        status: "INIT",
-      },
       list: {
         status: "INIT",
         data: [],
@@ -32,7 +24,6 @@ export default function act(state = initialState, action) {
                 status: { $set: "WAITING" },
               },
             });
-      
           case ACT_LIST_LOAD_SUCCESS:
             let newData = state.list.data.concat(action.list);
             if (action.status === true) {
@@ -57,14 +48,18 @@ export default function act(state = initialState, action) {
                 },
               });
             }
-      
           case ACT_LIST_LOAD_FAILURE:
             return update(state, {
               list: {
                 status: { $set: "FAILURE" },
               },
             });
-
+          case ACT_VISIT:
+            return update(state, {
+              list: {
+                status: { $set: action.list },
+              }
+            })
 
             default:
                 return state;

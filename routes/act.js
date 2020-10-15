@@ -7,30 +7,22 @@ const { Act,User } = require("../models");
 // Act 등록
 router.post("/add", async (req, res) => {
     try {
-    //   const { user_email } = req.session.loginInfo;
+      // const { user_email } = req.session.loginInfo;
       const user_email = "moonnr94@gmail.com";
       const { act_title, act_content } = req.body;
-      const act = await Act.create({
+      const list = await Act.create({
         act_title,
         act_content,
-        user_email,
+        user_email:user_email,
       });
-    //   for (const file of req.files) {
-    //     await Story_File.create({
-    //       act_id: story.dataValues.id,
-    //       file: file.filename,
-    //     });
-    //   }
 
-      res.json({ act: act, success: 1 });
+      res.json({ list: list, success: 1 });
     } catch (error) {
       console.error(error);
       res.status(400).json({ success: 3 });
     }
   });
 
-
-  
 // Act 목록 조회
 router.get("/list/:page", async (req, res) => {
     try {
@@ -39,7 +31,7 @@ router.get("/list/:page", async (req, res) => {
   
       // 9개씩 조회
       if (page > 1) {
-        offset = 9 * (page - 1);
+        offset = 10 * (page - 1);
       }
       console.log(page);
       console.log(offset);
@@ -52,17 +44,35 @@ router.get("/list/:page", async (req, res) => {
           "visited",
           "created_at",
         ],
-        // include : [
-            
-        // ],
+        order: [["created_at", "DESC"]],
         offset: offset,
-        limit: 9,
+        limit: 10,
       });
       res.json({ list: list, success: 1 });
     } catch (error) {
       res.status(400).json({ success: 3 });
     }
   });
+
+// ACT 상세 조회
+router.get("/:id", async (req, res) => {
+  try {
+    const act_id = req.params.id;
+    let user_email;
+    if (req.session.loginInfo) user_email = req.session.loginInfo.user_email;
+    else user_email = null;
+
+    const data = await Act.findOne({
+      where: { id: act_id },
+      include: [
+        { model: User, attributes: ["nickname"] },
+      ],
+    });
+    res.json({ data: data, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+}); 
   
 // Act 조회수 추가
 router.put("/visit", async (req, res) => {
