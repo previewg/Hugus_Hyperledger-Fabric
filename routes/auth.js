@@ -30,7 +30,7 @@ const upload = multer({
 router.post("/signup", async (req, res, next) => {
   const { email, nickname, password } = req.body;
   let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  let regPassword = /^[a-zA-Z0-9]{10,15}$/;
+  let regPassword = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^*()\-_=+\\\|\[\]{};:\'",.<>\/?]).{9,}$/i;
 
   try {
     const exUser = await User.findOne({ where: { email } });
@@ -141,14 +141,14 @@ router.get("/confirmEmail/:key", async (req, res) => {
     where: { key_for_verify: req.params.key },
   });
 
-  server.emit("hugus", "SUCCESS");
-
   try {
     if (data) {
       await Email_confirm.update(
         { email_verified: true },
         { where: { key_for_verify: req.params.key } }
       );
+      server.emit("hugus", "SUCCESS");
+
       res.send(
         "<script type=\"text/javascript\">alert(\"인증이 성공적으로 완료되었습니다. 회원가입을 이어서 진행해주세요.\");window.open('','_self').close();</script>"
       );

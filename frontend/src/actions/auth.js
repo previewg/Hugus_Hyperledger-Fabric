@@ -26,11 +26,6 @@ export const AUTH_SIGN_UPDATE = "AUTH_SIGN_UPDATE";
 export const AUTH_SIGN_UPDATE_SUCCESS = "AUTH_SIGN_UPDATE_SUCCESS";
 export const AUTH_SIGN_UPDATE_FAILURE = "AUTH_SIGN_UPDATE_FAILURE";
 
-// Confirm Password At MyInfo
-export const CONFIRM = "CONFIRM";
-export const CONFIRM_PWD = "CONFIRM_PWD";
-export const CONFIRM_PWD_ERROR = "CONFIRM_PWD_ERROR";
-
 // Profile Add
 export const PROFILE_ADD = "ADD_PROFILE";
 export const PROFILE_ADD_SUCCESS = "ADD_PROFILE_SUCCESS";
@@ -108,16 +103,6 @@ export const signUpdateSuccess = () => {
 
 export const signUpdateFailure = () => {
   return { type: AUTH_SIGN_UPDATE_FAILURE };
-};
-
-export const confirm = () => {
-  return { type: CONFIRM };
-};
-export const confirmPassword = () => {
-  return { type: CONFIRM_PWD };
-};
-export const confirmPasswordError = () => {
-  return { type: CONFIRM_PWD_ERROR };
 };
 
 //프로필 추가
@@ -216,19 +201,6 @@ export const signUpdateRequest = () => async (dispatch) => {
     })
     .catch((error) => {
       dispatch(signUpdateFailure());
-    });
-};
-
-// 비밀번호 확인요청
-export const confirmPwd = ({ user }) => async (dispatch) => {
-  dispatch(confirm());
-  await axios
-    .post("auth/confirm", { ...user })
-    .then(() => {
-      dispatch(confirmPassword());
-    })
-    .catch((error) => {
-      dispatch(confirmPasswordError(error));
     });
 };
 

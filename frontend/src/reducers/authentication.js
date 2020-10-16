@@ -14,9 +14,6 @@ import {
   AUTH_SIGN_UPDATE,
   AUTH_SIGN_UPDATE_SUCCESS,
   AUTH_SIGN_UPDATE_FAILURE,
-  CONFIRM,
-  CONFIRM_PWD,
-  CONFIRM_PWD_ERROR,
   PROFILE_ADD,
   PROFILE_ADD_SUCCESS,
   PROFILE_ADD_FAILURE,
@@ -54,7 +51,6 @@ const initialState = {
     error: -1,
   },
   status: {
-    confirm_pwd: "INIT",
     valid: false,
     isLoggedIn: getCookie("hugus") || false,
     currentUser: parseJwt(getCookie("hugus")).nickname || "",
@@ -183,25 +179,6 @@ export default function authentication(state = initialState, action) {
       return update(state, {
         signDestroy: {
           status: { $set: "FAILURE" },
-        },
-      });
-
-    case CONFIRM:
-      return update(state, {
-        status: {
-          confirm_pwd: { $set: "WAITING" },
-        },
-      });
-    case CONFIRM_PWD:
-      return update(state, {
-        status: {
-          confirm_pwd: { $set: "SUCCESS" },
-        },
-      });
-    case CONFIRM_PWD_ERROR:
-      return update(state, {
-        status: {
-          confirm_pwd: { $set: "FAILURE" },
         },
       });
 

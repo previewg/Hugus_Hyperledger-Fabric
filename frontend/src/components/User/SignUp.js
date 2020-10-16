@@ -208,10 +208,10 @@ const ErrorBoxStyle = styled.p`
   align-items: center;
   position: fixed;
   top: 100px;
-  width: 180px;
-  height: 50px;
+  width: 200px;
+  height: 70px;
   transition: 0.7s ease-in-out;
-  font-size: 15px;
+  font-size: 16px;
   z-index: 150;
 `;
 
@@ -219,7 +219,7 @@ const errorMsg = [
   "이메일이 이미 존재합니다",
   "이메일 형식에 맞게 입력 바랍니다",
   "닉네임이 이미 존재합니다.",
-  "비밀번호는 영문,숫자 포함 10자리 이상 입력 바랍니다",
+  "비밀번호는 영문,숫자,특수문자 포함 9자리 이상 입력 바랍니다",
   "이메일을 입력 바랍니다",
   "닉네임을 입력 바랍니다",
   "비밀번호를 입력 바랍니다",

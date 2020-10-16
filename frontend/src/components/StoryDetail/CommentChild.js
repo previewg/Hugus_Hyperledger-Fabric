@@ -29,10 +29,10 @@ const CommentChildStyle = styled.section`
       height: 45px;
       .header {
         display: flex;
-        width: 80px;
         > p {
           color: black;
           font-weight: normal;
+          margin-right: 10px;
         }
         > p:nth-child(2) {
           color: gray;

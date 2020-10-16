@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { commentChildAdd, commentDelete } from "../../actions/comment";
 import CommentChild from "../../components/StoryDetail/CommentChild";
 import CommentChildInput from "./CommentChildInput";
+import axios from "axios";
 
 const CommentListStyle = styled.section`
   display: flex;
@@ -196,7 +197,6 @@ const CommentList = ({ commentList, data }) => {
 
   const CommentChildMain = ({ comment }) => {
     const [status, setStatus] = useState(false);
-
     const onClickHandler = () => {
       if (status) setStatus(false);
       else setStatus(true);
