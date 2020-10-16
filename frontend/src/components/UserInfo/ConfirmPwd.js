@@ -10,7 +10,7 @@ const ConfirmPwdStyle = styled.section`
   display: flex;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 50;
   justify-content: center;
   align-items: center;

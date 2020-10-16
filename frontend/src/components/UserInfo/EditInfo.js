@@ -8,33 +8,40 @@ const EditInfoStyle = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
-  .preImg {
-    height: 5%;
-    width: 5%;
-    .destroy_button {
-      display: flex;
-      width: 100%;
-      height: 70%;
-      background: #ff5c7e;
-      color: white;
-      align-items: center;
-      justify-content: center;
+  .profile {
+    display: flex;
+    .profile__img {
+      min-width: 160px;
+      min-height: 160px;
+      width: 160px;
+      height: 160px;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      border-radius: 80px;
     }
+  }
+  .profile__nickname {
+    display: flex;
+  }
+  .profile__email {
+    display: flex;
   }
 `;
 
 const EditInfo = ({ setInfoType }) => {
   const dispatch = useDispatch();
   const profile_path = useSelector(
-    (state) => state.authentication.profile.data
+    (state) => state.authentication.status.profile_path
   );
+
   const username = useSelector(
     (state) => state.authentication.status.currentUser
   );
   const [profile, setProfile] = useState({
     file: null,
   });
-  const [profile_Path, setProfile_Path] = useState(profile_path);
+  const [new_profile_path, setNew_profile_path] = useState(profile_path);
   const [preImg, setPreImg] = useState([]);
   const [isConfirmed, setIsConfirmed] = useState(false);
 
@@ -83,44 +90,55 @@ const EditInfo = ({ setInfoType }) => {
       });
     }
   };
-  useEffect(() => {
-    setProfile_Path(profile_path);
-  }, [profile_Path]);
 
-  if (!isConfirmed)
-    return (
-      <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
-    );
+  // if (!isConfirmed)
+  //   return (
+  //     <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
+  //   );
   return (
     <EditInfoStyle>
-      <div>
-        <img className="info__profile" alt="info__profile" src={"../" + profile_Path} />
+      <div className="profile">
+        <div
+          className="profile__img"
+          alt="profile__img"
+          style={{
+            backgroundImage: `url("${profile_path}") `,
+          }}
+        />
       </div>
-      <div className="profile_picture">
-        프로필 사진 설정하기
-        <div>
-          {preImg.map((item, key) => {
-            return (
-              <img
-                className="preImg"
-                src={item.previewURL}
-                key={key}
-                alt="preview"
-              />
-            );
-          })}
-          <label htmlFor="file"></label>
-          <input
-            id="file"
-            name="file"
-            type="file"
-            accept="image/*"
-            onChange={onChangeHandler}
-          />
-          <button onClick={onSubmit}>제출</button>
-          <button onClick={onClear}>클리어</button>
-        </div>
+      <div className="profile__nickname">
+        <p>닉네임</p>
+        <p>무엇무엇</p>
       </div>
+      <div className="profile__email">
+        <p>이메일</p>
+        <p>무엇무엇</p>
+      </div>
+      {/*<div className="profile_picture">*/}
+      {/*  프로필 사진 설정하기*/}
+      {/*  <div>*/}
+      {/*    {preImg.map((item, key) => {*/}
+      {/*      return (*/}
+      {/*        <img*/}
+      {/*          className="preImg"*/}
+      {/*          src={item.previewURL}*/}
+      {/*          key={key}*/}
+      {/*          alt="preview"*/}
+      {/*        />*/}
+      {/*      );*/}
+      {/*    })}*/}
+      {/*    <label htmlFor="file"></label>*/}
+      {/*    <input*/}
+      {/*      id="file"*/}
+      {/*      name="file"*/}
+      {/*      type="file"*/}
+      {/*      accept="image/*"*/}
+      {/*      onChange={onChangeHandler}*/}
+      {/*    />*/}
+      {/*    <button onClick={onSubmit}>제출</button>*/}
+      {/*    <button onClick={onClear}>클리어</button>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
       <span onClick={onDeleteClick} className="destroy_button">
         회원 탈퇴 하기
