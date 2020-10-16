@@ -21,6 +21,8 @@ import StoryVote from "./StoryDetail/StoryVote";
 import StoryDetailLoader from "./StoryDetail/Loader";
 import ActList from "./ActMain/ActList";
 import ActContents from "./ActDetail/ActContents";
+import Pagination from "./ActMain/Pagination";
+import Search from "./ActMain/Search"
 export {
   NavBar,
   SignIn,
@@ -45,4 +47,6 @@ export {
   StoryDetailLoader,
   ActList,
   ActContents,
+  Search,
+  Pagination,
 };

@@ -25,29 +25,12 @@ export default function act(state = initialState, action) {
               },
             });
           case ACT_LIST_LOAD_SUCCESS:
-            let newData = state.list.data.concat(action.list);
-            if (action.status === true) {
-              return update(state, {
-                list: {
-                  status: { $set: "SUCCESS" },
-                  data: { $set: newData },
-                  num: { $set: state.list.num + 1 },
-                },
-              });
-            } else if (state.list.num === 1 && action.status === false) {
               return update(state, {
                 list: {
                   status: { $set: "SUCCESS" },
                   data: { $set: action.list },
                 },
               });
-            } else {
-              return update(state, {
-                list: {
-                  status: { $set: "SUCCESS" },
-                },
-              });
-            }
           case ACT_LIST_LOAD_FAILURE:
             return update(state, {
               list: {

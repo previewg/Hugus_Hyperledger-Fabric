@@ -6,6 +6,7 @@ import CountUp from "react-countup";
 import { actListLoader, actVisit } from "../../actions/act";
 import Loader from "./Loader";
 
+
 const ActListStyle = styled.div`
     margin-top:50px;
     width:100%;
@@ -54,36 +55,15 @@ const ActListStyle = styled.div`
     }
     `;
 
-const ActList = () => {
+const ActList = ({ list }) => {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.act.list.status);
-  const list = useSelector((state) => state.act.list.data);
   const num = useSelector((state) => state.act.list.num);
   const init = useRef(true);
 
-  useEffect(() => {
-    if (init.current) dispatch(actListLoader(1));
-    init.current = false;
-    // scroll event listener 등록
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      // scroll event listener 해제
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [num]);
 
   const loadMore = () => {
-    console.log(num);
     dispatch(actListLoader(num));
-  };
-
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && status !== "WAITING") {
-      loadMore();
-    }
   };
 
   const visitHandler = (id) => {
@@ -116,7 +96,7 @@ const ActList = () => {
             )
           })
             : null }
-      
+
         {status === "WAITING" && <Loader />}
     </ActListStyle>
   );

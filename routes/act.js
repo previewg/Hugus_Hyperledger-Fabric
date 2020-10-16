@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Act,User } = require("../models");
+const { Act, User } = require("../models");
 
 
 // Act 등록
@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
     let user_email;
     if (req.session.loginInfo) user_email = req.session.loginInfo.user_email;
     else user_email = null;
-
+    
     const data = await Act.findOne({
       where: { id: act_id },
       include: [
