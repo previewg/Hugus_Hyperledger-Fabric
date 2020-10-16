@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { ActList } from "components";
+import React, { useEffect, useState ,useRef } from "react";
+import axios from "axios";
+import { ActList,Search,Pagination } from "components";
 import styled from "styled-components";
 
 const ActStyle = styled.section`
@@ -54,8 +55,8 @@ const ActStyle = styled.section`
             }
         }
 
-        .page__number {
-        width:380px;
+        .pagination {
+        width:310px;
         display:flex;
         justify-content:space-around;
             >p {
@@ -68,67 +69,74 @@ const ActStyle = styled.section`
                 background-color: rgba(0, 0, 0, 0.1);
                 border-radius: 50%;
             }
+            .page-item {
+                >p {
+                cursor: pointer;
+                display:flex;
+                justify-content:center;
+                width:25px;
+                padding-top:4px;
+                border:none;
+                background-color: rgba(0, 0, 0, 0.1);
+                border-radius: 50%;
+            }
+            }
         }
 
 
     }
 `;
 
-const Act = () => {
+const ActMain = () => {
+    const init = useRef(true);  
+    const [actList, setActList] = useState([]);
+    const [total,setTotal] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-    const [search, setSearch] = useState("");
-
-    const onChangeHandler = (e) => {
-        e.preventDefault();
-        setSearch(e.target.value);
-      };
-
-    const backPageHandler = () => {
-
-    }; 
-
-    const nextPageHandler = () => {
+    // const indexOfLastAct = currentPage * actsPerPage;
+    // const indexOfFirstPost = indexOfLastAct - actsPerPage;
+    // const currentActs = acts.slice(indexOfFirstPost, indexOfLastAct);
         
-    };
+    useEffect(() => {
+        if(init.current){
+            const data =  axios.get("/act/list");
+            setActList();
+            setTotal();
+            init.current = false;
+        }
+
+        // const fetchActs = async () => {
+        //     setLoading(true);
+        //     const res = await axios.get(`/act/list/${page}`);
+        //     setActList(res.data.list);
+        //     setLoading(false);
+        // };
+        // fetchActs();
+    }, [actList]);
+
   return (
     <ActStyle>
         <div className="layout">
-
             <div className="title">
-                <span>전달 스토리</span>
+                <p>전달 스토리</p>
             </div>
 
-            <div className="inputAndButton">
-            <input
-            name="search"
-            value={search}
-            className="search_form"
-            type="text"
-            onChange={onChangeHandler}
-            />
-            <button className="search__bar">검색</button>    
-            </div>
-
-            <ActList/>
-
-            <div className="page__number">
+            <Search/>
+            <ActList actList={actList} loading={loading}/>
+            <Pagination total={total} />
+{/* 
+            <div className="pagination">
             <p onClick={backPageHandler}>&lt;</p>
-            <p>1</p>
-            <p>2</p>
-            <p>3</p>
-            <p>4</p>
-            <p>5</p>
-            <p>6</p>
-            <p>7</p>
-            <p>8</p>
-            <p>9</p>
+            <div className="page-item"><p className="page-link" href="#">1</p></div>
+            <div className="page-item"><p className="page-link" href="#">2</p></div>
+            <div className="page-item"><p className="page-link" href="#">3</p></div>
+            <div className="page-item"><p className="page-link" href="#">4</p></div>
+            <div className="page-item"><p className="page-link" href="#">5</p></div>
             <p onClick={nextPageHandler}>&gt;</p>
-            </div>
-
-
+            </div> */}
         </div>
     </ActStyle>
   );
 };
 
-export default Act;
+export default ActMain;

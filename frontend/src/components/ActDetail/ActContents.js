@@ -15,16 +15,15 @@ const ActContents = ({ id }) => {
   });
 
 useEffect(() => {
-const init = async () => {
-const result = await axios.get(`/act/${id}`);
-setActList({ status: "SUCCESS", list: result.data.list });
-};
-init();    
-}, []);
+  const init = async () => {
+  const result = await axios.get(`/act/${id}`)
+  setActList({ status: "SUCCESS", list: result.data.list });
+  };
+  init();    
+  }, []);
 
   return (
     <ActContentsStyle>
-     <p>asdfasdf</p>
     </ActContentsStyle>
   );
 };

@@ -9,7 +9,7 @@ const ActDetailStyle = styled.div`
 `;
 
 const ActDetail = ({ id }) => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     // const data = useSelector((state) => state.act.detail.data); 
     // const status = useSelector((state) => state.act.detail.status);
     // const currentUser = useSelector( (state) => state.authentication.status.currentUser);
