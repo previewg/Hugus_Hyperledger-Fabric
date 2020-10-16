@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -282,6 +282,10 @@ const NavBar = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
 
+  useEffect(()=>{
+
+  },[profile_path])
+
   const SignedIn = () => {
     if (isLoggedIn) {
       return (
@@ -314,7 +318,7 @@ const NavBar = () => {
           <Link
             to="/my"
             style={{
-              backgroundImage: `url("http://localhost:3000/user_profile/${profile_path}") `,
+              backgroundImage: `url("${profile_path}") `,
             }}
           ></Link>
         );

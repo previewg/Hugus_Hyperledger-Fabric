@@ -54,7 +54,7 @@ const initialState = {
     valid: false,
     isLoggedIn: getCookie("hugus") || false,
     currentUser: parseJwt(getCookie("hugus")).nickname || "",
-    profile_path: parseJwt(getCookie("hugus")).profile || null,
+    profile_path: parseJwt(getCookie("hugus")).profile || "",
   },
   profile: {
     status: "INIT",
@@ -73,6 +73,7 @@ const initialState = {
 };
 
 export default function authentication(state = initialState, action) {
+
   switch (action.type) {
     // 로그인
     case AUTH_SIGNIN:
@@ -190,6 +191,7 @@ export default function authentication(state = initialState, action) {
         },
       });
     case PROFILE_ADD_SUCCESS:
+      console.log(action.data)
       return update(state, {
         profile: {
           status: { $set: "SUCCESS" },

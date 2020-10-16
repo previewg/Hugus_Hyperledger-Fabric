@@ -118,7 +118,7 @@ const CommentChild = ({ id }) => {
               <div
                 className="comment_child_icon"
                 style={{
-                  backgroundImage: `url("http://localhost:3000/user_profile/${re.User.user_profile}") `,
+                  backgroundImage: `url("${re.User.user_profile}") `,
                 }}
               ></div>
             ) : (

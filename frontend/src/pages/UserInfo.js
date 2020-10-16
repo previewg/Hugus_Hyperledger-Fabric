@@ -97,7 +97,7 @@ const UserInfo = () => {
     return () => {
       flag.current = false;
     };
-  }, []);
+  }, [profile_path]);
 
   return (
     <UserInfoStyle>
@@ -107,7 +107,7 @@ const UserInfo = () => {
             {profile_path ? (
               <div
                 style={{
-                  backgroundImage: `url("http://localhost:3000/user_profile/${profile_path}") `,
+                  backgroundImage: `url("${profile_path}") `,
                 }}
               ></div>
             ) : (

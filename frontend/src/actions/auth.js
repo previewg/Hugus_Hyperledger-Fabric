@@ -209,7 +209,7 @@ export const profileUpload = (formData) => async (dispatch) => {
   // document.cookie = "hugus=; expires=Thu, 01 Jan 1999 00:00:10 GMT;";
   dispatch(profileAddStart());
   await axios
-    .put("auth/profile", formData, {
+    .put("myPage/profile", formData, {
       headers: { "content-type": "multipart/form-data" },
     })
     .then((response) => {
@@ -226,7 +226,7 @@ export const profileUpload = (formData) => async (dispatch) => {
 export const profileViewer = ({ username }) => async (dispatch) => {
   dispatch(profileLoadStart());
   await axios
-    .post("/auth/profile/view", { username })
+    .post("/myPage/profile/view", { username })
     .then((response) => {
       if (response.data.success === 1) {
         dispatch(profileLoadSuccess(response.data));

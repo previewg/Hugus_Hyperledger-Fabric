@@ -17,14 +17,7 @@ server.on("connection", function (socket) {
   socket.emit("hugus", "connected");
 });
 
-// multer 설정
-const multer = require("multer");
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, "user_profile"),
-    filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname),
-  }),
-});
+
 
 // 회원가입
 router.post("/signup", async (req, res, next) => {
@@ -239,56 +232,7 @@ router.delete("/destroy", (req, res, next) => {
   }
 });
 
-// 회원정보수정
-router.put("/update", (req, res, next) => {
-  const { email, nickname, password } = req.body;
-  User.update({ nickname: nickname }, { where: { nickname } });
-});
 
-// 회원사진수정
-router.put("/profile", upload.single("file"), async (req, res) => {
-  const { username } = req.body;
-  try {
-    let profile = req.file.filename;
-    await User.update(
-      {
-        user_profile: profile,
-      },
-      { where: { nickname: username } }
-    );
-
-    jwt.sign(
-      { nickname: username, profile: profile },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "24h",
-      },
-      (err, token) => {
-        res.cookie("hugus", token);
-        res.json({ success: 1, profile: profile });
-      }
-    );
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ success: 3 });
-  }
-});
-
-// 회원 기본 정보
-router.post("/profile/view", async (req, res) => {
-  try {
-    const user_name = req.body.username;
-
-    const data = await User.findOne(
-      { where: { nickname: user_name } },
-      { attributes: [] }
-    );
-    res.json({ data: data, success: 1 });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ failure: 3 });
-  }
-});
 
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
