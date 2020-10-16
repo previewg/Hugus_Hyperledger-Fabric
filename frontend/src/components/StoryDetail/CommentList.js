@@ -228,7 +228,7 @@ const CommentList = ({ commentList, data }) => {
               <div
                 className="comment_icon"
                 style={{
-                  backgroundImage: `url("http://localhost:3000/user_profile/${comment.User.user_profile}") `,
+                  backgroundImage: `url("${comment.User.user_profile}") `,
                 }}
               ></div>
             ) : (

@@ -220,7 +220,7 @@ const StoryList = () => {
               <Link
                 to={`/story/${story.id}`}
                 style={{
-                  backgroundImage: `url("http://localhost:3000/uploads/${story.Story_Files[0].file}") `,
+                  backgroundImage: `url("${story.Story_Files[0].file}") `,
                 }}
                 onClick={() => visitHandler(story.id)}
                 key={key}

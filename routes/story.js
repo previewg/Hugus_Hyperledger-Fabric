@@ -12,15 +12,27 @@ const {
   Story_Vote,
   sequelize,
 } = require("../models");
-
-// multer 설정
+const jwt = require("jsonwebtoken");
 const multer = require("multer");
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, "uploads"),
-    filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname),
-  }),
-});
+const multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+const path = require("path");
+AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
+
+let s3 = new AWS.S3();
+
+let upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "hugusstory",
+    key: function (req, file, cb) {
+      let extension = path.extname(file.originalname);
+      cb(null, file.originalname.split('.')[0]+Date.now().toString() + extension)
+
+    },
+    acl: 'public-read-write',
+  })
+})
 
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
@@ -34,11 +46,14 @@ router.post("/add", upload.array("files"), async (req, res) => {
       story_goal,
       user_email,
     });
+    // const story_file = req.file.location;
+    console.log(req.files[0].location)
+
 
     for (const file of req.files) {
       await Story_File.create({
         story_id: story.dataValues.id,
-        file: file.filename,
+        file: file.location,
       });
     }
 
