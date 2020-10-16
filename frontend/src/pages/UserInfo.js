@@ -6,7 +6,6 @@ import axios from "axios";
 
 const UserInfoStyle = styled.div`
   display: flex;
-  height: 100vh;
   padding-top: 200px;
   .side {
     display: flex;
@@ -65,12 +64,12 @@ const UserInfoStyle = styled.div`
     }
   }
   .main {
-    width: 65%;
+    width: 100%;
   }
 `;
 
-const UserInfo = () => {
-  const [infoType, setInfoType] = useState("my__home");
+const UserInfo = (props) => {
+  const [infoType, setInfoType] = useState("edit__profile");
   const [myHome, setMyHome] = useState({
     story: null,
   });
@@ -81,23 +80,29 @@ const UserInfo = () => {
   const currentUser = useSelector(
     (state) => state.authentication.status.currentUser
   );
-
+  const isLoggedIn = useSelector(
+    (state) => state.authentication.status.isLoggedIn
+  );
   const typeChangeHandler = (e) => {
     setInfoType(e.target.id);
   };
 
+  // useEffect(() => {
+  //   if (flag.current) {
+  //     const init = async () => {
+  //       const result = await axios.get(`/story?user=${currentUser}`);
+  //       setMyHome({ story: result.data.list });
+  //     };
+  //     init();
+  //   }
+  //   return () => {
+  //     flag.current = false;
+  //   };
+  // }, [profile_path]);
+
   useEffect(() => {
-    if (flag.current) {
-      const init = async () => {
-        const result = await axios.get(`/story?user=${currentUser}`);
-        setMyHome({ story: result.data.list });
-      };
-      init();
-    }
-    return () => {
-      flag.current = false;
-    };
-  }, [profile_path]);
+    if (!isLoggedIn) props.history.push("/");
+  }, [isLoggedIn]);
 
   return (
     <UserInfoStyle>
@@ -141,7 +146,13 @@ const UserInfo = () => {
         {infoType === "my__home" && <MyHome currentUser={currentUser} />}
         {infoType === "my__news" && <MyNews />}
         {infoType === "my__history" && <History />}
-        {infoType === "edit__profile" && <EditInfo setInfoType={setInfoType} />}
+        {infoType === "edit__profile" && (
+          <EditInfo
+            setInfoType={setInfoType}
+            profile_path={profile_path}
+            currentUser={currentUser}
+          />
+        )}
       </section>
     </UserInfoStyle>
   );

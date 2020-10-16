@@ -119,20 +119,6 @@ export const profileAddFailure = () => {
   return { type: PROFILE_ADD_FAILURE };
 };
 
-// 프로필 로드
-export const profileLoadStart = () => {
-  return { type: PROFILE_LOAD };
-};
-export const profileLoadSuccess = (data) => {
-  return {
-    type: PROFILE_LOAD_SUCCESS,
-    data: data,
-  };
-};
-export const profileLoadFailure = () => {
-  return { type: PROFILE_LOAD_FAILURE };
-};
-
 // 로그인
 export const signInRequest = ({ user }) => async (dispatch) => {
   dispatch(signInStart());
@@ -218,22 +204,6 @@ export const profileUpload = (formData) => async (dispatch) => {
     })
     .catch((error) => {
       dispatch(profileAddFailure());
-      console.error(error);
-    });
-};
-
-// 프로필사진 로드요청
-export const profileViewer = ({ username }) => async (dispatch) => {
-  dispatch(profileLoadStart());
-  await axios
-    .post("/myPage/profile/view", { username })
-    .then((response) => {
-      if (response.data.success === 1) {
-        dispatch(profileLoadSuccess(response.data));
-      }
-    })
-    .catch((error) => {
-      dispatch(profileLoadFailure());
       console.error(error);
     });
 };

@@ -54,7 +54,7 @@ const SignUpStyle = styled.div`
           align-items: center;
           left: 5px;
           background-color: transparent;
-          color: orange;
+          color: #ffa500;
           width: 70px;
           height: 30px;
           font-size: 13px;
