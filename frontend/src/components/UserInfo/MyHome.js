@@ -5,7 +5,7 @@ const MyHomeStyle = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-left: 200px;
+  margin-left: 100px;
   .my__home__header {
     display: flex;
     width: 700px;

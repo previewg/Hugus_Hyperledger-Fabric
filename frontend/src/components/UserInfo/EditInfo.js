@@ -4,15 +4,10 @@ import { profileUpload, signDestroyRequest } from "../../actions/auth";
 import styled from "styled-components";
 import ConfirmPwd from "./ConfirmPwd";
 
-const EditPage = styled.section`
+const EditInfoStyle = styled.section`
   display: flex;
-  font-size: large;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   width: 100%;
-  height: 50px;
-  border-radius: 30px;
-  margin-left: 70px;
   .preImg {
     height: 5%;
     width: 5%;
@@ -28,7 +23,7 @@ const EditPage = styled.section`
   }
 `;
 
-const EditInfo = () => {
+const EditInfo = ({ setInfoType }) => {
   const dispatch = useDispatch();
   const profile_path = useSelector(
     (state) => state.authentication.profile.data
@@ -41,6 +36,8 @@ const EditInfo = () => {
   });
   const [profile_Path, setProfile_Path] = useState(profile_path);
   const [preImg, setPreImg] = useState([]);
+  const [isConfirmed, setIsConfirmed] = useState(false);
+
   const onDeleteClick = async () => {
     const ok = window.confirm("정말 탈퇴 하시겠습니까?");
     if (ok) {
@@ -90,44 +87,45 @@ const EditInfo = () => {
     setProfile_Path(profile_path);
   }, [profile_Path]);
 
+  if (!isConfirmed)
+    return (
+      <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
+    );
   return (
-    <>
-      <ConfirmPwd />
-      <EditPage>
+    <EditInfoStyle>
+      <div>
+        <img className="info__profile" alt="info__profile" src={"../" + profile_Path} />
+      </div>
+      <div className="profile_picture">
+        프로필 사진 설정하기
         <div>
-          <img className="profile_img" alt="" src={"../" + profile_Path} />
+          {preImg.map((item, key) => {
+            return (
+              <img
+                className="preImg"
+                src={item.previewURL}
+                key={key}
+                alt="preview"
+              />
+            );
+          })}
+          <label htmlFor="file"></label>
+          <input
+            id="file"
+            name="file"
+            type="file"
+            accept="image/*"
+            onChange={onChangeHandler}
+          />
+          <button onClick={onSubmit}>제출</button>
+          <button onClick={onClear}>클리어</button>
         </div>
-        <div className="profile_picture">
-          프로필 사진 설정하기
-          <div>
-            {preImg.map((item, key) => {
-              return (
-                <img
-                  className="preImg"
-                  src={item.previewURL}
-                  key={key}
-                  alt="preview"
-                />
-              );
-            })}
-            <label htmlFor="file"></label>
-            <input
-              id="file"
-              name="file"
-              type="file"
-              accept="image/*"
-              onChange={onChangeHandler}
-            />
-            <button onClick={onSubmit}>제출</button>
-            <button onClick={onClear}>클리어</button>
-          </div>
-        </div>
+      </div>
 
-        <span onClick={onDeleteClick} className="destroy_button">
-          회원 탈퇴 하기
-        </span>
-      </EditPage>
-    </>
+      <span onClick={onDeleteClick} className="destroy_button">
+        회원 탈퇴 하기
+      </span>
+    </EditInfoStyle>
   );
 };
 export default EditInfo;

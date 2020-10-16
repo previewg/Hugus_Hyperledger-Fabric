@@ -292,17 +292,19 @@ router.post("/profile/view", async (req, res) => {
 
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
-  const { username, password } = req.body;
-
-  User.findOne({ where: { nickname: username } }).then((user) => {
-    bcrypt.compare(password, user.password).then((isMatched) => {
-      if (isMatched) {
-        return res.status(200).json({ success: true });
-      } else {
-        res.status(400).json({ password_incorrect: "PassWord Incorrect" });
-      }
-    });
-  });
+  const { nickname, password } = req.body;
+  console.log(nickname, password);
+  const user = await User.findOne({ where: { nickname } });
+  if (user) {
+    const isMatched = await bcrypt.compare(password, user.password);
+    if (isMatched) {
+      return res.json({ success: 1 });
+    } else {
+      res.json({ success: 2 });
+    }
+  } else {
+    res.status(400).json({ success: 3 });
+  }
 });
 
 //카카오 로그인

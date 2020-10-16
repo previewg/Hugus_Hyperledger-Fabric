@@ -12,7 +12,7 @@ const UserInfoStyle = styled.div`
     display: flex;
     align-content: center;
     justify-content: center;
-    width: 20%;
+    width: 25%;
     article {
       min-width: 170px;
       .side__user {
@@ -65,7 +65,7 @@ const UserInfoStyle = styled.div`
     }
   }
   .main {
-    width: 80%;
+    width: 65%;
   }
 `;
 
@@ -131,7 +131,7 @@ const UserInfo = () => {
               후원 이력
             </p>
             <p id="edit__profile" onClick={typeChangeHandler}>
-              회원 정보 수정
+              회원 정보 관리
             </p>
           </div>
         </article>
@@ -141,7 +141,7 @@ const UserInfo = () => {
         {infoType === "my__home" && <MyHome currentUser={currentUser} />}
         {infoType === "my__news" && <MyNews />}
         {infoType === "my__history" && <History />}
-        {infoType === "edit__profile" && <EditInfo />}
+        {infoType === "edit__profile" && <EditInfo setInfoType={setInfoType} />}
       </section>
     </UserInfoStyle>
   );
