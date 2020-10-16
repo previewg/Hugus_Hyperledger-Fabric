@@ -91,10 +91,10 @@ const EditInfo = ({ setInfoType }) => {
     }
   };
 
-  // if (!isConfirmed)
-  //   return (
-  //     <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
-  //   );
+  if (!isConfirmed)
+    return (
+      <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
+    );
   return (
     <EditInfoStyle>
       <div className="profile">
