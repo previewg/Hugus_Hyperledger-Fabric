@@ -14,7 +14,7 @@ const {
 } = require("../models");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
-const multerS3 = require('multer-s3');
+const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 const path = require("path");
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
@@ -27,12 +27,14 @@ let upload = multer({
     bucket: "hugusstory",
     key: function (req, file, cb) {
       let extension = path.extname(file.originalname);
-      cb(null, file.originalname.split('.')[0]+Date.now().toString() + extension)
-
+      cb(
+        null,
+        file.originalname.split(".")[0] + Date.now().toString() + extension
+      );
     },
-    acl: 'public-read-write',
-  })
-})
+    acl: "public-read-write",
+  }),
+});
 
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
@@ -46,13 +48,11 @@ router.post("/add", upload.array("files"), async (req, res) => {
       story_goal,
       user_email,
     });
-    // const story_file = req.file.location;
-    console.log(req.files[0].location)
 
-
+    const story_id = story.getDataValue("id");
     for (const file of req.files) {
       await Story_File.create({
-        story_id: story.dataValues.id,
+        story_id: story_id,
         file: file.location,
       });
     }
@@ -64,7 +64,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
       });
 
       await Story_Hashtag.create({
-        story_id: story.dataValues.id,
+        story_id: story_id,
         hashtag_id: result[0].dataValues.id,
       });
     }
@@ -72,7 +72,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
     const items = JSON.parse(req.body.items);
     for (const item of items) {
       await Story_Item.create({
-        story_id: story.dataValues.id,
+        story_id: story_id,
         item_name: item.item_name,
         item_price: item.item_price,
         item_quantity: item.item_quantity,
@@ -203,6 +203,51 @@ router.post("/update", upload.array("files"), async (req, res) => {
   }
 });
 
+// 스토리 목록 조회 ( init )
+router.get("/list/init/:section", async (req, res) => {
+  try {
+    let section = req.params.section;
+
+    const list = await Story.findAll({
+      attributes: [
+        "id",
+        "story_title",
+        "user_info",
+        "story_content",
+        "story_goal",
+        "user_email",
+        "visited",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+          ),
+          "story_like",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+          ),
+          "story_vote",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+          ),
+          "story_comment",
+        ],
+      ],
+      include: [
+        { model: Hashtag, attributes: ["hashtag"] },
+        { model: Story_File, attributes: ["file"], limit: 1 },
+      ],
+      limit: section * 9,
+    });
+    res.json({ list: list, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
 // 스토리 목록 조회
 router.get("/list/:section", async (req, res) => {
   try {
@@ -296,6 +341,7 @@ router.get("/:id", async (req, res) => {
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Story_Item },
         { model: User, attributes: ["nickname"] },
+        { model: Story_File, attributes: ["file"] },
       ],
     });
     if (user_email) {

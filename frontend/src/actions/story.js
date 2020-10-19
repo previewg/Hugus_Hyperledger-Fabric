@@ -216,11 +216,9 @@ export const storyUpdate = (data, props) => async (dispatch) => {
 export const storyListLoaderInit = (section) => async (dispatch) => {
   dispatch(storyListLoadInitStart());
   await axios
-    .get(`/story/list/${section}?init=true`)
+    .get(`/story/list/init/${section}`)
     .then((response) => {
-      let status = true;
-      if (response.data.list.length !== 9) status = false;
-      dispatch(storyListLoadInitSuccess(response.data.list, status));
+      dispatch(storyListLoadInitSuccess(response.data.list));
     })
     .catch((error) => {
       dispatch(storyListLoadInitFailure());
