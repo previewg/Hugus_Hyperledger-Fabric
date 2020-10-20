@@ -13,18 +13,18 @@ const ActDetailStyle = styled.div`
   flex-direction: column;
 `;
 
-const ActDetail = ({ }) => {
+const ActDetail = ({ match }) => {
     // const dispatch = useDispatch();
     // const currentUser = useSelector( (state) => state.authentication.status.currentUser);
     const init = useRef(true);  
-    const [actList, setActList] = useState([]);
+    const [actId, setActId] = useState([]);
     const [loading, setLoading] = useState(true);
-            
+
     useEffect(() => {
-        const initFunc = async (id) => {
+        const id = match.params.id;
+        const initFunc = async () => {
             const data =  await axios.get(`/act/${id}`)
-            console.log(data.data);
-            setActList(data.data);
+            setActId(data.data);
         }
         if(init.current) {
             init.current = false;
@@ -37,7 +37,7 @@ const ActDetail = ({ }) => {
 
     return (
     <ActDetailStyle>
-    <ActContents actList={actList}/>
+    <ActContents actId={actId}/>
     </ActDetailStyle>
     );
 };

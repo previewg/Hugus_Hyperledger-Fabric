@@ -27,6 +27,7 @@ import {
   StoryUpdate,
   ActMain,
   ActDetail,
+  ActWrite,
 } from "pages";
 
 // Common components
@@ -59,6 +60,7 @@ ReactDOM.render(
         <Route path="/info/block" component={Auth(BlockInfo, true)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
+        <Route path="/act/write" component={Auth(ActWrite, null)} />
       </Switch>
     </BrowserRouter>
   </Provider>,

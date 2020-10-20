@@ -10,6 +10,7 @@ import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
 import ActMain from "./ActMain";
 import ActDetail from "./ActDetail";
+import ActWrite from "./ActWrite";
 export {
   Home,
   StoryMain,
@@ -23,4 +24,5 @@ export {
   SearchResult,
   ActMain,
   ActDetail,
+  ActWrite,
 };

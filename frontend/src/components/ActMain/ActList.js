@@ -21,19 +21,17 @@ const ActListStyle = styled.div`
     }
     .list_grid {
         display: grid;
-        grid-template-columns: 10% 60% 15% 15%;
-    
-    
+        grid-template-columns: 10% 60% 13% 17%;
     }
     .acenter {
         text-align: center;
     }
-    .list_data {
+      .list_data {
         width: 100%;
         line-height: 40px;
         border-bottom: solid gray 0.1px;
         color: black;
-        font-size:15px;
+        font-size:17px;
         transition: 0.1s ease-in-out;
         outline:none;
         cursor: pointer;
@@ -57,10 +55,10 @@ const ActListStyle = styled.div`
     }
     `;
 
-const ActList = ({ }) => {
+const ActList = ({ actList }) => {
   const dispatch = useDispatch();
   const init = useRef(true);  
-  const [actList, setActList] = useState([]);
+  // const [actList, setActList] = useState([]);
   const [loading, setLoading] = useState(true);
 
 //   useEffect(() => {
@@ -81,34 +79,9 @@ const ActList = ({ }) => {
 //     // fetchActs();
 // }, []);
 
-
-// useEffect(() => {
-//   const initFunc = async () => {
-//   const data = await axios.get('/act/list')
-//         setActList(data.data.list)
-//   } 
-//   if(init.current) {
-//           init.current = false;
-//       }
-//     return initFunc(); 
-//   }, []);
-
   const visitHandler = (id) => {
     dispatch(actVisit(id));
   };
-
-
-  useEffect(() => {
-  const initFunc = async () => {
-      const response = await axios.get("/act/list")
-      setActList(response.data.list)
-    }
-    if(init.current) {
-    init.current = false;
-      initFunc();
-  }
-}, []);
-
 
   return (
     <ActListStyle>
@@ -127,16 +100,16 @@ const ActList = ({ }) => {
               key={key}
               >  
               <div className='list_grid list_data' key={key}>
-                <div className="act__id">{actList.id}</div>
-                <div className="act__title">{actList.act_title}</div> 
-                <div className="act__visit">{actList.visited}</div>
-                <div className='create__time'>{actList.created_at}</div>
+                <div className="act__id">{act.id}</div>
+                <div className="act__title">{act.act_title}</div> 
+                <div className="act__visit">{act.visited}</div>
+                <div className='create__time'>{act.created_at}</div>
               </div>
               </Link>
             )
           }) }
 
-        {/* {status === "WAITING" && <Loader />} */}
+        {/* {actList.length !== 0 && <Loader />} */}
     </ActListStyle>
   );
 };

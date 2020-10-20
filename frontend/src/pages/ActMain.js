@@ -2,6 +2,7 @@ import React, { useEffect, useState ,useRef } from "react";
 import axios from "axios";
 import { ActList,Search,Pagination } from "components";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const ActStyle = styled.section`
     width:100%;
@@ -16,10 +17,12 @@ const ActStyle = styled.section`
     width:75%;
         .title {
         width:100%;
+        display:flex;
+        justify-content:flex-start;
             >p {
             font-size:30px;
             border-bottom:solid orange 3px;
-            padding-bottom:3px;
+            padding-bottom:2px;
             }
         }
         /* .pagination {
@@ -49,23 +52,43 @@ const ActStyle = styled.section`
             }
             }
         } */
+        .actWrite_Btn {
+            font-size:1px;
+            cursor: pointer;
+        }
     }
 `;
 
-const ActMain = () => {
+const ActMain = (props) => {
     const [total,setTotal] = useState(0);
     const init = useRef(true);  
-    // const [actList, setActList] = useState([]);
-    // const [loading, setLoading] = useState(true);
+    const [actList, setActList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // const indexOfLastAct = currentPage * actsPerPage;
     // const indexOfFirstPost = indexOfLastAct - actsPerPage;
     // const currentActs = acts.slice(indexOfFirstPost, indexOfLastAct);
-        
 
     useEffect(() => {
         window.scrollTo(0, 0);
       }, []);
+
+      useEffect(() => {
+        const initFunc = async () => {
+            const data = await axios.get("/act/list")
+            setTotal(data.data.count)
+            setActList(data.data.list)
+          }
+          if(init.current) {
+          init.current = false;
+        }
+        initFunc();
+      }, []);
+
+
+    const onClickHandler = () => {
+        props.history.push("/act/write");
+    };
 
     // useEffect(() => {
     //     const initFunc = async () => {
@@ -92,8 +115,9 @@ const ActMain = () => {
                 <p>전달 스토리</p>
             </div>
             <Search/>
-            <ActList/>
-            <Pagination total={total} />
+            <ActList actList={actList}/>
+            <Pagination total={total} maxPage='15' pageLimit='5' />
+            <a className="actWrite_Btn" onClick={onClickHandler}>글쓰기 안보이게할거임</a>
         </div>
     </ActStyle>
   );

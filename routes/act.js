@@ -1,20 +1,49 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Act, User } = require("../models");
+const { Act, User, Act_File } = require("../models");
+const multer = require("multer");
+const multerS3 = require("multer-s3");
+const AWS = require("aws-sdk");
+const path = require("path");
+
+let s3 = new AWS.S3();
+
+let upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "hugusact",
+    key: function (req, file, cb) {
+      let extension = path.extname(file.originalname);
+      cb(
+        null,
+        file.originalname.split(".")[0] + Date.now().toString() + extension
+      );
+    },
+    acl: "public-read-write",
+  }),
+});
+
 
 
 // Act 등록
-router.post("/add", async (req, res) => {
+router.post("/add", upload.array("files"), async (req, res) => {
     try {
-      // const { user_email } = req.session.loginInfo;
-      const user_email = "moonnr94@gmail.com";
+      const { user_email } = req.session.loginInfo;
       const { act_title, act_content } = req.body;
       const list = await Act.create({
         act_title,
         act_content,
         user_email:user_email,
       });
+
+    const act_id = act.getDataValue("id");
+    for (const file of req.files) {
+      await act_File.create({
+        act_id: act_id,
+        file: file.location,
+      });
+    }
 
       res.json({ list: list, success: 1 });
     } catch (error) {
@@ -23,7 +52,7 @@ router.post("/add", async (req, res) => {
     }
   });
 
-
+// Act 목록 조회
 router.get("/list", async (req, res) => {
   try {
     const list = await Act.findAll({
@@ -45,8 +74,6 @@ router.get("/list", async (req, res) => {
     }
 });
 
-
-// Act 목록 조회
 // router.get("/list/:page", async (req, res) => {
 //     try {
 //       let page = req.params.page;
@@ -88,7 +115,7 @@ router.get("/:id", async (req, res) => {
     const data = await Act.findOne({
       where: { id: act_id },
       include: [
-        { model: User, attributes: ["nickname"] },
+        { model: Act_File, attributes: ["file"] },
       ],
     });
     res.json({ data: data, success: 1 });
