@@ -50,12 +50,19 @@ router.post("/add", upload.array("files"), async (req, res) => {
     });
 
     const story_id = story.getDataValue("id");
-    for (const file of req.files) {
-      await Story_File.create({
-        story_id: story_id,
-        file: file.location,
-      });
-    }
+        for (const file of req.files) {
+            if (file.location !== null) {
+                await Story_File.create({
+                  story_id: story_id,
+                    file: file.location,
+                });
+            } else {
+                await Story_File.create({
+                    story_id: story.dataValues.id,
+                    file: null,
+                })
+            }
+        }
 
     const hashtags = req.body.hashtags.split(",");
     for (const hashtag of hashtags) {

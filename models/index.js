@@ -66,6 +66,7 @@ db.Story.belongsToMany(db.Hashtag, {
   through: "Story_Hashtag",
   foreignKey: "story_id",
 });
+
 db.Story.hasMany(db.Story_File, { foreignKey: "story_id", sourceKey: "id" });
 
 // Story_Comment
@@ -147,6 +148,10 @@ db.Story_Hashtag.belongsTo(db.Hashtag, {
   targetKey: "id",
 });
 db.Story_Hashtag.belongsTo(db.Story, {
+  foreignKey: "story_id",
+  targetKey: "id",
+});
+db.Story_Hashtag.hasMany(db.Story_File, {
   foreignKey: "story_id",
   targetKey: "id",
 });
