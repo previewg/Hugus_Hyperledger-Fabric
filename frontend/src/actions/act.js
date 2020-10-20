@@ -40,9 +40,9 @@ const actListLoadFailure = () => {
 };
 
 // act 게시물 상세 정보
-export const actLoadInit = () => {
-  return { type: act_LOAD_INIT };
-};
+// export const actLoadInit = () => {
+//   return { type: act_LOAD_INIT };
+// };
 
 // const actLoadStart = () => {
 //   return { type: ACT_LOAD };
@@ -73,21 +73,21 @@ export const actAdd = (data) => async (dispatch) => {
     });
 };
 
-// act 게시물 목록 조회 요청
-export const actListLoader = (page) => async (dispatch) => {
-    dispatch(actListLoadStart());
-    await axios
-      .get(`/act/list/${page}`)
-      .then((response) => {
-        let status = true;
-        if (response.data.list.length !== 10) status = false;
-        dispatch(actListLoadSuccess(response.data.list, status));
-      })
-      .catch((error) => {
-        dispatch(actListLoadFailure());
-        console.error(error);
-      });
-  };
+// // act 게시물 목록 조회 요청
+// export const actListLoader = (page) => async (dispatch) => {
+//     dispatch(actListLoadStart());
+//     await axios
+//       .get(`/act/list/${page}`)
+//       .then((response) => {
+//         let status = true;
+//         if (response.data.list.length !== 10) status = false;
+//         dispatch(actListLoadSuccess(response.data.list, status));
+//       })
+//       .catch((error) => {
+//         dispatch(actListLoadFailure());
+//         console.error(error);
+//       });
+//   };
   
 // // 게시물 상세 조회 요청
 // export const actLoader = (id) => async (dispatch) => {
