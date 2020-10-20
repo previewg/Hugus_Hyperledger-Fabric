@@ -17,9 +17,6 @@ import {
   PROFILE_ADD,
   PROFILE_ADD_SUCCESS,
   PROFILE_ADD_FAILURE,
-  PROFILE_LOAD,
-  PROFILE_LOAD_SUCCESS,
-  PROFILE_LOAD_FAILURE,
 } from "../actions/auth";
 
 import update from "react-addons-update";
@@ -65,15 +62,9 @@ const initialState = {
   signDestroy: {
     status: "INIT",
   },
-  emailConfirm: {
-    send_status: "INIT",
-    status: "INIT",
-    key: parseJwt(getCookie("hugus_check")).key_for_verify || "",
-  },
 };
 
 export default function authentication(state = initialState, action) {
-
   switch (action.type) {
     // 로그인
     case AUTH_SIGNIN:
@@ -191,33 +182,13 @@ export default function authentication(state = initialState, action) {
         },
       });
     case PROFILE_ADD_SUCCESS:
-      console.log(action.data)
+      console.log(action.data);
       return update(state, {
         profile: {
           status: { $set: "SUCCESS" },
         },
         status: {
           profile_path: { $set: action.data },
-        },
-      });
-
-    case PROFILE_LOAD:
-      return update(state, {
-        profile: {
-          status: { $set: "WAITING" },
-        },
-      });
-    case PROFILE_LOAD_SUCCESS:
-      return update(state, {
-        profile: {
-          status: { $set: "SUCCESS" },
-          data: { $set: action.data.data.user_profile },
-        },
-      });
-    case PROFILE_LOAD_FAILURE:
-      return update(state, {
-        profile: {
-          status: { $set: "FAILURE" },
         },
       });
 
