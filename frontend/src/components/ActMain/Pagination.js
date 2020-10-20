@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-
-const Paginationstyle = styled.div`
+const PaginationStyle = styled.div`
   width: 40%;
-    div {
+  div {
     display: flex;
     justify-content: space-around;
     margin-top: 12px;
     text-align: center;
 
-    >button {
+    > button {
       font-weight: bold;
       height: 32px;
       width: 35px;
@@ -21,23 +20,22 @@ const Paginationstyle = styled.div`
         background-color: orange;
       }
     }
-
-  }  
+  }
 `;
 
 const createArr = (n) => {
   const iArr = new Array(n);
-  for(var i = 0; i < n; i ++) iArr[i] = i +1;
+  for (let i = 0; i < n; i++) iArr[i] = i + 1;
   return iArr;
 };
 
-const Pagination = ({ total, maxPage, pageLimit }) => {
+const Pagination = ({ total, pageLimit, nowPage }) => {
   const [blockNum, setBlockNum] = useState(0);
-  const [currPage, setCurrPage] = useState(1); 
+  const [currPage, setCurrPage] = useState(1);
 
-  const v = Number (blockNum * pageLimit);
-  const iArr = createArr(Number(maxPage));
-  const pArr = iArr.slice(v, Number(pageLimit)+ v); 
+  const v = Number(blockNum * pageLimit);
+  const iArr = createArr(Number(total));
+  const pArr = iArr.slice(v, Number(pageLimit) + v);
 
   const firstPage = () => {
     setBlockNum(0);
@@ -45,46 +43,47 @@ const Pagination = ({ total, maxPage, pageLimit }) => {
   };
 
   const lastPage = () => {
-    setBlockNum( Math.ceil(maxPage/pageLimit) -1 );
-    setCurrPage(maxPage);
-  }
+    setBlockNum(Math.ceil(total / pageLimit) - 1);
+    setCurrPage(total);
+  };
 
   const prePage = () => {
-    if ( currPage <= 1 )
-      return;
-    if (( currPage - 1 ) <= pageLimit * blockNum) {
-      setBlockNum( n => n - 1 );
+    if (currPage <= 1) return;
+    if (currPage - 1 <= pageLimit * blockNum) {
+      setBlockNum((n) => n - 1);
     }
-    setCurrPage( n => n - 1 );
-    }
-  const nextPage = () => {
-    if( currPage >= maxPage )
-    return;
-    if(pageLimit * Number( blockNum + 1 ) < Number(currPage + 1)) {
-      setBlockNum( n => n + 1 );
-    }
-    setCurrPage( n => n + 1 );
+    setCurrPage((n) => n - 1);
   };
+
+  const nextPage = () => {
+    if (currPage >= total) return;
+    if (pageLimit * Number(blockNum + 1) < Number(currPage + 1)) {
+      setBlockNum((n) => n + 1);
+    }
+    setCurrPage((n) => n + 1);
+  };
+
+  useEffect(() => {
+    nowPage(currPage);
+  }, [currPage]);
+
   return (
-    <Paginationstyle>
-        <p>currPage : {currPage}</p>
-        <p>blockNum : {blockNum}</p>
-        <div>
+    <PaginationStyle>
+      <p>currPage : {currPage}</p>
+      <p>blockNum : {blockNum}</p>
+      <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
-        {
-          pArr.map(n => (
-            <button>
-              {n}
-            </button>
-          ))
-        }
+        {pArr.map((n, key) => (
+          <button key={key} onClick={() => setCurrPage(n)}>
+            {n}
+          </button>
+        ))}
         <button onClick={nextPage}>&gt;</button>
         <button onClick={lastPage}>&gt;&gt;</button>
-        </div>
-    </Paginationstyle>
+      </div>
+    </PaginationStyle>
   );
-}
-
+};
 
 export default Pagination;
