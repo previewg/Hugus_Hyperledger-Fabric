@@ -96,7 +96,19 @@ router.post("/add", upload.array("files"), async (req, res) => {
 router.post("/delete", async (req, res) => {
   try {
     const { id } = req.body;
+    const data = await Story_File.findOne({where:{story_id:id},attributes:["file"]})
+   const key = data.file.split('/')
+
+
     await Story.destroy({ where: { id } });
+    await s3.deleteObject({
+      Bucket:'hugusstory',
+      Key:key[3]
+    },(err)=>{
+      if(err) {
+        throw err;
+      }
+    })
     res.json({ success: 1 });
   } catch (err) {
     console.error(err);
