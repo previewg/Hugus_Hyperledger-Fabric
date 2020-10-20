@@ -113,12 +113,13 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const CommentInput = ({ commentList, data }) => {
+const CommentInput = ({ commentList, data, num }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
   const like = useSelector((state) => state.story.like.user);
+  const total = useSelector((state) => state.comment.list.total);
 
   const [error, setError] = useState(false);
   const comment = useRef();
@@ -138,7 +139,9 @@ const CommentInput = ({ commentList, data }) => {
         comment.current.focus();
         setError(true);
       } else {
-        dispatch(commentAdd({ comment: comments, story_id: data.id }));
+        dispatch(
+          commentAdd({ comment: comments, story_id: data.id, num: num })
+        );
       }
     };
     const commentClearHandler = () => {
@@ -149,7 +152,7 @@ const CommentInput = ({ commentList, data }) => {
       return (
         <CommentFalseStyle>
           <div className="header">
-            <p>댓글 {commentList.length}개</p>
+            <p>댓글 {total}개</p>
             <div className="icon">
               <img
                 onClick={() => dispatch(signInBtnIsClicked())}
@@ -167,7 +170,7 @@ const CommentInput = ({ commentList, data }) => {
     return (
       <CommentTrueStyle>
         <div className="header">
-          <p>댓글 {commentList.length}개</p>
+          <p>댓글 {total}개</p>
           <div className="icon">
             {like ? (
               <img

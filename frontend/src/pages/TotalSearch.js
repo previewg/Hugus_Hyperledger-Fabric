@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
-import { hashtagAll } from "actions/hashtag";
+import {hashtagAll, hashtagSearch} from "actions/hashtag";
 import * as Hangul from "hangul-js";
+import {Link} from "react-router-dom";
 
 const TotalSearchStyle = styled.div`
   display: flex;
@@ -136,75 +137,90 @@ const TotalSearchStyle = styled.div`
   }
 `;
 
-const TotalSearch = () => {
-  const dispatch = useDispatch();
-  const list = useSelector((state) => state.hashtag.list.data);
-  const [search, setSearch] = useState("");
+const TotalSearch = ({history}) => {
+    const dispatch = useDispatch();
+    const list = useSelector((state) => state.hashtag.list.data);
+    const [search, setSearch] = useState("");
+    const onChangeHandler = (e) => {
+        e.preventDefault();
+        setSearch(e.target.value);
+    };
+    const onClick = () => {
+        dispatch(hashtagSearch(search));
+    }
 
-  const onChangeHandler = (e) => {
-    e.preventDefault();
-    setSearch(e.target.value);
-  };
 
-  const compare = (hashtag) => {
-    const dis = Hangul.disassemble(hashtag);
-    if (hashtag.match(search) || dis.includes(search)) return true;
-    else return false;
-  };
+    const compare = (hashtag) => {
+        const dis = Hangul.disassemble(hashtag);
+        if (hashtag.match(search) || dis.includes(search)) return true;
+        else return false;
+    };
 
-  useEffect(() => {
-    dispatch(hashtagAll());
-  }, []);
 
-  return (
-    <TotalSearchStyle search={search}>
-      <div className="layout">
-        <div className="content">
-          <img className="logo" alt="hugus" src="/icons/hugus.svg" />
-          <div className="title_text">
-            <p>
-              마음을 담는 기부
-              <br />
-              허그에 담기다
-            </p>
-            <p>
-              따뜻하게 안아줄 수 있는
-              <br />
-              투명하고 자율적인 기부 플랫폼
-            </p>
-          </div>
-        </div>
+    useEffect(() => {
+        dispatch(hashtagAll());
+    }, []);
 
-        <div className="search__bar">
-          <input
-            name="search"
-            value={search}
-            className="search_form"
-            type="text"
-            placeholder="해시태그로 검색해보세요!"
-            onChange={onChangeHandler}
-          />
-          <img alt="search__icon" src="/icons/search.png" />
-        </div>
-
-        <div className="live__suggestion">
-          {list.map((row) => {
-            if (compare(row.hashtag))
-              return (
-                <div>
-                  <input value={row.hashtag} readOnly />
-                  <img alt="search__icon" src="/icons/search.png" />
+    return (
+        <TotalSearchStyle search={search}>
+            <div className="layout">
+                <div className="content">
+                    <img className="logo" alt="hugus" src="/icons/hugus.svg"/>
+                    <div className="title_text">
+                        <p>
+                            마음을 담는 기부
+                            <br/>
+                            허그에 담기다
+                        </p>
+                        <p>
+                            따뜻하게 안아줄 수 있는
+                            <br/>
+                            투명하고 자율적인 기부 플랫폼
+                        </p>
+                    </div>
                 </div>
-              );
-          })}
-        </div>
-        <div className="suggestion">
-          <p>#추천태그1</p>
-          <p>#추천태그2</p>
-        </div>
-      </div>
-    </TotalSearchStyle>
-  );
+
+                <div className="search__bar">
+                    <input
+                        name="search"
+                        value={search}
+                        className="search_form"
+                        type="text"
+                        placeholder="해시태그로 검색해보세요!"
+                        onChange={onChangeHandler}
+                    />
+                    <Link to="/search/result" >
+                        <div onClick={onClick}>
+                            <img alt="search__icon" src="/icons/search.png"/>
+                        </div>
+                    </Link>
+                </div>
+                <div className="live__suggestion">
+                    {list.map((row, key) => {
+                        if (compare(row.hashtag))
+                            return (
+                                <div key={key}>
+                                    <input  value={row.hashtag} readOnly onClick={async ()=>{await setSearch(row.hashtag)
+                                        dispatch(hashtagSearch(row.hashtag))
+                                       history.push('/search/result')
+                                        }}
+                                    />
+                                    {search !=="" ? <Link to="/search/result">
+                                        <img alt="search__icon" src="/icons/search.png"/>
+                                    </Link> :null}
+
+
+                                </div>
+                            );
+                    })}
+                </div>
+                <div className="suggestion">
+                    <p>#추천태그1</p>
+                    <p>#추천태그2</p>
+                </div>
+            </div>
+        </TotalSearchStyle>
+    );
 };
 
 export default TotalSearch;

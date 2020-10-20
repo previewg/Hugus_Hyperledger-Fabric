@@ -165,7 +165,6 @@ const StoryContents = ({ data, history }) => {
   const currentUser = useSelector(
     (state) => state.authentication.status.currentUser
   );
-  console.log(data);
   const totalPrice = () => {
     let total = 0;
     data.Story_Items.map((item) => {

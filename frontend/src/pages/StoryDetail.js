@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { storyLoader, storyLoadInit } from "actions/story";
-import { commentListLoader } from "actions/comment";
-import { StoryContents, Comments, Back, StoryDetailLoader } from "components";
+import { commentListInit, commentListLoader } from "actions/comment";
+import { StoryContents, Comments, StoryDetailLoader } from "components";
 
 const StoryDetailStyle = styled.div`
   display: flex;
@@ -20,8 +20,11 @@ const StoryDetail = ({ match, history }) => {
 
   useEffect(() => {
     dispatch(storyLoader(match.params.id));
-    dispatch(commentListLoader(match.params.id));
-    return () => dispatch(storyLoadInit());
+    dispatch(commentListLoader(match.params.id, 1));
+    return () => {
+      dispatch(storyLoadInit());
+      dispatch(commentListInit());
+    };
   }, []);
 
   if (status !== "SUCCESS") return <StoryDetailLoader />;
@@ -29,7 +32,6 @@ const StoryDetail = ({ match, history }) => {
     <StoryDetailStyle>
       <StoryContents data={data} history={history} />
       <Comments data={data} />
-      <Back />
     </StoryDetailStyle>
   );
 };

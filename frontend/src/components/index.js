@@ -12,7 +12,6 @@ import EditInfo from "./UserInfo/EditInfo";
 import History from "./UserInfo/History";
 import MyNews from "./UserInfo/MyNews";
 import MyHome from "./UserInfo/MyHome";
-import Back from "./StoryDetail/Back";
 import Comments from "./StoryDetail/Comments";
 import CommentInput from "./StoryDetail/CommentInput";
 import CommentList from "./StoryDetail/CommentList";
@@ -22,7 +21,7 @@ import StoryDetailLoader from "./StoryDetail/Loader";
 import ActList from "./ActMain/ActList";
 import ActContents from "./ActDetail/ActContents";
 import Pagination from "./ActMain/Pagination";
-import Search from "./ActMain/Search"
+import Search from "./ActMain/Search";
 export {
   NavBar,
   SignIn,
@@ -38,7 +37,6 @@ export {
   History,
   MyHome,
   MyNews,
-  Back,
   StoryVote,
   StoryContents,
   CommentList,

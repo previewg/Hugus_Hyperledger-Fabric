@@ -50,12 +50,19 @@ router.post("/add", upload.array("files"), async (req, res) => {
     });
 
     const story_id = story.getDataValue("id");
-    for (const file of req.files) {
-      await Story_File.create({
-        story_id: story_id,
-        file: file.location,
-      });
-    }
+        for (const file of req.files) {
+            if (file.location !== null) {
+                await Story_File.create({
+                  story_id: story_id,
+                    file: file.location,
+                });
+            } else {
+                await Story_File.create({
+                    story_id: story.dataValues.id,
+                    file: null,
+                })
+            }
+        }
 
     const hashtags = req.body.hashtags.split(",");
     for (const hashtag of hashtags) {
@@ -89,7 +96,19 @@ router.post("/add", upload.array("files"), async (req, res) => {
 router.post("/delete", async (req, res) => {
   try {
     const { id } = req.body;
+    const data = await Story_File.findOne({where:{story_id:id},attributes:["file"]})
+   const key = data.file.split('/')
+
+
     await Story.destroy({ where: { id } });
+    await s3.deleteObject({
+      Bucket:'hugusstory',
+      Key:key[3]
+    },(err)=>{
+      if(err) {
+        throw err;
+      }
+    })
     res.json({ success: 1 });
   } catch (err) {
     console.error(err);
@@ -254,7 +273,7 @@ router.get("/list/:section", async (req, res) => {
     let section = req.params.section;
     let offset = 0;
 
-    // 18개씩 조회
+    // 9개씩 조회
     if (section > 1) {
       offset = 9 * (section - 1);
     }

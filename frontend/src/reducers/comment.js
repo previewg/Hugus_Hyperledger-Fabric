@@ -11,6 +11,7 @@ import {
   COMMENT_CHILD_ADD,
   COMMENT_CHILD_ADD_SUCCESS,
   COMMENT_CHILD_ADD_FAILURE,
+  COMMENT_LIST_INIT,
 } from "../actions/comment";
 import update from "react-addons-update";
 
@@ -22,8 +23,11 @@ const initialState = {
     status: "INIT",
   },
   list: {
+    total: 0,
     status: "INIT",
     data: [],
+    num: 1,
+    more: false,
   },
   child_add: {
     status: "INIT",
@@ -32,6 +36,25 @@ const initialState = {
 
 export default function comment(state = initialState, action) {
   switch (action.type) {
+    case COMMENT_LIST_INIT:
+      return {
+        add: {
+          status: "INIT",
+        },
+        delete: {
+          status: "INIT",
+        },
+        list: {
+          total: 0,
+          status: "INIT",
+          data: [],
+          num: 1,
+          more: false,
+        },
+        child_add: {
+          status: "INIT",
+        },
+      };
     case COMMENT_ADD:
       return update(state, {
         add: {
@@ -46,6 +69,9 @@ export default function comment(state = initialState, action) {
         list: {
           status: { $set: "SUCCESS" },
           data: { $set: action.list },
+          total: { $set: action.total },
+          more: { $set: action.more },
+          num: { $set: 2 },
         },
       });
     case COMMENT_ADD_FAILURE:
@@ -62,12 +88,38 @@ export default function comment(state = initialState, action) {
       });
 
     case COMMENT_LIST_LOAD_SUCCESS:
-      return update(state, {
-        list: {
-          status: { $set: "SUCCESS" },
-          data: { $set: action.list },
-        },
-      });
+      const newData = state.list.data.concat(action.list);
+      if (action.more) {
+        return update(state, {
+          list: {
+            status: { $set: "SUCCESS" },
+            data: { $set: newData },
+            num: { $set: state.list.num + 1 },
+            more: { $set: true },
+            total: { $set: action.total },
+          },
+        });
+      } else {
+        if (state.list.data.length % 10 !== action.list.length % 10) {
+          return update(state, {
+            list: {
+              status: { $set: "SUCCESS" },
+              data: { $set: newData },
+              more: { $set: false },
+              total: { $set: action.total },
+            },
+          });
+        } else {
+          return update(state, {
+            list: {
+              status: { $set: "SUCCESS" },
+              more: { $set: false },
+              total: { $set: action.total },
+            },
+          });
+        }
+      }
+
     case COMMENT_LIST_LOAD_FAILURE:
       return update(state, {
         list: {
@@ -88,6 +140,9 @@ export default function comment(state = initialState, action) {
         list: {
           status: { $set: "SUCCESS" },
           data: { $set: action.list },
+          total: { $set: action.total },
+          more: { $set: action.more },
+          num: { $set: 2 },
         },
       });
     case COMMENT_DELETE_FAILURE:
@@ -110,6 +165,9 @@ export default function comment(state = initialState, action) {
         list: {
           status: { $set: "SUCCESS" },
           data: { $set: action.list },
+          total: { $set: action.total },
+          more: { $set: action.more },
+          num: { $set: 2 },
         },
       });
     case COMMENT_CHILD_ADD_FAILURE:
