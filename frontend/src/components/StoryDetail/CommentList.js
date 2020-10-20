@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { commentChildAdd, commentDelete } from "../../actions/comment";
+import {
+  commentChildAdd,
+  commentDelete,
+  commentListLoader,
+} from "../../actions/comment";
 import CommentChild from "../../components/StoryDetail/CommentChild";
 import CommentChildInput from "./CommentChildInput";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const CommentListStyle = styled.section`
   display: flex;
@@ -155,6 +160,20 @@ const CommentListStyle = styled.section`
       }
     }
   }
+
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      cursor: pointer;
+      color: gray;
+    }
+    a {
+      text-decoration: none;
+      color: black;
+    }
+  }
 `;
 
 const time = (value) => {
@@ -182,12 +201,11 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const CommentList = ({ commentList, data }) => {
+const CommentList = ({ commentList, data, num }) => {
   const dispatch = useDispatch();
   const current_user = useSelector(
     (state) => state.authentication.status.currentUser
   );
-
   const commentDeleteHandler = (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
@@ -217,6 +235,10 @@ const CommentList = ({ commentList, data }) => {
         {status && <CommentChild id={comment.id} />}
       </>
     );
+  };
+
+  const loadMore = () => {
+    dispatch(commentListLoader(data.id, num));
   };
 
   return (
@@ -262,6 +284,12 @@ const CommentList = ({ commentList, data }) => {
           </article>
         );
       })}
+      <div className="bottom">
+        <p onClick={loadMore}>댓글 더보기</p>
+        <Link className="back_btn" to="/story">
+          글목록
+        </Link>
+      </div>
     </CommentListStyle>
   );
 };

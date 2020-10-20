@@ -1,7 +1,13 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { User, Story_Comment, Comment_Child, sequelize } = require("../models");
+const {
+  User,
+  Story_Comment,
+  Comment_Child,
+  Story_Comment_Like,
+  sequelize,
+} = require("../models");
 
 // 댓글 등록
 router.post("/add", async (req, res) => {
@@ -32,9 +38,19 @@ router.post("/add", async (req, res) => {
       },
       order: [["created_at", "DESC"]],
       include: [{ model: User, attributes: ["nickname", "user_profile"] }],
+      limit: 10,
     });
 
-    res.json({ list: list, success: 1 });
+    const total = await Story_Comment.count({
+      where: {
+        story_id: story_id,
+      },
+    });
+
+    let more = false;
+    if (total > 10) more = true;
+
+    res.json({ list: list, success: 1, total: total, more: more });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
@@ -76,8 +92,19 @@ router.post("/delete", async (req, res) => {
       },
       order: [["created_at", "DESC"]],
       include: [{ model: User, attributes: ["nickname", "user_profile"] }],
+      limit: 10,
     });
-    res.json({ list: list, success: 1 });
+
+    const total = await Story_Comment.count({
+      where: {
+        story_id: story_id,
+      },
+    });
+
+    let more = false;
+    if (total > 10) more = true;
+
+    res.json({ list: list, success: 1, total: total, more: more });
   } catch (err) {
     console.log(err);
     res.json({ message: false });
@@ -85,10 +112,16 @@ router.post("/delete", async (req, res) => {
 });
 
 // 댓글 목록 조회
-router.get("/list/:story_id", async (req, res) => {
+router.get("/list/:story_id/:section", async (req, res) => {
   try {
     let story_id = req.params.story_id;
+    let section = req.params.section;
+    let offset = 0;
 
+    // 10개씩 조회
+    if (section > 1) {
+      offset = 10 * (section - 1);
+    }
     const list = await Story_Comment.findAll({
       attributes: [
         "id",
@@ -102,13 +135,38 @@ router.get("/list/:story_id", async (req, res) => {
           "child_count",
         ],
       ],
-      include: [{ model: User, attributes: ["nickname", "user_profile"] }],
+      include: [
+        { model: User, attributes: ["nickname", "user_profile"] },
+        { model: Story_Comment_Like, attributes: ["like"] },
+      ],
+
       where: {
         story_id: story_id,
       },
       order: [["created_at", "DESC"]],
+      offset: offset,
+      limit: 10,
     });
-    res.json({ list: list, success: 1 });
+
+    const total = await Story_Comment.count({
+      where: {
+        story_id: story_id,
+      },
+    });
+
+    let more = false;
+    if (total > offset + 10) more = true;
+
+    res.json({ list: list, success: 1, more: more, total: total });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// 댓글 좋아요 등록 / 삭제
+router.post("/like", async (req, res) => {
+  try {
   } catch (error) {
     console.log(error);
     res.status(400).json({ success: 3 });
@@ -144,8 +202,19 @@ router.post("/child/add", async (req, res) => {
         story_id,
       },
       order: [["created_at", "DESC"]],
+      limit: 10,
     });
-    res.json({ list: list, success: 1 });
+
+    const total = await Story_Comment.count({
+      where: {
+        story_id: story_id,
+      },
+    });
+
+    let more = false;
+    if (total > 10) more = true;
+
+    res.json({ list: list, success: 1, more: more, total: total });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });

@@ -19,6 +19,7 @@ db.Email_confirm = require("./email_confirm")(sequelize, Sequelize);
 db.Kakao_User = require("./kakao_user")(sequelize, Sequelize);
 db.Story = require("./story")(sequelize, Sequelize);
 db.Story_Comment = require("./story_comment")(sequelize, Sequelize);
+db.Story_Comment_Like = require("./story_comment_like")(sequelize, Sequelize);
 db.Comment_Child = require("./comment_child")(sequelize, Sequelize);
 db.Story_Like = require("./story_like")(sequelize, Sequelize);
 db.Campaign = require("./campaign")(sequelize, Sequelize);
@@ -69,6 +70,10 @@ db.Story.hasMany(db.Story_File, { foreignKey: "story_id", sourceKey: "id" });
 
 // Story_Comment
 db.Story_Comment.hasMany(db.Comment_Child, {
+  foreignKey: "comment_id",
+  sourceKey: "id",
+});
+db.Story_Comment.hasMany(db.Story_Comment_Like, {
   foreignKey: "comment_id",
   sourceKey: "id",
 });
@@ -160,6 +165,12 @@ db.Story_Vote.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
 db.Story_Vote.belongsTo(db.User, { foreignKey: "user_id", targetKey: "id" });
 
 //Act
-db.Act.belongsTo(db.User, {foreignKey: "user_email",targetKey: "email"});
+db.Act.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
+
+//Story Comment Like
+db.Story_Comment_Like.belongsTo(db.Story_Comment, {
+  foreignKey: "comment_id",
+  targetKey: "id",
+});
 
 module.exports = db;

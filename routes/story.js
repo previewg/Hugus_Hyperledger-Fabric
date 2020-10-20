@@ -254,7 +254,7 @@ router.get("/list/:section", async (req, res) => {
     let section = req.params.section;
     let offset = 0;
 
-    // 18개씩 조회
+    // 9개씩 조회
     if (section > 1) {
       offset = 9 * (section - 1);
     }

@@ -17,6 +17,7 @@ export const COMMENT_CHILD_ADD = "COMMENT_CHILD_ADD";
 export const COMMENT_CHILD_ADD_SUCCESS = "COMMENT_CHILD_ADD_SUCCESS";
 export const COMMENT_CHILD_ADD_FAILURE = "COMMENT_CHILD_ADD_FAILURE";
 
+export const COMMENT_LIST_INIT = "COMMENT_LIST_INIT";
 // export const COMMENT_CHILD_LIST_LOAD = "COMMENT_CHILD_LIST_LOAD";
 // export const COMMENT_CHILD_LIST_LOAD_SUCCESS = "COMMENT_CHILD_LIST_LOAD_SUCCESS";
 // export const COMMENT_CHILD_LIST_LOAD_FAILURE = "COMMENT_CHILD_LIST_LOAD_FAILURE";
@@ -26,12 +27,16 @@ const commentAddStart = () => {
   return { type: COMMENT_ADD };
 };
 
-const commentAddSuccess = (list) => {
-  return { type: COMMENT_ADD_SUCCESS, list: list };
+const commentAddSuccess = (list, more, total) => {
+  return { type: COMMENT_ADD_SUCCESS, list: list, more: more, total: total };
 };
 
 const commentAddFailure = () => {
   return { type: COMMENT_ADD_FAILURE };
+};
+
+export const commentListInit = () => {
+  return { type: COMMENT_LIST_INIT };
 };
 
 // 댓글 리스트 로드
@@ -39,8 +44,13 @@ const commentListLoadStart = () => {
   return { type: COMMENT_LIST_LOAD };
 };
 
-const commentListLoadSuccess = (list) => {
-  return { type: COMMENT_LIST_LOAD_SUCCESS, list: list };
+const commentListLoadSuccess = (list, more, total) => {
+  return {
+    type: COMMENT_LIST_LOAD_SUCCESS,
+    list: list,
+    more: more,
+    total: total,
+  };
 };
 
 const commentListLoadFailure = () => {
@@ -52,8 +62,8 @@ const commentDeleteStart = () => {
   return { type: COMMENT_DELETE };
 };
 
-const commentDeleteSuccess = (list) => {
-  return { type: COMMENT_DELETE_SUCCESS, list: list };
+const commentDeleteSuccess = (list, more, total) => {
+  return { type: COMMENT_DELETE_SUCCESS, list: list, more: more, total: total };
 };
 
 const commentDeleteFailure = () => {
@@ -65,8 +75,13 @@ const commentChildAddStart = () => {
   return { type: COMMENT_CHILD_ADD };
 };
 
-const commentChildAddSuccess = (list) => {
-  return { type: COMMENT_CHILD_ADD_SUCCESS, list: list };
+const commentChildAddSuccess = (list, more, total) => {
+  return {
+    type: COMMENT_CHILD_ADD_SUCCESS,
+    list: list,
+    more: more,
+    total: total,
+  };
 };
 
 const commentChildAddFailure = () => {
@@ -79,7 +94,13 @@ export const commentAdd = (data) => async (dispatch) => {
   await axios
     .post("/comment/add", { ...data })
     .then((response) => {
-      dispatch(commentAddSuccess(response.data.list));
+      dispatch(
+        commentAddSuccess(
+          response.data.list,
+          response.data.more,
+          response.data.total
+        )
+      );
     })
     .catch((error) => {
       dispatch(commentAddFailure());
@@ -93,7 +114,13 @@ export const commentDelete = (data) => async (dispatch) => {
   await axios
     .post("/comment/delete", { ...data })
     .then((response) => {
-      dispatch(commentDeleteSuccess(response.data.list));
+      dispatch(
+        commentDeleteSuccess(
+          response.data.list,
+          response.data.more,
+          response.data.total
+        )
+      );
     })
     .catch((error) => {
       dispatch(commentDeleteFailure());
@@ -102,12 +129,18 @@ export const commentDelete = (data) => async (dispatch) => {
 };
 
 // 댓글 목록 조회 요청
-export const commentListLoader = (story_id) => async (dispatch) => {
+export const commentListLoader = (story_id, section) => async (dispatch) => {
   dispatch(commentListLoadStart());
   await axios
-    .get(`/comment/list/${story_id}`)
+    .get(`/comment/list/${story_id}/${section}`)
     .then((response) => {
-      dispatch(commentListLoadSuccess(response.data.list));
+      dispatch(
+        commentListLoadSuccess(
+          response.data.list,
+          response.data.more,
+          response.data.total
+        )
+      );
     })
     .catch((error) => {
       dispatch(commentListLoadFailure());
@@ -121,7 +154,13 @@ export const commentChildAdd = (data) => async (dispatch) => {
   await axios
     .post("/comment/child/add", { ...data })
     .then((response) => {
-      dispatch(commentChildAddSuccess(response.data.list));
+      dispatch(
+        commentChildAddSuccess(
+          response.data.list,
+          response.data.more,
+          response.data.total
+        )
+      );
     })
     .catch((error) => {
       dispatch(commentChildAddFailure());
