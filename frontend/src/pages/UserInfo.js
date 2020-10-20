@@ -69,7 +69,7 @@ const UserInfoStyle = styled.div`
 `;
 
 const UserInfo = (props) => {
-  const [infoType, setInfoType] = useState("edit__profile");
+  const [infoType, setInfoType] = useState("my__home");
   const [myHome, setMyHome] = useState({
     story: null,
   });

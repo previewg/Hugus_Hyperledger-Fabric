@@ -23,36 +23,59 @@ router.post("/add", async (req, res) => {
     }
   });
 
-// Act 목록 조회
-router.get("/list/:page", async (req, res) => {
-    try {
-      let page = req.params.page;
-      let offset = 0;
-  
-      // 9개씩 조회
-      if (page > 1) {
-        offset = 10 * (page - 1);
-      }
-      console.log(page);
-      console.log(offset);
-      const list = await Act.findAll({
-        attributes: [
-          "act_title",
-          "id",
-          "act_content",
-          "user_email",
-          "visited",
-          "created_at",
-        ],
-        order: [["created_at", "DESC"]],
-        offset: offset,
-        limit: 10,
-      });
-      res.json({ list: list, success: 1 });
-    } catch (error) {
-      res.status(400).json({ success: 3 });
+
+router.get("/list", async (req, res) => {
+  try {
+    const list = await Act.findAll({
+      attributes: [
+        "act_title",
+        "id",
+        "act_content",
+        "user_email",
+        "visited",
+        "created_at",
+      ],
+      order: [["created_at", "ASC"]],
+      limit: 10,
+    });
+      const count = await Act.count({ });
+      res.json({ list:list, count: count ,success :1 })
+    } catch {
+      res.status(400).json({ success: 3 })
     }
-  });
+});
+
+
+// Act 목록 조회
+// router.get("/list/:page", async (req, res) => {
+//     try {
+//       let page = req.params.page;
+//       let offset = 0;
+  
+//       // 9개씩 조회
+//       if (page > 1) {
+//         offset = 10 * (page - 1);
+//       }
+//       console.log(page);
+//       console.log(offset);
+//       const list = await Act.findAll({
+//         attributes: [
+//           "act_title",
+//           "id",
+//           "act_content",
+//           "user_email",
+//           "visited",
+//           "created_at",
+//         ],
+//         order: [["created_at", "DESC"]],
+//         offset: offset,
+//         limit: 10,
+//       });
+//       res.json({ list: list, success: 1 });
+//     } catch (error) {
+//       res.status(400).json({ success: 3 });
+//     }
+//   });
 
 // ACT 상세 조회
 router.get("/:id", async (req, res) => {

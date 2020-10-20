@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import CountUp from "react-countup";
 import { actListLoader, actVisit } from "../../actions/act";
 import Loader from "./Loader";
 
@@ -22,6 +22,8 @@ const ActListStyle = styled.div`
     .list_grid {
         display: grid;
         grid-template-columns: 10% 60% 15% 15%;
+    
+    
     }
     .acenter {
         text-align: center;
@@ -55,20 +57,58 @@ const ActListStyle = styled.div`
     }
     `;
 
-const ActList = ({ list }) => {
+const ActList = ({ }) => {
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.act.list.status);
-  const num = useSelector((state) => state.act.list.num);
-  const init = useRef(true);
+  const init = useRef(true);  
+  const [actList, setActList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const initFunc = async () => {
+//         const data =  await axios.get("/act/list");
+//         setActList(data.data.list);
+//     }
+//     if(init.current) {
+//         initFunc(); 
+//         init.current = false;
+//     }
+//     // const fetchActs = async () => {
+//     //     setLoading(true);
+//     //     const res = await axios.get(`/act/list/${page}`);
+//     //     setActList(res.data.list);
+//     //     setLoading(false);
+//     // };
+//     // fetchActs();
+// }, []);
 
 
-  const loadMore = () => {
-    dispatch(actListLoader(num));
-  };
+// useEffect(() => {
+//   const initFunc = async () => {
+//   const data = await axios.get('/act/list')
+//         setActList(data.data.list)
+//   } 
+//   if(init.current) {
+//           init.current = false;
+//       }
+//     return initFunc(); 
+//   }, []);
 
   const visitHandler = (id) => {
     dispatch(actVisit(id));
   };
+
+
+  useEffect(() => {
+  const initFunc = async () => {
+      const response = await axios.get("/act/list")
+      setActList(response.data.list)
+    }
+    if(init.current) {
+    init.current = false;
+      initFunc();
+  }
+}, []);
+
 
   return (
     <ActListStyle>
@@ -79,25 +119,24 @@ const ActList = ({ list }) => {
                 <div className='acenter'> 작성일자 </div>
               </div>
 
-              {list ? list.map( (act, key) => {
+              {actList.length !==0 && actList.map((act, key) => {
             return (
               <Link
               to={`/act/${act.id}`}
               onClick={() => visitHandler(act.id) }
               key={key}
-              >
+              >  
               <div className='list_grid list_data' key={key}>
-                <div className="act__id">{act.id}</div>
-                <div className="act__title">{act.act_title}</div>
-                <div className="act__visit">{act.visited}</div>
-                <div className='create__time'>{act.created_at}</div>
+                <div className="act__id">{actList.id}</div>
+                <div className="act__title">{actList.act_title}</div> 
+                <div className="act__visit">{actList.visited}</div>
+                <div className='create__time'>{actList.created_at}</div>
               </div>
               </Link>
             )
-          })
-            : null }
+          }) }
 
-        {status === "WAITING" && <Loader />}
+        {/* {status === "WAITING" && <Loader />} */}
     </ActListStyle>
   );
 };

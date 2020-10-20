@@ -158,7 +158,7 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
-
+  const [profile, setProfile] = useState("/icons/hugus_icon.png");
   const onDeleteClick = async () => {
     const ok = window.confirm("정말 탈퇴 하시겠습니까?");
     if (ok) {
@@ -190,15 +190,17 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
   };
 
   useEffect(() => {
+    if (profile_path) setProfile(profile_path);
     if (updateStatus === "SUCCESS") {
       setFile(null);
       setUrl("");
     }
   }, [updateStatus]);
-  // if (!isConfirmed)
-  //   return (
-  //     <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
-  //   );
+
+  if (!isConfirmed)
+    return (
+      <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
+    );
   return (
     <EditInfoStyle>
       <div>
@@ -236,7 +238,7 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
             className="profile__img"
             alt="profile__img"
             style={{
-              backgroundImage: `url("${profile_path}") `,
+              backgroundImage: `url("${profile}") `,
             }}
           >
             <div className="profile__img__changed">

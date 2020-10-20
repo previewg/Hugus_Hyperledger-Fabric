@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import StoryVote from "./StoryVote";
-import { storyDelete, storyUpdateStatusChanged } from "../../actions/story";
+import { storyDelete, storyUpdateStatusChanged } from "actions/story";
+import StorySlider from "./StorySlider";
 
 const StoryContentsStyle = styled.div`
   margin-top: 100px;
@@ -164,6 +165,7 @@ const StoryContents = ({ data, history }) => {
   const currentUser = useSelector(
     (state) => state.authentication.status.currentUser
   );
+  console.log(data);
   const totalPrice = () => {
     let total = 0;
     data.Story_Items.map((item) => {
@@ -205,6 +207,8 @@ const StoryContents = ({ data, history }) => {
         <p>작성자 소개</p>
         <p>{data.user_info}</p>
       </div>
+
+      <StorySlider files={data.Story_Files} />
 
       <div className="content">
         <p>내용</p>

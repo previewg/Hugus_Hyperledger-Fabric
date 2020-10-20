@@ -177,22 +177,13 @@ export default function story(state = initialState, action) {
       });
 
     case STORY_LIST_LOAD_INIT_SUCCESS:
-      if (action.status === true) {
-        return update(state, {
-          list: {
-            status: { $set: "SUCCESS" },
-            data: { $set: action.list },
-            num: { $set: state.list.num + 1 },
-          },
-        });
-      } else {
-        return update(state, {
-          list: {
-            status: { $set: "SUCCESS" },
-            data: { $set: action.list },
-          },
-        });
-      }
+      return update(state, {
+        list: {
+          status: { $set: "SUCCESS" },
+          data: { $set: action.list },
+          num: { $set: state.list.num + 1 },
+        },
+      });
 
     case STORY_LIST_LOAD_INIT_FAILURE:
       return update(state, {
