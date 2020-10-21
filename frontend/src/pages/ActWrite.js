@@ -400,7 +400,7 @@ const errorMsg = [
   "내용을 입력 바랍니다",
 ];
 
-const ActWrite = (props) => {
+const ActWrite = () => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
@@ -423,76 +423,6 @@ const ActWrite = (props) => {
 
   const [fileReaderState, setFileReaderState] = useState("");
 
-  const errorHandler = useCallback(() => {
-    if (!data.title) {
-      setErrorCode(1);
-      title.current.focus();
-      setFilled({
-        ...filled,
-        title: false,
-      });
-      return false;
-    } else if (!data.content) {
-      setErrorCode(3);
-      content.current.focus();
-      setFilled({
-        ...filled,
-        content: false,
-      });
-      return false;
-    } 
-    return true;
-  }, [filled]);
-
-  const actAddHandler = () => {
-    if (errorHandler()) {
-      const formData = new FormData();
-      formData.append("act_title", data.title);
-      formData.append("act_content", data.content);
-      if (data.files !== null) {
-        for (const file of data.files) {
-          formData.append(`files`, file);
-        }
-      } else {
-        formData.append("files", "");
-      }
-    //   dispatch(actAdd(formData, { ...props }));
-    }
-  };
-
-  const previewImg = (e) => {
-    setPreImg([]);
-    for (const file of e.target.files) {
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        let newPreImg = preImg;
-        newPreImg.push({
-          file: file,
-          previewURL: reader.result,
-        });
-        setPreImg(newPreImg);
-        setFileReaderState(file);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const onChangeHandler = (e) => {
-    e.preventDefault();
-    if (e.target.name === "files") {
-      previewImg(e);
-      setData({
-        ...data,
-        [e.target.name]: e.target.files,
-      });
-    } else {
-      setData({
-        ...data,
-        [e.target.name]: e.target.value,
-      });
-      setErrorCode(0);
-    }
-  };
 
   return (
     <>
@@ -509,47 +439,12 @@ const ActWrite = (props) => {
               value={data.title}
               type="text"
               placeholder="제목을 입력하세요."
-              onChange={onChangeHandler}
             />
           </div>
 
-          <div className="content">
-            <p>내용</p>
-            <div>
-              {preImg.map((item, key) => {
-                return (
-                  <div key={key}>
-                    <img
-                      className="preImg"
-                      src={item.previewURL}
-                      key={key}
-                      alt="preview"
-                    />
-                  </div>
-                );
-              })}
-              <label htmlFor="files">파일 첨부</label>
-              <input
-                id="files"
-                name="files"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={onChangeHandler}
-              />
-            </div>
-            <textarea
-              name="content"
-              ref={content}
-              value={data.content}
-              required
-              placeholder="내용을 입력하세요. "
-              onChange={onChangeHandler}
-            />
-          </div>
 
           <div className="submit">
-            <button onClick={actAddHandler}>
+            <button>
               제출하기
               <img alt="submit" src="/icons/PaperPlane.png" />
             </button>

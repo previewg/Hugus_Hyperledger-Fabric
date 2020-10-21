@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { ClipLoader } from "react-spinners";
@@ -60,30 +60,22 @@ const ActStyle = styled.section`
   }
 `;
 
-const ActMain = (props) => {
+const ActMain = () => {
   const [total, setTotal] = useState(0);
   const [actList, setActList] = useState([]);
-  const init = useRef(true);
-
-  useEffect(() => {
-    const initFunc = async () => {
-      const data = await axios.get("/act/list");
-      setTotal(data.data.count);
-    };
-    if (init.current) {
-      init.current = false;
-    }
-    initFunc();
-  }, []);
+  const [search, setSearch] = useState("");
+  const [clicked, setClicked] = useState(false);
 
   const nowPage = async (page) => {
-    const data = await axios.get(`/act/list/${page}`);
+    const data = await axios.get(`/act/list/${page}?keyword=${search}`);
     setActList(data.data.list);
+    setTotal(data.data.count);
+    setClicked(false);
   };
 
-  const onClickHandler = () => {
-    props.history.push("/act/write");
-  };
+//   const onClickHandler = () => {
+//     props.history.push("/act/write");
+//   };
 
   const Loader = () => {
     return (
@@ -107,12 +99,10 @@ const ActMain = (props) => {
         <div className="title">
           <p>전달 스토리</p>
         </div>
-        <Search />
+        <Search search={search} setSearch={setSearch} setClicked={setClicked}/>
         {actList.length !== 0 ? <ActList actList={actList} /> : <Loader />}
-        <Pagination total={total} pageLimit="5" nowPage={nowPage} />
-        <a className="actWrite_Btn" onClick={onClickHandler}>
-          글쓰기 안보이게할거임
-        </a>
+        <Pagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage} />
+  
       </div>
     </ActStyle>
   );

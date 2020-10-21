@@ -12,7 +12,7 @@ const SliderStyle = styled.section`
   }
   .slick-list {
     img {
-      width: 290px;
+      width: auto;
       height: 290px;
       object-fit: cover;
     }
@@ -69,6 +69,7 @@ const PrevArrow = (props) => {
 };
 
 const ActSlider = ({ files }) => {
+  console.log(files);
   const settings = {
     customPaging: function (i) {
       return (
