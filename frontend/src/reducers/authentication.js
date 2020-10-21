@@ -5,9 +5,7 @@ import {
   AUTH_SIGNOUT,
   AUTH_SIGNOUT_SUCCESS,
   AUTH_SIGNOUT_FAILURE,
-  AUTH_KAKAO_SIGNIN,
-  AUTH_KAKAO_SUCCESS,
-  AUTH_KAKAO_FAILURE,
+  AUTH_KAKAO_SIGNIN_SUCCESS,
   AUTH_SIGN_DESTROY,
   AUTH_SIGN_DESTROY_SUCCESS,
   AUTH_SIGN_DESTROY_FAILURE,
@@ -94,26 +92,15 @@ export default function authentication(state = initialState, action) {
       });
 
     //카카오 로그인
-    case AUTH_KAKAO_SIGNIN:
-      return update(state, {
-        signIn: {
-          status: { $set: "WAITING" },
-        },
-      });
-    case AUTH_KAKAO_SUCCESS:
+    case AUTH_KAKAO_SIGNIN_SUCCESS:
       return update(state, {
         signIn: {
           status: { $set: "SUCCESS" },
         },
         status: {
           currentUser: { $set: action.nickname },
+          profile_path: { $set: action.profile },
           isLoggedIn: { $set: true },
-        },
-      });
-    case AUTH_KAKAO_FAILURE:
-      return update(state, {
-        signIn: {
-          status: { $set: "FAILURE" },
         },
       });
 

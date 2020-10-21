@@ -17,8 +17,6 @@ server.on("connection", function (socket) {
   socket.emit("hugus", "connected");
 });
 
-
-
 // 회원가입
 router.post("/signup", async (req, res, next) => {
   const { email, nickname, password } = req.body;
@@ -172,7 +170,6 @@ router.post("/signIn", async (req, res) => {
         let session = req.session;
         session.loginInfo = {
           user_email: user.email,
-          user_profile: user.user_profile,
           user_nickname: user.nickname,
         };
         const payload = {
@@ -232,8 +229,6 @@ router.delete("/destroy", (req, res, next) => {
   }
 });
 
-
-
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
   const { nickname, password } = req.body;
@@ -253,26 +248,51 @@ router.post("/confirm", async (req, res) => {
 
 //카카오 로그인
 router.post("/kakao", async (req, res) => {
-  Kakao_User.create({
-    id_Value: req.body.profile.id,
-    nickname: req.body.profile.properties.nickname,
+  let email = req.body.id + "@kakao.com";
+  if (req.body.kakao_account.email) email = req.body.kakao_account.email;
+  let nickname = req.body.kakao_account.profile.nickname;
+  let user_profile = req.body.kakao_account.profile.profile_image_url;
+  const password = await bcrypt.hash(`${req.body.id}`, 12);
+
+  const check = await User.findOne({
+    where: {
+      email: email,
+    },
   });
+
+  if (!check) {
+    await User.create({
+      email: email,
+      nickname: nickname,
+      user_profile: user_profile,
+      password: password,
+    });
+  } else {
+    nickname = check.getDataValue("nickname");
+    user_profile = check.getDataValue("user_profile");
+  }
+
+  let session = req.session;
+  session.loginInfo = {
+    user_email: email,
+    user_nickname: nickname,
+  };
   const payload = {
-    nickname: req.body.profile.properties.nickname,
+    nickname: nickname,
+    profile: user_profile,
   };
   jwt.sign(
     payload,
     process.env.JWT_SECRET,
     {
-      //token 지속시간
       expiresIn: "24h",
     },
     (err, token) => {
-      // res.cookie(key,value) cookie에 key값을 넣는 방식
       res.cookie("hugus", token);
       res.json({
         success: 1,
-        nickname: payload.nickname,
+        nickname: nickname,
+        profile: user_profile,
       });
     }
   );

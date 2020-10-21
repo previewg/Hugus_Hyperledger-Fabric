@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {signInBtnIsClicked, signUpBtnIsClicked} from "../../actions/user";
-import {signInRequest} from "../../actions/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { signInBtnIsClicked, signUpBtnIsClicked } from "../../actions/user";
+import { signInRequest } from "../../actions/auth";
 import KakaoLo from "./KakaoLo";
+import Kakao from "./Kakao";
 
 const SignInStyle = styled.div`
   position: fixed;
@@ -114,94 +115,96 @@ const SignInStyle = styled.div`
   }
 `;
 const SignIn = () => {
-    const dispatch = useDispatch();
-    const [user, setUser] = useState({
+  const dispatch = useDispatch();
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+
+  const signInStatus = useSelector(
+    (state) => state.authentication.signIn.status
+  );
+  const errorCode = useSelector((state) => state.authentication.signIn.error);
+
+  const onChangeHandler = (e) => {
+    setUser({
+      ...user,
+      [e.target.id]: e.target.value,
+    });
+    if (e.key === "Enter") {
+      signInHandler();
+    }
+  };
+
+  const signInHandler = () => {
+    dispatch(signInRequest({ user }));
+  };
+  const errorMessage = [
+    "아이디 혹은 비밀번호가 일치하지 않습니다.",
+    "이메일 인증이 필요합니다.",
+  ];
+
+  useEffect(() => {
+    if (signInStatus === "SUCCESS") {
+      alert("로그인성공");
+      setUser({
         email: "",
         password: "",
-    });
+      });
+    } else if (signInStatus === "FAILURE") {
+      alert(errorMessage[errorCode - 1]);
+    }
+  }, [signInStatus]);
 
-    const signInStatus = useSelector((state) => state.authentication.signIn.status);
-    const errorCode = useSelector((state) => state.authentication.signIn.error);
-
-    const onChangeHandler = (e) => {
-        setUser({
-            ...user,
-            [e.target.id]: e.target.value,
-        });
-        if (e.key === "Enter") {
-            signInHandler();
-        }
-    };
-
-    const signInHandler = () => {
-        dispatch(signInRequest({user}));
-    };
-    const errorMessage = [
-        "아이디 혹은 비밀번호가 일치하지 않습니다.",
-        "이메일 인증이 필요합니다.",
-    ];
-
-    useEffect(() => {
-        if (signInStatus === "SUCCESS") {
-            alert("로그인성공");
-            setUser({
-                email: "",
-                password: "",
-            });
-        } else if (signInStatus === "FAILURE") {
-            alert(errorMessage[errorCode - 1]);
-        }
-    }, [signInStatus]);
-
-    return (
-        <SignInStyle>
-            <section>
-                <article className="header">
-                    <p
-                        className="close__btn"
-                        onClick={() => dispatch(signInBtnIsClicked())}
-                    >
-                        닫기
-                    </p>
-                    <p>로그인</p>
-                </article>
-                <article className="form">
-                    <input
-                        id="email"
-                        placeholder="이메일"
-                        value={user.email}
-                        onChange={onChangeHandler}
-                        onKeyPress={onChangeHandler}
-                    />
-                    <input
-                        type="password"
-                        id="password"
-                        value={user.password}
-                        placeholder="비밀번호"
-                        onChange={onChangeHandler}
-                        onKeyPress={onChangeHandler}
-                    />
-                    <div>
-                        <div className="checkbox">
-                            <input type="checkbox"/>
-                            <p>로그인 유지하기</p>
-                        </div>
-                        <p>아이디/비밀번호 찾기</p>
-                    </div>
-                </article>
-                <article className="buttons">
-                    <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
-                    {/*<button>카카오 계정으로 로그인</button>*/}
-                    <KakaoLo/>
-                    <button>페이스북 계정으로 로그인</button>
-                    <div className="already">
-                        <p>회원이 아니신가요?</p>
-                        <p onClick={() => dispatch(signUpBtnIsClicked())}>회원가입</p>
-                    </div>
-                </article>
-            </section>
-        </SignInStyle>
-    );
+  return (
+    <SignInStyle>
+      <section>
+        <article className="header">
+          <p
+            className="close__btn"
+            onClick={() => dispatch(signInBtnIsClicked())}
+          >
+            닫기
+          </p>
+          <p>로그인</p>
+        </article>
+        <article className="form">
+          <input
+            id="email"
+            placeholder="이메일"
+            value={user.email}
+            onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
+          />
+          <input
+            type="password"
+            id="password"
+            value={user.password}
+            placeholder="비밀번호"
+            onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
+          />
+          <div>
+            <div className="checkbox">
+              <input type="checkbox" />
+              <p>로그인 유지하기</p>
+            </div>
+            <p>아이디/비밀번호 찾기</p>
+          </div>
+        </article>
+        <article className="buttons">
+          <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
+          {/*<KakaoLo />*/}
+          <Kakao />
+          <button>페이스북 계정으로 로그인</button>
+          <div className="already">
+            <p>회원이 아니신가요?</p>
+            <p onClick={() => dispatch(signUpBtnIsClicked())}>회원가입</p>
+          </div>
+        </article>
+      </section>
+    </SignInStyle>
+  );
 };
 
 export default SignIn;

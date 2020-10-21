@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -267,7 +267,7 @@ const ResNavStyle = styled.nav`
 
 const NavBar = () => {
   const [menuClicked, setMenuClicked] = useState(false);
-
+  const init = useRef(true);
   const dispatch = useDispatch();
   const username = useSelector(
     (state) => state.authentication.status.currentUser
@@ -282,17 +282,30 @@ const NavBar = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
 
-  useEffect(() => {}, [profile_path]);
+  const SignOutHandler = () => {
+    if (window.Kakao.Auth.getAccessToken()) {
+      console.log("카카오 인증 토큰 존재", window.Kakao.Auth.getAccessToken());
+      window.Kakao.Auth.logout(() => {
+        console.log("로그아웃 완료", window.Kakao.Auth.getAccessToken());
+      });
+    }
+    dispatch(signOutRequest());
+  };
+
+  useEffect(() => {
+    if (init.current) {
+      console.log("init될텐데");
+      window.Kakao.init("da409c8b843f70cc0a9b46369e513be9");
+      init.current = false;
+    }
+  }, [profile_path]);
 
   const SignedIn = () => {
     if (isLoggedIn) {
       return (
         <>
           <p>{username}님</p>
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => dispatch(signOutRequest())}
-          >
+          <div style={{ cursor: "pointer" }} onClick={SignOutHandler}>
             로그아웃
           </div>
         </>
