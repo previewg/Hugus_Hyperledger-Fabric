@@ -32,12 +32,9 @@ const ActDetail = ({ match }) => {
         }
     }, []);
 
-
-
-
     return (
     <ActDetailStyle>
-    <ActContents actId={actId}/>
+            {actId.length !== 0 && <ActContents actId={actId}/>}
     </ActDetailStyle>
     );
 };

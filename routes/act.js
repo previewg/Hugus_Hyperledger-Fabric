@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Act, User, Act_File } = require("../models");
+const { Act, User, Act_File,Sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -27,7 +27,8 @@ let upload = multer({
 // Act 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
-    const { user_email } = req.session.loginInfo;
+    // const { user_email } = req.session.loginInfo;
+    const user_email = "moonnr94@gmail.com";
     const { act_title, act_content } = req.body;
     const list = await Act.create({
       act_title,
@@ -35,13 +36,13 @@ router.post("/add", upload.array("files"), async (req, res) => {
       user_email: user_email,
     });
 
-    const act_id = act.getDataValue("id");
-    for (const file of req.files) {
-      await act_File.create({
-        act_id: act_id,
-        file: file.location,
-      });
-    }
+    // const act_id = list.getDataValue("id");
+    // for (const file of req.files) {
+    //   await Act_File.create({
+    //     act_id: act_id,
+    //     file: file.location,
+    //   });
+    // }
 
     res.json({ list: list, success: 1 });
   } catch (error) {
@@ -51,39 +52,53 @@ router.post("/add", upload.array("files"), async (req, res) => {
 });
 
 // Act 목록 조회
-router.get("/list", async (req, res) => {
-  try {
-    let count = await Act.count({});
-    count = Math.ceil(count / 10);
-
-    res.json({ count: count, success: 1 });
-  } catch {
-    res.status(400).json({ success: 3 });
-  }
-});
-
 router.get("/list/:page", async (req, res) => {
   try {
     let page = req.params.page;
+    let keyword = req.query.keyword;
     let offset = 0;
     // 10개씩 조회
     if (page > 1) {
       offset = 10 * (page - 1);
     }
-    const list = await Act.findAll({
-      attributes: [
-        "act_title",
-        "id",
-        "act_content",
-        "user_email",
-        "visited",
-        "created_at",
-      ],
-      order: [["created_at", "DESC"]],
-      offset: offset,
-      limit: 10,
-    });
-    res.json({ list: list, success: 1 });
+
+    let list;
+    if (keyword){
+      list = await Act.findAll({
+        attributes: [
+          "act_title",
+          "id",
+          "act_content",
+          "user_email",
+          "visited",
+          "created_at",
+        ],
+        order: [["created_at", "DESC"]],
+        offset: offset,
+        limit: 10,
+        where:{act_title:{
+          [Sequelize.Op.like]: "%" + keyword + "%"
+      }}
+      });
+    }else{
+      list = await Act.findAll({
+        attributes: [
+          "act_title",
+          "id",
+          "act_content",
+          "user_email",
+          "visited",
+          "created_at",
+        ],
+        order: [["created_at", "DESC"]],
+        offset: offset,
+        limit: 10,
+      });
+    }
+
+    let count = await Act.count({});
+    count = Math.ceil(count / 10);
+    res.json({ list: list, count: count, success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }
@@ -126,5 +141,8 @@ router.put("/visit", async (req, res) => {
     res.status(400).json({ success: 3 });
   }
 });
+
+
+
 
 module.exports = router;

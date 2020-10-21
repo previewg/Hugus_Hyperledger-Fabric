@@ -1,4 +1,5 @@
-import React,{useState} from 'react';
+import React,{ useState, useRef } from 'react';
+import act from 'reducers/act';
 import styled from "styled-components";
 
 const SearchStyle = styled.div`
@@ -11,6 +12,7 @@ const SearchStyle = styled.div`
             border-radius:3px;
             border: solid grey 2px;
             transition: 0.2s ease-in-out;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
             :hover { 
             border: solid orange 2px;
                 :focus {
@@ -28,6 +30,7 @@ const SearchStyle = styled.div`
             border-radius:3px;
             transition: 0.2s ease-in-out;
             outline:none;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
             cursor: pointer;
                 :hover {
                 color:black;
@@ -35,8 +38,9 @@ const SearchStyle = styled.div`
             }
 `;
 
-const Search = () => {
-    const [search, setSearch] = useState("");
+const Search = ({ search, setSearch, setClicked }) => {
+
+    
     const onChangeHandler = (e) => {
         e.preventDefault();
         setSearch(e.target.value);
@@ -50,8 +54,11 @@ const Search = () => {
             className="search_form"
             type="text"
             onChange={onChangeHandler}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") setClicked();
+              }}
             />
-            <button className="search__bar">검색</button>    
+            <button className="search__bar" onClick={()=>setClicked(true)}>검색</button>    
         </SearchStyle>
     
     )

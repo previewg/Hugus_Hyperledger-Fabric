@@ -9,12 +9,14 @@ const PaginationStyle = styled.div`
     text-align: center;
 
     > button {
+      outline: none;
       font-weight: bold;
       height: 32px;
       width: 35px;
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
+      box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
       cursor: pointer;
       :hover {
         background-color: orange;
@@ -29,7 +31,7 @@ const createArr = (n) => {
   return iArr;
 };
 
-const Pagination = ({ total, pageLimit, nowPage }) => {
+const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
   const [blockNum, setBlockNum] = useState(0);
   const [currPage, setCurrPage] = useState(1);
 
@@ -65,12 +67,12 @@ const Pagination = ({ total, pageLimit, nowPage }) => {
 
   useEffect(() => {
     nowPage(currPage);
-  }, [currPage]);
+  }, [currPage,clicked]);
 
   return (
     <PaginationStyle>
-      <p>currPage : {currPage}</p>
-      <p>blockNum : {blockNum}</p>
+      {/* <p>currPage : {currPage}</p>
+      <p>blockNum : {blockNum}</p> */}
       <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
