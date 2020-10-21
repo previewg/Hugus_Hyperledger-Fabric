@@ -10,17 +10,9 @@ const SliderStyle = styled.section`
   .slick-slider {
     width: 300px;
   }
-  .slick-list {
-    .story_file {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      > img {
-        width: auto;
-        height: 290px;
-        object-fit: cover;
-      }
-    }
+  .story_file {
+    height: 290px;
+    object-fit: contain;
   }
 
   .slick-dots {
@@ -96,11 +88,7 @@ const StorySlider = ({ files }) => {
     <SliderStyle>
       <Slider {...settings}>
         {files.map((file, key) => {
-          return (
-            <div key={key} className="story_file">
-              <img src={file.file} />
-            </div>
-          );
+          return <img className="story_file" key={key} src={file.file} />;
         })}
       </Slider>
     </SliderStyle>

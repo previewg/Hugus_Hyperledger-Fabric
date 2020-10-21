@@ -50,19 +50,19 @@ router.post("/add", upload.array("files"), async (req, res) => {
     });
 
     const story_id = story.getDataValue("id");
-        for (const file of req.files) {
-            if (file.location !== null) {
-                await Story_File.create({
-                  story_id: story_id,
-                    file: file.location,
-                });
-            } else {
-                await Story_File.create({
-                    story_id: story.dataValues.id,
-                    file: null,
-                })
-            }
-        }
+    for (const file of req.files) {
+      if (file.location !== null) {
+        await Story_File.create({
+          story_id: story_id,
+          file: file.location,
+        });
+      } else {
+        await Story_File.create({
+          story_id: story.dataValues.id,
+          file: null,
+        });
+      }
+    }
 
     const hashtags = req.body.hashtags.split(",");
     for (const hashtag of hashtags) {
@@ -96,19 +96,24 @@ router.post("/add", upload.array("files"), async (req, res) => {
 router.post("/delete", async (req, res) => {
   try {
     const { id } = req.body;
-    const data = await Story_File.findOne({where:{story_id:id},attributes:["file"]})
-   const key = data.file.split('/')
-
+    const data = await Story_File.findOne({
+      where: { story_id: id },
+      attributes: ["file"],
+    });
+    const key = data.file.split("/");
 
     await Story.destroy({ where: { id } });
-    await s3.deleteObject({
-      Bucket:'hugusstory',
-      Key:key[3]
-    },(err)=>{
-      if(err) {
-        throw err;
+    await s3.deleteObject(
+      {
+        Bucket: "hugusstory",
+        Key: decodeURI(key[3]),
+      },
+      (err) => {
+        if (err) {
+          throw err;
+        }
       }
-    })
+    );
     res.json({ success: 1 });
   } catch (err) {
     console.error(err);
@@ -222,98 +227,120 @@ router.post("/update", upload.array("files"), async (req, res) => {
   }
 });
 
-// 스토리 목록 조회 ( init )
-router.get("/list/init/:section", async (req, res) => {
-  try {
-    let section = req.params.section;
-
-    const list = await Story.findAll({
-      attributes: [
-        "id",
-        "story_title",
-        "user_info",
-        "story_content",
-        "story_goal",
-        "user_email",
-        "visited",
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
-          ),
-          "story_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
-          ),
-          "story_vote",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
-          ),
-          "story_comment",
-        ],
-      ],
-      include: [
-        { model: Hashtag, attributes: ["hashtag"] },
-        { model: Story_File, attributes: ["file"], limit: 1 },
-      ],
-      limit: section * 9,
-    });
-    res.json({ list: list, success: 1 });
-  } catch (error) {
-    res.status(400).json({ success: 3 });
-  }
-});
-
 // 스토리 목록 조회
-router.get("/list/:section", async (req, res) => {
+router.get("/list/:page", async (req, res) => {
   try {
-    let section = req.params.section;
     let offset = 0;
-
-    // 9개씩 조회
-    if (section > 1) {
-      offset = 9 * (section - 1);
+    const page = req.params.page;
+    const type = req.query.type;
+    let order;
+    if (type === "hot") {
+      order = [["visited", "DESC"]];
+    } else if (type === "new") {
+      order = [["created_at", "DESC"]];
     }
-    const list = await Story.findAll({
-      attributes: [
-        "id",
-        "story_title",
-        "user_info",
-        "story_content",
-        "story_goal",
-        "user_email",
-        "visited",
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
-          ),
-          "story_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
-          ),
-          "story_vote",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
-          ),
-          "story_comment",
-        ],
-      ],
-      include: [
-        { model: Hashtag, attributes: ["hashtag"] },
-        { model: Story_File, attributes: ["file"], limit: 1 },
-      ],
-      offset: offset,
-      limit: 9,
-    });
+    // 9개씩 조회
+    if (page > 1) {
+      offset = 9 * (page - 1);
+    }
 
-    res.json({ list: list, success: 1 });
+    let list;
+    if (type === "my") {
+      const { user_email } = req.session.loginInfo;
+      list = await Story.findAll({
+        attributes: [
+          "id",
+          "story_title",
+          "user_info",
+          "story_content",
+          "story_goal",
+          "user_email",
+          "visited",
+          "createdAt",
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+            ),
+            "story_like",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+            ),
+            "story_vote",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+            ),
+            "story_comment",
+          ],
+        ],
+        include: [
+          { model: Hashtag, attributes: ["hashtag"] },
+          { model: Story_File, attributes: ["file"], limit: 1 },
+        ],
+        offset: offset,
+        limit: 9,
+        where: {
+          id: [
+            sequelize.literal(
+              "(SELECT story_id FROM story_like WHERE user_email = user_email AND `like`=true)"
+            ),
+          ],
+        },
+
+        order: [["created_at", "DESC"]],
+      });
+      const total = await Story.count({ where: {} });
+      let more = false;
+      if (total > page * 10) more = true;
+
+      res.json({ list: list, success: 1, more: more });
+    } else {
+      list = await Story.findAll({
+        attributes: [
+          "id",
+          "story_title",
+          "user_info",
+          "story_content",
+          "story_goal",
+          "user_email",
+          "visited",
+          "createdAt",
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+            ),
+            "story_like",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+            ),
+            "story_vote",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+            ),
+            "story_comment",
+          ],
+        ],
+        include: [
+          { model: Hashtag, attributes: ["hashtag"] },
+          { model: Story_File, attributes: ["file"], limit: 1 },
+        ],
+        offset: offset,
+        limit: 9,
+        order: order,
+      });
+      const total = await Story.count({});
+      let more = false;
+      if (total > page * 10) more = true;
+
+      res.json({ list: list, success: 1, more: more });
+    }
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

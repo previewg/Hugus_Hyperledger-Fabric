@@ -1,13 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 import CountUp from "react-countup";
-import {
-  storyListLoader,
-  storyListLoaderInit,
-  storyVisit,
-} from "../../actions/story";
 import Loader from "./Loader";
 
 const StoryListStyle = styled.div`
@@ -110,7 +105,6 @@ const StoryListStyle = styled.div`
     }
   }
 `;
-
 const BarStyle = styled.div`
   width: 100%;
   height: 20%;
@@ -145,39 +139,14 @@ const BarStyle = styled.div`
   }
 `;
 
-const StoryList = () => {
-  const dispatch = useDispatch();
-  const status = useSelector((state) => state.story.list.status);
-  const list = useSelector((state) => state.story.list.data);
-  const num = useSelector((state) => state.story.list.num);
+const StoryList = ({ storyType, changed, setChanged }) => {
+  const [list, setList] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const init = useRef(true);
 
-  useEffect(() => {
-    if (init.current) dispatch(storyListLoaderInit(num));
-    init.current = false;
-    // scroll event listener 등록
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      // scroll event listener 해제
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [num]);
-
-  const loadMore = () => {
-    dispatch(storyListLoader(num));
-  };
-
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && status !== "WAITING") {
-      loadMore();
-    }
-  };
-
-  const visitHandler = (id) => {
-    dispatch(storyVisit(id));
+  const visitHandler = async (story_id) => {
+    await axios.put("/story/visit", { story_id: story_id });
   };
 
   const ProgressBar = ({ vote, goal }) => {
@@ -197,7 +166,6 @@ const StoryList = () => {
           <CountUp end={ratio} duration={2} />
           <span> %</span>
         </div>
-
         <div>
           <div></div>
         </div>
@@ -211,8 +179,69 @@ const StoryList = () => {
     return <p>{story.user_info}</p>;
   };
 
+  const LoadHandler = ({ storyType }) => {
+    const loadInit = async () => {
+      setLoading(true);
+      const initData = await axios.get(`/story/list/1?type=${storyType}`);
+      setList(initData.data.list);
+      if (initData.data.more) {
+        setPage(page + 1);
+      }
+      setLoading(false);
+    };
+
+    const loadMore = async () => {
+      setLoading(true);
+      const moreData = await axios.get(`/story/list/${page}?type=${storyType}`);
+      if (list.length % 9 !== 0) {
+        let len = (page - 1) * 9;
+        let newData = list.slice(0, len).concat(moreData.data.list);
+        setList(newData);
+      } else {
+        let newData = list.concat(moreData.data.list);
+        setList(newData);
+      }
+      if (moreData.data.more) {
+        setPage(page + 1);
+      }
+      setLoading(false);
+    };
+
+    const scrollHandler = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+      if (scrollTop + clientHeight >= scrollHeight && !loading) {
+        loadMore();
+      }
+    };
+    useEffect(() => {
+      if (init.current) {
+        loadInit();
+        init.current = false;
+      }
+      // scroll event listener 등록
+      window.addEventListener("scroll", scrollHandler);
+      return () => {
+        // scroll event listener 해제
+        window.removeEventListener("scroll", scrollHandler);
+      };
+    }, []);
+
+    return null;
+  };
+
+  useEffect(() => {
+    if (changed === true) {
+      setChanged(false);
+      setPage(1);
+      init.current = true;
+    }
+  }, [changed]);
+
   return (
     <StoryListStyle>
+      <LoadHandler storyType={storyType} />
       <section>
         {list.map((story, key) => {
           if (story.Story_Files[0]) {
@@ -285,7 +314,7 @@ const StoryList = () => {
             );
           }
         })}
-        {status === "WAITING" && <Loader />}
+        {loading && <Loader />}
       </section>
     </StoryListStyle>
   );

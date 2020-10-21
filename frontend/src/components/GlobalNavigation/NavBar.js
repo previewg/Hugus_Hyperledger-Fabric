@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -282,9 +282,7 @@ const NavBar = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
 
-  useEffect(()=>{
-
-  },[profile_path])
+  useEffect(() => {}, [profile_path]);
 
   const SignedIn = () => {
     if (isLoggedIn) {
@@ -355,9 +353,18 @@ const NavBar = () => {
           <div className="dropdown">
             <Link to="/story">Story</Link>
             <ul>
-              <Link to="">인기 스토리</Link>
-              <Link to="">최신 스토리</Link>
-              <Link to="">관심 스토리</Link>
+              <Link to="/story?type=hot">인기 스토리</Link>
+              <Link to="/story?type=new">최신 스토리</Link>
+              {isLoggedIn ? (
+                <Link to="/story?type=my">관심 스토리</Link>
+              ) : (
+                <a
+                  style={{ cursor: "pointer" }}
+                  onClick={() => dispatch(signInBtnIsClicked())}
+                >
+                  관심 스토리
+                </a>
+              )}
             </ul>
           </div>
           <div className="dropdown">
