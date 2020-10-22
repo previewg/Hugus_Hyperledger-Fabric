@@ -297,6 +297,7 @@ const NavBar = () => {
   const KakaoAPI = useCallback(() => {
     Kakao.init("da409c8b843f70cc0a9b46369e513be9");
   }, []);
+
   useEffect(() => {
     if (init.current) {
       KakaoAPI();

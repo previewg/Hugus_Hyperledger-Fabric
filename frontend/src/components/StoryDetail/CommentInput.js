@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
 import { storyLike } from "../../actions/story";
+import KakaoLinkAPI from "./KakaoLinkAPI";
+import FacebookLink from "./FacebookLink";
 
 const CommentFalseStyle = styled.div`
   font-weight: bold;
@@ -158,7 +160,9 @@ const CommentInput = ({ data, num }) => {
                 className="unlike"
                 src="/icons/unlike.svg"
               />
-              <img alt="share" className="share" src="/icons/share.svg" />
+              <KakaoLinkAPI />
+              <FacebookLink />
+              {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
             </div>
           </div>
           <input disabled placeholder="로그인이 필요합니다." />
@@ -185,7 +189,9 @@ const CommentInput = ({ data, num }) => {
                 src="/icons/unlike.svg"
               />
             )}
-            <img alt="share" className="share" src="/icons/share.svg" />
+            <KakaoLinkAPI />
+            <FacebookLink />
+            {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
           </div>
         </div>
         <input

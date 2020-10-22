@@ -82,19 +82,16 @@ const SignInStyle = styled.div`
       height: 40%;
       button {
         width: 70%;
-        height: 35px;
-        border: none;
+        height: 40px;
         cursor: pointer;
+        border-radius: 6px;
         :focus {
           outline: none;
         }
-        :nth-child(1) {
-          background-color: pink;
-          color: white;
-        }
-        :nth-child(2) {
-          background-color: #f7e100;
-        }
+      }
+      button:nth-child(1) {
+        border: none;
+        background-color: pink;
       }
       .already {
         font-size: 12px;
