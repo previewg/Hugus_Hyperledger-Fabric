@@ -74,15 +74,9 @@ const UserInfo = (props) => {
     story: null,
   });
   const flag = useRef(true);
-  const profile_path = useSelector(
-    (state) => state.authentication.status.profile_path
-  );
-  const currentUser = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
-  const isLoggedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
+  const profile = useSelector((state) => state.auth.user.profile);
+  const nickname = useSelector((state) => state.auth.user.nickname);
+  const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const typeChangeHandler = (e) => {
     setInfoType(e.target.id);
   };
@@ -90,7 +84,7 @@ const UserInfo = (props) => {
   // useEffect(() => {
   //   if (flag.current) {
   //     const init = async () => {
-  //       const result = await axios.get(`/story?user=${currentUser}`);
+  //       const result = await axios.get(`/story?user=${nickname}`);
   //       setMyHome({ story: result.data.list });
   //     };
   //     init();
@@ -98,7 +92,7 @@ const UserInfo = (props) => {
   //   return () => {
   //     flag.current = false;
   //   };
-  // }, [profile_path]);
+  // }, [profile]);
 
   useEffect(() => {
     if (!isLoggedIn) props.history.push("/");
@@ -109,10 +103,10 @@ const UserInfo = (props) => {
       <section className="side">
         <article>
           <div className="side__user">
-            {profile_path ? (
+            {profile ? (
               <div
                 style={{
-                  backgroundImage: `url("${profile_path}") `,
+                  backgroundImage: `url("${profile}") `,
                 }}
               ></div>
             ) : (
@@ -123,7 +117,7 @@ const UserInfo = (props) => {
               ></div>
             )}
 
-            <p>{currentUser}님</p>
+            <p>{nickname}님</p>
           </div>
           <div className="side__menu">
             <p id="my__home" onClick={typeChangeHandler}>
@@ -143,14 +137,14 @@ const UserInfo = (props) => {
       </section>
 
       <section className="main">
-        {infoType === "my__home" && <MyHome currentUser={currentUser} />}
+        {infoType === "my__home" && <MyHome nickname={nickname} />}
         {infoType === "my__news" && <MyNews />}
         {infoType === "my__history" && <History />}
         {infoType === "edit__profile" && (
           <EditInfo
             setInfoType={setInfoType}
-            profile_path={profile_path}
-            currentUser={currentUser}
+            profile={profile}
+            nickname={nickname}
           />
         )}
       </section>

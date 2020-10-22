@@ -150,19 +150,30 @@ const EditInfoStyle = styled.section`
   }
 `;
 
-const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
+const EditInfo = ({ setInfoType, profile, nickname }) => {
   const dispatch = useDispatch();
-  const updateStatus = useSelector(
-    (state) => state.authentication.profile.status
-  );
+  const updateStatus = useSelector((state) => state.auth.profileChange.status);
+  const isSocial = useSelector((state) => state.auth.user.social);
+  const email = useSelector((state) => state.auth.user.email);
+  const naverObj = useSelector((state) => state.auth.naverObj);
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [profile, setProfile] = useState("/icons/hugus_icon.png");
+  const [profileFile, setProfileFile] = useState("/icons/hugus_icon.png");
+
   const onDeleteClick = async () => {
     const ok = window.confirm("정말 탈퇴 하시겠습니까?");
     if (ok) {
-      await dispatch(signDestroyRequest(currentUser));
+      if (naverObj.getLoginStatus) {
+        naverObj.logout();
+        console.log("네이버 로그아웃 완료");
+      }
+      if (window.Kakao.Auth.getAccessToken()) {
+        window.Kakao.Auth.logout(() => {
+          console.log("카카오 로그아웃 완료");
+        });
+      }
+      await dispatch(signDestroyRequest(email));
       window.history.back();
     }
   };
@@ -175,7 +186,7 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
   const onSubmit = () => {
     const formData = new FormData();
     formData.append(`file`, file);
-    formData.append(`username`, currentUser);
+    formData.append(`username`, nickname);
     dispatch(profileUpload(formData));
   };
 
@@ -190,14 +201,14 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
   };
 
   useEffect(() => {
-    if (profile_path) setProfile(profile_path);
+    if (profile) setProfileFile(profile);
     if (updateStatus === "SUCCESS") {
       setFile(null);
       setUrl("");
     }
   }, [updateStatus]);
 
-  if (!isConfirmed)
+  if (!isConfirmed && !isSocial)
     return (
       <ConfirmPwd setIsConfirmed={setIsConfirmed} setInfoType={setInfoType} />
     );
@@ -238,7 +249,7 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
             className="profile__img"
             alt="profile__img"
             style={{
-              backgroundImage: `url("${profile}") `,
+              backgroundImage: `url("${profileFile}") `,
             }}
           >
             <div className="profile__img__changed">
@@ -256,7 +267,7 @@ const EditInfo = ({ setInfoType, profile_path, currentUser }) => {
 
         <div className="profile__nickname">
           <p>닉네임</p>
-          <p>{currentUser}</p>
+          <p>{nickname}</p>
         </div>
         <div className="profile__email">
           <p>이메일</p>

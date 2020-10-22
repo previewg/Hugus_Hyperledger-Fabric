@@ -7,7 +7,7 @@ const smtpTransporter = require("nodemailer-smtp-transport");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
-const { User, Email_confirm, Kakao_User } = require("../models");
+const { User, Email_confirm } = require("../models");
 
 // socket 설정
 const io = require("socket.io");
@@ -26,7 +26,6 @@ router.post("/signup", async (req, res, next) => {
   try {
     const exUser = await User.findOne({ where: { email } });
     const exNick = await User.findOne({ where: { nickname } });
-    //중복방지
 
     // 이메일 중복
     if (exUser) {
@@ -175,6 +174,7 @@ router.post("/signIn", async (req, res) => {
         const payload = {
           nickname: user.nickname,
           profile: user.user_profile,
+          email: user.email,
         };
         jwt.sign(
           payload,
@@ -190,6 +190,7 @@ router.post("/signIn", async (req, res) => {
               success: 1,
               nickname: user.nickname,
               profile: user.user_profile,
+              email: user.email,
             });
           }
         );
@@ -211,8 +212,8 @@ router.post("/signOut", (req, res) => {
 });
 
 // 회원탈퇴
-router.delete("/destroy", (req, res, next) => {
-  const { username } = req.body;
+router.post("/destroy", (req, res, next) => {
+  const { email } = req.body;
   let store = req.sessionStore;
 
   try {
@@ -220,7 +221,7 @@ router.delete("/destroy", (req, res, next) => {
       if (err) throw err;
     });
     res.clearCookie("hugus");
-    User.destroy({ where: { nickname: username } }).then((result) => {
+    User.destroy({ where: { email } }).then((result) => {
       return res.status(200).json({ success: 1 });
     });
   } catch (error) {
@@ -254,22 +255,19 @@ router.post("/kakao", async (req, res) => {
   let user_profile = req.body.kakao_account.profile.profile_image_url;
   const password = await bcrypt.hash(`${req.body.id}`, 12);
 
-  const check = await User.findOne({
+  const user = await User.findOne({
     where: {
       email: email,
     },
   });
 
-  if (!check) {
+  if (!user) {
     await User.create({
       email: email,
       nickname: nickname,
       user_profile: user_profile,
       password: password,
     });
-  } else {
-    nickname = check.getDataValue("nickname");
-    user_profile = check.getDataValue("user_profile");
   }
 
   let session = req.session;
@@ -278,8 +276,10 @@ router.post("/kakao", async (req, res) => {
     user_nickname: nickname,
   };
   const payload = {
+    email: email,
     nickname: nickname,
     profile: user_profile,
+    social: "kakao",
   };
   jwt.sign(
     payload,
@@ -293,6 +293,65 @@ router.post("/kakao", async (req, res) => {
         success: 1,
         nickname: nickname,
         profile: user_profile,
+        email: email,
+        social: "kakao",
+      });
+    }
+  );
+});
+
+//네이버 로그인
+router.post("/naver", async (req, res) => {
+  const { email, nickname, profile } = req.body;
+  const password = await bcrypt.hash(email, 12);
+
+  const user = await User.findOne({
+    where: {
+      email: email,
+    },
+  });
+  let user_profile;
+  let user_nickname;
+
+  if (user) {
+    user_profile = user.getDataValue("user_profile");
+    user_nickname = user.getDataValue("nickname");
+  } else {
+    await User.create({
+      email: email,
+      nickname: nickname,
+      user_profile: profile,
+      password: password,
+    });
+    user_profile = profile;
+    user_nickname = nickname;
+  }
+
+  let session = req.session;
+  session.loginInfo = {
+    user_email: email,
+    user_nickname: user_nickname,
+  };
+  const payload = {
+    email: email,
+    nickname: user_nickname,
+    profile: user_profile,
+    social: "naver",
+  };
+  jwt.sign(
+    payload,
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "24h",
+    },
+    (err, token) => {
+      res.cookie("hugus", token);
+      res.json({
+        success: 1,
+        nickname: user_nickname,
+        profile: user_profile,
+        email: email,
+        social: "naver",
       });
     }
   );

@@ -8,9 +8,7 @@ export default (Component, option, adminRoute = null) => {
   // false -> 로그인한 유저는 출입이 불가능한 페이지
 
   const AuthenticateCheck = (props) => {
-    const isLoggedIn = useSelector(
-      (state) => state.authentication.status.isLoggedIn
-    );
+    const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
     const [isAllowed, setIsAllowed] = useState(true);
 
     useEffect(() => {

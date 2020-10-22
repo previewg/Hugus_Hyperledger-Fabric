@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { signInBtnIsClicked, signUpBtnIsClicked } from "../../actions/user";
 import { signInRequest } from "../../actions/auth";
-import KakaoLo from "./KakaoLo";
 import Kakao from "./Kakao";
+import Naver from "./Naver";
 
 const SignInStyle = styled.div`
   position: fixed;
@@ -95,10 +95,6 @@ const SignInStyle = styled.div`
         :nth-child(2) {
           background-color: #f7e100;
         }
-        :nth-child(3) {
-          background-color: #4064ac;
-          color: white;
-        }
       }
       .already {
         font-size: 12px;
@@ -121,10 +117,8 @@ const SignIn = () => {
     password: "",
   });
 
-  const signInStatus = useSelector(
-    (state) => state.authentication.signIn.status
-  );
-  const errorCode = useSelector((state) => state.authentication.signIn.error);
+  const signInStatus = useSelector((state) => state.auth.signIn.status);
+  const errorCode = useSelector((state) => state.auth.signIn.error);
 
   const onChangeHandler = (e) => {
     setUser({
@@ -194,9 +188,8 @@ const SignIn = () => {
         </article>
         <article className="buttons">
           <button onClick={signInHandler}>HUGUS 계정으로 로그인</button>
-          {/*<KakaoLo />*/}
           <Kakao />
-          <button>페이스북 계정으로 로그인</button>
+          <Naver />
           <div className="already">
             <p>회원이 아니신가요?</p>
             <p onClick={() => dispatch(signUpBtnIsClicked())}>회원가입</p>

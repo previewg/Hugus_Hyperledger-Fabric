@@ -1,30 +1,27 @@
 import React from "react";
-import {useSelector} from "react-redux";
-import styled from 'styled-components';
+import { useSelector } from "react-redux";
+import styled from "styled-components";
 
 const History_main = styled.section`
-display: flex;
-.section_intro{
+  display: flex;
+  .section_intro {
     font-size: xx-large;
-    
-    }
-    .section_middle{
+  }
+  .section_middle {
     margin-top: 40px;
     border-style: solid;
     padding: 70px;
-    }
-`
+  }
+`;
 const History = () => {
-    const username = useSelector(state => state.authentication.status.currentUser);
-    return (
-        <History_main>
-            <div className="section_intro">
-                {username}님께서 참여하신 캠페인은 총 n 건 입니다.
-            </div>
-            <div className="section_middle">
-                총 후원 금액은 n 원 입니다.
-            </div>
-        </History_main>
-    )
-}
+  const username = useSelector((state) => state.auth.status.nickname);
+  return (
+    <History_main>
+      <div className="section_intro">
+        {username}님께서 참여하신 캠페인은 총 n 건 입니다.
+      </div>
+      <div className="section_middle">총 후원 금액은 n 원 입니다.</div>
+    </History_main>
+  );
+};
 export default History;

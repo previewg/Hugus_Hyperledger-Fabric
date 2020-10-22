@@ -12,7 +12,6 @@ const {
   Story_Vote,
   sequelize,
 } = require("../models");
-const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -39,7 +38,7 @@ let upload = multer({
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
-    const { user_email } = req.session.loginInfo;
+    const { user_email, social } = req.session.loginInfo;
     const { story_title, user_info, story_content, story_goal } = req.body;
     const story = await Story.create({
       story_title,
@@ -285,7 +284,8 @@ router.get("/list/:page", async (req, res) => {
         where: {
           id: [
             sequelize.literal(
-              "(SELECT story_id FROM story_like WHERE user_email = user_email AND `like`=true)"
+              `(SELECT story_id FROM story_like WHERE user_email = '${user_email}'` +
+                "AND `like`=true)"
             ),
           ],
         },

@@ -112,9 +112,7 @@ const errorMsg = [
 ];
 
 const ConfirmPwd = ({ setIsConfirmed, setInfoType }) => {
-  const nickname = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
+  const nickname = useSelector((state) => state.auth.user.nickname);
   const input = useRef();
   const [password, setPassword] = useState("");
   const [errorCode, setErrorCode] = useState(0);

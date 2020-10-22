@@ -113,11 +113,9 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const CommentInput = ({ commentList, data, num }) => {
+const CommentInput = ({ data, num }) => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
+  const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const like = useSelector((state) => state.story.like.user);
   const total = useSelector((state) => state.comment.list.total);
 

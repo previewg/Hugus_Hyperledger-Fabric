@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { kakaosignInRequest } from "../../actions/auth";
+import { kakaoSignInRequest } from "../../actions/auth";
 import { useDispatch } from "react-redux";
 import { signInBtnIsClicked } from "../../actions/user";
+
 const Kakao = () => {
   const dispatch = useDispatch();
 
@@ -12,7 +13,7 @@ const Kakao = () => {
           url: "/v2/user/me",
           success: (res) => {
             console.log(res);
-            dispatch(kakaosignInRequest({ res }));
+            dispatch(kakaoSignInRequest({ res }));
             dispatch(signInBtnIsClicked());
           },
           fail: (error) => {
