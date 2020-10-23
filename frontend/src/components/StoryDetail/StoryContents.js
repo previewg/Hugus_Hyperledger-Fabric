@@ -162,9 +162,7 @@ const StoryContentsStyle = styled.div`
 const StoryContents = ({ data, history }) => {
   const dispatch = useDispatch();
   const likeNum = useSelector((state) => state.story.like.likeNum);
-  const currentUser = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
+  const email = useSelector((state) => state.auth.user.email);
   const totalPrice = () => {
     let total = 0;
     data.Story_Items.map((item) => {
@@ -185,7 +183,7 @@ const StoryContents = ({ data, history }) => {
       history.push(`/story/update/${data.id}`);
     };
 
-    if (data.User.nickname === currentUser)
+    if (data.user_email === email)
       return (
         <div className="if_owner">
           <button onClick={onUpdateHandler}>수정</button>

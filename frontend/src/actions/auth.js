@@ -13,6 +13,8 @@ export const AUTH_SIGNOUT_FAILURE = "AUTH_SIGNOUT_FAILURE";
 
 // KakaoSignIn
 export const AUTH_KAKAO_SIGNIN_SUCCESS = "AUTH_KAKAO_SIGNIN_SUCCESS";
+// NaverSignIn
+export const AUTH_NAVER_SIGNIN_SUCCESS = "AUTH_NAVER_SIGNIN_SUCCESS";
 
 // SignDestroy
 export const AUTH_SIGN_DESTROY = "AUTH_SIGN_DESTROY";
@@ -45,6 +47,7 @@ export const signInSuccess = (data) => {
     data: data,
   };
 };
+
 export const signInFailure = (error) => {
   return { type: AUTH_SIGNIN_FAILURE, error: error };
 };
@@ -53,8 +56,15 @@ export const signInFailure = (error) => {
 export const kakaoSignInSuccess = (data) => {
   return {
     type: AUTH_KAKAO_SIGNIN_SUCCESS,
-    nickname: data.nickname,
-    profile: data.profile,
+    data: data,
+  };
+};
+
+// 네이버 로그인
+export const naverSignInSuccess = (data) => {
+  return {
+    type: AUTH_NAVER_SIGNIN_SUCCESS,
+    data: data,
   };
 };
 
@@ -127,13 +137,28 @@ export const signInRequest = ({ user }) => async (dispatch) => {
 };
 
 // 카카오 로그인 요청
-export const kakaosignInRequest = ({ res }) => async (dispatch) => {
+export const kakaoSignInRequest = ({ res }) => async (dispatch) => {
   dispatch(signInStart());
   await axios
     .post("/auth/kakao", { ...res })
     .then((response) => {
       if (response.data.success === 1) {
         dispatch(kakaoSignInSuccess(response.data));
+      }
+    })
+    .catch((error) => {
+      dispatch(signInFailure(error));
+    });
+};
+
+// 네이버 로그인 요청
+export const naverSignInRequest = (res) => async (dispatch) => {
+  dispatch(signInStart());
+  await axios
+    .post("/auth/naver", { ...res })
+    .then((response) => {
+      if (response.data.success === 1) {
+        dispatch(naverSignInSuccess(response.data));
       }
     })
     .catch((error) => {
@@ -155,10 +180,10 @@ export const signOutRequest = () => async (dispatch) => {
 };
 
 // 회원탈퇴요청
-export const signDestroyRequest = (username) => async (dispatch) => {
+export const signDestroyRequest = (email) => async (dispatch) => {
   dispatch(signDestroyStart());
   await axios
-    .post("/auth/destroy", { username })
+    .post("/auth/destroy", { email: email })
     .then((username) => {
       dispatch(signDestroySuccess());
     })

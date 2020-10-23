@@ -6,6 +6,7 @@ import {
   AUTH_SIGNOUT_SUCCESS,
   AUTH_SIGNOUT_FAILURE,
   AUTH_KAKAO_SIGNIN_SUCCESS,
+  AUTH_NAVER_SIGNIN_SUCCESS,
   AUTH_SIGN_DESTROY,
   AUTH_SIGN_DESTROY_SUCCESS,
   AUTH_SIGN_DESTROY_FAILURE,
@@ -45,13 +46,20 @@ const initialState = {
     status: "INIT",
     error: -1,
   },
-  status: {
-    valid: false,
+  user: {
     isLoggedIn: getCookie("hugus") || false,
-    currentUser: parseJwt(getCookie("hugus")).nickname || "",
-    profile_path: parseJwt(getCookie("hugus")).profile || "",
+    nickname: parseJwt(getCookie("hugus")).nickname || "",
+    profile: parseJwt(getCookie("hugus")).profile || "",
+    email: parseJwt(getCookie("hugus")).email || "",
+    social: parseJwt(getCookie("hugus")).social || "",
   },
-  profile: {
+  naverObj: new window.naver.LoginWithNaverId({
+    clientId: "edTCgFsetZW7QgyeUmNJ",
+    callbackUrl: "http://localhost:3001/auth/naver",
+    isPopup: false,
+    loginButton: { color: "green", type: 3, height: 60 },
+  }),
+  profileChange: {
     status: "INIT",
   },
   signOut: {
@@ -62,7 +70,7 @@ const initialState = {
   },
 };
 
-export default function authentication(state = initialState, action) {
+export default function auth(state = initialState, action) {
   switch (action.type) {
     // 로그인
     case AUTH_SIGNIN:
@@ -72,15 +80,15 @@ export default function authentication(state = initialState, action) {
         },
       });
     case AUTH_SIGNIN_SUCCESS:
-      console.log(action);
       return update(state, {
         signIn: {
           status: { $set: "SUCCESS" },
         },
-        status: {
+        user: {
           isLoggedIn: { $set: true },
-          currentUser: { $set: action.data.nickname },
-          profile_path: { $set: action.data.profile },
+          nickname: { $set: action.data.nickname },
+          profile: { $set: action.data.profile },
+          email: { $set: action.data.email },
         },
       });
     case AUTH_SIGNIN_FAILURE:
@@ -97,10 +105,27 @@ export default function authentication(state = initialState, action) {
         signIn: {
           status: { $set: "SUCCESS" },
         },
-        status: {
-          currentUser: { $set: action.nickname },
-          profile_path: { $set: action.profile },
+        user: {
           isLoggedIn: { $set: true },
+          nickname: { $set: action.data.nickname },
+          profile: { $set: action.data.profile },
+          email: { $set: action.data.email },
+          social: { $set: action.data.social },
+        },
+      });
+
+    //네이버 로그인
+    case AUTH_NAVER_SIGNIN_SUCCESS:
+      return update(state, {
+        signIn: {
+          status: { $set: "SUCCESS" },
+        },
+        user: {
+          isLoggedIn: { $set: true },
+          nickname: { $set: action.data.nickname },
+          profile: { $set: action.data.profile },
+          email: { $set: action.data.email },
+          social: { $set: action.data.social },
         },
       });
 
@@ -111,18 +136,20 @@ export default function authentication(state = initialState, action) {
           status: { $set: "WAITING" },
         },
       });
+
     case AUTH_SIGNOUT_SUCCESS:
       return update(state, {
         signIn: {
           status: { $set: "INIT" },
         },
-        status: {
+        user: {
           isLoggedIn: { $set: false },
-          currentUser: { $set: "" },
+          nickname: { $set: "" },
+          profile: { $set: "" },
+          email: { $set: "" },
         },
-        profile: {
+        profileChange: {
           status: { $set: "INIT" },
-          data: { $set: null },
         },
         signOut: {
           status: { $set: "SUCCESS" },
@@ -146,9 +173,11 @@ export default function authentication(state = initialState, action) {
 
     case AUTH_SIGN_DESTROY_SUCCESS:
       return update(state, {
-        status: {
+        user: {
           isLoggedIn: { $set: false },
-          currentUser: { $set: "" },
+          nickname: { $set: "" },
+          profile: { $set: "" },
+          email: { $set: "" },
         },
         signDestroy: {
           status: { $set: "SUCCESS" },
@@ -164,18 +193,17 @@ export default function authentication(state = initialState, action) {
     // 프로필 업로드
     case PROFILE_ADD:
       return update(state, {
-        profile: {
+        profileChange: {
           status: { $set: "WAITING" },
         },
       });
     case PROFILE_ADD_SUCCESS:
-      console.log(action.data);
       return update(state, {
-        profile: {
+        profileChange: {
           status: { $set: "SUCCESS" },
         },
-        status: {
-          profile_path: { $set: action.data },
+        user: {
+          profile: { $set: action.data },
         },
       });
 

@@ -52,9 +52,7 @@ const BarStyle = styled.div`
 const StoryVote = ({ data }) => {
   const dispatch = useDispatch();
   const vote = useSelector((state) => state.story.vote);
-  const isLoggedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
+  const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
 
   const ProgressBar = () => {
     let ratio = (vote.voteNum / data.story_goal) * 100;

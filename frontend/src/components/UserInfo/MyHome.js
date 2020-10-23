@@ -54,7 +54,7 @@ const MyHomeStyle = styled.section`
   }
 `;
 
-const MyHome = ({ currentUser }) => {
+const MyHome = ({ nickname }) => {
   return (
     <MyHomeStyle>
       <article className="my__home__header">
