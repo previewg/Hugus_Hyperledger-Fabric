@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
 import { storyLike } from "../../actions/story";
+import KakaoLinkAPI from "./KakaoLinkAPI";
+import FacebookLink from "./FacebookLink";
 
 const CommentFalseStyle = styled.div`
   font-weight: bold;
@@ -113,11 +115,9 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const CommentInput = ({ commentList, data, num }) => {
+const CommentInput = ({ data, num }) => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
+  const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const like = useSelector((state) => state.story.like.user);
   const total = useSelector((state) => state.comment.list.total);
 
@@ -160,7 +160,9 @@ const CommentInput = ({ commentList, data, num }) => {
                 className="unlike"
                 src="/icons/unlike.svg"
               />
-              <img alt="share" className="share" src="/icons/share.svg" />
+              <KakaoLinkAPI />
+              <FacebookLink />
+              {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
             </div>
           </div>
           <input disabled placeholder="로그인이 필요합니다." />
@@ -187,7 +189,9 @@ const CommentInput = ({ commentList, data, num }) => {
                 src="/icons/unlike.svg"
               />
             )}
-            <img alt="share" className="share" src="/icons/share.svg" />
+            <KakaoLinkAPI />
+            <FacebookLink />
+            {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
           </div>
         </div>
         <input

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { storyAdd } from "actions/story";
 

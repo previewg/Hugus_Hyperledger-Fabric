@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { signInBtnIsClicked } from "actions/user";
@@ -20,6 +20,17 @@ const StoryMainStyle = styled.div`
 const StoryMain = (props) => {
   const dispatch = useDispatch();
   const isLoggedIn = props.isLoggedIn;
+  const [storyType, setStoryType] = useState("hot");
+  const [changed, setChanged] = useState(false);
+  const typeChange = (e) => {
+    e.preventDefault();
+    if (e.target.getAttribute("name") === "my" && !isLoggedIn) {
+      dispatch(signInBtnIsClicked());
+      return;
+    }
+    setStoryType(e.target.getAttribute("name"));
+    setChanged(true);
+  };
 
   const onClickHandler = () => {
     if (isLoggedIn) props.history.push("/story/write");
@@ -27,16 +38,24 @@ const StoryMain = (props) => {
   };
 
   useEffect(() => {
+    if (props.location.search) {
+      setStoryType(props.location.search.split("=")[1]);
+      setChanged(true);
+    }
     window.scrollTo(0, 0);
-  }, []);
+  }, [props.location.search]);
 
   return (
     <StoryMainStyle>
-      <StoryNav />
+      <StoryNav storyType={storyType} typeChange={typeChange} />
       <p className="StoryWrite__btn" onClick={onClickHandler}>
         글작성
       </p>
-      <StoryList />
+      <StoryList
+        storyType={storyType}
+        changed={changed}
+        setChanged={setChanged}
+      />
     </StoryMainStyle>
   );
 };

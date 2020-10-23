@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { signOutRequest } from "../../actions/auth";
-import { signInBtnIsClicked } from "../../actions/user";
+import { signOutRequest, naverSignInRequest } from "actions/auth";
+import { signInBtnIsClicked } from "actions/user";
 
 const NavStyle = styled.nav`
   position: fixed;
@@ -266,35 +266,52 @@ const ResNavStyle = styled.nav`
 `;
 
 const NavBar = () => {
+  const { Kakao } = window;
   const [menuClicked, setMenuClicked] = useState(false);
-
+  const init = useRef(true);
   const dispatch = useDispatch();
-  const username = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
-  const isLoggedIn = useSelector(
-    (state) => state.authentication.status.isLoggedIn
-  );
-  const profile_path = useSelector(
-    (state) => state.authentication.status.profile_path
-  );
+  const nickname = useSelector((state) => state.auth.user.nickname);
+  const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
+  const profile = useSelector((state) => state.auth.user.profile);
   const onClickHandler = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
+  const naverObj = useSelector((state) => state.auth.naverObj);
 
-  useEffect(()=>{
+  const SignOutHandler = () => {
+    if (window.Kakao.Auth.getAccessToken()) {
+      console.log("카카오 인증 토큰 존재", window.Kakao.Auth.getAccessToken());
+      window.Kakao.Auth.logout(() => {
+        console.log("로그아웃 완료", window.Kakao.Auth.getAccessToken());
+      });
+    } else if (naverObj.getLoginStatus) {
+      naverObj.logout();
+    }
+    dispatch(signOutRequest());
+  };
 
-  },[profile_path])
+  const NaverAPI = useCallback(() => {
+    naverObj.init();
+  }, []);
+
+  const KakaoAPI = useCallback(() => {
+    Kakao.init("da409c8b843f70cc0a9b46369e513be9");
+  }, []);
+
+  useEffect(() => {
+    if (init.current) {
+      KakaoAPI();
+      NaverAPI();
+      init.current = false;
+    }
+  }, [profile, nickname]);
 
   const SignedIn = () => {
     if (isLoggedIn) {
       return (
         <>
-          <p>{username}님</p>
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => dispatch(signOutRequest())}
-          >
+          <p>{nickname}님</p>
+          <div style={{ cursor: "pointer" }} onClick={SignOutHandler}>
             로그아웃
           </div>
         </>
@@ -313,12 +330,12 @@ const NavBar = () => {
 
   const UserIcon = () => {
     if (isLoggedIn) {
-      if (profile_path) {
+      if (profile) {
         return (
           <Link
             to="/my"
             style={{
-              backgroundImage: `url("${profile_path}") `,
+              backgroundImage: `url("${profile}") `,
             }}
           ></Link>
         );
@@ -346,6 +363,7 @@ const NavBar = () => {
 
   return (
     <>
+      <button id="naverIdLogin" style={{ display: "none" }} />
       <NavStyle menuClicked={menuClicked}>
         <div className="nav__title">
           <img className="logo" alt="hugus" src="/icons/hugus.svg" />
@@ -355,9 +373,18 @@ const NavBar = () => {
           <div className="dropdown">
             <Link to="/story">Story</Link>
             <ul>
-              <Link to="">인기 스토리</Link>
-              <Link to="">최신 스토리</Link>
-              <Link to="">관심 스토리</Link>
+              <Link to="/story?type=hot">인기 스토리</Link>
+              <Link to="/story?type=new">최신 스토리</Link>
+              {isLoggedIn ? (
+                <Link to="/story?type=my">관심 스토리</Link>
+              ) : (
+                <a
+                  style={{ cursor: "pointer" }}
+                  onClick={() => dispatch(signInBtnIsClicked())}
+                >
+                  관심 스토리
+                </a>
+              )}
             </ul>
           </div>
           <div className="dropdown">
@@ -376,7 +403,7 @@ const NavBar = () => {
             <ul>
               <Link to="">물품 구매 인증</Link>
               <Link to="">물품 전달 과정</Link>
-              <Link to="">수혜자의 이야기</Link>
+              <Link to="/act/talk">수혜자의 이야기</Link>
             </ul>
           </div>
         </div>

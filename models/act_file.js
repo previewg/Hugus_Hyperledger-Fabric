@@ -2,23 +2,19 @@
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Campaign_Comment",
+    "Act_File",
     {
-      user_email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      campaign_id: {
+      act_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      comment: {
-        type: DataTypes.TEXT,
+      file: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
-      tableName: "campaign_comment",
+      tableName: "act_file",
       freezeTableName: true,
       underscored: true,
       charset: "utf8mb4",

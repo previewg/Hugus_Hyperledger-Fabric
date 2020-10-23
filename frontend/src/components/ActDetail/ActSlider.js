@@ -10,9 +10,12 @@ const SliderStyle = styled.section`
   .slick-slider {
     width: 300px;
   }
-  .story_file {
-    height: 290px;
-    object-fit: contain;
+  .slick-list {
+    img {
+      width: auto;
+      height: 290px;
+      object-fit: cover;
+    }
   }
 
   .slick-dots {
@@ -65,7 +68,8 @@ const PrevArrow = (props) => {
   );
 };
 
-const StorySlider = ({ files }) => {
+const ActSlider = ({ files }) => {
+  console.log(files);
   const settings = {
     customPaging: function (i) {
       return (
@@ -88,11 +92,15 @@ const StorySlider = ({ files }) => {
     <SliderStyle>
       <Slider {...settings}>
         {files.map((file, key) => {
-          return <img className="story_file" key={key} src={file.file} />;
+          return (
+            <div key={key}>
+              <img src={file.file} />
+            </div>
+          );
         })}
       </Slider>
     </SliderStyle>
   );
 };
 
-export default StorySlider;
+export default ActSlider;

@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {hashtagAll} from "actions/hashtag";
+import { useDispatch, useSelector } from "react-redux";
+import { hashtagAll } from "actions/hashtag";
 import * as Hangul from "hangul-js";
-import {Link} from "react-router-dom";
-import {hashtagSearch} from "../actions/hashtag";
-import {storyVisit} from "../actions/story";
+import { Link } from "react-router-dom";
+import { hashtagSearch } from "../actions/hashtag";
+import { storyVisit } from "../actions/story";
+import axios from "axios";
 
 const SearchResultStyle = styled.section`
   display: flex;
@@ -17,9 +18,9 @@ const SearchResultStyle = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
-.search__comment{
-font-size: 22px;
-}
+    .search__comment {
+      font-size: 22px;
+    }
     .search__bar {
       margin-top: 20px;
       width: 50%;
@@ -194,148 +195,155 @@ const StoryListStyle = styled.div`
 `;
 
 const SearchResult = () => {
-    const dispatch = useDispatch();
-    const search_list = useSelector((state) => state.hashtag.search.data);
-    const [search, setSearch] = useState("");
-    const list = useSelector((state) => state.hashtag.list.data);
+  const dispatch = useDispatch();
+  const search_list = useSelector((state) => state.hashtag.search.data);
+  const [search, setSearch] = useState("");
+  const list = useSelector((state) => state.hashtag.list.data);
 
-    const compare = (hashtag) => {
-        const dis = Hangul.disassemble(hashtag);
-        if (hashtag.match(search) || dis.includes(search)) return true;
-        else return false;
-    };
+  const compare = (hashtag) => {
+    const dis = Hangul.disassemble(hashtag);
+    if (hashtag.match(search) || dis.includes(search)) return true;
+    else return false;
+  };
 
-    const onChangeHandler = (e) => {
-        e.preventDefault();
-        setSearch(e.target.value);
-        if (e.key === "Enter") {
-            onClick();
-        }
-    };
-    const visitHandler = (id) => {
-        dispatch(storyVisit(id));
-    };
-    const onClick = () => {
-        dispatch(hashtagSearch(search));
-
+  const onChangeHandler = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+    if (e.key === "Enter") {
+      onClick();
     }
-    useEffect(() => {
-        dispatch(hashtagAll());
-        if(search!==""){
-            setSearch(search_list[0].Hashtag.hashtag)
-        }
-        dispatch(hashtagAll());
-    }, [search_list]);
+  };
+  const visitHandler = async (story_id) => {
+    await axios.put("/story/visit", { story_id: story_id });
+  };
+  const onClick = () => {
+    dispatch(hashtagSearch(search));
+  };
+  useEffect(() => {
+    dispatch(hashtagAll());
+    if (search !== "") {
+      setSearch(search_list[0].Hashtag.hashtag);
+    }
+    dispatch(hashtagAll());
+  }, [search_list]);
 
-    return (
-        <SearchResultStyle search={search}>
-            <div className="layout">
-                <div className="search__bar">
+  return (
+    <SearchResultStyle search={search}>
+      <div className="layout">
+        <div className="search__bar">
+          <input
+            name="search"
+            value={search}
+            className="search_form"
+            type="text"
+            placeholder="해시태그로 검색해보세요!"
+            onChange={onChangeHandler}
+            onKeyPress={onChangeHandler}
+          />
+          <div onClick={onClick}>
+            <img alt="search__icon" src="/icons/search.png" />
+          </div>
+        </div>
+        <div className="live__suggestion">
+          {list.map((row, key) => {
+            if (row.hashtag !== undefined) {
+              if (compare(row.hashtag))
+                return (
+                  <div key={key}>
                     <input
-                        name="search"
-                        value={search}
-                        className="search_form"
-                        type="text"
-                        placeholder="해시태그로 검색해보세요!"
-                        onChange={onChangeHandler}
-                        onKeyPress={onChangeHandler}
-                   />
+                      value={row.hashtag}
+                      readOnly
+                      onClick={async () => {
+                        await setSearch(row.hashtag);
+                        dispatch(hashtagSearch(row.hashtag));
+                      }}
+                    />
+
                     <div onClick={onClick}>
-                        <img alt="search__icon" src="/icons/search.png"/>
+                      <img alt="search__icon" src="/icons/search.png" />
                     </div>
-                </div>
-                <div className="live__suggestion">
-                    {list.map((row, key) => {
-                        if(row.hashtag!==undefined){
-                            if (compare(row.hashtag))
-                                return (
-                                    <div key={key}>
+                  </div>
+                );
+            }
+          })}
+        </div>
+        <div className="search__comment">
+          {search_list.length !== 0 && search_list !== "NOTHING"
+            ? '"' +
+              search_list[0].Hashtag.hashtag +
+              '"' +
+              " 검색결과 총" +
+              search_list.length +
+              "개의 게시글이 존재합니다."
+            : null}
+        </div>
+        {search_list === "NOTHING" || search_list.length === 0 ? (
+          <div>검색결과 없음</div>
+        ) : (
+          <StoryListStyle>
+            <section>
+              {search_list.map((story, key) => {
+                if (story.Story_Files[0]) {
+                  return (
+                    <Link
+                      to={`/story/${story.story_id}`}
+                      style={{
+                        backgroundImage: `url("${story.Story_Files[0].file}")`,
+                      }}
+                      onClick={() => visitHandler(story.story_id)}
+                      key={key}
+                    >
+                      <div>
+                        <div className="story__hashtag">
+                          {story.Hashtag.hashtag}
+                        </div>
 
-                                        <input  value={row.hashtag} readOnly onClick={async ()=>{await setSearch(row.hashtag)
-                                            dispatch(hashtagSearch(row.hashtag))
-                                        }}
-                                        />
+                        <p className="story__title">
+                          {story.Story.story_title}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                } else {
+                  return (
+                    <Link
+                      to={`/story/${story.id}`}
+                      style={{
+                        backgroundImage: `url("http://localhost:3000/HUGUS.png") `,
+                      }}
+                      onClick={() => visitHandler(story.id)}
+                      key={key}
+                    >
+                      <div>
+                        <div className="story__hashtag">
+                          {story.Hashtag.hashtag}
+                        </div>
 
-
-                                        <div onClick={onClick}>
-                                            <img alt="search__icon" src="/icons/search.png"/>
-                                        </div>
-
-                                    </div>
-                                );
-                        }
-                    })}
-                </div>
-                <div className="search__comment">
-                    {search_list.length!==0 && search_list !== "NOTHING" ?   ( "\""+search_list[0].Hashtag.hashtag+"\""+" 검색결과 총"+search_list.length+"개의 게시글이 존재합니다." ):null}
-
-                </div>
-                {search_list === "NOTHING" || search_list.length===0 ? (<div>검색결과 없음</div>)
-                    :
-                    (
-
-                        <StoryListStyle>
-                            <section>
-                                {search_list.map((story, key) => {
-                                    if (story.Story_Files[0]) {
-                                        return (
-                                            <Link to={`/story/${story.story_id}`}
-                                                  style={{
-                                                      backgroundImage: `url("${story.Story_Files[0].file}")`,
-                                                  }}
-                                                  onClick={() => visitHandler(story.story_id)}
-                                                  key={key}
-                                            >
-                                                <div>
-                                                    <div className="story__hashtag">
-                                                        {story.Hashtag.hashtag}
-                                                    </div>
-
-                                                    <p className="story__title">{story.Story.story_title}</p>
-
-                                                </div>
-                                            </Link>
-                                        )
-                                    } else {
-                                        return (
-                                            <Link
-                                                to={`/story/${story.id}`}
-                                                style={{
-                                                    backgroundImage: `url("http://localhost:3000/HUGUS.png") `,
-                                                }}
-                                                onClick={() => visitHandler(story.id)}
-                                                key={key}
-                                            >
-                                                <div>
-                                                    <div className="story__hashtag">
-                                                        {story.Hashtag.hashtag}
-                                                    </div>
-
-                                                    <p className="story__title">{story.Story.story_title}</p>
-
-                                                </div>
-                                            </Link>
-                                        )
-                                    }
-                                })}
-                            </section>
-                        </StoryListStyle>
-                    )
+                        <p className="story__title">
+                          {story.Story.story_title}
+                        </p>
+                      </div>
+                    </Link>
+                  );
                 }
-                {/*<div className="live__suggestion">*/}
-                {/*    {list.map((row, key) => {*/}
-                {/*        if (compare(row.hashtag))*/}
-                {/*            return (*/}
-                {/*                <div key={key}>*/}
-                {/*                    <input value={row.hashtag} readOnly/>*/}
-                {/*                    <img alt="search__icon" src="/icons/search.png"/>*/}
-                {/*                </div>*/}
-                {/*            );*/}
-                {/*    })}*/}
-                {/*</div>*/}
-            </div>
-        </SearchResultStyle>
-    );
+              })}
+            </section>
+          </StoryListStyle>
+        )}
+        {/*<div className="live__suggestion">*/}
+        {/*    {list.map((row, key) => {*/}
+        {/*        if (compare(row.hashtag))*/}
+        {/*            return (*/}
+        {/*                <div key={key}>*/}
+        {/*                    <input value={row.hashtag} readOnly/>*/}
+        {/*                    <img alt="search__icon" src="/icons/search.png"/>*/}
+        {/*                </div>*/}
+        {/*            );*/}
+        {/*    })}*/}
+        {/*</div>*/}
+      </div>
+    </SearchResultStyle>
+  );
 };
 
 export default SearchResult;

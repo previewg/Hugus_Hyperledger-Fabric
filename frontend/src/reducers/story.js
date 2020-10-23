@@ -5,12 +5,6 @@ import {
   STORY_DELETE,
   STORY_DELETE_SUCCESS,
   STORY_DELETE_FAILURE,
-  STORY_LIST_LOAD,
-  STORY_LIST_LOAD_SUCCESS,
-  STORY_LIST_LOAD_FAILURE,
-  STORY_LIST_LOAD_INIT,
-  STORY_LIST_LOAD_INIT_SUCCESS,
-  STORY_LIST_LOAD_INIT_FAILURE,
   STORY_LOAD_INIT,
   STORY_LOAD,
   STORY_LOAD_SUCCESS,
@@ -36,11 +30,6 @@ const initialState = {
   },
   update: {
     status: "INIT",
-  },
-  list: {
-    status: "INIT",
-    data: [],
-    num: 1,
   },
   detail: {
     status: "INIT",
@@ -119,75 +108,6 @@ export default function story(state = initialState, action) {
     case STORY_DELETE_FAILURE:
       return update(state, {
         delete: {
-          status: { $set: "FAILURE" },
-        },
-      });
-
-    case STORY_LIST_LOAD:
-      return update(state, {
-        list: {
-          status: { $set: "WAITING" },
-        },
-        like: {
-          status: { $set: "WAITING" },
-        },
-      });
-
-    case STORY_LIST_LOAD_SUCCESS:
-      if (action.status === true) {
-        let len = (state.list.num - 1) * 9;
-        let newData = state.list.data.slice(0, len).concat(action.list);
-        return update(state, {
-          list: {
-            status: { $set: "SUCCESS" },
-            data: { $set: newData },
-            num: { $set: state.list.num + 1 },
-          },
-        });
-      } else {
-        if (action.list.length !== state.list.data.length % 9) {
-          let len = (state.list.num - 1) * 9;
-          let newData = state.list.data.slice(0, len).concat(action.list);
-          return update(state, {
-            list: {
-              status: { $set: "SUCCESS" },
-              data: { $set: newData },
-            },
-          });
-        } else {
-          return update(state, {
-            list: {
-              status: { $set: "SUCCESS" },
-            },
-          });
-        }
-      }
-
-    case STORY_LIST_LOAD_FAILURE:
-      return update(state, {
-        list: {
-          status: { $set: "FAILURE" },
-        },
-      });
-    case STORY_LIST_LOAD_INIT:
-      return update(state, {
-        list: {
-          status: { $set: "WAITING" },
-        },
-      });
-
-    case STORY_LIST_LOAD_INIT_SUCCESS:
-      return update(state, {
-        list: {
-          status: { $set: "SUCCESS" },
-          data: { $set: action.list },
-          num: { $set: state.list.num + 1 },
-        },
-      });
-
-    case STORY_LIST_LOAD_INIT_FAILURE:
-      return update(state, {
-        list: {
           status: { $set: "FAILURE" },
         },
       });

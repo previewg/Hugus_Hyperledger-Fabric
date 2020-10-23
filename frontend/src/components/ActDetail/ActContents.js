@@ -1,134 +1,121 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import Slider from 'react-slick';
+import ActSlider from "./ActSlider";
+import { Link } from "react-router-dom";
 
 const ActContentsStyle = styled.div`
   display: flex;
+  padding-top:70px;
   justify-content: center;
   flex-direction:column;
-  width: 80%;
-  .slick-slider{
-    width: 90%;
-  }
-  .slick-slide{
-  display: flex;
-  justify-content: center;
-  transition: all 0.6s ease-in-out;
-  }
-  .slick-slide>div{
-    padding: 15%;
-  }
-  .slick-center{
-      transform: scale(1.2);
-    }
-
-  .act{
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
-    border-radius: 5px;
-    cursor:pointer;
-    :focus{
-    outline: none;
-    };
-    img{
-    width: 100%; 
-    height: auto;
-    }
-    .act__title{
-    padding: 10px;
-    padding-top: 0;
-    padding-bottom: 0;
-    font-size: 13px;
-    }
-  }
-/*   
-  @media(max-width: 700px){
-    .slick-slider{
-        width: 700px;
-        height: 550px;
-      }
-      
-    .slick-slide>div{
-    padding: 20px;
-  }
-  } */
+  width: 70%;
+ 
  .act_contents {
    width:100%;
    display:flex;
-   justify-content:center;
+   justify-content:flex-start;
+   margin-top: 70px;
+          >p {
+            font-size:25px;
+            border-bottom:solid orange 3px;
+            padding-bottom:2px;
+            }
  }
+
+ .content {
+  .buyAuthForm {
+    margin-top: 50px;
+    p:nth-child(1) {
+      font-weight: bold;
+    }
+    p:nth-child(2) {
+      border: solid 0.1px lightgray;
+      padding: 15px;
+      padding-left: 20px;
+    }
+  }
+
+  .giveProcessForm {
+    margin-top: 50px;
+    p:nth-child(1) {
+      font-weight: bold;
+    }
+    p:nth-child(2) {
+      border: solid 0.1px lightgray;
+      padding: 15px;
+      padding-left: 20px;
+    }
+  }
+ }
+
+
+  .back_btn {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    color: grey;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+    outline: none;
+    :hover {
+    color: orange;
+    }
+  }
+
+  .visited {
+    margin-top: 50px;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 13px;
+    > p {
+      margin: 0;
+      margin-left: 10px;
+    }
+  }
 
 `;
 
+const ActContents = ({ actId }) => {
+const data = actId.data; 
 
-const NextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <img
-      className={className}
-      style={{ ...style, display: "block",transform:'scale(2)'}}
-      onClick={onClick}
-      src='/icons/Nexticon.png'
-    />
-  );
-};
-const PrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <img
-      className={className}
-      style={{ ...style, display: "block",transform:'scale(2)'}}
-      onClick={onClick}
-      src='/icons/Backicon.png'
-    />
-  );
-}
-
-const ActContents = ({ actList }) => {
-  const settings = {
-    infinite: true,
-    autopspeed: 5000,
-    slidesToShow:3,
-    slidesToScroll: 1,
-    centerMode:true,
-    nextArrow:<NextArrow/>,
-    prevArrow:<PrevArrow/>
-};
   return (
     <ActContentsStyle>
-            <Slider {...settings}>
-                <div className='act'>
-                    <img alt='' src='/pics/1.jpg'/>
-                    <p className='act__title'>게시물1의 제목</p>
-                </div>
-                <div className='act'>
-                    <img alt='' src='/pics/2.jpg'/>
-                    <p className='act__title'>게시물2의 제목</p>
-                </div>
-                <div className='act'>
-                    <img alt='' src='/pics/3.jpg'/>
-                    <p className='act__title'>게시물3의 제목</p>
-                </div>
-                <div className='act'>
-                    <img alt='' src='/pics/4.jpg'/>
-                    <p className='act__title'>게시물4의 제목</p>
-                </div>
-            </Slider>
+    <div className="act_contents">
 
-      <div className="act_contents">
-        {actList.map((act, key) => {
-          return (
-            <p key={key}>
-              {act.act_title}
-              {act.act_content}
-              {act.visited}
-              {act.created_at}
-            </p>
-          );
-        })}
+      {/* <p>{data.act_title}에 대한 소식입니다.</p> */}
       </div>
+
+      <Link className="back_btn" to="/act">
+      글목록
+      </Link>
+
+
+      {/* <ActSlider files={data.Act_Files} /> */}
       
+      <div className="visited">
+      <p>조회수 {data.visited}</p>
+      </div>
+
+      <div className="content">
+      <div className="buyAuthForm">
+      <p>구매내역</p>
+      <p>
+      asdads
+      </p>
+      </div>
+
+      <div className="giveProcessForm">
+      <p>전달과정</p>
+      <p>
+      {data.act_content}  
+      </p>
+      </div>
+      </div>
 
 
 

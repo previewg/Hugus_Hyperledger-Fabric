@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { actVisit } from "../../actions/act";
 
-const ActListStyle = styled.div`
+const ActTalkListStyle = styled.div`
   margin-top: 50px;
   width: 100%;
   a {
@@ -52,14 +52,14 @@ const ActListStyle = styled.div`
   }
 `;
 
-const ActList = ({ actList }) => {
+const ActTalkList = ({ }) => {
   const dispatch = useDispatch();
   const visitHandler = (id) => {
     dispatch(actVisit(id));
   };
 
   return (
-    <ActListStyle>
+    <ActTalkListStyle>
       <div className="list_grid list_tit">
         <div> 번호 </div>
         <div> 제목 </div>
@@ -67,7 +67,7 @@ const ActList = ({ actList }) => {
         <div className="acenter"> 작성일자 </div>
       </div>
 
-      {actList.map((act, key) => {
+      {/* {actList.map((act, key) => {
         return (
           <Link
             to={`/act/${act.id}`}
@@ -82,8 +82,8 @@ const ActList = ({ actList }) => {
             </div>
           </Link>
         );
-      })}
-    </ActListStyle>
+      })} */}
+    </ActTalkListStyle>
   );
 };
-export default ActList;
+export default ActTalkList;

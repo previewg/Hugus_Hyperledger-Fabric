@@ -212,36 +212,6 @@ export const storyUpdate = (data, props) => async (dispatch) => {
     });
 };
 
-// 게시물 목록 조회 (처음만)
-export const storyListLoaderInit = (section) => async (dispatch) => {
-  dispatch(storyListLoadInitStart());
-  await axios
-    .get(`/story/list/init/${section}`)
-    .then((response) => {
-      dispatch(storyListLoadInitSuccess(response.data.list));
-    })
-    .catch((error) => {
-      dispatch(storyListLoadInitFailure());
-      console.error(error);
-    });
-};
-
-// 게시물 목록 조회 요청
-export const storyListLoader = (section) => async (dispatch) => {
-  dispatch(storyListLoadStart());
-  await axios
-    .get(`/story/list/${section}`)
-    .then((response) => {
-      let status = true;
-      if (response.data.list.length !== 9) status = false;
-      dispatch(storyListLoadSuccess(response.data.list, status));
-    })
-    .catch((error) => {
-      dispatch(storyListLoadFailure());
-      console.error(error);
-    });
-};
-
 // 게시물 상세 조회 요청
 export const storyLoader = (id) => async (dispatch) => {
   dispatch(storyLoadStart());
@@ -254,14 +224,6 @@ export const storyLoader = (id) => async (dispatch) => {
       dispatch(storyLoadFailure());
       console.log(error);
     });
-};
-
-// 게시물 조회수 추가 요청
-export const storyVisit = (id) => async () => {
-  await axios
-    .put("/story/visit", { story_id: id })
-    .then(() => null)
-    .catch((error) => console.error(error));
 };
 
 // 게시물 좋아요 추가/제거 요청

@@ -203,9 +203,8 @@ const time = (value) => {
 
 const CommentList = ({ commentList, data, num }) => {
   const dispatch = useDispatch();
-  const current_user = useSelector(
-    (state) => state.authentication.status.currentUser
-  );
+  const nickname = useSelector((state) => state.auth.user.nickname);
+  const email = useSelector((state) => state.auth.user.email);
   const commentDeleteHandler = (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
@@ -265,7 +264,7 @@ const CommentList = ({ commentList, data, num }) => {
               <div className="header">
                 <a>{comment.User.nickname}</a>
                 <div>
-                  {current_user == comment.User.nickname && (
+                  {email == comment.user_email && (
                     <button onClick={() => commentDeleteHandler(comment.id)}>
                       삭제
                     </button>
@@ -274,11 +273,7 @@ const CommentList = ({ commentList, data, num }) => {
                 </div>
               </div>
               <p>{comment.comment}</p>
-              <CommentChildInput
-                comment={comment}
-                story_id={data.id}
-                current_user={current_user}
-              />
+              <CommentChildInput comment={comment} story_id={data.id} />
               <CommentChildMain comment={comment} />
             </div>
           </article>

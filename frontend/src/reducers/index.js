@@ -1,5 +1,5 @@
-import {combineReducers} from "redux";
-import authentication from "./authentication";
+import { combineReducers } from "redux";
+import auth from "./auth";
 import user from "./user";
 import story from "./story";
 import comment from "./comment";
@@ -8,14 +8,13 @@ import myPage from "./myPage";
 import act from "./act";
 import block from "./block";
 
-
 export default combineReducers({
-    authentication,
-    user,
-    story,
-    comment,
-    hashtag,
-    myPage: myPage,
-    act,
-    block,
+  auth,
+  user,
+  story,
+  comment,
+  hashtag,
+  myPage: myPage,
+  act,
+  block,
 });
