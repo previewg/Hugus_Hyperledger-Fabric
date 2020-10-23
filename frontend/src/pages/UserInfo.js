@@ -80,6 +80,9 @@ const UserInfo = (props) => {
   const currentUser = useSelector(
     (state) => state.authentication.status.currentUser
   );
+  const hashEmail = useSelector(
+      (state) => state.authentication.status.hash_email
+  );
   const isLoggedIn = useSelector(
     (state) => state.authentication.status.isLoggedIn
   );
@@ -124,6 +127,7 @@ const UserInfo = (props) => {
             )}
 
             <p>{currentUser}님</p>
+            <p>{hashEmail}</p>
           </div>
           <div className="side__menu">
             <p id="my__home" onClick={typeChangeHandler}>

@@ -6,6 +6,7 @@ import comment from "./comment";
 import hashtag from "./hashtag";
 import myPage from "./myPage";
 import act from "./act";
+import block from "./block";
 
 
 export default combineReducers({
@@ -16,4 +17,5 @@ export default combineReducers({
     hashtag,
     myPage: myPage,
     act,
+    block,
 });

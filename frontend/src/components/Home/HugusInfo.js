@@ -83,7 +83,7 @@ const HugusInfo = () => {
       </article>
       <article className="menu">
         <button>허그 소개</button>
-        <Link to="/info/block">실시간 블록체인 정보</Link>
+        <Link to="/block">실시간 블록체인 정보</Link>
       </article>
     </HugusInfoStyle>
   );
