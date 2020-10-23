@@ -403,7 +403,7 @@ const NavBar = () => {
             <ul>
               <Link to="">물품 구매 인증</Link>
               <Link to="">물품 전달 과정</Link>
-              <Link to="">수혜자의 이야기</Link>
+              <Link to="/act/talk">수혜자의 이야기</Link>
             </ul>
           </div>
         </div>

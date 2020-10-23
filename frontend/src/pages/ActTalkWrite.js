@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-const ActWriteStyle = styled.div`
+const ActTalkWriteStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
@@ -399,7 +399,7 @@ const errorMsg = [
   "내용을 입력 바랍니다",
 ];
 
-const ActWrite = () => {
+const ActTalkWrite = () => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
@@ -425,7 +425,7 @@ const ActWrite = () => {
 
   return (
     <>
-      <ActWriteStyle>
+      <ActTalkWriteStyle>
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -450,10 +450,10 @@ const ActWrite = () => {
           </div>
           
         </div>
-      </ActWriteStyle>
+      </ActTalkWriteStyle>
       {/* <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle> */}
     </>
   );
 };
 
-export default ActWrite;
+export default ActTalkWrite;

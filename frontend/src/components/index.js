@@ -22,6 +22,9 @@ import ActList from "./ActMain/ActList";
 import ActContents from "./ActDetail/ActContents";
 import Pagination from "./ActMain/Pagination";
 import Search from "./ActMain/Search";
+import ActTalkList from "./ActTalkMain/ActTalkList";
+import TalkPagination from "./ActTalkMain/TalkPagination";
+import TalkSearch from "./ActTalkMain/TalkSearch";
 import NaverCallback from "./User/NaverCallback";
 export {
   NavBar,
@@ -48,5 +51,8 @@ export {
   ActContents,
   Search,
   Pagination,
+  ActTalkList,
+  TalkPagination,
+  TalkSearch,
   NaverCallback,
 };

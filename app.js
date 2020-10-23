@@ -10,6 +10,7 @@ require("dotenv").config();
 require("morgan")("dev");
 require("cors")();
 require("cookie-parser")();
+require('./db')()
 
 const app = express();
 app.use(express.json());
@@ -66,6 +67,7 @@ const storyRouter = require("./routes/story");
 const commentRouter = require("./routes/comment");
 const hashtagRouter = require("./routes/hashtag");
 const actRouter = require("./routes/act");
+const blockRouter = require("./routes/block");
 
 // Router 사용
 app.use("/auth", authRouter);
@@ -74,6 +76,7 @@ app.use("/story", storyRouter);
 app.use("/comment", commentRouter);
 app.use("/hashtag", hashtagRouter);
 app.use("/act", actRouter);
+app.use("/block", blockRouter);
 // 404 처리
 app.use((req, res) => {
     new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

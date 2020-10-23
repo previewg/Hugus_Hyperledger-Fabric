@@ -83,12 +83,11 @@ const ActContentsStyle = styled.div`
 const ActContents = ({ actId }) => {
 const data = actId.data; 
 
-
   return (
     <ActContentsStyle>
     <div className="act_contents">
 
-      <p>{data.act_title}에 대한 소식입니다.</p>
+      {/* <p>{data.act_title}에 대한 소식입니다.</p> */}
       </div>
 
       <Link className="back_btn" to="/act">
@@ -96,7 +95,7 @@ const data = actId.data;
       </Link>
 
 
-      <ActSlider files={data.Act_Files} />
+      {/* <ActSlider files={data.Act_Files} /> */}
       
       <div className="visited">
       <p>조회수 {data.visited}</p>
@@ -106,7 +105,7 @@ const data = actId.data;
       <div className="buyAuthForm">
       <p>구매내역</p>
       <p>
-      치킨 1마리: 3,000,000 원
+      asdads
       </p>
       </div>
 

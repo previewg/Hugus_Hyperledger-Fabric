@@ -52,6 +52,7 @@ const initialState = {
     profile: parseJwt(getCookie("hugus")).profile || "",
     email: parseJwt(getCookie("hugus")).email || "",
     social: parseJwt(getCookie("hugus")).social || "",
+    hash_email: parseJwt(getCookie("hugus")).hash_email || "",
   },
   naverObj: new window.naver.LoginWithNaverId({
     clientId: "edTCgFsetZW7QgyeUmNJ",
@@ -99,6 +100,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: action.data.nickname },
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
+          hash_email: {$set: action.data.hash_email},
         },
       });
     case AUTH_SIGNIN_FAILURE:
@@ -156,6 +158,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
+          hash_email: {$set: ""}
         },
         profileChange: {
           status: { $set: "INIT" },
@@ -187,6 +190,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
+          hash_email: {$set: ""}
         },
         signDestroy: {
           status: { $set: "SUCCESS" },
