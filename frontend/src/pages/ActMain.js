@@ -75,7 +75,7 @@ const ActMain = () => {
         </div>
         <Search search={search} setSearch={setSearch} setClicked={setClicked}/>
         {actList.length !== 0 ? <ActList actList={actList} /> : <Loader />}
-        <Pagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage} />
+        <Pagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
   
       </div>
     </ActStyle>

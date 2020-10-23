@@ -54,6 +54,7 @@ const ActListStyle = styled.div`
 
 const ActList = ({ actList }) => {
   const dispatch = useDispatch();
+  
   const visitHandler = (id) => {
     dispatch(actVisit(id));
   };

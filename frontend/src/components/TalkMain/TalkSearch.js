@@ -1,5 +1,4 @@
-import React,{ useState, useRef } from 'react';
-import act from 'reducers/act';
+import React from 'react';
 import styled from "styled-components";
 
 const SearchStyle = styled.div`

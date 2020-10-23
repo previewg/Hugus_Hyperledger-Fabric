@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { actVisit } from "../../actions/act";
 
-const ActTalkListStyle = styled.div`
+const TalkListStyle = styled.div`
   margin-top: 50px;
   width: 100%;
   a {
@@ -52,14 +52,14 @@ const ActTalkListStyle = styled.div`
   }
 `;
 
-const ActTalkList = ({ }) => {
+const TalkList = ({ talkList }) => {
   const dispatch = useDispatch();
   const visitHandler = (id) => {
     dispatch(actVisit(id));
   };
 
   return (
-    <ActTalkListStyle>
+    <TalkListStyle>
       <div className="list_grid list_tit">
         <div> 번호 </div>
         <div> 제목 </div>
@@ -67,23 +67,23 @@ const ActTalkList = ({ }) => {
         <div className="acenter"> 작성일자 </div>
       </div>
 
-      {/* {actList.map((act, key) => {
+      {talkList.map((talk, key) => {
         return (
           <Link
-            to={`/act/${act.id}`}
-            onClick={() => visitHandler(act.id)}
+            to={`/talk/${talk.id}`}
+            onClick={() => visitHandler(talk.id)}
             key={key}
           >
             <div className="list_grid list_data" key={key}>
-              <div className="act__id">{act.id}</div>
-              <div className="act__title">{act.act_title}</div>
-              <div className="act__visit">{act.visited}</div>
-              <div className="create__time">{act.created_at}</div>
+              <div className="talk__id">{talk.id}</div>
+              <div className="talk__title">{talk.talk_title}</div>
+              <div className="talk__visit">{talk.visited}</div>
+              <div className="create__time">{talk.created_at}</div>
             </div>
           </Link>
         );
-      })} */}
-    </ActTalkListStyle>
+      })}
+    </TalkListStyle>
   );
 };
-export default ActTalkList;
+export default TalkList;

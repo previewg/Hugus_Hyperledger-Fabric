@@ -11,8 +11,9 @@ import BlockInfo from "./BlockInfo";
 import ActMain from "./ActMain";
 import ActDetail from "./ActDetail";
 import ActWrite from "./ActWrite";
-import ActTalkMain from "./ActTalkMain";
-import ActTalkWrite from "./ActTalkWrite";
+import TalkMain from "./TalkMain";
+import TalkDetail from "./TalkDetail";
+
 export {
   Home,
   StoryMain,
@@ -27,6 +28,6 @@ export {
   ActMain,
   ActDetail,
   ActWrite,
-  ActTalkMain,
-  ActTalkWrite,
+  TalkMain,
+  TalkDetail,
 };
