@@ -28,6 +28,8 @@ import {
   ActMain,
   ActDetail,
   ActWrite,
+  ActTalkMain,
+  ActTalkWrite,
 } from "pages";
 
 // Common components
@@ -56,11 +58,13 @@ ReactDOM.render(
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
-        {/*<Route exact path="/info" component={Auth(UserInfo, true)} />*/}
+        <Route exact path="/info" component={Auth(UserInfo, true)} />
         <Route path="/info/block" component={Auth(BlockInfo, true)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
+        <Route path="/act/talk" component={Auth(ActTalkMain, null)} />
+        {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
       </Switch>
     </BrowserRouter>
   </Provider>,

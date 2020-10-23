@@ -11,7 +11,7 @@ const ActDetailStyle = styled.div`
   margin-bottom: 70px;
   align-items: center;
   flex-direction: column;
-`;
+`;  
 
 const ActDetail = ({ match }) => {
     // const dispatch = useDispatch();
