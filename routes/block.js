@@ -9,7 +9,7 @@ router.post("/Info", async (req, res) => {
         Block.find({},
             (err, data) => {
                 if (err) console.log(err);
-                else
+                else console.log(data)
                 res.json({data: data, success: 1})
             })
             .sort({timestamp: -1}).limit(10);
