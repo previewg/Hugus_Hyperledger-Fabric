@@ -11,7 +11,6 @@ const KakaoStyle = styled.button`
   display: flex;
   align-items: center;
   img {
-    border-right: solid #e7e7e7 0.1px;
     width: 27px;
     height: 22px;
     margin-right: 44px;

@@ -59,17 +59,23 @@ router.post("/signup", async (req, res, next) => {
       });
     }
 
-    const hash = await bcrypt.hash(password, 12);
-    await User.create({
-      email,
-      nickname,
-      password: hash,
-    });
-    return res.status(200).json({ success: 1 });
-  } catch (err) {
-    console.error(err);
-    return next(err);
-  }
+        const hash = await bcrypt.hash(password, 12);
+
+        crypto.randomBytes(8, (err, buf) => {
+            crypto.pbkdf2(email, buf.toString('base64'), 100000, 8, 'sha512', (err, key) => {
+                User.create({
+                    email,
+                    nickname,
+                    password: hash,
+                    hash: key.toString('base64')
+                });
+            })
+        })
+        return res.status(200).json({success: 1});
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    }
 });
 
 router.post("/requestEmail", async (req, res) => {
@@ -78,20 +84,19 @@ router.post("/requestEmail", async (req, res) => {
   const key_for_verify = key_one + key_two;
   const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-  const email = req.body.email;
-
-  const smtpTransport = nodemailer.createTransport(
-    smtpTransporter({
-      service: "Gmail",
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: "yh9407@gmail.com",
-        pass: "nazgbplzumjbaozs",
-      },
-    })
-  );
+    const email = req.body.email;
+    const smtpTransport = nodemailer.createTransport(
+        smtpTransporter({
+            service: "Gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: "yh9407@gmail.com",
+                pass: "nazgbplzumjbaozs",
+            },
+        })
+    );
 
   const url = `http://127.0.0.1:3000/auth/confirmEmail/${key_for_verify}`;
 
@@ -160,7 +165,6 @@ router.post("/signIn", async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: 2,
-        code: 1,
       });
     }
 
@@ -175,6 +179,7 @@ router.post("/signIn", async (req, res) => {
           nickname: user.nickname,
           profile: user.user_profile,
           email: user.email,
+          hash_email: user.hash,
         };
         jwt.sign(
           payload,
@@ -191,11 +196,12 @@ router.post("/signIn", async (req, res) => {
               nickname: user.nickname,
               profile: user.user_profile,
               email: user.email,
+              hash_email: user.hash,
             });
           }
         );
       } else {
-        return res.status(400).json({ success: 2, code: 1 });
+        return res.status(400).json({ success: 2 });
       }
     });
   });

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { signInBtnIsClicked } from "./user";
 
+export const AUTH_INIT = "AUTH_INIT";
+
 // SignIn
 export const AUTH_SIGNIN = "AUTH_SIGNIN";
 export const AUTH_SIGNIN_SUCCESS = "AUTH_SIGNIN_SUCCESS";
@@ -35,6 +37,10 @@ export const PROFILE_ADD_FAILURE = "ADD_PROFILE_FAILURE";
 export const PROFILE_LOAD = "PROFILE_LOAD";
 export const PROFILE_LOAD_SUCCESS = "PROFILE_LOAD_SUCCESS";
 export const PROFILE_LOAD_FAILURE = "PROFILE_LOAD_FAILURE";
+
+export const authInit = () => {
+  return { type: AUTH_INIT };
+};
 
 // 로그인
 export const signInStart = () => {

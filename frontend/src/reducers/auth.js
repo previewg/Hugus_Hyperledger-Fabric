@@ -1,4 +1,5 @@
 import {
+  AUTH_INIT,
   AUTH_SIGNIN,
   AUTH_SIGNIN_SUCCESS,
   AUTH_SIGNIN_FAILURE,
@@ -44,7 +45,6 @@ function parseJwt(token) {
 const initialState = {
   signIn: {
     status: "INIT",
-    error: -1,
   },
   user: {
     isLoggedIn: getCookie("hugus") || false,
@@ -52,6 +52,7 @@ const initialState = {
     profile: parseJwt(getCookie("hugus")).profile || "",
     email: parseJwt(getCookie("hugus")).email || "",
     social: parseJwt(getCookie("hugus")).social || "",
+    hash_email: parseJwt(getCookie("hugus")).hash_email || "",
   },
   naverObj: new window.naver.LoginWithNaverId({
     clientId: "edTCgFsetZW7QgyeUmNJ",
@@ -72,6 +73,16 @@ const initialState = {
 
 export default function auth(state = initialState, action) {
   switch (action.type) {
+    case AUTH_INIT:
+      return update(state, {
+        signIn: {
+          status: { $set: "INIT" },
+        },
+        signOut: {
+          status: { $set: "INIT" },
+        },
+      });
+
     // 로그인
     case AUTH_SIGNIN:
       return update(state, {
@@ -89,13 +100,13 @@ export default function auth(state = initialState, action) {
           nickname: { $set: action.data.nickname },
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
+          hash_email: {$set: action.data.hash_email},
         },
       });
     case AUTH_SIGNIN_FAILURE:
       return update(state, {
         signIn: {
           status: { $set: "FAILURE" },
-          error: { $set: action.error },
         },
       });
 
@@ -147,6 +158,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
+          hash_email: {$set: ""}
         },
         profileChange: {
           status: { $set: "INIT" },
@@ -178,6 +190,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
+          hash_email: {$set: ""}
         },
         signDestroy: {
           status: { $set: "SUCCESS" },

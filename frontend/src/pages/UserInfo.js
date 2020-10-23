@@ -77,6 +77,8 @@ const UserInfo = (props) => {
   const profile = useSelector((state) => state.auth.user.profile);
   const nickname = useSelector((state) => state.auth.user.nickname);
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
+  const hashEmail = useSelector((state) => state.auth.user.hash_email);
+
   const typeChangeHandler = (e) => {
     setInfoType(e.target.id);
   };
@@ -118,6 +120,8 @@ const UserInfo = (props) => {
             )}
 
             <p>{nickname}님</p>
+            <p>hash : {hashEmail}</p>
+
           </div>
           <div className="side__menu">
             <p id="my__home" onClick={typeChangeHandler}>

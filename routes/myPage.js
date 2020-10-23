@@ -44,7 +44,7 @@ router.put("/profile", upload.single("file"), async (req, res) => {
             console.log(key[3])
            await s3.deleteObject({
                 Bucket: 'hugus',
-                Key: key[3]
+                Key: decodeURI(key[3])
             }, (err) => {
                 if (err) {
                     throw err;
@@ -96,6 +96,7 @@ router.post("/myWriting", async (req, res) => {
     try {
         const {username} = req.body;
         const user_email = await User.findOne({where: {nickname: username}});
+console.log(req.body.session)
 
         const writingList = await Story.findAll({
             where: {user_email: user_email.dataValues.email},
