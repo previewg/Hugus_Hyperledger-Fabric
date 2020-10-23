@@ -39,7 +39,7 @@ const SignUpStyle = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: space-around;
-      height: 50%;
+      height: 65%;
       .email {
         display: flex;
         width: 400px;
@@ -126,39 +126,18 @@ const SignUpStyle = styled.div`
         }
       }
     }
-    .social {
+    .already {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
-      height: 25%;
+      color: gray;
+      justify-content: center;
+      font-size: 12px;
       p {
-        font-size: 13px;
+        width: 100px;
+        text-align: center;
       }
-      .social__logo {
-        width: 50%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        img {
-          width: 35px;
-          cursor: pointer;
-          transition: 0.2s ease-in-out;
-
-          :hover {
-            transform: scale(1.2);
-          }
-        }
-      }
-      .already {
-        display: flex;
-        justify-content: space-around;
-        width: 50%;
-        color: gray;
-        p:nth-child(2) {
-          color: orange;
-          cursor: pointer;
-        }
+      p:nth-child(2) {
+        cursor: pointer;
+        color: orange;
       }
     }
   }
@@ -417,17 +396,9 @@ const SignUp = () => {
 
             <button onClick={signUpHandler}>가입하기</button>
           </article>
-          <article className="social">
-            <p>소셜 계정으로 간편하게 가입하세요!</p>
-            <div className="social__logo">
-              <img alt="google" src="icons/google.png" />
-              <img alt="kakao" src="icons/kakao.png" />
-              <img alt="facebook" src="icons/facebook.png" />
-            </div>
-            <div className="already">
-              <p>이미 회원이신가요?</p>
-              <p onClick={() => dispatch(signInBtnIsClicked())}>로그인</p>
-            </div>
+          <article className="already">
+            <p>이미 회원이신가요?</p>
+            <p onClick={() => dispatch(signInBtnIsClicked())}>로그인</p>
           </article>
         </section>
         {openTerm && (

@@ -1,4 +1,5 @@
 import {
+  AUTH_INIT,
   AUTH_SIGNIN,
   AUTH_SIGNIN_SUCCESS,
   AUTH_SIGNIN_FAILURE,
@@ -44,7 +45,6 @@ function parseJwt(token) {
 const initialState = {
   signIn: {
     status: "INIT",
-    error: -1,
   },
   user: {
     isLoggedIn: getCookie("hugus") || false,
@@ -72,6 +72,16 @@ const initialState = {
 
 export default function auth(state = initialState, action) {
   switch (action.type) {
+    case AUTH_INIT:
+      return update(state, {
+        signIn: {
+          status: { $set: "INIT" },
+        },
+        signOut: {
+          status: { $set: "INIT" },
+        },
+      });
+
     // 로그인
     case AUTH_SIGNIN:
       return update(state, {
@@ -95,7 +105,6 @@ export default function auth(state = initialState, action) {
       return update(state, {
         signIn: {
           status: { $set: "FAILURE" },
-          error: { $set: action.error },
         },
       });
 

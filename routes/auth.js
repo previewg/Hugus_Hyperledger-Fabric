@@ -160,7 +160,6 @@ router.post("/signIn", async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: 2,
-        code: 1,
       });
     }
 
@@ -195,7 +194,7 @@ router.post("/signIn", async (req, res) => {
           }
         );
       } else {
-        return res.status(400).json({ success: 2, code: 1 });
+        return res.status(400).json({ success: 2 });
       }
     });
   });
