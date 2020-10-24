@@ -1,4 +1,5 @@
 import NavBar from "./GlobalNavigation/NavBar";
+import Footer from "./GlobalFooter/Footer";
 import SignIn from "./User/SignIn";
 import SignUp from "./User/SignUp";
 import StoryList from "./StoryMain/StoryList";
@@ -34,6 +35,7 @@ import Main from "./Home/Main";
 export {
   Main,
   NavBar,
+  Footer,
   SignIn,
   SignUp,
   StoryList,

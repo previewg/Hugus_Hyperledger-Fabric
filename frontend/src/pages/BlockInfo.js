@@ -8,49 +8,65 @@ import Flow from "./flow";
 
 const BlockInfoStyle = styled.section`
     width:100%;
+    height: 100%;
     padding-top:70px;
     display:flex;
-    justify-content:center;
+    flex-direction: column;
+    background-color: #12253f ;
+    .title {
+        font-weight: bolder;
+        margin-top : 50px;
+        margin-right: 60px;
+        height: 18%;
+        align-self: flex-end;
+            >span {
+            color:#05b9c1;
+            font-size:30px;
+            border-bottom:solid orange 3px;
+            padding : 5px 15px 5px;
+            }
+        }
     .layout {
     display:flex;
     align-items:center;
     flex-direction:column;
     margin-top: 100px;
-    width:85%;
-        .title {
-        width:100%;
-            >span {
-            font-size:30px;
-            border-bottom:solid orange 3px;
-            padding : 5px 5px 15px 5px;
-            
-            }
-        }
-       .underline{
-     
+    width:100%;
+      .underline{
       width: 100%;
-      height: 2px;
-      background-color: lightgrey;
+      height: 1px;
+      margin-bottom: 10px;
+      background-color: #05b9c1;
       transition: all .5s ease-in-out;
       }
         .block__title{
-        
           display:grid;
           width: 100%;
-          font-size: 20px;
+          font-size: 32px;
+          color: lightgray;
           grid-template-columns: 1.25fr 1fr 1fr 1fr 1fr 1.1fr ;
           margin-bottom: 20px;
           justify-items: center;
+              .title__tx{
+              color: #05b9c1;
+              }
         }
         .block__list{
-          margin-top: 20px;
+          border: none;
+          color: lightgray;
+          font-size: 16px;
+          border-bottom: gray solid 0.1px;
+          margin-top: 18px;
           display:grid;
           justify-items: center;
-
+          height: 100%;
           width: 100%;
           grid-template-columns: 1.25fr 1fr 1fr 1fr 1fr 1.1fr ;
           .hover_tx{
           display: none;
+          }
+          .tx__{
+          color: #05b9c1;
           }
           :hover{
           .tx__{
@@ -58,12 +74,10 @@ const BlockInfoStyle = styled.section`
           }
           .hover_tx{
               display: flex; 
-              background: white;         
+               color: #05b9c1;
           }
           }
         }
-        
-        
     }
 `;
 
@@ -101,11 +115,11 @@ useEffect(()=>{
         <BlockInfoStyle>
             <Socket/>
             <div className="title">
-                <span>BLOCKINFO</span>
+                <span>HUGUS CHAIN</span>
             </div>
             <div className="layout">
                 <div className='block__title'>
-                    <div> TX_ID</div>
+                    <div className={'title__tx'}> TX_ID</div>
                     <div> TYPE</div>
                     <div> SENDER</div>
                     <div> RECEIVER</div>
@@ -123,13 +137,12 @@ useEffect(()=>{
                             <div className="act__visit">{block.sender_id}</div>
                             <div className='receiver_id'>{block.receiver_id}</div>
                             <div className='amount'>{block.amount}</div>
-                            <Flow block_time={block.timestamp}/>
+                            <Flow className='timestamp' block_time={block.timestamp}/>
                         </div>
                     )
                 })}
             </div>
         </BlockInfoStyle>
-
     );
 };
 

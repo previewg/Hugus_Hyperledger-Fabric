@@ -178,15 +178,19 @@ router.post("/signIn", async (req, res) => {
     bcrypt.compare(password, user.password).then((isMatched) => {
       if (isMatched) {
         let session = req.session;
+
         session.loginInfo = {
           user_email: user.email,
           user_nickname: user.nickname,
+          hash_email: user.hash,
+          profile: user.user_profile,
         };
         const payload = {
           nickname: user.nickname,
           profile: user.user_profile,
           email: user.email,
           hash_email: user.hash,
+          phone_number: user.phone_number
         };
         jwt.sign(
           payload,
@@ -204,6 +208,7 @@ router.post("/signIn", async (req, res) => {
               profile: user.user_profile,
               email: user.email,
               hash_email: user.hash,
+              phone_number: user.phone_number
             });
           }
         );

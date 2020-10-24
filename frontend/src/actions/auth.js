@@ -38,6 +38,11 @@ export const PROFILE_LOAD = "PROFILE_LOAD";
 export const PROFILE_LOAD_SUCCESS = "PROFILE_LOAD_SUCCESS";
 export const PROFILE_LOAD_FAILURE = "PROFILE_LOAD_FAILURE";
 
+//Update Profile Information
+export const MY_INFO_UPDATE = "MY_INFO_UPDATE";
+export const MY_INFO_UPDATE_SUCCESS = "MY_INFO_UPDATE_SUCCESS";
+export const MY_INFO_UPDATE_FAILURE = "MY_INFO_UPDATE_FAILURE";
+
 export const authInit = () => {
   return { type: AUTH_INIT };
 };
@@ -124,6 +129,16 @@ export const profileAddSuccess = (data) => {
 };
 export const profileAddFailure = () => {
   return { type: PROFILE_ADD_FAILURE };
+};
+//UPDATE INFO
+export const updateInfoStart = () => {
+  return { type: MY_INFO_UPDATE };
+};
+export const updateInfoSuccess = (data) => {
+  return { type: MY_INFO_UPDATE_SUCCESS, data: data };
+};
+export const updateInfoFailure = (code) => {
+  return { type: MY_INFO_UPDATE_FAILURE, code:code };
 };
 
 // 로그인 요청
@@ -228,3 +243,19 @@ export const profileUpload = (formData) => async (dispatch) => {
       console.error(error);
     });
 };
+
+//UPDATE INFO 요청
+export const updateInfo = (userInfo) => async (dispatch) => {
+  dispatch(updateInfoStart());
+  await axios
+      .post("/myPage/update",{userInfo})
+      .then((response)=>{
+        if(response.data.success===1){
+          dispatch(updateInfoSuccess(response.data));
+        }else dispatch(updateInfoFailure(response.data.code))
+      })
+      .catch((error)=>{
+        dispatch(updateInfoFailure(error))
+      })
+}
+
