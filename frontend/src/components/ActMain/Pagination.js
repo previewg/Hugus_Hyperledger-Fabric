@@ -34,11 +34,10 @@ const createArr = (n) => {
 const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
   const [blockNum, setBlockNum] = useState(0);
   const [currPage, setCurrPage] = useState(1);
-
+  
   const v = Number(blockNum * pageLimit);
   const iArr = createArr(Number(total));
   const pArr = iArr.slice(v, Number(pageLimit) + v);
-
   const firstPage = () => {
     setBlockNum(0);
     setCurrPage(1);
@@ -64,16 +63,16 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
     }
     setCurrPage((n) => n + 1);
   };
-
+  
   useEffect(() => {
     nowPage(currPage);
   }, [currPage,clicked]);
 
   return (
     <PaginationStyle>
-      {/* <p>currPage : {currPage}</p>
-      <p>blockNum : {blockNum}</p> */}
-      <div>
+        
+
+        <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
         {pArr.map((n, key) => (

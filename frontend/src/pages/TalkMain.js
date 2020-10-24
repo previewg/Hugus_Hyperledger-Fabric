@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { ClipLoader } from "react-spinners";
 import { css } from "@emotion/core";
-import { ActTalkList, TalkSearch, TalkPagination } from "components";
+import { TalkList, TalkSearch, TalkPagination } from "components";
 
 const ActTalkStyle = styled.section`
   width: 100%;
@@ -36,16 +36,16 @@ const ActTalkStyle = styled.section`
 
 const ActTalkMain = () => {
   const [total, setTotal] = useState(0);
-//   const [actList, setActList] = useState([]);
-//   const [search, setSearch] = useState("");
-//   const [clicked, setClicked] = useState(false);
+  const [talkList, setTalkList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [clicked, setClicked] = useState(false);
 
-//   const nowPage = async (page) => {
-//     const data = await axios.get(`/act/list/${page}?keyword=${search}`);
-//     setActList(data.data.list);
-//     setTotal(data.data.count);
-//     setClicked(false);
-//   };
+  const nowPage = async (talk_id) => {
+    const data = await axios.get(`/talk/list/${talk_id}?keyword=${search}`);
+    setTalkList(data.data.list);
+    setTotal(data.data.count);
+    setClicked(false);
+  };
 
   const Loader = () => {
     return (
@@ -65,14 +65,13 @@ const ActTalkMain = () => {
 
   return (
     <ActTalkStyle>
-        <a>asdfasdfasf</a>
       <div className="layout">
         <div className="title">
           <p>수혜자의 이야기</p>
         </div>
-        {/* <Search search={search} setSearch={setSearch} setClicked={setClicked}/> */}
-        {/* {actList.length !== 0 ? <ActList actList={actList} /> : <Loader />} */}
-        {/* <Pagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage} /> */}
+        <TalkSearch search={search} setSearch={setSearch} setClicked={setClicked}/>
+        {talkList.length !== 0 ? <TalkList talkList={talkList} /> : <Loader />}
+        <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
   
       </div>
     </ActTalkStyle>

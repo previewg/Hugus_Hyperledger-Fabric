@@ -28,8 +28,9 @@ import {
   ActMain,
   ActDetail,
   ActWrite,
-  ActTalkMain,
-  ActTalkWrite,
+  TalkMain,
+  TalkDetail,
+  // ActTalkWrite,
 } from "pages";
 
 // Common components
@@ -62,7 +63,8 @@ ReactDOM.render(
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
-        <Route path="/act/talk" component={Auth(ActTalkMain, null)} />
+        <Route exact path="/talk" component={Auth(TalkMain, null)} />
+        <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
         {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
       </Switch>

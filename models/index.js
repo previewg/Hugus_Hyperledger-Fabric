@@ -31,6 +31,11 @@ db.Story_File = require("./story_file")(sequelize, Sequelize);
 db.Story_Vote = require("./story_vote")(sequelize, Sequelize);
 db.Act = require("./act")(sequelize, Sequelize);
 db.Act_File = require("./act_file")(sequelize, Sequelize);
+db.Talk = require("./talk")(sequelize, Sequelize);
+db.Talk_File = require("./talk_file")(sequelize, Sequelize);
+db.Talk_Comment = require("./talk_comment")(sequelize, Sequelize);
+db.Talk_Comment_Child = require("./talk_comment_child")(sequelize, Sequelize);
+db.Talk_Comment_Like = require("./talk_comment_like")(sequelize, Sequelize);
 
 // User
 db.User.hasMany(db.Story, { foreignKey: "user_email", sourceKey: "email" });
@@ -52,6 +57,18 @@ db.User.hasMany(db.Story_Like, {
   sourceKey: "email",
 });
 db.User.hasMany(db.Act, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+});
+db.User.hasMany(db.Talk, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+});
+db.User.hasMany(db.Talk_Comment, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+});
+db.User.hasMany(db.Talk_Comment_Child, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
@@ -175,6 +192,49 @@ db.Act.hasMany(db.Act_File, { foreignKey: "act_id", sourceKey: "id" });
 
 // Act_File
 db.Act_File.belongsTo(db.Act, { foreignKey: "act_id", targetKey: "id" });
+
+//Talk
+db.Talk.hasMany(db.Talk_Comment, { foreignKey: "talk_id", sourceKey: "id" });
+db.Talk.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
+db.Talk.hasMany(db.Talk_File, { foreignKey: "talk_id", sourceKey: "id" });
+
+//Talk_File
+db.Talk_File.belongsTo(db.Talk, { foreignKey: "talk_id", targetKey: "id" });
+
+//Talk_comment
+db.Talk_Comment.hasMany(db.Talk_Comment_Child, {
+  foreignKey: "comment_id",
+  sourceKey: "id",
+});
+db.Talk_Comment.hasMany(db.Talk_Comment_Like, {
+  foreignKey: "comment_id",
+  sourceKey: "id",
+});
+db.Talk_Comment.belongsTo(db.Talk, {
+  foreignKey: "talk_id",
+  targetKey: "id",
+});
+db.Talk_Comment.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "email",
+});
+
+//Talk_Comment_child
+db.Talk_Comment_Child.belongsTo(db.Talk_Comment, {
+  foreignKey: "comment_id",
+  targetKey: "id",            
+});
+db.Talk_Comment_Child.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "email",
+});
+
+//Talk_Comment_Like
+db.Talk_Comment_Like.belongsTo(db.Talk_Comment, {
+  foreignKey: "comment_id",
+  targetKey: "id",
+});
+
 
 //Story Comment Like
 db.Story_Comment_Like.belongsTo(db.Story_Comment, {

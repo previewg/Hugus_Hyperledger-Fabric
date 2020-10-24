@@ -2,17 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import ActSlider from "./ActSlider";
+import TalkSlider from "./TalkSlider";
 import { Link } from "react-router-dom";
 
-const ActContentsStyle = styled.div`
+const TalkContentsStyle = styled.div`
   display: flex;
   padding-top:70px;
   justify-content: center;
   flex-direction:column;
   width: 70%;
  
- .act_contents {
+ .talk_contents {
    width:100%;
    display:flex;
    justify-content:flex-start;
@@ -25,17 +25,6 @@ const ActContentsStyle = styled.div`
  }
 
  .content {
-  .buyAuthForm {
-    margin-top: 50px;
-    p:nth-child(1) {
-      font-weight: bold;
-    }
-    p:nth-child(2) {
-      border: solid 0.1px lightgray;
-      padding: 15px;
-      padding-left: 20px;
-    }
-  }
 
   .giveProcessForm {
     margin-top: 50px;
@@ -47,9 +36,8 @@ const ActContentsStyle = styled.div`
       padding: 15px;
       padding-left: 20px;
     }
-  }
+    }
  }
-
 
   .back_btn {
     display: flex;
@@ -77,49 +65,39 @@ const ActContentsStyle = styled.div`
       margin-left: 10px;
     }
   }
-
 `;
 
-const ActContents = ({ actId }) => {
-const data = actId.data; 
+const TalkContents = ({ talkId }) => {
+const data = talkId.data; 
 
   return (
-    <ActContentsStyle>
-    <div className="act_contents">
+    <TalkContentsStyle>
+    <div className="talk_contents">
 
-      <p>{data.act_title}에 대한 소식입니다.</p>
+      <p>{data.talk_title}</p>
       </div>
 
-      <Link className="back_btn" to="/act">
+      <Link className="back_btn" to="/talk">
       글목록
       </Link>
 
-      <ActSlider files={data.Act_Files} />
+      <TalkSlider files={data.Talk_Files} />
       
       <div className="visited">
       <p>조회수 {data.visited}</p>
       </div>
 
       <div className="content">
-      <div className="buyAuthForm">
-      <p>구매내역</p>
-      <p>
-      asdads
-      </p>
-      </div>
-
       <div className="giveProcessForm">
-      <p>전달과정</p>
+      <p>수혜자의 소식</p>
       <p>
-      {data.act_content}  
+      {data.talk_content}  
       </p>
       </div>
       </div>
 
-
-
-    </ActContentsStyle>
+    </TalkContentsStyle>
   );
 };
 
-export default ActContents;
+export default TalkContents;

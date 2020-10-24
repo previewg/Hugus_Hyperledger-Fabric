@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { signOutRequest, naverSignInRequest } from "actions/auth";
+import { signOutRequest } from "actions/auth";
 import { signInBtnIsClicked } from "actions/user";
 
 const NavStyle = styled.nav`
@@ -403,7 +403,7 @@ const NavBar = () => {
             <ul>
               <Link to="">물품 구매 인증</Link>
               <Link to="">물품 전달 과정</Link>
-              <Link to="/act/talk">수혜자의 이야기</Link>
+              <Link to="/talk">수혜자의 이야기</Link>
             </ul>
           </div>
         </div>

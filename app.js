@@ -67,6 +67,8 @@ const storyRouter = require("./routes/story");
 const commentRouter = require("./routes/comment");
 const hashtagRouter = require("./routes/hashtag");
 const actRouter = require("./routes/act");
+const talkRouter = require("./routes/talk");
+const talkCommentRouter = require("./routes/talk_comment");
 const blockRouter = require("./routes/block");
 
 // Router 사용
@@ -76,6 +78,8 @@ app.use("/story", storyRouter);
 app.use("/comment", commentRouter);
 app.use("/hashtag", hashtagRouter);
 app.use("/act", actRouter);
+app.use("/talk", talkRouter);
+app.use("/talk_comment", talkCommentRouter);
 app.use("/block", blockRouter);
 // 404 처리
 app.use((req, res) => {

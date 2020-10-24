@@ -23,9 +23,13 @@ import ActList from "./ActMain/ActList";
 import ActContents from "./ActDetail/ActContents";
 import Pagination from "./ActMain/Pagination";
 import Search from "./ActMain/Search";
-import ActTalkList from "./ActTalkMain/ActTalkList";
-import TalkPagination from "./ActTalkMain/TalkPagination";
-import TalkSearch from "./ActTalkMain/TalkSearch";
+import TalkList from "./TalkMain/TalkList";
+import TalkPagination from "./TalkMain/TalkPagination";
+import TalkSearch from "./TalkMain/TalkSearch";
+import TalkContents from "./TalkDetail/TalkContents";
+import TalkComments from "./TalkDetail/TalkComments";
+import TalkCommentInput from "./TalkDetail/TalkCommentInput";
+import TalkCommentList from "./TalkDetail/TalkCommentList";
 import NaverCallback from "./User/NaverCallback";
 export {
   NavBar,
@@ -53,8 +57,12 @@ export {
   ActContents,
   Search,
   Pagination,
-  ActTalkList,
+  TalkList,
   TalkPagination,
   TalkSearch,
+  TalkContents,
+  TalkComments,
+  TalkCommentInput,
+  TalkCommentList,
   NaverCallback,
 };

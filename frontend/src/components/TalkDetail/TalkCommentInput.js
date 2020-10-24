@@ -1,13 +1,11 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { commentAdd } from "../../actions/comment";
+// import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
-import { storyLike } from "../../actions/story";
-import KakaoLinkAPI from "./KakaoLinkAPI";
-import FacebookLink from "./FacebookLink";
+// import { storyLike } from "../../actions/story";
 
-const CommentFalseStyle = styled.div`
+const TalkCommentFalseStyle = styled.div`
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -32,7 +30,7 @@ const CommentFalseStyle = styled.div`
     border-bottom: solid gray 0.1px;
   }
 `;
-const CommentTrueStyle = styled.div`
+const TalkCommentTrueStyle = styled.div`
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -115,17 +113,18 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const CommentInput = ({ data, num }) => {
+const TalkCommentInput = ({ data, num }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const like = useSelector((state) => state.story.like.user);
   const total = useSelector((state) => state.comment.list.total);
+
   const [error, setError] = useState(false);
   const comment = useRef();
 
-  const likeHandler = (status) => {
-    dispatch(storyLike(data.id, status));
-  };
+  // const likeHandler = (status) => {
+  //   dispatch(storyLike(data.id, status));
+  // };
 
   const Input = () => {
     const [comments, setComments] = useState("");
@@ -138,9 +137,10 @@ const CommentInput = ({ data, num }) => {
         comment.current.focus();
         setError(true);
       } else {
-        dispatch(
-          commentAdd({ comment: comments, story_id: data.id, num: num })
-        );
+        
+
+
+        
       }
     };
     const commentClearHandler = () => {
@@ -149,7 +149,7 @@ const CommentInput = ({ data, num }) => {
 
     if (!isLoggedIn) {
       return (
-        <CommentFalseStyle>
+        <TalkCommentFalseStyle>
           <div className="header">
             <p>댓글 {total}개</p>
             <div className="icon">
@@ -159,21 +159,18 @@ const CommentInput = ({ data, num }) => {
                 className="unlike"
                 src="/icons/unlike.svg"
               />
-              <KakaoLinkAPI />
-              <FacebookLink />
-              {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
             </div>
           </div>
           <input disabled placeholder="로그인이 필요합니다." />
-        </CommentFalseStyle>
+        </TalkCommentFalseStyle>
       );
     }
     return (
-      <CommentTrueStyle>
+      <TalkCommentTrueStyle>
         <div className="header">
           <p>댓글 {total}개</p>
           <div className="icon">
-            {like ? (
+            {/* {like ? (
               <img
                 onClick={() => likeHandler(true)}
                 alt="like"
@@ -187,10 +184,7 @@ const CommentInput = ({ data, num }) => {
                 className="unlike"
                 src="/icons/unlike.svg"
               />
-            )}
-            <KakaoLinkAPI />
-            <FacebookLink />
-            {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
+            )} */}
           </div>
         </div>
         <input
@@ -209,7 +203,7 @@ const CommentInput = ({ data, num }) => {
           </button>
           <button onClick={commentAddHandler}>등록</button>
         </div>
-      </CommentTrueStyle>
+      </TalkCommentTrueStyle>
     );
   };
 
@@ -221,4 +215,4 @@ const CommentInput = ({ data, num }) => {
   );
 };
 
-export default CommentInput;
+export default TalkCommentInput;
