@@ -11,6 +11,7 @@
 # misc
 .env.local
 .env
+debug.log
 
 npm-debug.log*
 yarn-debug.log*

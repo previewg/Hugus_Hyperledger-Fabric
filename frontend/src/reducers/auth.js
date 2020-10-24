@@ -110,7 +110,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: action.data.nickname },
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
-          hash_email: {$set: action.data.hash_email},
+          hash_email: { $set: action.data.hash_email },
         },
       });
     case AUTH_SIGNIN_FAILURE:
@@ -132,6 +132,7 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
           social: { $set: action.data.social },
+          hash_email: { $set: action.data.hash_email },
         },
       });
 
@@ -147,6 +148,7 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
           social: { $set: action.data.social },
+          hash_email: { $set: action.data.hash_email },
         },
       });
 
@@ -168,7 +170,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
-          hash_email: {$set: ""}
+          hash_email: { $set: "" },
         },
         profileChange: {
           status: { $set: "INIT" },
@@ -200,7 +202,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
-          hash_email: {$set: ""}
+          hash_email: { $set: "" },
         },
         signDestroy: {
           status: { $set: "SUCCESS" },
