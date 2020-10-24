@@ -30,7 +30,9 @@ import TalkComments from "./TalkDetail/TalkComments";
 import TalkCommentInput from "./TalkDetail/TalkCommentInput";
 import TalkCommentList from "./TalkDetail/TalkCommentList";
 import NaverCallback from "./User/NaverCallback";
+import Main from "./Home/Main";
 export {
+  Main,
   NavBar,
   SignIn,
   SignUp,

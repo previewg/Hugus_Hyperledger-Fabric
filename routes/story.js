@@ -94,22 +94,24 @@ router.post("/delete", async (req, res) => {
       where: { story_id: id },
       attributes: ["file"],
     });
+
+    let params = {
+      Bucket: "hugusstory",
+      Delete: {
+        Objects: [],
+      },
+    };
+
     for (const file of files) {
       const key = file.file.split("/");
-      if (!key) {
-        await s3.deleteObject(
-          {
-            Bucket: "hugusstory",
-            Key: decodeURI(key[3]),
-          },
-          (err) => {
-            if (err) {
-              throw err;
-            }
-          }
-        );
-      }
+      params.Delete.Objects.push({ Key: decodeURI(key[3]) });
     }
+
+    await s3.deleteObjects(params, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
 
     // const hashtags = await Story_Hashtag.findAll({
     //   attributes: [
