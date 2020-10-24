@@ -14,7 +14,7 @@ const History_main = styled.section`
   }
 `;
 const History = () => {
-  const username = useSelector((state) => state.auth.status.nickname);
+  const username = useSelector((state) => state.auth.user.nickname);
   return (
     <History_main>
       <div className="section_intro">
