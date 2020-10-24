@@ -59,23 +59,30 @@ router.post("/signup", async (req, res, next) => {
       });
     }
 
-        const hash = await bcrypt.hash(password, 12);
+    const hash = await bcrypt.hash(password, 12);
 
-        crypto.randomBytes(8, (err, buf) => {
-            crypto.pbkdf2(email, buf.toString('base64'), 100000, 8, 'sha512', (err, key) => {
-                User.create({
-                    email,
-                    nickname,
-                    password: hash,
-                    hash: key.toString('base64')
-                });
-            })
-        })
-        return res.status(200).json({success: 1});
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    }
+    crypto.randomBytes(8, (err, buf) => {
+      crypto.pbkdf2(
+        email,
+        buf.toString("base64"),
+        100000,
+        8,
+        "sha512",
+        (err, key) => {
+          User.create({
+            email,
+            nickname,
+            password: hash,
+            hash: key.toString("base64"),
+          });
+        }
+      );
+    });
+    return res.status(200).json({ success: 1 });
+  } catch (err) {
+    console.error(err);
+    return next(err);
+  }
 });
 
 router.post("/requestEmail", async (req, res) => {
@@ -84,19 +91,19 @@ router.post("/requestEmail", async (req, res) => {
   const key_for_verify = key_one + key_two;
   const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-    const email = req.body.email;
-    const smtpTransport = nodemailer.createTransport(
-        smtpTransporter({
-            service: "Gmail",
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: "yh9407@gmail.com",
-                pass: "nazgbplzumjbaozs",
-            },
-        })
-    );
+  const email = req.body.email;
+  const smtpTransport = nodemailer.createTransport(
+    smtpTransporter({
+      service: "Gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "yh9407@gmail.com",
+        pass: "nazgbplzumjbaozs",
+      },
+    })
+  );
 
   const url = `http://127.0.0.1:3000/auth/confirmEmail/${key_for_verify}`;
 
@@ -239,7 +246,6 @@ router.post("/destroy", (req, res, next) => {
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
   const { nickname, password } = req.body;
-  console.log(nickname, password);
   const user = await User.findOne({ where: { nickname } });
   if (user) {
     const isMatched = await bcrypt.compare(password, user.password);
@@ -260,19 +266,36 @@ router.post("/kakao", async (req, res) => {
   let nickname = req.body.kakao_account.profile.nickname;
   let user_profile = req.body.kakao_account.profile.profile_image_url;
   const password = await bcrypt.hash(`${req.body.id}`, 12);
-
+  let hash = "";
   const user = await User.findOne({
     where: {
       email: email,
     },
   });
 
-  if (!user) {
-    await User.create({
-      email: email,
-      nickname: nickname,
-      user_profile: user_profile,
-      password: password,
+  if (user) {
+    user_profile = user.getDataValue("user_profile");
+    nickname = user.getDataValue("nickname");
+    hash = user.getDataValue("hash");
+  } else {
+    crypto.randomBytes(8, (err, buf) => {
+      crypto.pbkdf2(
+        email,
+        buf.toString("base64"),
+        100000,
+        8,
+        "sha512",
+        (err, key) => {
+          hash = key.toString("base64");
+          User.create({
+            email: email,
+            nickname: nickname,
+            user_profile: user_profile,
+            password: password,
+            hash: hash,
+          });
+        }
+      );
     });
   }
 
@@ -286,6 +309,7 @@ router.post("/kakao", async (req, res) => {
     nickname: nickname,
     profile: user_profile,
     social: "kakao",
+    hash_email: hash,
   };
   jwt.sign(
     payload,
@@ -301,6 +325,7 @@ router.post("/kakao", async (req, res) => {
         profile: user_profile,
         email: email,
         social: "kakao",
+        hash_email: hash,
       });
     }
   );
@@ -310,24 +335,38 @@ router.post("/kakao", async (req, res) => {
 router.post("/naver", async (req, res) => {
   const { email, nickname, profile } = req.body;
   const password = await bcrypt.hash(email, 12);
-
+  let hash = "";
+  let user_profile = "";
+  let user_nickname = "";
   const user = await User.findOne({
     where: {
       email: email,
     },
   });
-  let user_profile;
-  let user_nickname;
 
   if (user) {
     user_profile = user.getDataValue("user_profile");
     user_nickname = user.getDataValue("nickname");
+    hash = user.getDataValue("hash");
   } else {
-    await User.create({
-      email: email,
-      nickname: nickname,
-      user_profile: profile,
-      password: password,
+    crypto.randomBytes(8, (err, buf) => {
+      crypto.pbkdf2(
+        email,
+        buf.toString("base64"),
+        100000,
+        8,
+        "sha512",
+        (err, key) => {
+          hash = key.toString("base64");
+          User.create({
+            email: email,
+            nickname: nickname,
+            user_profile: profile,
+            password: password,
+            hash: key.toString("base64"),
+          });
+        }
+      );
     });
     user_profile = profile;
     user_nickname = nickname;
@@ -343,6 +382,7 @@ router.post("/naver", async (req, res) => {
     nickname: user_nickname,
     profile: user_profile,
     social: "naver",
+    hash_email: hash,
   };
   jwt.sign(
     payload,
@@ -358,6 +398,7 @@ router.post("/naver", async (req, res) => {
         profile: user_profile,
         email: email,
         social: "naver",
+        hash_email: hash,
       });
     }
   );

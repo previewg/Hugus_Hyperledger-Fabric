@@ -10,14 +10,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-       hash: {
-            type: DataTypes.STRING,
-            allowNull: false,
-       },
+      hash: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       nickname: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
       password: {
         type: DataTypes.STRING,

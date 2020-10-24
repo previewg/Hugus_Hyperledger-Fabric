@@ -10,6 +10,7 @@ const {
   User,
   Story_Like,
   Story_Vote,
+  Story_Comment,
   sequelize,
 } = require("../models");
 const multer = require("multer");
@@ -25,7 +26,7 @@ let upload = multer({
     s3: s3,
     bucket: "hugusstory",
     key: function (req, file, cb) {
-      let extension = path.extname(file.originalname);
+      const extension = path.extname(file.originalname);
       cb(
         null,
         file.originalname.split(".")[0] + Date.now().toString() + extension
@@ -38,7 +39,7 @@ let upload = multer({
 // 스토리 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
-    const { user_email, social } = req.session.loginInfo;
+    const { user_email } = req.session.loginInfo;
     const { story_title, user_info, story_content, story_goal } = req.body;
     const story = await Story.create({
       story_title,
@@ -50,17 +51,12 @@ router.post("/add", upload.array("files"), async (req, res) => {
 
     const story_id = story.getDataValue("id");
     for (const file of req.files) {
-      if (file.location !== null) {
-        await Story_File.create({
-          story_id: story_id,
-          file: file.location,
-        });
-      } else {
-        await Story_File.create({
-          story_id: story.dataValues.id,
-          file: null,
-        });
-      }
+      let fileName = null;
+      if (file.location !== null) fileName = file.location;
+      await Story_File.create({
+        story_id: story_id,
+        file: fileName,
+      });
     }
 
     const hashtags = req.body.hashtags.split(",");
@@ -71,7 +67,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
 
       await Story_Hashtag.create({
         story_id: story_id,
-        hashtag_id: result[0].dataValues.id,
+        hashtag_id: result[0].getDataValue("id"),
       });
     }
 
@@ -91,28 +87,53 @@ router.post("/add", upload.array("files"), async (req, res) => {
   }
 });
 
-// 스토리 삭제 ( 일단 soft delete로 연관 테이블 정보들은 보존 / 추후에 복구 가능 )
 router.post("/delete", async (req, res) => {
   try {
     const { id } = req.body;
-    const data = await Story_File.findOne({
+    const files = await Story_File.findAll({
       where: { story_id: id },
       attributes: ["file"],
     });
-    const key = data.file.split("/");
+    for (const file of files) {
+      const key = file.file.split("/");
+      if (!key) {
+        await s3.deleteObject(
+          {
+            Bucket: "hugusstory",
+            Key: decodeURI(key[3]),
+          },
+          (err) => {
+            if (err) {
+              throw err;
+            }
+          }
+        );
+      }
+    }
+
+    // const hashtags = await Story_Hashtag.findAll({
+    //   attributes: [
+    //     "hashtag_id",
+    //     [
+    //       sequelize.literal(
+    //         "(SELECT COUNT(1) FROM story_hashtag WHERE hashtag_id = `Story_Hashtag`.hashtag_id)"
+    //       ),
+    //       "count",
+    //     ],
+    //   ],
+    //   where: { story_id: id },
+    // });
+    //
+    // for (const hashtag of hashtags) {
+    //   const unique = hashtag.getDataValue("count") === 1 ? true : false;
+    //   if (unique) {
+    //     await Hashtag.destroy({
+    //       where: { id: hashtag.getDataValue("hashtag_id") },
+    //     });
+    //   }
+    // }
 
     await Story.destroy({ where: { id } });
-    await s3.deleteObject(
-      {
-        Bucket: "hugusstory",
-        Key: decodeURI(key[3]),
-      },
-      (err) => {
-        if (err) {
-          throw err;
-        }
-      }
-    );
     res.json({ success: 1 });
   } catch (err) {
     console.error(err);
@@ -127,11 +148,8 @@ router.post("/update", upload.array("files"), async (req, res) => {
       story_title,
       user_info,
       story_content,
-      story_goal,
       id,
       hashtags,
-      items,
-      del_items,
       del_hashtags,
     } = req.body;
 
@@ -144,22 +162,21 @@ router.post("/update", upload.array("files"), async (req, res) => {
 
     const delHashtagList = JSON.parse(del_hashtags);
     for (const del of delHashtagList) {
-      console.log(del);
-      const count = await Story_Hashtag.count({
-        where: { hashtag_id: del.id },
-      });
+      // const count = await Story_Hashtag.count({
+      //   where: { hashtag_id: del.id },
+      // });
 
       await Story_Hashtag.destroy({
         where: { hashtag_id: del.id },
       });
 
-      if (count === 1) {
-        await Hashtag.destroy({
-          where: {
-            hashtag: del.hashtag,
-          },
-        });
-      }
+      // if (count === 1) {
+      //   await Hashtag.destroy({
+      //     where: {
+      //       hashtag: del.hashtag,
+      //     },
+      //   });
+      // }
     }
 
     const hashtagList = JSON.parse(hashtags);
@@ -172,36 +189,36 @@ router.post("/update", upload.array("files"), async (req, res) => {
         await Story_Hashtag.findOrCreate({
           where: {
             story_id: id,
-            hashtag_id: result[0].dataValues.id,
+            hashtag_id: result[0].getDataValue("id"),
           },
         });
       }
     }
 
-    for (const id of del_items.split(",")) {
-      await Story_Item.destroy({
-        where: { id: id },
-      });
-    }
-
-    const itemList = JSON.parse(items);
-    for (const item of itemList) {
-      if (item.new) {
-        await Story_Item.create({
-          story_id: id,
-          item_name: item.item_name,
-          item_price: item.item_price,
-          item_quantity: item.item_quantity,
-        });
-      }
-    }
+    // 아이템은 수정 못하게
+    // for (const id of del_items.split(",")) {
+    //   await Story_Item.destroy({
+    //     where: { id: id },
+    //   });
+    // }
+    //
+    // const itemList = JSON.parse(items);
+    // for (const item of itemList) {
+    //   if (item.new) {
+    //     await Story_Item.create({
+    //       story_id: id,
+    //       item_name: item.item_name,
+    //       item_price: item.item_price,
+    //       item_quantity: item.item_quantity,
+    //     });
+    //   }
+    // }
 
     await Story.update(
       {
         story_title,
         user_info,
         story_content,
-        story_goal,
       },
       {
         where: { id },
