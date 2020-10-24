@@ -1,4 +1,5 @@
 import NavBar from "./GlobalNavigation/NavBar";
+import Footer from "./GlobalFooter/Footer";
 import SignIn from "./User/SignIn";
 import SignUp from "./User/SignUp";
 import StoryList from "./StoryMain/StoryList";
@@ -28,6 +29,7 @@ import TalkSearch from "./ActTalkMain/TalkSearch";
 import NaverCallback from "./User/NaverCallback";
 export {
   NavBar,
+  Footer,
   SignIn,
   SignUp,
   StoryList,
