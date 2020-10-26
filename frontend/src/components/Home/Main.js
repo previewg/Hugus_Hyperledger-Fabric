@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import MoreBtn from "./MoreBtn";
 
 const MainStyle = styled.section`
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100vh;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: center;
   transition: all 1.5s ease-in-out;
   opacity: ${(props) => props.opacity};
   .slogan {
@@ -18,13 +20,17 @@ const MainStyle = styled.section`
     position: relative;
     top: 50px;
     left: ${(props) => (props.scroll > 300 ? 500 : 0)}px;
-    width: 30%;
+    width: 80%;
     min-width: 290px;
-    height: 300px;
-    display: ${(props) => (props.scroll > 600 ? "none" : "flex")};
+    height: 350px;
+    display: ${(props) => (props.scroll > 1000 ? "none" : "flex")};
     flex-direction: column;
     justify-content: space-around;
+    align-items: flex-end;
+    padding-right: 30px;
+
     .slogan__main {
+      color: #585858;
       font-size: 80px;
       font-weight: bold;
       font-family: "Kcc", sans-serif !important;
@@ -70,6 +76,7 @@ const Main = ({ scroll }) => {
           <p>블록체인 기반 기부플랫폼</p>
         </div>
       </article>
+      <MoreBtn />
     </MainStyle>
   );
 };

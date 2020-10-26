@@ -14,8 +14,8 @@ const CampaignSliderStyle = styled.section`
   > p {
     text-align: left;
     font-size: 25px;
-    font-weight: bold;
-    border-bottom: solid 3px orange;
+    padding: 10px;
+    border-bottom: solid 2px orange;
     margin-bottom: 100px;
   }
   > div {

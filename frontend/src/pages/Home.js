@@ -39,7 +39,6 @@ const Home = () => {
     <HomeStyle>
       <Main scroll={scroll} />
       <CampaignSlider scroll={scroll} />
-      {/*<MoreBtn />*/}
       <HugusInfo />
       <CampaignList />
     </HomeStyle>
