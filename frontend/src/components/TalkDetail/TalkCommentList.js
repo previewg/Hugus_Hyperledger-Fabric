@@ -219,7 +219,7 @@ const TalkCommentList = ({ talkId, talkCommentList }) => {
 
     return (
       <>
-        {data.child_count !== 0 && !status && (
+        {/* {data.child_count !== 0 && !status && (
           <p className="child_count" onClick={onClickHandler}>
             답글 {data.child_count}개 보기
           </p>
@@ -228,7 +228,7 @@ const TalkCommentList = ({ talkId, talkCommentList }) => {
           <p className="child_count" onClick={onClickHandler}>
             답글 {comment.child_count}개 숨기기
           </p>
-        )}
+        )} */}
         {status && <TalkCommentChild id={data.id} />}
       </>
     );
