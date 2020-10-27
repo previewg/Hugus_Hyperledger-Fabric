@@ -30,12 +30,13 @@ const TalkDetail = ({ match }) => {
       initFunc();
     }
   }, []);
+  
 
   return (
     <TalkDetailStyle>
       {talkId.length !== 0 && <TalkContents talkId={talkId} />}
-      {talkCommentList.length !== 0 && <TalkComments 
-      talkId={talkId} talkCommentList={talkCommentList}/> }
+      {talkCommentList.length !== 0 && <TalkComments talkId={talkId} 
+      talkCommentList={talkCommentList} setTalkCommentList={setTalkCommentList}/>}
     </TalkDetailStyle>
   );
 };

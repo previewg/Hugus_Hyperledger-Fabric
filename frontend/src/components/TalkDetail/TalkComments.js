@@ -6,14 +6,13 @@ import TalkCommentList from "./TalkCommentList";
 const TalkCommentStyle = styled.div`
   width: 700px;
 `;
-const TalkComments = ({ talkId, talkCommentList, total }) => {
+const TalkComments = ({ talkId, talkCommentList, setTalkCommentList }) => {
   // const init = useRef(true);
-
 
   return (
     <TalkCommentStyle>
-      <TalkCommentInput talkId={talkId} talkCommentList={talkCommentList} total={total}/>
-      <TalkCommentList talkId={talkId} talkCommentList={talkCommentList}/>
+      <TalkCommentInput talkId={talkId} talkCommentList={talkCommentList} setTalkCommentList={setTalkCommentList}/>
+      <TalkCommentList talkId={talkId} talkCommentList={talkCommentList} setTalkCommentList={setTalkCommentList}/>
     </TalkCommentStyle>
   );
 };

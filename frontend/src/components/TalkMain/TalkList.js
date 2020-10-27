@@ -51,9 +51,10 @@ const TalkListStyle = styled.div`
   }
 `;
 
-const TalkList = ({ talkList ,talkId }) => {
-  const visitHandler = (id) => {
-    axios.put('talk/visit', { talk_id: id  });
+const TalkList = ({ talkList }) => {
+
+  const visitHandler = async (id) => {
+    await axios.put('/talk/visit', { talk_id: id });
   };
 
   return (

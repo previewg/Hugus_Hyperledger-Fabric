@@ -196,40 +196,39 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const TalkCommentList = ({ talkId, talkCommentList }) => {
-  // const dispatch = useDispatch();
+const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
   const email = useSelector((state) => state.auth.user.email);
-  const data  = talkCommentList.list;
+  const data = talkCommentList.list;
   const talk_id = talkId.data.id;
 
-  const commentDeleteHandler = (id) => {
+  const commentDeleteHandler = async (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
-     axios.post("/talk_comment/delete",{ comment_id: id, talk_id: talk_id });
-    }
+    const result = await axios.post("/talk_comment/delete",{ comment_id: id, talk_id: talk_id });
+    setTalkCommentList(result.data)
+  }
   };
 
-  const TalkCommentChildMain = ({ data }) => {
+  const TalkCommentChildMain = ({ comment }) => {
     const [status, setStatus] = useState(false);
-
     const onClickHandler = () => {
       if (status) setStatus(false);
       else setStatus(true);
     };
-
     return (
       <>
-        {/* {data.child_count !== 0 && !status && (
+        {comment.child_count !== 0 && !status && (
           <p className="child_count" onClick={onClickHandler}>
-            답글 {data.child_count}개 보기
+            답글 {comment.child_count}개 보기
           </p>
         )}
-        {data.child_count !== 0 && status && (
+        {comment.child_count !== 0 && status && (
           <p className="child_count" onClick={onClickHandler}>
             답글 {comment.child_count}개 숨기기
           </p>
-        )} */}
-        {status && <TalkCommentChild id={data.id} />}
+        )}
+        
+        {status && <TalkCommentChild id={comment.id} setTalkCommentList={setTalkCommentList} talkCommentList={talkCommentList} />}
       </>
     );
   };
@@ -269,10 +268,10 @@ const TalkCommentList = ({ talkId, talkCommentList }) => {
                   )}
                   <p className="date">{time(comment.createdAt)}</p>
                 </div>
-              </div>
+              </div> 
               <p>{comment.comment}</p>
-              {/* <TalkCommentChildInput comment={comment} talk_id={commentId.id} />
-              <TalkCommentChildMain comment={comment} /> */}
+              <TalkCommentChildInput comment={comment} talk_id={talk_id} />
+              <TalkCommentChildMain comment={comment} />
             </div>
           </article>
         );

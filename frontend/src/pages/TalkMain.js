@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { ClipLoader } from "react-spinners";
@@ -70,7 +70,7 @@ const ActTalkMain = () => {
           <p>수혜자의 이야기</p>
         </div>
         <TalkSearch search={search} setSearch={setSearch} setClicked={setClicked}/>
-        {talkList.length !== 0 ? <TalkList talkList={talkList}/> : <Loader />}
+        {talkList.length !== 0 ? <TalkList talkList={talkList} /> : <Loader />}
         <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
   
       </div>

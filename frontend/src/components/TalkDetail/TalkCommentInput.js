@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 // import { commentAdd } from "../../actions/comment";
@@ -114,10 +114,10 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const TalkCommentInput = ({ talkId, talkCommentList }) => {
+const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
-  const like = useSelector((state) => state.story.like.user);
+  // const like = useSelector((state) => state.talk.like.user);
   const total = talkCommentList.total;
   const talk_id = talkId.data.id;
   const [error, setError] = useState(false);
@@ -135,14 +135,14 @@ const TalkCommentInput = ({ talkId, talkCommentList }) => {
       setError(false);
     };
 
-    const commentAddHandler = () => {
+    const commentAddHandler = async () => {
       if (comments === "") {
         comment.current.focus();
         setError(true);
       } else {
-        const list = axios.post('/talk_comment/add', { talk_id: talk_id, comment:comments });
+        const result = await axios.post('/talk_comment/add', { talk_id: talk_id, comment:comments });
+        setTalkCommentList(result.data);
       }
-      setComments("");
     };
 
     const commentClearHandler = () => {
@@ -211,7 +211,7 @@ const TalkCommentInput = ({ talkId, talkCommentList }) => {
 
   return (
     <>
-      <Input />
+      <Input/>
       <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
     </>
   );
