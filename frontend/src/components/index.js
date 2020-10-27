@@ -1,4 +1,5 @@
 import NavBar from "./GlobalNavigation/NavBar";
+import Footer from "./GlobalFooter/Footer";
 import SignIn from "./User/SignIn";
 import SignUp from "./User/SignUp";
 import StoryList from "./StoryMain/StoryList";
@@ -30,8 +31,11 @@ import TalkComments from "./TalkDetail/TalkComments";
 import TalkCommentInput from "./TalkDetail/TalkCommentInput";
 import TalkCommentList from "./TalkDetail/TalkCommentList";
 import NaverCallback from "./User/NaverCallback";
+import Main from "./Home/Main";
 export {
+  Main,
   NavBar,
+  Footer,
   SignIn,
   SignUp,
   StoryList,

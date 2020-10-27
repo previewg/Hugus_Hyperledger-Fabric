@@ -34,7 +34,7 @@ import {
 } from "pages";
 
 // Common components
-import { NavBar, NaverCallback, ScrollTop } from "components";
+import {Footer, NavBar, NaverCallback, ScrollTop } from "components";
 
 // HOC
 import Auth from "hoc/auth";
@@ -68,6 +68,7 @@ ReactDOM.render(
         {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
       </Switch>
+      <Footer/>
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")

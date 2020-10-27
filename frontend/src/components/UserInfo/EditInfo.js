@@ -3,12 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { profileUpload, signDestroyRequest } from "../../actions/auth";
 import styled from "styled-components";
 import ConfirmPwd from "./ConfirmPwd";
+import { updateInfo } from "../../actions/auth";
+import user from "../../reducers/user";
 
 const EditInfoStyle = styled.section`
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
+
   > div {
     position: relative;
     top: -50px;
@@ -107,6 +110,20 @@ const EditInfoStyle = styled.section`
       > p:nth-child(2) {
         font-size: 22px;
       }
+      .update__nickname {
+        width: 38%;
+        height: 13px;
+        font-size: 15px;
+        transition: 0.4s ease-in-out;
+        border: solid 0.2px lightgray;
+        padding: 10px;
+        border-radius: 20px;
+
+        :focus {
+          outline: none;
+          border: solid 0.1px orange;
+        }
+      }
     }
 
     .profile__email {
@@ -116,6 +133,7 @@ const EditInfoStyle = styled.section`
       align-items: center;
       > p:nth-child(2) {
         font-size: 22px;
+        width: 40px;
       }
     }
 
@@ -124,6 +142,19 @@ const EditInfoStyle = styled.section`
       display: flex;
       justify-content: center;
       align-items: center;
+      .update__phone {
+        width: 35%;
+        height: 13px;
+        font-size: 15px;
+        transition: 0.4s ease-in-out;
+        border: solid 0.2px lightgray;
+        padding: 10px;
+        border-radius: 20px;
+        :focus {
+          outline: none;
+          border: solid 0.1px orange;
+        }
+      }
       > p:nth-child(2) {
         font-size: 22px;
       }
@@ -155,9 +186,19 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
   const updateStatus = useSelector((state) => state.auth.profileChange.status);
   const isSocial = useSelector((state) => state.auth.user.social);
   const email = useSelector((state) => state.auth.user.email);
+  const myPageData = useSelector((state) => state.auth.myPage_User);
+  const username = useSelector((state) => state.auth.user.nickname);
+  const phone_number = useSelector((state) => state.auth.user.phone_number);
   const naverObj = useSelector((state) => state.auth.naverObj);
+
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    nickname: username,
+    phone: phone_number,
+  });
+  const [errorCode, setErrorCode] = useState();
+  const [updateOpen, setUpdateOpen] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [profileFile, setProfileFile] = useState("/icons/hugus_icon.png");
 
@@ -177,6 +218,10 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
       window.history.back();
     }
   };
+  const errorMsg = [
+    "닉네임이 이미 존재합니다.",
+    "휴대전화 번호는 숫자와 '-' 만 입력가능합니다.",
+  ];
 
   const onClear = (e) => {
     setFile(null);
@@ -200,13 +245,54 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  const onChangeInfo = (e) => {
+    setUserInfo({
+      ...userInfo,
+      [e.target.id]: e.target.value,
+    });
+    if (e.key === "Enter") {
+      onClickUpdate();
+    }
+  };
+
+  const openUpdateForm = () => {
+    setUpdateOpen(true);
+  };
+  const onClickUpdate = () => {
+    dispatch(updateInfo(userInfo));
+
+    setUserInfo({
+      // nickname: myPageData.nickname,
+      // phone:myPageData.phone,
+      ...userInfo,
+    });
+  };
   useEffect(() => {
     if (profile) setProfileFile(profile);
     if (updateStatus === "SUCCESS") {
       setFile(null);
       setUrl("");
     }
-  }, [updateStatus]);
+    if (myPageData.success === 1)
+      setUserInfo({
+        nickname: myPageData.nickname,
+        phone: myPageData.phone,
+      });
+    else
+      setUserInfo({
+        nickname: username,
+        phone: phone_number,
+      });
+    if (myPageData.status === "SUCCESS") {
+      setUpdateOpen(false);
+      alert("수정완료 되었습니다.");
+    } else if (myPageData.status === "FAILURE") {
+      setErrorCode(myPageData.code);
+      if (errorCode) {
+        alert(errorMsg[errorCode]);
+      }
+    }
+  }, [updateStatus, myPageData.status, myPageData, errorCode]);
 
   if (!isConfirmed && !isSocial)
     return (
@@ -266,19 +352,47 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
         )}
 
         <div className="profile__nickname">
-          <p>닉네임</p>
-          <p>{nickname}</p>
+          {updateOpen ? (
+            <input
+              className="update__nickname"
+              id="nickname"
+              value={userInfo.nickname}
+              placeholder="변경하고자 하는 닉네임을 입력해 주세요"
+              onChange={onChangeInfo}
+              onKeyPress={onChangeInfo}
+            />
+          ) : (
+            <p>
+              닉네임 :{myPageData.success === 1 ? userInfo.nickname : username}{" "}
+            </p>
+          )}
         </div>
         <div className="profile__email">
-          <p>이메일</p>
-          <p>무엇무엇</p>
+          <p> 이메일 : {email} </p>
         </div>
         <div className="profile__phone">
-          <p>휴대폰 번호</p>
-          <p>010-1234-5678</p>
+          {updateOpen ? (
+            <input
+              className="update__phone"
+              id="phone"
+              value={userInfo.phone}
+              placeholder="휴대전화번호를 입력해 주세요"
+              onChange={onChangeInfo}
+              onKeyPress={onChangeInfo}
+            />
+          ) : (
+            <p>
+              휴대전화 번호 :{" "}
+              {myPageData.success === 1 ? userInfo.phone : phone_number}
+            </p>
+          )}
         </div>
         <div className="profile__delete">
-          <p>정보 수정 하기</p>
+          {updateOpen ? (
+            <p onClick={onClickUpdate}>수정 완료 하기</p>
+          ) : (
+            <p onClick={openUpdateForm}>정보 수정 하기</p>
+          )}
           <p onClick={onDeleteClick}>회원 탈퇴 하기</p>
         </div>
       </div>

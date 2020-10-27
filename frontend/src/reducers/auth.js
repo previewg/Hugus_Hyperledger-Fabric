@@ -17,6 +17,9 @@ import {
   PROFILE_ADD,
   PROFILE_ADD_SUCCESS,
   PROFILE_ADD_FAILURE,
+  MY_INFO_UPDATE,
+  MY_INFO_UPDATE_SUCCESS,
+  MY_INFO_UPDATE_FAILURE,
 } from "../actions/auth";
 
 import update from "react-addons-update";
@@ -41,7 +44,6 @@ function parseJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
-
 const initialState = {
   signIn: {
     status: "INIT",
@@ -53,6 +55,7 @@ const initialState = {
     email: parseJwt(getCookie("hugus")).email || "",
     social: parseJwt(getCookie("hugus")).social || "",
     hash_email: parseJwt(getCookie("hugus")).hash_email || "",
+    phone_number: parseJwt(getCookie("hugus")).phone_number || "",
   },
   naverObj: new window.naver.LoginWithNaverId({
     clientId: "edTCgFsetZW7QgyeUmNJ",
@@ -69,6 +72,13 @@ const initialState = {
   signDestroy: {
     status: "INIT",
   },
+  myPage_User: {
+    status: "INIT",
+    nickname:'',
+    phone:'',
+    success:'',
+    code:'',
+  }
 };
 
 export default function auth(state = initialState, action) {
@@ -100,7 +110,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: action.data.nickname },
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
-          hash_email: {$set: action.data.hash_email},
+          hash_email: { $set: action.data.hash_email },
         },
       });
     case AUTH_SIGNIN_FAILURE:
@@ -122,6 +132,7 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
           social: { $set: action.data.social },
+          hash_email: { $set: action.data.hash_email },
         },
       });
 
@@ -137,6 +148,7 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
           social: { $set: action.data.social },
+          hash_email: { $set: action.data.hash_email },
         },
       });
 
@@ -158,7 +170,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
-          hash_email: {$set: ""}
+          hash_email: { $set: "" },
         },
         profileChange: {
           status: { $set: "INIT" },
@@ -190,7 +202,7 @@ export default function auth(state = initialState, action) {
           nickname: { $set: "" },
           profile: { $set: "" },
           email: { $set: "" },
-          hash_email: {$set: ""}
+          hash_email: { $set: "" },
         },
         signDestroy: {
           status: { $set: "SUCCESS" },
@@ -218,6 +230,34 @@ export default function auth(state = initialState, action) {
         user: {
           profile: { $set: action.data },
         },
+      });
+      //Update information
+    case MY_INFO_UPDATE:
+      return update(state, {
+        myPage_User: {
+          status: {$set: "WAITING"},
+          code:{$set:''}
+        },
+      });
+
+    case MY_INFO_UPDATE_SUCCESS:
+      return update(state, {
+        user:{
+          nickname:{$set:action.data.user_nickname}
+        },
+        myPage_User: {
+          status: {$set: "SUCCESS"},
+          nickname: {$set:action.data.user_nickname},
+          phone:{$set:action.data.phone_number},
+          success:{$set:action.data.success}
+        },
+      });
+    case MY_INFO_UPDATE_FAILURE:
+      return update(state, {
+        myPage_User: {
+          code:{$set:action.code},
+          status: {$set: "FAILURE"},
+        }
       });
 
     default:

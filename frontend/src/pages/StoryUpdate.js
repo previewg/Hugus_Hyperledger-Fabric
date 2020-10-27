@@ -144,124 +144,22 @@ const StoryUpdateStyle = styled.div`
     }
 
     .items {
+      font-weight: bold;
       margin-top: 35px;
-      width: 100%;
-      > p {
-        font-weight: bold;
-      }
-
       .item {
-        margin-top: 40px;
-        width: 90%;
-        display: flex;
-        align-items: center;
+        font-weight: normal;
+        font-size: 14px;
+        background-color: #fff7ef;
+        padding: 1rem;
         p {
-          margin-left: 5px;
-          font-size: 13px;
+          margin: 0;
+          margin-bottom: 10px;
         }
-        input {
-          padding: 5px;
-          height: 20px;
-          outline: none;
-          border: none;
-          border-bottom: solid 0.1px lightgray;
-          transition: 0.3s ease-in-out;
-          :focus {
-            border-bottom: solid 0.1px orange;
-          }
+        p:nth-last-child(1) {
+          margin-bottom: 0;
         }
-        .item_name {
-          display: flex;
-          flex-direction: column;
-          min-width: 200px;
-          margin-right: 10px;
-        }
-        .item_price {
-          display: flex;
-          flex-direction: column;
-          width: 90px;
-          min-width: 90px;
-          margin-right: 10px;
-        }
-        .item_quantity {
-          display: flex;
-          flex-direction: column;
-          width: 90px;
-          min-width: 90px;
-          margin-right: 10px;
-        }
-
-        button {
-          position: relative;
-          top: 20px;
-          left: 20px;
-          width: 50px;
-          min-width: 50px;
-          height: 30px;
-          margin-right: 5px;
-          background-color: transparent;
-          border-radius: 3px;
-          cursor: pointer;
-          outline: none;
-        }
-        .item_add {
-          border: solid orange 0.1px;
-          color: orange;
-          :hover {
-            background-color: orange;
-            color: white;
-          }
-        }
-        .item_delete {
-          border: solid darkgray 0.1px;
-          color: darkgray;
-          :hover {
-            background-color: darkgray;
-            color: white;
-          }
-        }
-      }
-      .item_list {
-        margin-top: 20px;
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-        > div {
-          display: flex;
-          align-items: center;
-          > p {
-            font-size: 13px;
-          }
-          > button {
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-left: 10px;
-            color: #fa6f6f;
-            width: 40px;
-            height: 25px;
-            border: solid 0.1px #fa6f6f;
-            background-color: transparent;
-            outline: none;
-            :hover {
-              background-color: #fa6f6f;
-              color: white;
-            }
-          }
-        }
-      }
-      .total_price {
-        border-top: solid 0.1px orange;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        p:nth-child(1) {
-          font-size: 12px;
-          cursor: pointer;
-          transition: 0.3s ease-in-out;
-          :hover {
-            color: #f83c3c;
-          }
+        .total_price {
+          text-align: end;
         }
       }
     }
@@ -406,14 +304,11 @@ const errorMsg = [
   "해시태그를 입력 바랍니다",
 ];
 
-const StoryWrite = (props) => {
+const StoryUpdate = (props) => {
   const dispatch = useDispatch();
   const title = useRef();
   const info = useRef();
   const content = useRef();
-  const itemName = useRef();
-  const itemPrice = useRef();
-  const itemQuantity = useRef();
   const hashtags = useRef();
   const load = useRef(true);
   const preData = useSelector((state) => state.story.detail.data);
@@ -424,15 +319,9 @@ const StoryWrite = (props) => {
     info: "",
     content: "",
     files: null,
-    item_name: "",
-    item_price: "",
-    item_quantity: "",
     hashtag: "",
-    items: [],
-    del_items: [],
     hashtags: [],
     del_hashtags: [],
-    totalPrice: 0,
     goal: 0,
   });
 
@@ -440,7 +329,6 @@ const StoryWrite = (props) => {
     title: true,
     info: true,
     content: true,
-    items: true,
     hashtags: true,
   });
 
@@ -449,8 +337,6 @@ const StoryWrite = (props) => {
   const [preImg, setPreImg] = useState([]);
 
   const [fileReaderState, setFileReaderState] = useState("");
-
-  const [removedItems, setRemovedItems] = useState([]);
 
   const errorHandler = useCallback(() => {
     if (!data.title) {
@@ -477,14 +363,6 @@ const StoryWrite = (props) => {
         content: false,
       });
       return false;
-    } else if (data.items.length === 0) {
-      setErrorCode(7);
-      itemName.current.focus();
-      setFilled({
-        ...filled,
-        items: false,
-      });
-      return false;
     } else if (data.hashtags.length === 0) {
       setErrorCode(8);
       hashtags.current.focus();
@@ -505,10 +383,7 @@ const StoryWrite = (props) => {
       formData.append("user_info", data.info);
       formData.append("story_content", data.content);
       formData.append("hashtags", JSON.stringify(data.hashtags));
-      formData.append("items", JSON.stringify(data.items));
-      formData.append("del_items", data.del_items);
       formData.append("del_hashtags", JSON.stringify(data.del_hashtags));
-      formData.append("story_goal", data.goal);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -551,54 +426,12 @@ const StoryWrite = (props) => {
         [e.target.name]: e.target.value,
       });
       setErrorCode(0);
-      if (e.target.name !== "item" && e.target.name !== "hashtag") {
+      if (e.target.name !== "hashtag") {
         setFilled({
           ...filled,
           [e.target.name]: true,
         });
       }
-    }
-  };
-
-  const addItem = () => {
-    if (data.item_name === "") {
-      setErrorCode(4);
-      itemName.current.focus();
-    } else if (data.item_price === "") {
-      setErrorCode(5);
-      itemPrice.current.focus();
-    } else if (data.item_quantity === "") {
-      setErrorCode(6);
-      itemQuantity.current.focus();
-    } else {
-      let item = {
-        item_name: data.item_name,
-        item_price: data.item_price,
-        item_quantity: data.item_quantity,
-        new: true,
-      };
-      let totalPrice = data.totalPrice + data.item_price * data.item_quantity;
-      let goal;
-      if (totalPrice < 1000000 && totalPrice > 0) {
-        goal = 50;
-      } else {
-        goal = Math.floor(totalPrice / 1000000) * 100;
-      }
-      let items = data.items.concat(item);
-      setData({
-        ...data,
-        item_name: "",
-        item_price: "",
-        item_quantity: "",
-        goal: goal,
-        items,
-        totalPrice: totalPrice,
-      });
-      setFilled({
-        ...filled,
-        items: true,
-      });
-      setErrorCode(0);
     }
   };
 
@@ -618,39 +451,6 @@ const StoryWrite = (props) => {
       setErrorCode(0);
     }
   };
-
-  const onDeleteHandler = useCallback(
-    (key) => () => {
-      const del_items = data.del_items.concat(data.items[key].id);
-      let items;
-      let totalPrice =
-        data.totalPrice -
-        data.items[key].item_price * data.items[key].item_quantity;
-      let goal;
-      if (totalPrice < 1000000 && totalPrice > 0) {
-        goal = 50;
-      } else {
-        goal = Math.floor(totalPrice / 1000000) * 100;
-      }
-      if (key === 0) {
-        items = data.items.slice(1, data.items.length);
-      } else if (key === data.items.length - 1) {
-        items = data.items.slice(0, key);
-      } else {
-        items = data.items
-          .slice(0, key)
-          .concat(data.items.slice(key + 1, data.items.length));
-      }
-      setData({
-        ...data,
-        items,
-        totalPrice: totalPrice,
-        goal: goal,
-        del_items: del_items,
-      });
-    },
-    [data]
-  );
 
   const onTagDeleteHandler = useCallback(
     (key) => () => {
@@ -677,49 +477,18 @@ const StoryWrite = (props) => {
     [data]
   );
 
-  const itemInputDelete = useCallback(() => {
-    setData({
-      ...data,
-      item_name: "",
-      item_price: "",
-      item_quantity: "",
-    });
-  }, [data]);
-
-  const clearItems = useCallback(() => {
-    setData({
-      ...data,
-      items: [],
-    });
-  }, [data]);
-
   const init = () => {
     let pre = {
       title: preData.story_title,
       info: preData.user_info,
       content: preData.story_content,
       files: null,
-      items: [],
-      item_name: "",
-      item_price: "",
-      item_quantity: "",
       hashtag: "",
       hashtags: [],
-      del_items: [],
       del_hashtags: [],
       totalPrice: 0,
       goal: preData.story_goal,
     };
-    preData.Story_Items.map((item) => {
-      pre.items.push({
-        item_name: item.item_name,
-        item_price: item.item_price,
-        item_quantity: item.item_quantity,
-        new: false,
-        id: item.id,
-      });
-      pre.totalPrice += item.item_price * item.item_quantity;
-    });
     preData.Hashtags.map((tag) =>
       pre.hashtags.push({
         tag: tag.hashtag,
@@ -728,6 +497,14 @@ const StoryWrite = (props) => {
       })
     );
     setData(pre);
+  };
+
+  const totalPrice = () => {
+    let total = 0;
+    preData.Story_Items.map((item) => {
+      total += item.item_price * item.item_quantity;
+    });
+    return total;
   };
 
   useEffect(() => {
@@ -740,200 +517,146 @@ const StoryWrite = (props) => {
 
   return (
     <>
-      <StoryUpdateStyle>
-        <div className="layout">
-          <div className="write_title">
-            <p>수정하기</p>
-          </div>
-          <div className="title">
-            <p>제목</p>
-            <input
-              name="title"
-              ref={title}
-              value={data.title}
-              type="text"
-              placeholder="제목을 입력하세요."
-              onChange={onChangeHandler}
-            />
-          </div>
-
-          <div className="info">
-            <p>작성자 소개</p>
-            <textarea
-              name="info"
-              ref={info}
-              value={data.info}
-              required
-              placeholder="본인을 마음껏 표현해주세요."
-              onChange={onChangeHandler}
-            />
-          </div>
-
-          <div className="content">
-            <p>내용</p>
-            <div>
-              {preImg.map((item, key) => {
-                return (
-                  <div key={key}>
-                    <img
-                      className="preImg"
-                      src={item.previewURL}
-                      key={key}
-                      alt="preview"
-                    />
-                  </div>
-                );
-              })}
-              <label htmlFor="files">파일 첨부</label>
+      {preData && (
+        <StoryUpdateStyle>
+          <div className="layout">
+            <div className="write_title">
+              <p>수정하기</p>
+            </div>
+            <div className="title">
+              <p>제목</p>
               <input
-                id="files"
-                name="files"
-                type="file"
-                multiple
-                accept="image/*"
+                name="title"
+                ref={title}
+                value={data.title}
+                type="text"
+                placeholder="제목을 입력하세요."
                 onChange={onChangeHandler}
               />
             </div>
-            <textarea
-              name="content"
-              ref={content}
-              value={data.content}
-              required
-              placeholder="내용을 입력하세요. "
-              onChange={onChangeHandler}
-            />
-          </div>
 
-          <div className="items">
-            <p>필요 물품</p>
-            <div className="item">
-              <div className="item_name">
-                <p>물품 내용</p>
-                <input
-                  name="item_name"
-                  ref={itemName}
-                  value={data.item_name}
-                  placeholder="물품 내용을 입력하세요."
-                  onChange={onChangeHandler}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") addItem(e);
-                  }}
-                />
-              </div>
-              <div className="item_price">
-                <p>물품 금액(원)</p>
-                <input
-                  type="number"
-                  name="item_price"
-                  ref={itemPrice}
-                  value={data.item_price}
-                  placeholder="ex) 10000"
-                  onChange={onChangeHandler}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") addItem(e);
-                  }}
-                />
-              </div>
-              <div className="item_quantity">
-                <p>물품 수량(개)</p>
-                <input
-                  type="number"
-                  name="item_quantity"
-                  ref={itemQuantity}
-                  value={data.item_quantity}
-                  placeholder="ex) 3"
-                  onChange={onChangeHandler}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") addItem(e);
-                  }}
-                />
-              </div>
-              <button className="item_add" onClick={addItem}>
-                등록
-              </button>
-              <button className="item_delete" onClick={itemInputDelete}>
-                취소
-              </button>
-            </div>
-            <div className="item_list">
-              {data.items.map((item, key) => {
-                return (
-                  <div key={key}>
-                    <p>
-                      {item.item_name} ({" "}
-                      {Number(item.item_price).toLocaleString()} 원 X{" "}
-                      {item.item_quantity} 개 )
-                    </p>
-                    <button onClick={onDeleteHandler(key)}>삭제</button>
-                  </div>
-                );
-              })}
-            </div>
-            {data.items.length !== 0 && (
-              <div className="total_price">
-                <p onClick={clearItems}>일괄 삭제</p>
-                <p>합계 {data.totalPrice.toLocaleString()}원</p>
-              </div>
-            )}
-          </div>
-
-          <div className="warning">
-            <p>
-              ※ 스토리 등록 이후, <strong>물품의 총액에 따라</strong> 캠페인
-              등록에 대한 필요 득표수가 다릅니다.
-            </p>
-            <p>✔ 기준</p>
-            <p>
-              <strong>100만원 미만</strong> : 50(필요 득표수),{" "}
-              <strong>100만원 이상</strong> : 총액(만원) / 100(만원) 의 몫
-            </p>
-            <div>
-              <p>예) 199만원 -> 100, 201만원 -> 200</p>
-              <p>현재 필요 득표수 : {data.goal}</p>
-            </div>
-          </div>
-
-          <div className="hashtags">
-            <p>태그</p>
-            <div>
-              <input
-                name="hashtag"
-                ref={hashtags}
-                value={data.hashtag}
-                placeholder="# 태그입력"
+            <div className="info">
+              <p>작성자 소개</p>
+              <textarea
+                name="info"
+                ref={info}
+                value={data.info}
+                required
+                placeholder="본인을 마음껏 표현해주세요."
                 onChange={onChangeHandler}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") addHashtag(e);
-                }}
               />
-              {data.hashtags.map((hashtag, key) => {
-                return (
-                  <div className="added__hashtag" key={key}>
-                    <p className="hashtag"># {hashtag.tag}</p>
-                    <p
-                      className="clear"
-                      onClick={onTagDeleteHandler(key)}
-                      key={key + 100}
-                    >
-                      x
+            </div>
+
+            <div className="content">
+              <p>내용</p>
+              <div>
+                {preImg.map((item, key) => {
+                  return (
+                    <div key={key}>
+                      <img
+                        className="preImg"
+                        src={item.previewURL}
+                        key={key}
+                        alt="preview"
+                      />
+                    </div>
+                  );
+                })}
+                <label htmlFor="files">파일 첨부</label>
+                <input
+                  id="files"
+                  name="files"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={onChangeHandler}
+                />
+              </div>
+              <textarea
+                name="content"
+                ref={content}
+                value={data.content}
+                required
+                placeholder="내용을 입력하세요. "
+                onChange={onChangeHandler}
+              />
+            </div>
+
+            <div className="items">
+              <p>저는 이런것들이 필요합니다</p>
+              <div className="item">
+                {preData.Story_Items.map((item, key) => {
+                  return (
+                    <p key={key}>
+                      ✔ {item.item_name} ({item.item_price.toLocaleString()} 원
+                      X {item.item_quantity.toLocaleString()} 개)
                     </p>
-                  </div>
-                );
-              })}
+                  );
+                })}
+                <p className="total_price">
+                  합계 {totalPrice().toLocaleString()}원
+                </p>
+              </div>
+            </div>
+
+            <div className="warning">
+              <p>
+                ※ 스토리 등록 이후, <strong>물품의 총액에 따라</strong> 캠페인
+                등록에 대한 필요 득표수가 다릅니다.
+              </p>
+              <p>✔ 기준</p>
+              <p>
+                <strong>100만원 미만</strong> : 50(필요 득표수),{" "}
+                <strong>100만원 이상</strong> : 총액(만원) / 100(만원) 의 몫
+              </p>
+              <div>
+                <p>예) 199만원 -> 100, 201만원 -> 200</p>
+                <p>현재 필요 득표수 : {data.goal}</p>
+              </div>
+            </div>
+
+            <div className="hashtags">
+              <p>태그</p>
+              <div>
+                <input
+                  name="hashtag"
+                  ref={hashtags}
+                  value={data.hashtag}
+                  placeholder="# 태그입력"
+                  onChange={onChangeHandler}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addHashtag(e);
+                  }}
+                />
+                {data.hashtags.map((hashtag, key) => {
+                  return (
+                    <div className="added__hashtag" key={key}>
+                      <p className="hashtag"># {hashtag.tag}</p>
+                      <p
+                        className="clear"
+                        onClick={onTagDeleteHandler(key)}
+                        key={key + 100}
+                      >
+                        x
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="submit">
+              <button onClick={storyUpdateHandler}>
+                수정하기
+                <img alt="submit" src="/icons/PaperPlane.png" />
+              </button>
             </div>
           </div>
-
-          <div className="submit">
-            <button onClick={storyUpdateHandler}>
-              수정하기
-              <img alt="submit" src="/icons/PaperPlane.png" />
-            </button>
-          </div>
-        </div>
-      </StoryUpdateStyle>
+        </StoryUpdateStyle>
+      )}
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );
 };
 
-export default StoryWrite;
+export default StoryUpdate;

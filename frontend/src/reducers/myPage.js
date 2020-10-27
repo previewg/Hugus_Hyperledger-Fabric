@@ -2,15 +2,16 @@ import {
     MY_LIST_LOADER,
     MY_LIST_LOADER_SUCCESS,
     MY_LIST_LOADER_FAILURE, myListLoaderFailure,
+
 } from "../actions/myPage";
+
 import update from "react-addons-update";
 
 const initialState = {
     pageList: {
         status: "INIT",
-        list:''
-    }
-
+        list: ''
+    },
 }
 
 export default function myPage(state = initialState, action) {
@@ -25,7 +26,7 @@ export default function myPage(state = initialState, action) {
             return update(state, {
                 pageList: {
                     status: {$set: "SUCCESS"},
-                    list:{$set:action.list}
+                    list: {$set: action.list}
                 },
             });
         case MY_LIST_LOADER_FAILURE:
