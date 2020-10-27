@@ -32,6 +32,9 @@ import TalkCommentInput from "./TalkDetail/TalkCommentInput";
 import TalkCommentList from "./TalkDetail/TalkCommentList";
 import NaverCallback from "./User/NaverCallback";
 import Main from "./Home/Main";
+import BlockSearch from "./BlockInfo/BlockSearch";
+import BlockInfoHead from "./BlockInfo/BlockInfoHead";
+import BlockInfoMain from "./BlockInfo/BlockInfoMain";
 export {
   Main,
   NavBar,
@@ -67,4 +70,7 @@ export {
   TalkCommentInput,
   TalkCommentList,
   NaverCallback,
+  BlockSearch,
+  BlockInfoHead,
+  BlockInfoMain,
 };
