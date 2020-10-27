@@ -1,21 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import TalkCommentInput from "./TalkCommentInput";
 import TalkCommentList from "./TalkCommentList";
 
 const TalkCommentStyle = styled.div`
   width: 700px;
 `;
-const TalkComments = ({ talkId, commentId }) => {
-  const init = useRef(true);
+const TalkComments = ({ talkId, talkCommentList, total }) => {
+  // const init = useRef(true);
 
 
   return (
     <TalkCommentStyle>
-      <TalkCommentInput talkId={talkId} commentId={commentId}/>
-      <TalkCommentList talkId={talkId} commentId={commentId}/>
+      <TalkCommentInput talkId={talkId} talkCommentList={talkCommentList} total={total}/>
+      <TalkCommentList talkId={talkId} talkCommentList={talkCommentList}/>
     </TalkCommentStyle>
   );
 };

@@ -7,7 +7,7 @@ import { TalkList, TalkSearch, TalkPagination } from "components";
 
 const ActTalkStyle = styled.section`
   width: 100%;
-  padding-top: 70px;
+  padding-top: 30px;
   display: flex;
   justify-content: center;
   .layout {
@@ -70,7 +70,7 @@ const ActTalkMain = () => {
           <p>수혜자의 이야기</p>
         </div>
         <TalkSearch search={search} setSearch={setSearch} setClicked={setClicked}/>
-        {talkList.length !== 0 ? <TalkList talkList={talkList} /> : <Loader />}
+        {talkList.length !== 0 ? <TalkList talkList={talkList}/> : <Loader />}
         <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
   
       </div>

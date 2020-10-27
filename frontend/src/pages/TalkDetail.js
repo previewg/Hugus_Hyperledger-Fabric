@@ -14,18 +14,16 @@ const TalkDetailStyle = styled.div`
 const TalkDetail = ({ match }) => {
   const init = useRef(true);
   const [talkId, setTalkId] = useState([]);
-  const [commentId, setcommentId] = useState([]);
-
+  const [talkCommentList, setTalkCommentList] = useState([]);
   useEffect(() => {
     const id = match.params.id;
-    const talk_id = match.params.id;
-    const section = match.params.section;
+    const page = 1;
 
     const initFunc = async () => {
       const data = await axios.get(`/talk/${id}`);
-      const comment = await axios.get(`/talk_comment/list/${talk_id}/${section}`);
+      const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
       setTalkId(data.data);
-      setcommentId(comment.data);
+      setTalkCommentList(comment.data);
     };
     if (init.current) {
       init.current = false;
@@ -36,7 +34,8 @@ const TalkDetail = ({ match }) => {
   return (
     <TalkDetailStyle>
       {talkId.length !== 0 && <TalkContents talkId={talkId} />}
-      <TalkComments talkId={talkId} commentId={commentId}/>
+      {talkCommentList.length !== 0 && <TalkComments 
+      talkId={talkId} talkCommentList={talkCommentList}/> }
     </TalkDetailStyle>
   );
 };

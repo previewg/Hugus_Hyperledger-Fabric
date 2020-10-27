@@ -9,9 +9,6 @@ export const ACT_LIST_LOAD_SUCCESS = "ACT_LIST_LOAD_SUCCESS";
 export const ACT_LIST_LOAD_FAILURE = "ACT_LIST_LOAD_FAILURE";
 export const ACT_VISIT = "ACT_VISIT";
 export const act_LOAD_INIT = "ACT_LOAD_INIT"
-// export const ACT_LOAD = "ACT_LOAD";
-// export const ACT_LOAD_SUCCESS = "ACT_LOAD_SUCCESS";
-// export const ACT_LOAD_FAILURE = "ACT_LOAD_FAILURE";
 
 // act 게시물 등록
 const actAddStart = () => {

@@ -87,7 +87,7 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const CommentChild = ({ id }) => {
+const CommentChild = ({ talkCommentList }) => {
   const [comments, setComments] = useState({
     status: "WAITING",
     list: [],
@@ -98,8 +98,8 @@ const CommentChild = ({ id }) => {
   useEffect(() => {
     if (flag.current || childAddStatus === "SUCCESS") {
       const init = async () => {
-        const result = await axios.get(`/comment/childList/${id}`);
-        setComments({ status: "SUCCESS", list: result.data.list });
+        // const result = await axios.get(`/comment/childList/${id}`);
+        // setComments({ status: "SUCCESS", list: result.data.list });
       };
       init();
     }
@@ -111,7 +111,7 @@ const CommentChild = ({ id }) => {
   if (comments.status === "WAITING") return <Loader />;
   return (
     <CommentChildStyle>
-      {comments.list.map((re, key) => {
+      {talkCommentList.list.map((re, key) => {
         return (
           <article className="comment_child" key={key}>
             {re.User.user_profile ? (
