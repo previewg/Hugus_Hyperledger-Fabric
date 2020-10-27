@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import TalkSlider from "./TalkSlider";
 import { Link } from "react-router-dom";
 
@@ -68,9 +66,9 @@ const TalkContentsStyle = styled.div`
 `;
 
 const TalkContents = ({ talkId }) => {
-const data = talkId.data; 
+const data = talkId.data;
 
-  return (
+return (
     <TalkContentsStyle>
     <div className="talk_contents">
 

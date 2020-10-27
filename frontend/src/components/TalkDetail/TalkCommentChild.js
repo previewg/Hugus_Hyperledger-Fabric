@@ -3,7 +3,6 @@ import styled from "styled-components";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import { css } from "@emotion/core";
-import { useSelector } from "react-redux";
 
 const CommentChildStyle = styled.section`
   .comment_child {
@@ -87,31 +86,44 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const CommentChild = ({ id }) => {
-  const [comments, setComments] = useState({
-    status: "WAITING",
-    list: [],
-  });
-  const flag = useRef(true);
-  const childAddStatus = useSelector((state) => state.comment.child_add.status);
+const TalkCommentChild = ({ id, talkCommentList, setTalkCommentList }) => { //특정 댓글들의 id를 가져왔음 !
+  const init = useRef(true);
+  console.log(talkCommentList);
+  // const [comments, setComments] = useState({
+  //   status: "WAITING",
+  //   list: [],
+  // });
+  // const flag = useRef(true);
+  // const childAddStatus = useSelector((state) => state.comment.child_add.status);
+
+  // useEffect(() => {
+  //   if (flag.current || childAddStatus === "SUCCESS") {
+  //     const init = async () => {
+  //       const result = await axios.get(`/comment/childList/${id}`);
+  //       setComments({ status: "SUCCESS", list: result.data.list });
+  //     };
+  //     init();
+  //   }
+  //   return () => {
+  //     flag.current = false;
+  //   };
+  // }, [childAddStatus]);
 
   useEffect(() => {
-    if (flag.current || childAddStatus === "SUCCESS") {
-      const init = async () => {
-        const result = await axios.get(`/comment/childList/${id}`);
-        setComments({ status: "SUCCESS", list: result.data.list });
-      };
-      init();
-    }
-    return () => {
-      flag.current = false;
+    const initFunc = async () => {
+      const result = await axios.get(`/talk_comment/childList/${id}`)
+      setTalkCommentList(result.data.list);
     };
-  }, [childAddStatus]);
+    if (init.current) {
+      init.current = false;
+    initFunc();
+    }
+  }, []);
 
-  if (comments.status === "WAITING") return <Loader />;
+  // if (comments.status === "WAITING") return <Loader />;
   return (
     <CommentChildStyle>
-      {comments.list.map((re, key) => {
+      {talkCommentList.list.length !== 0 && talkCommentList.list.map((re, key) => {
         return (
           <article className="comment_child" key={key}>
             {re.User.user_profile ? (
@@ -142,4 +154,4 @@ const CommentChild = ({ id }) => {
   );
 };
 
-export default CommentChild;
+export default TalkCommentChild;

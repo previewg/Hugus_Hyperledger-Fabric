@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { ClipLoader } from "react-spinners";
@@ -7,7 +7,7 @@ import { TalkList, TalkSearch, TalkPagination } from "components";
 
 const ActTalkStyle = styled.section`
   width: 100%;
-  padding-top: 70px;
+  padding-top: 30px;
   display: flex;
   justify-content: center;
   .layout {
