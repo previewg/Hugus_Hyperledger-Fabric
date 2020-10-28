@@ -234,7 +234,7 @@ const CampaignList = () => {
         {list.map((campaign, key) => {
           return (
             <Link
-              to={`/story/${campaign.id}`}
+              to={`/campaign/${campaign.id}`}
               style={{
                 backgroundImage: `url("${campaign.Campaign_Files[0].file}") `,
               }}

@@ -71,6 +71,49 @@ router.post("/delete", async (req, res) => {
   }
 });
 
+// 캠페인 리스트 조회 ( 메인 슬라이더용  - 도달 임박순 )
+router.get("/init", async (req, res) => {
+  try {
+    const list = await Campaign.findAll({
+      attributes: [
+        "id",
+        "campaign_title",
+        "campaign_goal",
+        "user_email",
+        "visited",
+        "createdAt",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id)"
+          ),
+          "campaign_like",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM campaign_vote WHERE campaign_id = `Campaign`.id)"
+          ),
+          "campaign_vote",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM campaign_comment WHERE campaign_id = `Campaign`.id)"
+          ),
+          "campaign_comment",
+        ],
+      ],
+      include: [
+        { model: Hashtag, attributes: ["hashtag"] },
+        { model: Campaign_File, attributes: ["file"] },
+      ],
+      limit: 10,
+      order: [["created_at", "DESC"]],
+    });
+    res.json({ list: list, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
 // 캠페인 목록 조회
 router.get("/list/:page", async (req, res) => {
   try {

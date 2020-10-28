@@ -15,6 +15,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.Hashtag = require("./hashtag")(sequelize, Sequelize);
+db.Kakao_Pay = require("./kakao_pay")(sequelize, Sequelize);
 
 //Auth
 db.User = require("./auth/user")(sequelize, Sequelize);
