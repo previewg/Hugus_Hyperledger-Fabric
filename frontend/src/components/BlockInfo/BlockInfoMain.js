@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Flow from "./Flow";
 
@@ -80,10 +80,12 @@ const CopiedAlertStyle = styled.span`
   }
 `;
 
-const BlockInfoMain = ({ list }) => {
+const BlockInfoMain = ({ list, history }) => {
+  const onClickHandler = () => {
+    history.push("/Block/List");
+  };
   const CopiedAlert = ({ id }) => {
     const [time, setTime] = useState(false);
-
     const copyTx = () => {
       setTime(true);
       setTimeout(() => setTime(false), 1000);
@@ -91,12 +93,6 @@ const BlockInfoMain = ({ list }) => {
       tx_id.select();
       document.execCommand("Copy");
     };
-    const onClickHandler = () => {
-
-      // if ()
-      history.push("/Block/List");
-      // else dispatch(signInBtnIsClicked());
-    }
 
     return (
       <CopiedAlertStyle time={time}>
@@ -112,8 +108,8 @@ const BlockInfoMain = ({ list }) => {
         <div className="BlockInfoMain__title">
           <p>Blocks & Transactions</p>
           <p className="BlockViewAll__btn" onClick={onClickHandler}>
-        View All
-      </p>
+            View All
+          </p>
         </div>
         <div className="BlockInfoMain__header">
           <p className="block_height">BLOCK HEIGHT</p>
