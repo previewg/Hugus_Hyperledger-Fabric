@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -27,11 +27,28 @@ const ErrorBoxStyle = styled.p`
 
 const errorMsg = "답글을 입력하세요";
 
-const CommentChildInput = ({ comment, talk_id }) => {
+const TalkCommentChildInput = ({ comment, talk_id, setTalkCommentList }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [comments, setComments] = useState("");
   const [error, setError] = useState(false);
   const commentChild = useRef();
+
+  const init = useRef(true);
+  const [childStatus, setChildStatus] = useState({ status: "WAITING" });
+  const [childList, setChildList] = useState([]);
+
+  useEffect(() => {
+    const id = comment.id;
+    const initFunc = async () => {
+      const comment = await axios.get(`/talk_comment/childList/${id}`);
+      setChildList(comment.data);
+      setChildStatus("SUCCESS");
+    };
+    if (init.current) {
+      init.current = false;
+    initFunc();
+    }
+  }, []);
 
   const onCommentChangeHandler = (e) => {
     setComments(e.target.value);
@@ -47,8 +64,8 @@ const CommentChildInput = ({ comment, talk_id }) => {
       commentChild.current.focus();
       setError(true);
     } else {
-        axios.post("/talk_comment/child/add", { comment: comments, comment_id: comment.id, talk_id: talk_id })
-        .then(setComments(""));
+      const result = axios.post("/talk_comment/child/add", { comment: comments, comment_id: comment.id, talk_id: talk_id })
+      setChildList(result.data);
     }
   };
 
@@ -92,4 +109,4 @@ const CommentChildInput = ({ comment, talk_id }) => {
   );
 };
 
-export default CommentChildInput;
+export default TalkCommentChildInput;

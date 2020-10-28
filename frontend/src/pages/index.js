@@ -13,6 +13,7 @@ import ActDetail from "./ActDetail";
 import ActWrite from "./ActWrite";
 import TalkMain from "./TalkMain";
 import TalkDetail from "./TalkDetail";
+import TalkWrite from "./TalkWrite";
 
 export {
   Home,
@@ -30,4 +31,5 @@ export {
   ActWrite,
   TalkMain,
   TalkDetail,
+  TalkWrite,
 };

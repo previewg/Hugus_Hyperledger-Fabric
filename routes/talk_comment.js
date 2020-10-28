@@ -30,12 +30,11 @@ router.post("/add", async (req, res) => {
           "createdAt",
           [
             sequelize.literal(
-              "(SELECT COUNT(comment_id) FROM comment_child WHERE comment_id = `Talk_Comment`.id)"
+              "(SELECT COUNT(comment_id) FROM talk_comment_child WHERE comment_id = `Talk_Comment`.id)"
             ),
             "child_count",
           ],
-        ]
-        ,
+        ],
         where: {
           talk_id: req.body.talk_id,
         },
@@ -150,6 +149,7 @@ router.get("/list/:id/:page", async (req, res) => {
         offset: offset,
         limit: 10,
       });
+
 
       const total = await Talk_Comment.count({
         where: {

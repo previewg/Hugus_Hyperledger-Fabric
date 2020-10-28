@@ -30,7 +30,7 @@ import {
   ActWrite,
   TalkMain,
   TalkDetail,
-  // ActTalkWrite,
+  TalkWrite,
 } from "pages";
 
 // Common components
@@ -65,7 +65,7 @@ ReactDOM.render(
         <Route path="/act/write" component={Auth(ActWrite, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
         <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
-        {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
+        <Route path="/talk/write" component={Auth(TalkWrite, null)} />
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
       </Switch>
       <Footer />
