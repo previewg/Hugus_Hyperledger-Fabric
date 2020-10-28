@@ -1,10 +1,11 @@
+
 import React from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import Flow from "./Flow";
+import Flow from "../BlockInfo/Flow";
 
-const BlockInfoMainStyle = styled.article`
-  margin-top: 50px;
+
+const BlockInfoListStyle = styled.article` 
+margin-top: 50px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -12,7 +13,7 @@ const BlockInfoMainStyle = styled.article`
     width: 80%;
     display: flex;
     flex-direction: column;
-    .BlockInfoMain__title {
+    .BlockInfoList__title {
       display: flex;
       width: 100%;
       justify-content: space-between;
@@ -22,7 +23,7 @@ const BlockInfoMainStyle = styled.article`
       }
     }
 
-    .BlockInfoMain__header {
+    .BlockInfoList__header {
       display: grid;
       grid-template-columns: 1fr 4fr 1fr 1fr 2fr 2fr;
       border-top: solid 0.1px orange;
@@ -32,7 +33,7 @@ const BlockInfoMainStyle = styled.article`
       }
     }
 
-    .BlockInfoMain__body {
+    .BlockInfoList__body {
       transition: background-color 0.2s ease-in-out;
       display: grid;
       grid-template-columns: 1fr 4fr 1fr 1fr 2fr 2fr;
@@ -46,31 +47,21 @@ const BlockInfoMainStyle = styled.article`
   }
 `;
 
-
-const BlockInfoMain = ({ list,history }) => {
-  const dispatch = useDispatch();
-   console.log(history);
-  const onClickHandler = () => {
-  
-    // if () 
-    history.push("/Block/List");
-  // else dispatch(signInBtnIsClicked());
-  }
+const BlockInfoList = ({ list }) => {
+  console.log(list)
   const copyTx = () => {
     const tx_id = document.getElementById("tx_id");
     tx_id.select();
     document.execCommand("Copy");
   };
   return (
-    <BlockInfoMainStyle>
+    <BlockInfoListStyle>
       <div>
-        <div className="BlockInfoMain__title">
+        <div className="BlockInfoList__title">
           <p>Blocks & Transactions</p>
-          <p className="BlockViewAll__btn" onClick={onClickHandler}>
-        View All
-      </p>
+          
         </div>
-        <div className="BlockInfoMain__header">
+        <div className="BlockInfoList__header">
           <p className="block_height">BLOCK HEIGHT</p>
           <p className="tx_id">TX HASH</p>
           <p className="tx_type">TX TYPE</p>
@@ -81,7 +72,7 @@ const BlockInfoMain = ({ list,history }) => {
 
         {list.map((block, key) => {
           return (
-            <div className="BlockInfoMain__body" key={key}>
+            <div className="BlockInfoList__body" key={key}>
               <p className="block_height">{block.block_height}</p>
               <p className="tx_id">
                 {block.tx_id.slice(0, 40)}...
@@ -96,8 +87,9 @@ const BlockInfoMain = ({ list,history }) => {
           );
         })}
       </div>
-    </BlockInfoMainStyle>
+      
+    </BlockInfoListStyle>
   );
 };
 
-export default BlockInfoMain;
+export default BlockInfoList;

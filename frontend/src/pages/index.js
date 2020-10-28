@@ -8,6 +8,7 @@ import SearchResult from "./SearchResult";
 import User from "./User";
 import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
+import BlockInfoList from "./BlockInfoList";
 import ActMain from "./ActMain";
 import ActDetail from "./ActDetail";
 import ActWrite from "./ActWrite";
@@ -25,6 +26,7 @@ export {
   User,
   UserInfo,
   BlockInfo,
+  BlockInfoList,
   SearchResult,
   ActMain,
   ActDetail,
