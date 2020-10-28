@@ -35,6 +35,7 @@ import Main from "./Home/Main";
 import BlockSearch from "./BlockInfo/BlockSearch";
 import BlockInfoHead from "./BlockInfo/BlockInfoHead";
 import BlockInfoMain from "./BlockInfo/BlockInfoMain";
+import BlockInfoList from "./BlockInfoList/BlockInfoList";
 export {
   Main,
   NavBar,
@@ -73,4 +74,6 @@ export {
   BlockSearch,
   BlockInfoHead,
   BlockInfoMain,
+  BlockInfoList,
+  
 };

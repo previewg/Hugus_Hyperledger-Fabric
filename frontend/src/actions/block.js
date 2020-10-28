@@ -27,4 +27,14 @@ export const blockListLoader = () => async (dispatch) => {
         .catch((error) => {
             dispatch(blockListLoaderFailure(error))
         })
+        .post("/block/List")
+        .then((response) => {
+            if (response.data.success === 1) {
+                dispatch(blockListLoaderSuccess(response.data.data))
+            }
+        })
+        .catch((error) => {
+            dispatch(blockListLoaderFailure(error))
+        })
+
 }

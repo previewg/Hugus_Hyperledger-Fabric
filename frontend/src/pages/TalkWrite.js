@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-const ActWriteStyle = styled.div`
+const TalkWriteStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
@@ -396,37 +396,152 @@ const ErrorBoxStyle = styled.p`
 const errorMsg = [
   "",
   "제목을 입력 바랍니다",
-  "내용을 입력 바랍니다",
+  "소식을 입력 바랍니다",
 ];
 
-const ActWrite = () => {
-  const dispatch = useDispatch();
-  const title = useRef();
-  const content = useRef();
-  const [data, setData] = useState({
-    title: "",
-    info: "",
-    content: "",
-    files: null,
-  });
+const TalkWrite = () => {
+  // const dispatch = useDispatch();
+  // const title = useRef();
+  // const info = useRef();
+  // const content = useRef();
 
-  const [filled, setFilled] = useState({
-    title: true,
-    info: true,
-    content: true,
-  });
+  // const [data, setData] = useState({
+  //   title: "",
+  //   info: "",
+  //   content: "",
+  //   files: null,
+  // });
 
-  const [errorCode, setErrorCode] = useState(0);
+  // const [filled, setFilled] = useState({
+  //   title: true,
+  //   info: true,
+  //   content: true,
+  // });
 
-  const [preImg, setPreImg] = useState([]);
+  // const [errorCode, setErrorCode] = useState(0);
 
-  const [fileReaderState, setFileReaderState] = useState("");
+  // const [preImg, setPreImg] = useState([]);
+
+  // const [fileReaderState, setFileReaderState] = useState("");
+
+  // const errorHandler = useCallback(() => {
+  //   if (!data.title) {
+  //     setErrorCode(1);
+  //     title.current.focus();
+  //     setFilled({
+  //       ...filled,
+  //       title: false,
+  //     });
+  //     return false;
+  //   } else if (!data.info) {
+  //     setErrorCode(2);
+  //     info.current.focus();
+  //     setFilled({
+  //       ...filled,
+  //       info: false,
+  //     });
+  //     return false;
+  //   } else if (!data.content) {
+  //     setErrorCode(3);
+  //     content.current.focus();
+  //     setFilled({
+  //       ...filled,
+  //       content: false,
+  //     });
+  //     return false;
+  //   } 
+  //   return true;
+  // }, [filled]);
+
+  // const talkAddHandler = () => {
+  //   if (errorHandler()) {
+  //     const formData = new FormData();
+  //     formData.append("story_title", data.title);
+  //     formData.append("user_info", data.info);
+  //     formData.append("talk_content", data.content);
+  //     if (data.files !== null) {
+  //       for (const file of data.files) {
+  //         formData.append(`files`, file);
+  //       }
+  //     } else {
+  //       formData.append("files", "");
+  //     }
+  //     // dispatch(storyAdd(formData, { ...props }));
+  //   }
+  // };
+
+  // const previewImg = (e) => {
+  //   setPreImg([]);
+  //   for (const file of e.target.files) {
+  //     let reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       let newPreImg = preImg;
+  //       newPreImg.push({
+  //         file: file,
+  //         previewURL: reader.result,
+  //       });
+  //       setPreImg(newPreImg);
+  //       setFileReaderState(file);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  // const onChangeHandler = (e) => {
+  //   e.preventDefault();
+  //   if (e.target.name === "files") {
+  //     previewImg(e);
+  //     setData({
+  //       ...data,
+  //       [e.target.name]: e.target.files,
+  //     });
+  //   } else {
+  //     setData({
+  //       ...data,
+  //       [e.target.name]: e.target.value,
+  //     });
+  //     setErrorCode(0);
+     
+  //   }
+  // };
+
+  // const onDeleteHandler = useCallback(
+  //   (key) => () => {
+  //     let items;
+  //     let totalPrice =
+  //       data.totalPrice -
+  //       data.items[key].item_price * data.items[key].item_quantity;
+  //     let goal;
+  //     if (totalPrice < 1000000 && totalPrice > 0) {
+  //       goal = 50;
+  //     } else {
+  //       goal = Math.floor(totalPrice / 1000000) * 100;
+  //     }
+  //     if (key === 0) {
+  //       items = data.items.slice(1, data.items.length);
+  //     } else if (key === data.items.length - 1) {
+  //       items = data.items.slice(0, key);
+  //     } else {
+  //       items = data.items
+  //         .slice(0, key)
+  //         .concat(data.items.slice(key + 1, data.items.length));
+  //     }
+  //     setData({
+  //       ...data,
+  //       items,
+  //       totalPrice: totalPrice,
+  //       goal: goal,
+  //     });
+  //   },
+  //   [data]
+  // );
 
 
   return (
     <>
-      <ActWriteStyle>
-        <div className="layout">
+      <TalkWriteStyle>
+        <a>asdfsfsafsafdsa</a>
+        {/* <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
           </div>
@@ -438,22 +553,69 @@ const ActWrite = () => {
               value={data.title}
               type="text"
               placeholder="제목을 입력하세요."
+              onChange={onChangeHandler}
+            />
+          </div>
+
+          <div className="info">
+            <p>작성자 소개</p>
+            <textarea
+              name="info"
+              ref={info}
+              value={data.info}
+              required
+              placeholder="본인을 마음껏 표현해주세요."
+              onChange={onChangeHandler}
+            />
+          </div>
+
+          <div className="content">
+            <p>내용</p>
+            <div>
+              {preImg.map((item, key) => {
+                return (
+                  <div key={key}>
+                    <img
+                      className="preImg"
+                      src={item.previewURL}
+                      key={key}
+                      alt="preview"
+                    />
+                  </div>
+                );
+              })}
+              <label htmlFor="files">파일 첨부</label>
+              <input
+                id="files"
+                name="files"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={onChangeHandler}
+              />
+            </div>
+            <textarea
+              name="content"
+              // ref={content}
+              value={data.content}
+              required
+              placeholder="내용을 입력하세요. "
+              onChange={onChangeHandler}
             />
           </div>
 
 
           <div className="submit">
-            <button>
+            <button onClick={talkAddHandler}>
               제출하기
               <img alt="submit" src="/icons/PaperPlane.png" />
             </button>
           </div>
-          
-        </div>
-      </ActWriteStyle>
-      <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
+        </div> */}
+      </TalkWriteStyle>
+      {/* <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle> */}
     </>
   );
 };
 
-export default ActWrite;
+export default TalkWrite;

@@ -23,6 +23,7 @@ import {
   User,
   UserInfo,
   BlockInfo,
+  BlockInfoList,
   SearchResult,
   StoryUpdate,
   ActMain,
@@ -32,10 +33,11 @@ import {
   TalkDetail,
   CampaignDetail,
   // ActTalkWrite,
+  TalkWrite,
 } from "pages";
 
 // Common components
-import { Footer, NavBar, NaverCallback, ScrollTop } from "components";
+import {  Footer, NavBar, NaverCallback, ScrollTop } from "components";
 
 // HOC
 import Auth from "hoc/auth";
@@ -65,13 +67,14 @@ ReactDOM.render(
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
-        <Route path="/block" component={Auth(BlockInfo, null)} />
+        <Route exact path="/block" component={Auth(BlockInfo, null)} />
+        <Route path="/block/List" component={Auth(BlockInfoList, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
         <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
-        {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
+        <Route path="/talk/write" component={Auth(TalkWrite, null)} />
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
       </Switch>
       <Footer />
