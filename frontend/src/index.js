@@ -34,7 +34,7 @@ import {
 } from "pages";
 
 // Common components
-import {Footer, NavBar, NaverCallback, ScrollTop } from "components";
+import { Footer, NavBar, NaverCallback, ScrollTop } from "components";
 
 // HOC
 import Auth from "hoc/auth";
@@ -59,7 +59,7 @@ ReactDOM.render(
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
-        <Route path="/block" component={Auth(BlockInfo, true)} />
+        <Route path="/block" component={Auth(BlockInfo, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
@@ -68,7 +68,7 @@ ReactDOM.render(
         {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
       </Switch>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")

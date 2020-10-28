@@ -43,6 +43,7 @@ const BlockInfo = () => {
   useEffect(() => {
     if (init.current) {
       initLoad().then(() => (init.current = false));
+      window.scrollTo(0, 0);
     }
   }, []);
 

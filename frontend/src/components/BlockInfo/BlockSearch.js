@@ -11,10 +11,11 @@ const BlockSearchStyle = styled.article`
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-left: 90px;
     input {
       transition: all 1s ease-in-out;
       margin-right: 70px;
-      width: ${(props) => (props.isClicked ? "600px" : "150px")};
+      width: ${(props) => (props.isClicked ? "600px" : "320px")};
       height: 40px;
       border-radius: 20px;
       border: solid 0.1px orange;
