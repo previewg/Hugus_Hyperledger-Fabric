@@ -2,7 +2,7 @@
 const express = require("express");
 const path = require("path");
 const models = require("./models");
-const fs = require("fs");
+// const fs = require("fs");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 
@@ -31,22 +31,22 @@ app.use(
 );
 
 // 업로드 파일 경로 설정
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/user_profile", express.static(path.join(__dirname, "user_profile")));
-
-try {
-  fs.readdirSync("uploads");
-} catch (error) {
-  console.log("uploads 폴더 생성");
-  fs.mkdirSync("uploads");
-}
-
-try {
-  fs.readdirSync("user_profile");
-} catch (error) {
-  console.log("user_profile 폴더 생성");
-  fs.mkdirSync("user_profile");
-}
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/user_profile", express.static(path.join(__dirname, "user_profile")));
+//
+// try {
+//   fs.readdirSync("uploads");
+// } catch (error) {
+//   console.log("uploads 폴더 생성");
+//   fs.mkdirSync("uploads");
+// }
+//
+// try {
+//   fs.readdirSync("user_profile");
+// } catch (error) {
+//   console.log("user_profile 폴더 생성");
+//   fs.mkdirSync("user_profile");
+// }
 
 models.sequelize
   // sequelize MariaDB 연결
@@ -71,6 +71,7 @@ const talkRouter = require("./routes/talk");
 const talkCommentRouter = require("./routes/talk_comment");
 const blockRouter = require("./routes/block");
 const payRouter = require("./routes/pay");
+const campaignRouter = require("./routes/campaign");
 
 // Router 사용
 app.use("/auth", authRouter);
@@ -83,6 +84,7 @@ app.use("/talk", talkRouter);
 app.use("/talk_comment", talkCommentRouter);
 app.use("/block", blockRouter);
 app.use("/pay", payRouter);
+app.use("/campaign", campaignRouter);
 
 // 404 처리
 app.use((req, res) => {

@@ -28,6 +28,7 @@ const Home = () => {
   // };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     window.addEventListener("scroll", scrollHandler);
     return () => {
       window.removeEventListener("scroll", scrollHandler);

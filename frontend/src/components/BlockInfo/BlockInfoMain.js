@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Flow from "./Flow";
 
@@ -34,23 +34,72 @@ const BlockInfoMainStyle = styled.article`
     .BlockInfoMain__body {
       transition: background-color 0.2s ease-in-out;
       display: grid;
+      align-items: center;
       grid-template-columns: 1fr 4fr 1fr 1fr 2fr 2fr;
-      > p {
+      > p,
+      span {
         justify-self: center;
+        margin: 5px;
+        input {
+          outline: none;
+          border: none;
+          background: transparent;
+          width: 200px;
+        }
+        button {
+          background: transparent;
+          outline: none;
+          color: gray;
+          border: none;
+          cursor: pointer;
+          transition: color 0.2s ease-in-out;
+          :hover {
+            color: #0c7eff;
+            font-weight: bold;
+          }
+        }
+      }
+      p:nth-child(2) {
+        display: flex;
+        align-items: center;
       }
       :hover {
-        background-color: #b0dcef;
+        background-color: #c5e8f6;
       }
     }
   }
 `;
 
+const CopiedAlertStyle = styled.span`
+  display: flex;
+  align-items: center;
+  .time {
+    transition: opacity 0.3s ease-in-out;
+    opacity: ${(props) => (props.time ? 1 : 0)};
+    font-size: 13px;
+  }
+`;
+
 const BlockInfoMain = ({ list }) => {
-  const copyTx = () => {
-    const tx_id = document.getElementById("tx_id");
-    tx_id.select();
-    document.execCommand("Copy");
+  const CopiedAlert = ({ id }) => {
+    const [time, setTime] = useState(false);
+
+    const copyTx = () => {
+      setTime(true);
+      setTimeout(() => setTime(false), 1000);
+      const tx_id = document.getElementById(id);
+      tx_id.select();
+      document.execCommand("Copy");
+    };
+
+    return (
+      <CopiedAlertStyle time={time}>
+        <button onClick={copyTx}>복사</button>
+        <span className="time">복사완료!</span>
+      </CopiedAlertStyle>
+    );
   };
+
   return (
     <BlockInfoMainStyle>
       <div>
@@ -71,10 +120,15 @@ const BlockInfoMain = ({ list }) => {
           return (
             <div className="BlockInfoMain__body" key={key}>
               <p className="block_height">{block.block_height}</p>
-              <p className="tx_id">
-                {block.tx_id.slice(0, 40)}...
-                <input readOnly id="tx_id" value={block.tx_id} />
-                <button onClick={copyTx}>복사</button>
+              <p>
+                <input
+                  readOnly
+                  className="tx_id"
+                  id={block.tx_id}
+                  value={block.tx_id.slice(0, 40)}
+                />
+                ...
+                <CopiedAlert id={block.tx_id} />
               </p>
               <p className="tx_type">{block.tx_type}</p>
               <Flow className="age" block_time={block.timestamp} />

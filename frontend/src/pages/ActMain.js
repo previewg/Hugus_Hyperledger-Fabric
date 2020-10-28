@@ -26,7 +26,7 @@ const ActStyle = styled.section`
         padding-bottom: 2px;
       }
     }
-  
+
     .actWrite_Btn {
       font-size: 1px;
       cursor: pointer;
@@ -47,9 +47,9 @@ const ActMain = () => {
     setClicked(false);
   };
 
-//   const onClickHandler = () => {
-//     props.history.push("/act/write");
-//   };
+  //   const onClickHandler = () => {
+  //     props.history.push("/act/write");
+  //   };
 
   const Loader = () => {
     return (
@@ -73,10 +73,14 @@ const ActMain = () => {
         <div className="title">
           <p>전달 스토리</p>
         </div>
-        <Search search={search} setSearch={setSearch} setClicked={setClicked}/>
+        <Search search={search} setSearch={setSearch} setClicked={setClicked} />
         {actList.length !== 0 ? <ActList actList={actList} /> : <Loader />}
-        <Pagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
-  
+        <Pagination
+          clicked={clicked}
+          total={total}
+          pageLimit="5"
+          nowPage={nowPage}
+        />
       </div>
     </ActStyle>
   );

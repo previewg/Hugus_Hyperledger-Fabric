@@ -30,6 +30,7 @@ import {
   ActWrite,
   TalkMain,
   TalkDetail,
+  CampaignDetail,
   // ActTalkWrite,
 } from "pages";
 
@@ -52,6 +53,11 @@ ReactDOM.render(
       <User />
       <Switch>
         <Route exact path="/" component={Auth(Home, null)} />
+        <Route
+          exact
+          path="/campaign/:id"
+          component={Auth(CampaignDetail, null)}
+        />
         <Route exact path="/story" component={Auth(StoryMain, null)} />
         <Route path="/story/write" component={Auth(StoryWrite, true)} />
         <Route path="/story/update/:id" component={Auth(StoryUpdate, true)} />

@@ -18,11 +18,11 @@ const BlockInfoHeadStyle = styled.article`
       font-size: 40px;
       font-weight: bold;
       color: orange;
-      margin-right: 30px;
+      margin-right: 20px;
     }
     p:nth-child(2) {
       color: #1eb71e;
-      padding-bottom: 5px;
+      padding-bottom: 10px;
     }
   }
 
@@ -59,7 +59,7 @@ const BlockInfoHead = () => {
     <BlockInfoHeadStyle>
       <div>
         <p>HUGUS CHAIN</p>
-        <p>RUNNING</p>
+        <p>●RUNNING</p>
       </div>
       <div className="summary">
         <div>

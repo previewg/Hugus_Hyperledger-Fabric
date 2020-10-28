@@ -13,7 +13,7 @@ const BlockSearchStyle = styled.article`
     justify-content: center;
     padding-left: 90px;
     input {
-      transition: all 1s ease-in-out;
+      transition: all 0.7s ease-in-out;
       margin-right: 70px;
       width: ${(props) => (props.isClicked ? "600px" : "320px")};
       height: 40px;
@@ -37,7 +37,12 @@ const BlockSearch = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [placeholder, setPlaceholder] = useState("SEARCH");
   const [img, setImg] = useState("/icons/Search.png");
+  const [search, setSearch] = useState("");
   const here = useRef();
+
+  const onChangeHandler = (e) => {
+    setSearch(e.target.value);
+  };
 
   const inputOpen = () => {
     setIsClicked(true);
@@ -47,6 +52,7 @@ const BlockSearch = () => {
   };
 
   const inputClose = () => {
+    setSearch("");
     setIsClicked(false);
     setPlaceholder("SEARCH");
     setImg("/icons/Search.png");
@@ -54,7 +60,13 @@ const BlockSearch = () => {
   return (
     <BlockSearchStyle isClicked={isClicked}>
       <div>
-        <input ref={here} onClick={inputOpen} placeholder={placeholder} />
+        <input
+          ref={here}
+          onClick={inputOpen}
+          value={search}
+          onChange={onChangeHandler}
+          placeholder={placeholder}
+        />
         <img onClick={inputClose} src={img} />
       </div>
     </BlockSearchStyle>

@@ -2,23 +2,19 @@
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Story_Vote",
+    "Campaign_Vote",
     {
       user_email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      story_id: {
+      campaign_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      vote: {
-        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
     },
     {
-      tableName: "story_vote",
+      tableName: "campaign_vote",
       freezeTableName: true,
       underscored: true,
       charset: "utf8mb4",

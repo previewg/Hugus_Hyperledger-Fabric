@@ -277,13 +277,13 @@ router.get("/list/:page", async (req, res) => {
           "createdAt",
           [
             sequelize.literal(
-              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
             ),
             "story_like",
           ],
           [
             sequelize.literal(
-              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
             ),
             "story_vote",
           ],
@@ -303,8 +303,7 @@ router.get("/list/:page", async (req, res) => {
         where: {
           id: [
             sequelize.literal(
-              `(SELECT story_id FROM story_like WHERE user_email = '${user_email}'` +
-                "AND `like`=true)"
+              `(SELECT story_id FROM story_like WHERE user_email = '${user_email}'`
             ),
           ],
         },
@@ -329,13 +328,13 @@ router.get("/list/:page", async (req, res) => {
           "createdAt",
           [
             sequelize.literal(
-              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
             ),
             "story_like",
           ],
           [
             sequelize.literal(
-              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
             ),
             "story_vote",
           ],
@@ -384,13 +383,13 @@ router.get("/:id", async (req, res) => {
         "visited",
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
           ),
           "story_like",
         ],
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
           ),
           "story_vote",
         ],
@@ -411,11 +410,11 @@ router.get("/:id", async (req, res) => {
     });
     if (user_email) {
       const like = await Story_Like.findOne({
-        where: { story_id: story_id, user_email: user_email, like: true },
+        where: { story_id: story_id, user_email: user_email },
       });
 
       const vote = await Story_Vote.findOne({
-        where: { story_id: story_id, user_email: user_email, vote: true },
+        where: { story_id: story_id, user_email: user_email },
       });
       res.json({
         data: data,
@@ -465,21 +464,17 @@ router.put("/like", async (req, res) => {
     const history = await Story_Like.findOne({
       where: { story_id, user_email },
     });
-
+    console.log(story_id);
+    console.log(user_email);
+    console.log(history);
     if (history) {
-      await Story_Like.update(
-        {
-          like: !status,
-        },
-        {
-          where: { story_id, user_email },
-        }
-      );
+      await Story_Like.destroy({
+        where: { story_id, user_email },
+      });
     } else {
       await Story_Like.create({
         story_id,
         user_email,
-        like: !status,
       });
     }
 
@@ -500,19 +495,13 @@ router.put("/vote", async (req, res) => {
     });
 
     if (history) {
-      await Story_Vote.update(
-        {
-          vote: !status,
-        },
-        {
-          where: { story_id, user_email },
-        }
-      );
+      await Story_Vote.destroy({
+        where: { story_id, user_email },
+      });
     } else {
       await Story_Vote.create({
         story_id,
         user_email,
-        vote: !status,
       });
     }
 

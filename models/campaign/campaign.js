@@ -12,32 +12,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      campaign_file: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      campaign_hashtag: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       campaign_goal: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      campaign_vote: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
+      user_email: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       visited: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: 0,
       },
     },
     {
       tableName: "campaign",
       freezeTableName: true,
       underscored: true,
-      paranoid: true, //soft delete
       charset: "utf8mb4",
       collate: "utf8mb4_general_ci",
     }
