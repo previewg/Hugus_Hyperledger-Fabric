@@ -12,7 +12,7 @@ const BlockInfoStyle = styled.section`
   padding-top: 50px;
 `;
 
-const BlockInfo = () => {
+const BlockInfo = (props) => {
   const init = useRef(true);
   const [list, setList] = useState([]);
   const [data, setData] = useState({
@@ -52,7 +52,7 @@ const BlockInfo = () => {
       <Socket />
       <BlockSearch />
       <BlockInfoHead />
-      <BlockInfoMain list={list} />
+      <BlockInfoMain list={list} history={props.history}/>
     </BlockInfoStyle>
   );
 };
