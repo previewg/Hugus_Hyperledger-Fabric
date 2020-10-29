@@ -26,7 +26,6 @@ const Home = (props) => {
     };
   }, []);
 
-  console.log(scroll);
   return (
     <HomeStyle>
       <Main scroll={scroll} />

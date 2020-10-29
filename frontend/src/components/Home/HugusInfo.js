@@ -89,4 +89,4 @@ const HugusInfo = () => {
   );
 };
 
-export default HugusInfo;
+export default React.memo(HugusInfo);

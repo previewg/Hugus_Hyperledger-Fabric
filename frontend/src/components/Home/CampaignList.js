@@ -149,14 +149,13 @@ const CampaignList = () => {
   const visitHandler = async (campaign_id) => {
     await axios.put("/campaign/visit", { campaign_id: campaign_id });
   };
-
-  const ProgressBar = ({ vote, goal }) => {
+  const ProgressBar = ({ donate, goal }) => {
     const [ratio, setRatio] = useState(0);
 
     useEffect(() => {
       const init = setTimeout(() => {
-        if (vote > goal) setRatio(100);
-        setRatio((vote / goal) * 100);
+        if (donate > goal) setRatio(100);
+        setRatio((donate / goal) * 100);
       });
       return () => clearTimeout(init);
     }, []);
@@ -206,11 +205,11 @@ const CampaignList = () => {
       const scrollHeight = document.documentElement.scrollHeight;
       const scrollTop = document.documentElement.scrollTop;
       const clientHeight = document.documentElement.clientHeight;
+
       if (scrollTop + clientHeight >= scrollHeight && !loading) {
         loadMore();
       }
     };
-
     useEffect(() => {
       if (init.current) {
         loadInit();
@@ -226,7 +225,6 @@ const CampaignList = () => {
 
     return null;
   };
-
   return (
     <CampaignListStyle>
       <LoadHandler />
@@ -250,7 +248,7 @@ const CampaignList = () => {
 
                 <p className="campaign__title">{campaign.campaign_title}</p>
                 <ProgressBar
-                  vote={campaign.campaign_vote}
+                  donate={campaign.campaign_donate}
                   goal={campaign.campaign_goal}
                 />
               </div>
@@ -271,4 +269,4 @@ const CampaignList = () => {
   );
 };
 
-export default CampaignList;
+export default React.memo(CampaignList);

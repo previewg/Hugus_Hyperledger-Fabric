@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PayLoader } from "components";
@@ -15,7 +15,7 @@ const PayStyle = styled.section`
     flex-direction: column;
     > p {
       width: 100px;
-      border-bottom: solid orange 3px;
+      border-bottom: solid orange 2px;
       font-size: 20px;
       padding: 10px;
     }
@@ -60,13 +60,36 @@ const PayStyle = styled.section`
             justify-self: center;
             display: flex;
             > input {
-              width: 130px;
+              width: 150px;
               border: none;
               border-bottom: solid 0.1px lightgray;
               margin-right: 5px;
               outline: none;
               text-align: end;
               font-size: 18px;
+            }
+          }
+        }
+        .pay__header__select {
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          > div:nth-child(2) {
+            justify-self: center;
+            button {
+              background-color: transparent;
+              margin: 5px;
+              padding: 5px;
+              width: 70px;
+              height: 30px;
+              border-radius: 15px;
+              border: 0.1px solid lightgray;
+              cursor: pointer;
+              outline: none;
+              :hover {
+                border: 0.1px solid orange;
+                color: orange;
+              }
             }
           }
         }
@@ -81,7 +104,7 @@ const PayStyle = styled.section`
     flex-direction: column;
     > p {
       width: 100px;
-      border-bottom: solid orange 3px;
+      border-bottom: solid orange 2px;
       font-size: 20px;
       padding: 10px;
       margin-bottom: 40px;
@@ -171,10 +194,29 @@ const PayStyle = styled.section`
       }
     }
   }
-
-  .pay__button {
-    margin-top: 200px;
+  .pay__summary {
+    margin-top: 100px;
     width: 700px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: solid 0.1px lightgray;
+    > p {
+      font-size: 20px;
+      padding: 10px;
+      :nth-child(2) {
+        strong {
+          margin-right: 10px;
+          font-size: 30px;
+        }
+      }
+    }
+  }
+  .pay__button {
+    margin-top: 100px;
+    width: 700px;
+    height: 200px;
     display: flex;
     justify-content: center;
     > button {
@@ -192,8 +234,11 @@ const PayStyle = styled.section`
 
 const Pay = ({ match }) => {
   const [pay, setPay] = useState("kakaopay");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const amountInput = useRef(false);
+  const [status, setStatus] = useState(false);
+  const [data, setData] = useState({});
+  const init = useRef(true);
 
   const kakaoPay = async () => {
     const data = await axios.post("/pay/", {
@@ -222,7 +267,7 @@ const Pay = ({ match }) => {
     amountInput.current = true;
   };
 
-  const payTypeChange = (e) => {
+  const payTypeChange = useCallback((e) => {
     if (e.target.id === "kakaopay") {
       setPay("kakaopay");
     } else if (e.target.id === "naverpay") {
@@ -234,11 +279,7 @@ const Pay = ({ match }) => {
     } else {
       setPay("money");
     }
-  };
-
-  const [status, setStatus] = useState(false);
-  const [data, setData] = useState({});
-  const init = useRef(true);
+  }, []);
 
   const loader = async () => {
     const res = await axios.get(`/campaign/${match.params.id}`);
@@ -247,6 +288,7 @@ const Pay = ({ match }) => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (init.current) {
       loader();
       init.current = false;
@@ -280,6 +322,20 @@ const Pay = ({ match }) => {
                   onChange={amountChange}
                 />
                 <span>원</span>
+              </div>
+            </div>
+            <div className="pay__header__select">
+              <div></div>
+              <div>
+                <button onClick={() => setAmount(Number(amount) + 1000)}>
+                  +1천원
+                </button>
+                <button onClick={() => setAmount(Number(amount) + 10000)}>
+                  +1만원
+                </button>
+                <button onClick={() => setAmount(Number(amount) + 100000)}>
+                  +1십만원
+                </button>
               </div>
             </div>
           </div>
@@ -320,6 +376,12 @@ const Pay = ({ match }) => {
             </p>
           </div>
         </div>
+      </article>
+      <article className="pay__summary">
+        <p>결제금액</p>
+        <p>
+          <strong>{amount.toLocaleString()}</strong>원
+        </p>
       </article>
       <article className="pay__button">
         <button onClick={payReady}>결제하기</button>
