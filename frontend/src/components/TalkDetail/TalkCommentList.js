@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {  useSelector } from "react-redux";
-import TalkCommentChild from "../../components/TalkDetail/TalkCommentChild";
+import TalkCommentChild from "./TalkCommentChild";
 import TalkCommentChildInput from "./TalkCommentChildInput";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -240,8 +240,6 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
     const comment = axios.get(`/talk_comment/list/${id}/${page}`);
     setTalkCommentList(comment.data);
   };
-
-  console.log(talkCommentList);
 
   return (
     <TalkCommentListStyle>

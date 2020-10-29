@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const TalkListStyle = styled.div`
-  margin-top: 50px;
   width: 100%;
+  margin-top: 30px;
   a {
     text-decoration: none;
   }

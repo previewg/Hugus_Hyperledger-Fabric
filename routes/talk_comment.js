@@ -207,7 +207,6 @@ router.post("/child/add", async (req, res) => {
   
       let more = false;
       if (total > 10) more = true;
-  
       res.json({ list: list, success: 1, more: more, total: total });
     } catch (error) {
       console.error(error);

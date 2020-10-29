@@ -59,13 +59,13 @@ const TalkCommentChildInput = ({ comment, talk_id, setTalkCommentList }) => {
     setComments("");
   };
 
-  const commentChildAddHandler = () => {
+  const commentChildAddHandler = async () => {
     if (comments === "") {
       commentChild.current.focus();
       setError(true);
     } else {
-      const result = axios.post("/talk_comment/child/add", { comment: comments, comment_id: comment.id, talk_id: talk_id })
-      setChildList(result.data);
+      const result = await axios.post("/talk_comment/child/add", { comment: comments, comment_id: comment.id, talk_id: talk_id })
+      setTalkCommentList(result.data);
     }
   };
 

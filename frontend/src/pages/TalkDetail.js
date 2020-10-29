@@ -11,7 +11,7 @@ const TalkDetailStyle = styled.div`
   flex-direction: column;
 `;  
 
-const TalkDetail = ({ match }) => {
+const TalkDetail = ({ match,history }) => {
   const init = useRef(true);
   const [talkId, setTalkId] = useState([]);
   const [talkCommentList, setTalkCommentList] = useState([]);
@@ -34,7 +34,7 @@ const TalkDetail = ({ match }) => {
 
   return (
     <TalkDetailStyle>
-      {talkId.length !== 0 && <TalkContents talkId={talkId} />}
+      {talkId.length !== 0 && <TalkContents talkId={talkId} history={history} />}
       {talkCommentList.length !== 0 && <TalkComments talkId={talkId} 
       talkCommentList={talkCommentList} setTalkCommentList={setTalkCommentList}/>}
     </TalkDetailStyle>
