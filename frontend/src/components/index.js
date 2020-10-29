@@ -38,6 +38,7 @@ import BlockInfoMain from "./BlockInfo/BlockInfoMain";
 import BlockInfoList from "./BlockInfoList/BlockInfoList";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
+import PayLoader from "./Pay/Loader";
 export {
   Main,
   NavBar,
@@ -79,4 +80,5 @@ export {
   BlockInfoList,
   CampaignDetailLoader,
   CampaignContents,
+  PayLoader,
 };
