@@ -37,10 +37,11 @@ import {
 } from "pages";
 
 // Common components
-import {  Footer, NavBar, NaverCallback, ScrollTop } from "components";
+import { Footer, NavBar, NaverCallback, ScrollTop } from "components";
 
 // HOC
 import Auth from "hoc/auth";
+import Pay from "./pages/Pay";
 
 const store = createStore(
   rootReducer,
@@ -76,6 +77,7 @@ ReactDOM.render(
         <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
         <Route path="/talk/write" component={Auth(TalkWrite, null)} />
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
+        <Route path="/pay/:id" component={Auth(Pay, true)} />
       </Switch>
       <Footer />
     </BrowserRouter>

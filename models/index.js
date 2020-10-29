@@ -43,7 +43,10 @@ db.Campaign_Comment = require("./campaign/campaign_comment")(
 );
 db.Campaign_Like = require("./campaign/campaign_like")(sequelize, Sequelize);
 db.Campaign_File = require("./campaign/campaign_file")(sequelize, Sequelize);
-db.Campaign_Vote = require("./campaign/campaign_vote")(sequelize, Sequelize);
+db.Campaign_Donate = require("./campaign/campaign_donate")(
+  sequelize,
+  Sequelize
+);
 db.Campaign_Hashtag = require("./campaign/campaign_hashtag")(
   sequelize,
   Sequelize
@@ -110,7 +113,7 @@ db.User.hasMany(db.Story_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
-db.User.hasMany(db.Campaign_Vote, {
+db.User.hasMany(db.Campaign_Donate, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
@@ -219,7 +222,7 @@ db.Campaign.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
 });
-db.Campaign.hasMany(db.Campaign_Vote, {
+db.Campaign.hasMany(db.Campaign_Donate, {
   foreignKey: "campaign_id",
   sourceKey: "id",
 });
@@ -288,11 +291,14 @@ db.Campaign_File.belongsTo(db.Campaign, {
 });
 
 // Campaign_Vote
-db.Campaign_Vote.belongsTo(db.Campaign, {
+db.Campaign_Donate.belongsTo(db.Campaign, {
   foreignKey: "campaign_id",
   targetKey: "id",
 });
-db.Campaign_Vote.belongsTo(db.User, { foreignKey: "user_id", targetKey: "id" });
+db.Campaign_Donate.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "id",
+});
 
 // Hashtag
 db.Hashtag.belongsToMany(db.Story, {

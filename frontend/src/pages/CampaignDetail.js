@@ -1,29 +1,37 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { CampaignDetailLoader, CampaignContents } from "components";
 
 const CampaignDetailStyle = styled.section`
-  padding-top: 100px;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;
 
-const CampaignDetail = ({ match }) => {
-  const pay = async () => {
-    const data = await axios.post("/pay/", {
-      campaign_id: match.params.id,
-      total_amount: 370000,
-    });
-    window.open(
-      `${data.data.data.next_redirect_pc_url}`,
-      "HUGUS_pay",
-      "width=430,height=500"
-    );
+const CampaignDetail = ({ match, history }) => {
+  const [status, setStatus] = useState(false);
+  const [data, setData] = useState({});
+  const init = useRef(true);
+
+  const loader = async () => {
+    const res = await axios.get(`/campaign/${match.params.id}`);
+    setData(res.data.data);
+    setStatus(true);
   };
 
+  useEffect(() => {
+    if (init.current) {
+      loader();
+      init.current = false;
+    }
+  }, []);
+
+  if (!status) return <CampaignDetailLoader />;
   return (
     <CampaignDetailStyle>
-      <article>여기여기</article>
-      <button onClick={pay}>후원하기</button>
+      <CampaignContents data={data} history={history} />
+      {/*<CampaignComments data={data} />*/}
     </CampaignDetailStyle>
   );
 };

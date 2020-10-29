@@ -1,7 +1,15 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Campaign, Campaign_File, Hashtag, sequelize } = require("../models");
+const {
+  Campaign,
+  Campaign_File,
+  Campaign_Like,
+  Campaign_Donate,
+  Hashtag,
+  User,
+  sequelize,
+} = require("../models");
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -90,9 +98,9 @@ router.get("/init", async (req, res) => {
         ],
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM campaign_vote WHERE campaign_id = `Campaign`.id)"
+            "(SELECT SUM(amount) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
           ),
-          "campaign_vote",
+          "campaign_donate",
         ],
         [
           sequelize.literal(
@@ -140,9 +148,9 @@ router.get("/list/:page", async (req, res) => {
         ],
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM campaign_vote WHERE campaign_id = `Campaign`.id)"
+            "(SELECT SUM(amount) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
           ),
-          "campaign_vote",
+          "campaign_donate",
         ],
         [
           sequelize.literal(
@@ -168,69 +176,61 @@ router.get("/list/:page", async (req, res) => {
   }
 });
 
-// 스토리 상세 조회
+// 캠페인 상세 조회
 router.get("/:id", async (req, res) => {
   try {
-    const story_id = req.params.id;
+    const campaign_id = req.params.id;
     let user_email;
     if (req.session.loginInfo) user_email = req.session.loginInfo.user_email;
     else user_email = null;
 
-    const data = await Story.findOne({
+    const data = await Campaign.findOne({
       attributes: [
         "id",
-        "story_title",
-        "user_info",
-        "story_content",
-        "story_goal",
+        "campaign_title",
+        "campaign_goal",
         "user_email",
         "visited",
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id AND `like`=true )"
+            "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id )"
           ),
-          "story_like",
+          "campaign_like",
         ],
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id AND `vote`=true )"
+            "(SELECT SUM(amount) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
           ),
-          "story_vote",
+          "campaign_donate",
         ],
         [
           sequelize.literal(
-            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+            "(SELECT COUNT(1) FROM campaign_comment WHERE campaign_id = `Campaign`.id)"
           ),
-          "story_comment",
+          "campaign_comment",
         ],
       ],
-      where: { id: story_id },
+      where: { id: campaign_id },
       include: [
         { model: Hashtag, attributes: ["hashtag"] },
-        { model: Story_Item },
         { model: User, attributes: ["nickname"] },
-        { model: Story_File, attributes: ["file"] },
+        { model: Campaign_File, attributes: ["file"] },
       ],
     });
-    if (user_email) {
-      const like = await Story_Like.findOne({
-        where: { story_id: story_id, user_email: user_email, like: true },
-      });
 
-      const vote = await Story_Vote.findOne({
-        where: { story_id: story_id, user_email: user_email, vote: true },
+    if (user_email) {
+      const like = await Campaign_Like.findOne({
+        where: { campaign_id: campaign_id, user_email: user_email },
       });
       res.json({
         data: data,
         like: like ? true : false,
-        vote: vote ? true : false,
         success: 1,
       });
     } else {
       res.json({
         data: data,
         like: false,
-        vote: false,
         success: 1,
       });
     }
@@ -239,17 +239,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 스토리 조회수 추가
+// 캠페인 조회수 추가
 router.put("/visit", async (req, res) => {
   try {
-    const { story_id } = req.body;
-    await Story.increment(
+    const { campaign_id } = req.body;
+    await Campaign.increment(
       {
         visited: 1,
       },
       {
         where: {
-          id: story_id,
+          id: campaign_id,
         },
       }
     );
