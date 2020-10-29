@@ -1,9 +1,9 @@
 import axios from "axios";
-import React, { useCallback, useRef, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-const TalkWriteStyle = styled.div`
+const TalkUpdateStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
@@ -144,124 +144,22 @@ const TalkWriteStyle = styled.div`
     }
 
     .items {
+      font-weight: bold;
       margin-top: 35px;
-      width: 100%;
-      > p {
-        font-weight: bold;
-      }
-
       .item {
-        margin-top: 40px;
-        width: 90%;
-        display: flex;
-        align-items: center;
+        font-weight: normal;
+        font-size: 14px;
+        background-color: #fff7ef;
+        padding: 1rem;
         p {
-          margin-left: 5px;
-          font-size: 13px;
+          margin: 0;
+          margin-bottom: 10px;
         }
-        input {
-          padding: 5px;
-          height: 20px;
-          outline: none;
-          border: none;
-          border-bottom: solid 0.1px lightgray;
-          transition: 0.3s ease-in-out;
-          :focus {
-            border-bottom: solid 0.1px orange;
-          }
+        p:nth-last-child(1) {
+          margin-bottom: 0;
         }
-        .item_name {
-          display: flex;
-          flex-direction: column;
-          min-width: 200px;
-          margin-right: 10px;
-        }
-        .item_price {
-          display: flex;
-          flex-direction: column;
-          width: 90px;
-          min-width: 90px;
-          margin-right: 10px;
-        }
-        .item_quantity {
-          display: flex;
-          flex-direction: column;
-          width: 90px;
-          min-width: 90px;
-          margin-right: 10px;
-        }
-
-        button {
-          position: relative;
-          top: 20px;
-          left: 20px;
-          width: 50px;
-          min-width: 50px;
-          height: 30px;
-          margin-right: 5px;
-          background-color: transparent;
-          border-radius: 3px;
-          cursor: pointer;
-          outline: none;
-        }
-        .item_add {
-          border: solid orange 0.1px;
-          color: orange;
-          :hover {
-            background-color: orange;
-            color: white;
-          }
-        }
-        .item_delete {
-          border: solid darkgray 0.1px;
-          color: darkgray;
-          :hover {
-            background-color: darkgray;
-            color: white;
-          }
-        }
-      }
-      .item_list {
-        margin-top: 20px;
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-        > div {
-          display: flex;
-          align-items: center;
-          > p {
-            font-size: 13px;
-          }
-          > button {
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-left: 10px;
-            color: #fa6f6f;
-            width: 40px;
-            height: 25px;
-            border: solid 0.1px #fa6f6f;
-            background-color: transparent;
-            outline: none;
-            :hover {
-              background-color: #fa6f6f;
-              color: white;
-            }
-          }
-        }
-      }
-      .total_price {
-        border-top: solid 0.1px orange;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        p:nth-child(1) {
-          font-size: 12px;
-          cursor: pointer;
-          transition: 0.3s ease-in-out;
-          :hover {
-            color: #f83c3c;
-          }
+        .total_price {
+          text-align: end;
         }
       }
     }
@@ -397,31 +295,13 @@ const ErrorBoxStyle = styled.p`
 const errorMsg = [
   "",
   "제목을 입력 바랍니다",
-  "소식을 입력 바랍니다",
+  "내용을 입력 바랍니다",
 ];
 
-const TalkWrite = ({ props, match, history  }) => {
+const TalkUpdate = (props) => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
-  const init = useRef(true);
-  const [talkId, setTalkId] = useState([]);
-  const [talkCommentList, setTalkCommentList] = useState([]);
-  useEffect(() => {
-    const id = match.params.id;
-    const page = 1;
-
-    const initFunc = async () => {
-      const data = await axios.get(`/talk/${id}`);
-      const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
-      setTalkId(data.data);
-      setTalkCommentList(comment.data);
-    };
-    if (init.current) {
-      init.current = false;
-      initFunc();
-    }
-  }, []);
 
   const [data, setData] = useState({
     title: "",
@@ -459,11 +339,12 @@ const TalkWrite = ({ props, match, history  }) => {
       return false;
     } 
     return true;
-  }, [data,filled]);
+  }, [filled, data]);
 
-  const talkAddHandler = async () => {
+  const talkUpdateHandler = async () => {
     if (errorHandler()) {
       const formData = new FormData();
+      formData.append("id", props.match.params.id);
       formData.append("talk_title", data.title);
       formData.append("talk_content", data.content);
       if (data.files !== null) {
@@ -473,8 +354,8 @@ const TalkWrite = ({ props, match, history  }) => {
       } else {
         formData.append("files", "");
       }
-      const result = await axios.post(`/talk/add` , formData );
-      setTalkCommentList(result.data);
+      // dispatch(storyUpdate(formData, { ...props }));
+      await axios.post("/talk/update", formData )
       history.push("/talk");
     }
   };
@@ -513,73 +394,91 @@ const TalkWrite = ({ props, match, history  }) => {
     }
   };
 
+  const init = () => {
+    let pre = {
+      title: preData.talk_title,
+      content: preData.talk_content,
+      files: null,
+    };
+    setData(pre);
+  };
+
+  useEffect(() => {
+    if (load.current) {
+      // dispatch(storyLoader(props.match.params.id));
+
+      load.current = false;
+    }
+    if (loadStatus === "SUCCESS") init();
+  }, [loadStatus]);
+
   return (
     <>
-      <TalkWriteStyle>
-        <a>asdfsfsafsafdsa</a>
-        <div className="layout">
-          <div className="write_title">
-            <p>글쓰기</p>
-          </div>
-          <div className="title">
-            <p>제목</p>
-            <input
-              name="title"
-              ref={title}
-              value={data.title}
-              type="text"
-              placeholder="제목을 입력하세요."
-              onChange={onChangeHandler}
-            />
-          </div>
-
-          <div className="content">
-            <p>소식</p>
-            <div>
-              {preImg.map((item, key) => {
-                return (
-                  <div key={key}>
-                    <img
-                      className="preImg"
-                      src={item.previewURL}
-                      key={key}
-                      alt="preview"
-                    />
-                  </div>
-                );
-              })}
-              <label htmlFor="files">파일 첨부</label>
+      {preData && (
+        <TalkUpdateStyle>
+          <div className="layout">
+            <div className="write_title">
+              <p>수정하기</p>
+            </div>
+            <div className="title">
+              <p>제목</p>
               <input
-                id="files"
-                name="files"
-                type="file"
-                multiple
-                accept="image/*"
+                name="title"
+                ref={title}
+                value={data.title}
+                type="text"
+                placeholder="제목을 입력하세요."
                 onChange={onChangeHandler}
               />
             </div>
-            <textarea
-              name="content"
-              ref={content}
-              value={data.content}
-              required
-              placeholder="수혜자의 소식을 입력하세요. "
-              onChange={onChangeHandler}
-            />
-          </div>
 
+            <div className="content">
+              <p>내용</p>
+              <div>
+                {preImg.map((item, key) => {
+                  return (
+                    <div key={key}>
+                      <img
+                        className="preImg"
+                        src={item.previewURL}
+                        key={key}
+                        alt="preview"
+                      />
+                    </div>
+                  );
+                })}
+                <label htmlFor="files">파일 첨부</label>
+                <input
+                  id="files"
+                  name="files"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={onChangeHandler}
+                />
+              </div>
+              <textarea
+                name="content"
+                ref={content}
+                value={data.content}
+                required
+                placeholder="내용을 입력하세요. "
+                onChange={onChangeHandler}
+              />
+            </div>
 
-          <div className="submit">
-            <button onClick={talkAddHandler}>
-              제출하기
-              <img alt="submit" src="/icons/PaperPlane.png" />
-            </button>
+            <div className="submit">
+              <button onClick={talkUpdateHandler}>
+                수정하기
+                <img alt="submit" src="/icons/PaperPlane.png" />
+              </button>
+            </div>
           </div>
-        </div>
-      </TalkWriteStyle>
+        </TalkUpdateStyle>
+      )}
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );
 };
 
-export default TalkWrite;
+export default TalkUpdate;

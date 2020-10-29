@@ -7,7 +7,7 @@ import { css } from "@emotion/core";
 import { TalkList, TalkSearch, TalkPagination } from "components";
 import { signInBtnIsClicked } from "actions/user";
 
-const ActTalkStyle = styled.section`
+const TalkStyle = styled.section`
   width: 100%;
   padding-top: 30px;
   display: flex;
@@ -28,14 +28,25 @@ const ActTalkStyle = styled.section`
         padding-bottom: 2px;
       }
     }
-    .talkWrite_Btn {
-      font-size: 1px;
+    .write {
+      margin-top: 60px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    .talkWrite__btn {
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+      :hover {
+      color: orange;
+      }
     }
+  }
+
   }
 `;
 
-const ActTalkMain = (props) => {
+const TalkMain = (props) => {
   const dispatch = useDispatch();
   const isLoggedIn = props.isLoggedIn;
 
@@ -73,19 +84,21 @@ const ActTalkMain = (props) => {
   };
 
   return (
-    <ActTalkStyle>
+    <TalkStyle>
       <div className="layout">
         <div className="title">
           <p>수혜자의 이야기</p>
-        </div>
-        <p className="talkWrite__btn" onClick={onClickHandler}>
-        글작성 </p>
+          </div>
+
         <TalkSearch search={search} setSearch={setSearch} setClicked={setClicked}/>
+        <div className="write">
+        <span className="talkWrite__btn" onClick={onClickHandler}>글작성</span>
+        </div>
         {talkList.length !== 0 ? <TalkList talkList={talkList} /> : <Loader />}
         <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
       </div>
-    </ActTalkStyle>
+    </TalkStyle>
   );
 };
 
-export default ActTalkMain;
+export default TalkMain;

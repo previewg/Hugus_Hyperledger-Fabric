@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 
 const SearchStyle = styled.div`
@@ -50,15 +50,17 @@ const Search = ({ search, setSearch, setClicked }) => {
         here.current.focus();  
     };
 
-    const inputClose = () => {
+    const inputClose = (e) => {
+        setSearch("")
         setIsClicked(false);
-        setPlaceholder("SEARCH");
       };
 
     const onChangeHandler = (e) => {
         e.preventDefault();
         setSearch(e.target.value);
       };
+
+
 
     return(
         <SearchStyle isClicked={isClicked}>

@@ -32,7 +32,6 @@ import {
   TalkMain,
   TalkDetail,
   CampaignDetail,
-  // ActTalkWrite,
   TalkWrite,
 } from "pages";
 
@@ -73,8 +72,8 @@ ReactDOM.render(
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
-        <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
         <Route path="/talk/write" component={Auth(TalkWrite, null)} />
+        <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
       </Switch>
       <Footer />
