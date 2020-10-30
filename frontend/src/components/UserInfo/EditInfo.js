@@ -350,7 +350,6 @@ const EditInfo = ({setInfoType, profile, nickname}) => {
                         </div>
                     </div>
                 )}
-
                 <div className="profile__nickname">
                     {updateOpen ? (
                             <input
@@ -381,7 +380,6 @@ const EditInfo = ({setInfoType, profile, nickname}) => {
                         />
                     ) : (<p>휴대전화 번호 : {myPageData.success === 1 ? (userInfo.phone) : (phone_number)}</p>
                     )}
-
                 </div>
                 <div className="profile__delete">
                     {updateOpen ? <p onClick={onClickUpdate}>수정 완료 하기</p> : <p onClick={openUpdateForm}>정보 수정 하기</p>}

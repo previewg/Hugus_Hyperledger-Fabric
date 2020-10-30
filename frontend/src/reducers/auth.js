@@ -111,6 +111,8 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
           hash_email: { $set: action.data.hash_email },
+          phone_number:{$set:action.data.phone_number}
+
         },
       });
     case AUTH_SIGNIN_FAILURE:
@@ -236,7 +238,7 @@ export default function auth(state = initialState, action) {
       return update(state, {
         myPage_User: {
           status: {$set: "WAITING"},
-          code:{$set:''}
+          code:{$set:''},
         },
       });
 
@@ -249,7 +251,7 @@ export default function auth(state = initialState, action) {
           status: {$set: "SUCCESS"},
           nickname: {$set:action.data.user_nickname},
           phone:{$set:action.data.phone_number},
-          success:{$set:action.data.success}
+          success:{$set:action.data.success},
         },
       });
     case MY_INFO_UPDATE_FAILURE:

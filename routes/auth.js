@@ -208,13 +208,15 @@ router.post("/signIn", async (req, res) => {
               profile: user.user_profile,
               email: user.email,
               hash_email: user.hash,
-              phone_number: user.phone_number
+              phone_number: user.phone_number,
             });
           }
         );
       } else {
         return res.status(400).json({ success: 2 });
       }
+
+
     });
   });
 });
