@@ -32,6 +32,13 @@ import TalkCommentInput from "./TalkDetail/TalkCommentInput";
 import TalkCommentList from "./TalkDetail/TalkCommentList";
 import NaverCallback from "./User/NaverCallback";
 import Main from "./Home/Main";
+import BlockSearch from "./BlockInfo/BlockSearch";
+import BlockInfoHead from "./BlockInfo/BlockInfoHead";
+import BlockInfoMain from "./BlockInfo/BlockInfoMain";
+import BlockInfoList from "./BlockInfoList/BlockInfoList";
+import CampaignDetailLoader from "./CampaignDetail/Loader";
+import CampaignContents from "./CampaignDetail/CampaignContents";
+import PayLoader from "./Pay/Loader";
 export {
   Main,
   NavBar,
@@ -67,4 +74,11 @@ export {
   TalkCommentInput,
   TalkCommentList,
   NaverCallback,
+  BlockSearch,
+  BlockInfoHead,
+  BlockInfoMain,
+  BlockInfoList,
+  CampaignDetailLoader,
+  CampaignContents,
+  PayLoader,
 };

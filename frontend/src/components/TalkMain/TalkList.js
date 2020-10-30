@@ -1,12 +1,11 @@
+import axios from "axios";
 import React from "react";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { actVisit } from "../../actions/act";
 
 const TalkListStyle = styled.div`
-  margin-top: 50px;
   width: 100%;
+  margin-top: 30px;
   a {
     text-decoration: none;
   }
@@ -53,9 +52,9 @@ const TalkListStyle = styled.div`
 `;
 
 const TalkList = ({ talkList }) => {
-  const dispatch = useDispatch();
-  const visitHandler = (id) => {
-    dispatch(actVisit(id));
+
+  const visitHandler = async (id) => {
+    await axios.put('/talk/visit', { talk_id: id });
   };
 
   return (

@@ -8,11 +8,14 @@ import SearchResult from "./SearchResult";
 import User from "./User";
 import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
+import BlockInfoList from "./BlockInfoList";
 import ActMain from "./ActMain";
 import ActDetail from "./ActDetail";
 import ActWrite from "./ActWrite";
 import TalkMain from "./TalkMain";
 import TalkDetail from "./TalkDetail";
+import CampaignDetail from "./CampaignDetail";
+import TalkWrite from "./TalkWrite";
 
 export {
   Home,
@@ -24,10 +27,13 @@ export {
   User,
   UserInfo,
   BlockInfo,
+  BlockInfoList,
   SearchResult,
   ActMain,
   ActDetail,
   ActWrite,
   TalkMain,
   TalkDetail,
+  TalkWrite,
+  CampaignDetail,
 };

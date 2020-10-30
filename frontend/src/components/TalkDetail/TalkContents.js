@@ -1,9 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import TalkSlider from "./TalkSlider";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const TalkContentsStyle = styled.div`
   display: flex;
@@ -39,10 +39,11 @@ const TalkContentsStyle = styled.div`
     }
  }
 
-  .back_btn {
+ .back {
+  width: 100%;
     display: flex;
-    width: 100%;
     justify-content: flex-end;
+  .back_btn {
     font-size: 15px;
     font-weight: bold;
     text-decoration: none;
@@ -54,6 +55,7 @@ const TalkContentsStyle = styled.div`
     color: orange;
     }
   }
+}
 
   .visited {
     margin-top: 50px;
@@ -65,28 +67,73 @@ const TalkContentsStyle = styled.div`
       margin-left: 10px;
     }
   }
+
+  .if_owner {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      margin-left: 5px;
+      background: none;
+      :hover {
+        font-weight: bold;
+        color: orange;
+      }
+    }
+  }
+
 `;
 
-const TalkContents = ({ talkId }) => {
-const data = talkId.data; 
+const TalkContents = ({ talkId,history }) => {
+const email = useSelector((state) => state.auth.user.email);
+const data = talkId.data;
 
-  return (
+
+const IfOwner = () => {
+  const onDeleteHandler = async () => {
+    const confirmed = window.confirm("삭제하시겠습니까?");
+    if (confirmed) {
+      await axios.post("/talk/delete", {talk_id:data.id} );
+      history.push("/talk");
+    }
+  };
+
+  const onUpdateHandler = () => {
+    // history.push(`/talk/update/${data.id}`);
+  };
+
+  if (data.user_email === email)
+    return (
+      <div className="if_owner">
+        <button onClick={onUpdateHandler}>수정</button>
+        <button onClick={onDeleteHandler}>삭제</button>
+      </div>
+    );
+  return null;
+};
+
+return (
     <TalkContentsStyle>
     <div className="talk_contents">
 
       <p>{data.talk_title}</p>
       </div>
 
+      <div className="back">
       <Link className="back_btn" to="/talk">
       글목록
       </Link>
+      </div>
 
       <TalkSlider files={data.Talk_Files} />
       
       <div className="visited">
       <p>조회수 {data.visited}</p>
       </div>
-
+      <IfOwner />
       <div className="content">
       <div className="giveProcessForm">
       <p>수혜자의 소식</p>

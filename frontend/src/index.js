@@ -23,6 +23,7 @@ import {
   User,
   UserInfo,
   BlockInfo,
+  BlockInfoList,
   SearchResult,
   StoryUpdate,
   ActMain,
@@ -30,14 +31,16 @@ import {
   ActWrite,
   TalkMain,
   TalkDetail,
-  // ActTalkWrite,
+  CampaignDetail,
+  TalkWrite,
 } from "pages";
 
 // Common components
-import {Footer, NavBar, NaverCallback, ScrollTop } from "components";
+import { Footer, NavBar, NaverCallback, ScrollTop } from "components";
 
 // HOC
 import Auth from "hoc/auth";
+import Pay from "./pages/Pay";
 
 const store = createStore(
   rootReducer,
@@ -52,6 +55,11 @@ ReactDOM.render(
       <User />
       <Switch>
         <Route exact path="/" component={Auth(Home, null)} />
+        <Route
+          exact
+          path="/campaign/:id"
+          component={Auth(CampaignDetail, null)}
+        />
         <Route exact path="/story" component={Auth(StoryMain, null)} />
         <Route path="/story/write" component={Auth(StoryWrite, true)} />
         <Route path="/story/update/:id" component={Auth(StoryUpdate, true)} />
@@ -59,16 +67,18 @@ ReactDOM.render(
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
-        <Route path="/block" component={Auth(BlockInfo, true)} />
+        <Route exact path="/block" component={Auth(BlockInfo, null)} />
+        <Route path="/block/List" component={Auth(BlockInfoList, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
+        <Route path="/talk/write" component={Auth(TalkWrite, null)} />
         <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
-        {/* <Route path="/act/talk/write" component={Auth(ActTalkWrite, null)} /> */}
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
+        <Route path="/pay/:id" component={Auth(Pay, true)} />
       </Switch>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")

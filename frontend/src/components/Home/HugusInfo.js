@@ -7,7 +7,7 @@ const HugusInfoStyle = styled.section`
   width: 100%;
   height: 300px;
   background-color: #e9e9e9;
-  margin-top: 50px;
+  margin-top: 100px;
   justify-content: space-between;
   align-items: center;
   .logo {
@@ -89,4 +89,4 @@ const HugusInfo = () => {
   );
 };
 
-export default HugusInfo;
+export default React.memo(HugusInfo);

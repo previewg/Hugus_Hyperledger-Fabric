@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   CampaignList,
@@ -8,16 +8,28 @@ import {
   Main,
 } from "components";
 
-const HomeStyle = styled.section`
-  padding-top: 150px;
-`;
+const HomeStyle = styled.section``;
 
-const Home = () => {
+const Home = (props) => {
+  const [scroll, setScroll] = useState(0);
+
+  const scrollHandler = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    setScroll(scrollTop);
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    window.addEventListener("scroll", scrollHandler);
+    return () => {
+      window.removeEventListener("scroll", scrollHandler);
+    };
+  }, []);
+
   return (
     <HomeStyle>
-      <Main />
-      <CampaignSlider />
-      <MoreBtn />
+      <Main scroll={scroll} />
+      <CampaignSlider scroll={scroll} />
       <HugusInfo />
       <CampaignList />
     </HomeStyle>

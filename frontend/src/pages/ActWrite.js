@@ -451,7 +451,7 @@ const ActWrite = () => {
           
         </div>
       </ActWriteStyle>
-      {/* <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle> */}
+      <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );
 };

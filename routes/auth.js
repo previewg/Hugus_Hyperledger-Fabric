@@ -178,19 +178,15 @@ router.post("/signIn", async (req, res) => {
     bcrypt.compare(password, user.password).then((isMatched) => {
       if (isMatched) {
         let session = req.session;
-
         session.loginInfo = {
           user_email: user.email,
           user_nickname: user.nickname,
-          hash_email: user.hash,
-          profile: user.user_profile,
         };
         const payload = {
           nickname: user.nickname,
           profile: user.user_profile,
           email: user.email,
           hash_email: user.hash,
-          phone_number: user.phone_number
         };
         jwt.sign(
           payload,
@@ -208,15 +204,13 @@ router.post("/signIn", async (req, res) => {
               profile: user.user_profile,
               email: user.email,
               hash_email: user.hash,
-              phone_number: user.phone_number,
+              phone_number: user.phone_number
             });
           }
         );
       } else {
         return res.status(400).json({ success: 2 });
       }
-
-
     });
   });
 });
@@ -253,6 +247,7 @@ router.post("/destroy", (req, res, next) => {
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
   const { nickname, password } = req.body;
+  console.log(nickname, password);
   const user = await User.findOne({ where: { nickname } });
   if (user) {
     const isMatched = await bcrypt.compare(password, user.password);
@@ -299,7 +294,7 @@ router.post("/kakao", async (req, res) => {
             nickname: nickname,
             user_profile: user_profile,
             password: password,
-            hash: hash,
+            hash: key.toString("base64"),
           });
         }
       );

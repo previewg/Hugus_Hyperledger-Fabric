@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  commentChildAdd,
-  commentDelete,
-  commentListLoader,
-} from "../../actions/comment";
-import TalkCommentChild from "../../components/TalkDetail/TalkCommentChild";
+import {  useSelector } from "react-redux";
+import TalkCommentChild from "./TalkCommentChild";
 import TalkCommentChildInput from "./TalkCommentChildInput";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -201,16 +196,18 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const TalkCommentList = ({ commentId }) => {
-  const dispatch = useDispatch();
-  const nickname = useSelector((state) => state.auth.user.nickname);
+const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
   const email = useSelector((state) => state.auth.user.email);
-  // const commentDeleteHandler = (id) => {
-  //   const confirmed = window.confirm("삭제하시겠습니까?");
-  //   if (confirmed) {
-  //     dispatch(commentDelete({ comment_id: id, story_id: data.id }));
-  //   }
-  // };
+  const data = talkCommentList.list;
+  const talk_id = talkId.data.id;
+
+  const commentDeleteHandler = async (id) => {
+    const confirmed = window.confirm("삭제하시겠습니까?");
+    if (confirmed) {
+    const result = await axios.post("/talk_comment/delete",{ comment_id: id, talk_id: talk_id });
+    setTalkCommentList(result.data)
+  }
+  };
 
   const TalkCommentChildMain = ({ comment }) => {
     const [status, setStatus] = useState(false);
@@ -218,7 +215,6 @@ const TalkCommentList = ({ commentId }) => {
       if (status) setStatus(false);
       else setStatus(true);
     };
-
     return (
       <>
         {comment.child_count !== 0 && !status && (
@@ -231,17 +227,23 @@ const TalkCommentList = ({ commentId }) => {
             답글 {comment.child_count}개 숨기기
           </p>
         )}
+        
         {status && <TalkCommentChild id={comment.id} />}
       </>
     );
   };
 
-  // const loadMore = () => {
-  //   dispatch(commentListLoader(data.id, num));
-  // };
+  const loadMore = ({ match }) => {
+    const id = match.params.id;
+    const page = 1;
+    // dispatch(commentListLoader(data.id, num));
+    const comment = axios.get(`/talk_comment/list/${id}/${page}`);
+    setTalkCommentList(comment.data);
+  };
+
   return (
     <TalkCommentListStyle>
-      {commentId.list.length !== 0 && commentId.map((comment, key) => {
+      {talkCommentList.list !== 0 && data.map((comment, key) => {
         return (
           <article key={key}>
             {comment.User.user_profile ? (
@@ -263,23 +265,23 @@ const TalkCommentList = ({ commentId }) => {
               <div className="header">
                 <a>{comment.User.nickname}</a>
                 <div>
-                  {/* {email == comment.user_email && (
-                    <button onClick={() => commentDeleteHandler(comment.id)}>
+                  {email == comment.user_email && 
+                  ( <button onClick={() => commentDeleteHandler(comment.id)}>
                       삭제
                     </button>
-                  )} */}
+                  )}
                   <p className="date">{time(comment.createdAt)}</p>
                 </div>
-              </div>
+              </div> 
               <p>{comment.comment}</p>
-              <TalkCommentChildInput comment={comment} talk_id={commentId.id} />
+              <TalkCommentChildInput comment={comment} talk_id={talk_id} setTalkCommentList={setTalkCommentList} />
               <TalkCommentChildMain comment={comment} />
             </div>
           </article>
         );
       })}
       <div className="bottom">
-        {/* <p onClick={loadMore}>댓글 더보기</p> */}
+        <p onClick={loadMore}>댓글 더보기</p>
       </div>
     </TalkCommentListStyle>
   );

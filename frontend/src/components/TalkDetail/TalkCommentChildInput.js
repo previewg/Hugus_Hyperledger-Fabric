@@ -1,7 +1,6 @@
-import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import { commentAdd, commentChildAdd } from "../../actions/comment";
+import axios from "axios";
 
 const ErrorBoxStyle = styled.p`
   ${(props) => {
@@ -28,12 +27,28 @@ const ErrorBoxStyle = styled.p`
 
 const errorMsg = "답글을 입력하세요";
 
-const CommentChildInput = ({ comment, story_id }) => {
+const TalkCommentChildInput = ({ comment, talk_id, setTalkCommentList }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [comments, setComments] = useState("");
   const [error, setError] = useState(false);
-  const dispatch = useDispatch();
   const commentChild = useRef();
+
+  const init = useRef(true);
+  const [childStatus, setChildStatus] = useState({ status: "WAITING" });
+  const [childList, setChildList] = useState([]);
+
+  useEffect(() => {
+    const id = comment.id;
+    const initFunc = async () => {
+      const comment = await axios.get(`/talk_comment/childList/${id}`);
+      setChildList(comment.data);
+      setChildStatus("SUCCESS");
+    };
+    if (init.current) {
+      init.current = false;
+    initFunc();
+    }
+  }, []);
 
   const onCommentChangeHandler = (e) => {
     setComments(e.target.value);
@@ -44,18 +59,13 @@ const CommentChildInput = ({ comment, story_id }) => {
     setComments("");
   };
 
-  const commentChildAddHandler = (id) => {
+  const commentChildAddHandler = async () => {
     if (comments === "") {
       commentChild.current.focus();
       setError(true);
     } else {
-      dispatch(
-        commentChildAdd({
-          comment: comments,
-          comment_id: id,
-          story_id: story_id,
-        })
-      ).then(setComments(""));
+      const result = await axios.post("/talk_comment/child/add", { comment: comments, comment_id: comment.id, talk_id: talk_id })
+      setTalkCommentList(result.data);
     }
   };
 
@@ -99,4 +109,4 @@ const CommentChildInput = ({ comment, story_id }) => {
   );
 };
 
-export default CommentChildInput;
+export default TalkCommentChildInput;

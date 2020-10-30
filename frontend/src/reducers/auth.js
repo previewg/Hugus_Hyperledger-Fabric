@@ -74,11 +74,11 @@ const initialState = {
   },
   myPage_User: {
     status: "INIT",
-    nickname:'',
-    phone:'',
-    success:'',
-    code:'',
-  }
+    nickname: "",
+    phone: "",
+    success: "",
+    code: "",
+  },
 };
 
 export default function auth(state = initialState, action) {
@@ -233,33 +233,33 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data },
         },
       });
-      //Update information
+    //Update information
     case MY_INFO_UPDATE:
       return update(state, {
         myPage_User: {
-          status: {$set: "WAITING"},
-          code:{$set:''},
+          status: { $set: "WAITING" },
+          code: { $set: "" },
         },
       });
 
     case MY_INFO_UPDATE_SUCCESS:
       return update(state, {
-        user:{
-          nickname:{$set:action.data.user_nickname}
+        user: {
+          nickname: { $set: action.data.user_nickname },
         },
         myPage_User: {
-          status: {$set: "SUCCESS"},
-          nickname: {$set:action.data.user_nickname},
-          phone:{$set:action.data.phone_number},
-          success:{$set:action.data.success},
+          status: { $set: "SUCCESS" },
+          nickname: { $set: action.data.user_nickname },
+          phone: { $set: action.data.phone_number },
+          success: { $set: action.data.success },
         },
       });
     case MY_INFO_UPDATE_FAILURE:
       return update(state, {
         myPage_User: {
-          code:{$set:action.code},
-          status: {$set: "FAILURE"},
-        }
+          code: { $set: action.code },
+          status: { $set: "FAILURE" },
+        },
       });
 
     default:

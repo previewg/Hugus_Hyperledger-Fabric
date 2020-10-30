@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const PaginationStyle = styled.div`
-  width: 40%;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  width: 35%;
   div {
     display: flex;
     justify-content: space-around;
     margin-top: 12px;
     text-align: center;
+    
 
     > button {
       outline: none;
       font-weight: bold;
-      height: 32px;
-      width: 35px;
+      height: 25px;
+      width: 28px;
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;

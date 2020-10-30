@@ -3,7 +3,6 @@ import styled from "styled-components";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import { css } from "@emotion/core";
-import { useSelector } from "react-redux";
 
 const CommentChildStyle = styled.section`
   .comment_child {
@@ -87,31 +86,27 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const CommentChild = ({ id }) => {
-  const [comments, setComments] = useState({
-    status: "WAITING",
-    list: [],
-  });
-  const flag = useRef(true);
-  const childAddStatus = useSelector((state) => state.comment.child_add.status);
+const TalkCommentChild = ({ id }) => { 
+  const init = useRef(true);
+  const [comments, setComments] = useState({ status: "WAITING" });
+  const [childList, setChildList] = useState([]);
 
   useEffect(() => {
-    if (flag.current || childAddStatus === "SUCCESS") {
-      const init = async () => {
-        const result = await axios.get(`/comment/childList/${id}`);
-        setComments({ status: "SUCCESS", list: result.data.list });
-      };
-      init();
-    }
-    return () => {
-      flag.current = false;
+    const initFunc = async () => {
+      const comment = await axios.get(`/talk_comment/childList/${id}`);
+      setChildList(comment.data);
+      setComments("SUCCESS");
     };
-  }, [childAddStatus]);
+    if (init.current) {
+      init.current = false;
+    initFunc();
+    }
+  }, []);
 
   if (comments.status === "WAITING") return <Loader />;
   return (
     <CommentChildStyle>
-      {comments.list.map((re, key) => {
+      {childList.list.length !== 0 && childList.list.map((re, key) => {
         return (
           <article className="comment_child" key={key}>
             {re.User.user_profile ? (
@@ -142,4 +137,4 @@ const CommentChild = ({ id }) => {
   );
 };
 
-export default CommentChild;
+export default TalkCommentChild;
