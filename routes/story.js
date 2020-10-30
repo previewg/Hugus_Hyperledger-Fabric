@@ -467,6 +467,7 @@ router.put("/like", async (req, res) => {
     console.log(story_id);
     console.log(user_email);
     console.log(history);
+    
     if (history) {
       await Story_Like.destroy({
         where: { story_id, user_email },

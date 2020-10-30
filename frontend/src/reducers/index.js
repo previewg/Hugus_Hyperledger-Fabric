@@ -7,6 +7,7 @@ import hashtag from "./hashtag";
 import myPage from "./myPage";
 import act from "./act";
 import block from "./block";
+import talk from "./talk";
 
 export default combineReducers({
   auth,
@@ -17,4 +18,5 @@ export default combineReducers({
   myPage: myPage,
   act,
   block,
+  talk,
 });

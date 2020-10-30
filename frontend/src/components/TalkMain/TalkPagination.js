@@ -13,6 +13,9 @@ const PaginationStyle = styled.div`
     
 
     > button {
+      left:${() => {
+            // if ({n} === {currPage}) return "-30%";
+          }};
       outline: none;
       font-weight: bold;
       height: 25px;
@@ -27,6 +30,24 @@ const PaginationStyle = styled.div`
       }
     }
   }
+  /* .current_show{
+      position:relative;
+          left:${() => {
+            // if ({n} === {currPage}) return "-30%";
+          }};
+             outline: none;
+          font-weight: bold;
+          height: 25px;
+          width: 28px;
+          border: none;
+          border-radius: 50%;
+          transition: 0.1s ease-in-out;
+          background-color: orange;
+          box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+          cursor: pointer;
+          :hover {
+          }
+          } */
 `;
 
 const createArr = (n) => {
@@ -75,8 +96,7 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
 
   return (
     <PaginationStyle>
-      {/* <p>currPage : {currPage}</p>
-      <p>blockNum : {blockNum}</p> */}
+      <p>currPage : {currPage}</p>
       <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
@@ -88,6 +108,7 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
         <button onClick={nextPage}>&gt;</button>
         <button onClick={lastPage}>&gt;&gt;</button>
       </div>
+      <div className="current_show"></div>
     </PaginationStyle>
   );
 };
