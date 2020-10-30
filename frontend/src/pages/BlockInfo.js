@@ -6,7 +6,7 @@ import { BlockInfoHead, BlockInfoMain, BlockSearch } from "components";
 
 const BlockInfoStyle = styled.section`
   width: 100%;
-  height: 120vh;
+ 
   display: flex;
   flex-direction: column;
   padding-top: 50px;

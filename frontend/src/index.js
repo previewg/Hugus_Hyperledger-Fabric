@@ -24,6 +24,7 @@ import {
   UserInfo,
   BlockInfo,
   BlockInfoList,
+  BlockInfoSearch,
   SearchResult,
   StoryUpdate,
   ActMain,
@@ -62,6 +63,7 @@ ReactDOM.render(
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route exact path="/block" component={Auth(BlockInfo, null)} />
         <Route path="/block/List" component={Auth(BlockInfoList, null)} />
+        <Route path="/block/search" component={Auth(BlockInfoSearch, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />

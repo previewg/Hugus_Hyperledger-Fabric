@@ -6,7 +6,7 @@ import { css } from "@emotion/core";
 import { BlockSearch, BlockInfoList, Pagination } from "components";
 
 const BlockInfoListStyle = styled.section`
-    height: 120vh;
+    
    flex-direction: column;
     width: 100%;
   padding-top: 70px;

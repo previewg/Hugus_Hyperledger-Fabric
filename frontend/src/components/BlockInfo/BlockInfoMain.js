@@ -49,7 +49,7 @@ const BlockInfoMainStyle = styled.article`
 
 const BlockInfoMain = ({ list,history }) => {
   const dispatch = useDispatch();
-   console.log(history);
+  //  console.log(history);
   const onClickHandler = () => {
   
     // if () 

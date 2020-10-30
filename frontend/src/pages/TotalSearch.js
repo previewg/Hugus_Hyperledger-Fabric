@@ -147,6 +147,7 @@ const TotalSearch = ({history}) => {
     };
     const onClick = () => {
         dispatch(hashtagSearch(search));
+        console.log(search)
     }
 
 

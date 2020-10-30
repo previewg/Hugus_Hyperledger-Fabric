@@ -36,6 +36,7 @@ import BlockSearch from "./BlockInfo/BlockSearch";
 import BlockInfoHead from "./BlockInfo/BlockInfoHead";
 import BlockInfoMain from "./BlockInfo/BlockInfoMain";
 import BlockInfoList from "./BlockInfoList/BlockInfoList";
+import BlockInfoSearchLoader from "./BlockInfoSearch/Loader"
 export {
   Main,
   NavBar,
@@ -75,5 +76,6 @@ export {
   BlockInfoHead,
   BlockInfoMain,
   BlockInfoList,
+  BlockInfoSearchLoader,
   
 };
