@@ -115,7 +115,8 @@ router.post("/update", async (req, res) => {
     const changePhone = req.body.userInfo.phone;
     let regExp = /^\d{3}-\d{3,4}-\d{4}$/;
     const exEmail = await User.findOne({where: {email: user.user_email}});
-    console.log(exEmail.nickname)
+    const currentPhone = await User.findOne({where: {email: user.user_email}, attributes: ["phone_number"]});
+
     try {
         const exUserName = await User.findOne({where: {nickname: changeName}});
         if (exEmail.nickname !== changeName) {
@@ -163,6 +164,7 @@ router.post("/update", async (req, res) => {
                     hash_email: user.hash_email,
                     profile: user.profile,
                     phone_number: changePhone,
+                    currentPhone:currentPhone.phone_number,
                 })
             }
         );
