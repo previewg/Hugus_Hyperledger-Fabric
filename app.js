@@ -24,11 +24,19 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: new MongoStore({
-      url: "mongodb://localhost/HUGUS",
+      url: process.env.MONGO_LOCAL_URL,
       collection: "sessions",
     }),
   })
 );
+
+// socket 설정
+const io = require("socket.io");
+const server = io.listen(3333);
+server.on("connection", function (socket) {
+  socket.emit("hugus", "connected");
+});
+module.exports = server;
 
 // 업로드 파일 경로 설정
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -48,8 +56,8 @@ app.use(
 //   fs.mkdirSync("user_profile");
 // }
 
+// sequelize MariaDB 연결
 models.sequelize
-  // sequelize MariaDB 연결
   .sync()
   .then(() => {
     console.log("✓ DB 연결 성공");

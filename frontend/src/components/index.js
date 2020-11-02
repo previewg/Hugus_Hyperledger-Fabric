@@ -39,6 +39,9 @@ import BlockInfoList from "./BlockInfoList/BlockInfoList";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
 import PayLoader from "./Pay/Loader";
+import Pending from "./Pay/Pending";
+import BlockSocket from "./BlockInfo/BlockSocket";
+import PaySocket from "./Pay/PaySocket";
 export {
   Main,
   NavBar,
@@ -81,4 +84,7 @@ export {
   CampaignDetailLoader,
   CampaignContents,
   PayLoader,
+  Pending,
+  BlockSocket,
+  PaySocket,
 };

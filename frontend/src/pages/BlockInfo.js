@@ -1,8 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import socketIOClient from "socket.io-client";
 import axios from "axios";
-import { BlockInfoHead, BlockInfoMain, BlockSearch } from "components";
+import {
+  BlockInfoHead,
+  BlockInfoMain,
+  BlockSearch,
+  BlockSocket,
+} from "components";
 
 const BlockInfoStyle = styled.section`
   width: 100%;
@@ -10,35 +14,24 @@ const BlockInfoStyle = styled.section`
   display: flex;
   flex-direction: column;
   padding-top: 50px;
+  align-items: center;
 `;
 
 const BlockInfo = (props) => {
   const init = useRef(true);
-  const [list, setList] = useState([]);
-  const [data, setData] = useState({
-    block_total: 0,
-  });
+  const [txList, setTxList] = useState([]);
+  const [blockList, setBlockList] = useState([]);
+  const [txHeight, setTxHeight] = useState(0);
+  const [blockHeight, setBlockHeight] = useState(0);
+  console.log("초기화");
 
-  const Socket = () => {
-    useEffect(() => {
-      const socket = socketIOClient("http://localhost:2002");
-      console.log("socket is opened");
-      socket.on("hugus", (res) => {
-        list.unshift(JSON.parse(res));
-        setList(list.slice(0, 10));
-      });
-      return () => {
-        socket.close();
-        console.log("socket is closed");
-      };
-    }, []);
-    return null;
-  };
-
-  const initLoad = async () => {
+  const initLoad = useCallback(async () => {
     const initData = await axios.get("/block/init");
-    setList(initData.data.list);
-  };
+    setTxList(initData.data.txList);
+    setBlockList(initData.data.blockList);
+    setTxHeight(initData.data.txHeight);
+    setBlockHeight(initData.data.blockHeight);
+  }, []);
 
   useEffect(() => {
     if (init.current) {
@@ -49,10 +42,19 @@ const BlockInfo = (props) => {
 
   return (
     <BlockInfoStyle>
-      <Socket />
+      <BlockSocket
+        txList={txList}
+        setTxList={setTxList}
+        blockList={blockList}
+        setBlockList={setBlockList}
+      />
       <BlockSearch />
-      <BlockInfoHead />
-      <BlockInfoMain list={list} history={props.history}/>
+      <BlockInfoHead txHeight={txHeight} blockHeight={blockHeight} />
+      <BlockInfoMain
+        txList={txList}
+        blockList={blockList}
+        history={props.history}
+      />
     </BlockInfoStyle>
   );
 };

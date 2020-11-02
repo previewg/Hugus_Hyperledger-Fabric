@@ -4,7 +4,7 @@ let database;
 module.exports = () => {
   function connect() {
     mongoose.connect(
-      "mongodb+srv://brave-son:qwe123@hugus0.hyowm.mongodb.net/HUGUS",
+      process.env.MONGO_REMOTE_URL,
       { useNewUrlParser: true, useUnifiedTopology: true },
       function (err) {
         if (!err) {

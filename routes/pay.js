@@ -3,13 +3,14 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 const { Kakao_Pay, Campaign } = require("../models");
+const server = require("../app");
 
 router.post("/", async (req, res) => {
   const { user_email } = req.session.loginInfo;
   const { campaign_id, total_amount } = req.body;
   const campaign_data = await Campaign.findOne({ where: { id: campaign_id } });
   const campaign_title = campaign_data.getDataValue("campaign_title");
-  const data = `cid=TC0ONETIME&partner_order_id=HUGUS_PAY&partner_user_id=hugus&item_name=${campaign_title}&quantity=1&total_amount=${total_amount}&tax_free_amount=0&approval_url=http://localhost:3000/pay/approval&cancel_url=http://localhost:3001&fail_url=http://localhost:3001`;
+  const data = `cid=TC0ONETIME&partner_order_id=HUGUS_PAY&partner_user_id=hugus&item_name=${campaign_title}&quantity=1&total_amount=${total_amount}&tax_free_amount=0&approval_url=http://localhost:3000/pay/approval&cancel_url=http://localhost:3000/pay/cancel&fail_url=http://localhost:3000/pay/failure`;
   const headers = {
     Authorization: `KakaoAK ${process.env.APP_ADMIN_KEY}`,
     "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -49,8 +50,9 @@ router.get("/approval", async (req, res) => {
       headers,
     })
     .then((response) => {
+      server.emit(user_email, "SUCCESS");
       res.send(
-        "<script type=\"text/javascript\">window.open('','_self').close();</script>"
+        "<script type=\"text/javascript\">alert(\"결제가 완되었습니다.\");window.open('','_self').close();</script>"
       );
     })
     .catch((error) => {
@@ -59,6 +61,15 @@ router.get("/approval", async (req, res) => {
     .finally(async () => {
       await Kakao_Pay.destroy({ where: { user_email } });
     });
+});
+
+router.get("/cancel", async (req, res) => {
+  const { user_email } = req.session.loginInfo;
+  server.emit(user_email, "CANCELED");
+  await Kakao_Pay.destroy({ where: { user_email } });
+  res.send(
+    "<script type=\"text/javascript\">alert(\"결제가 취소되었습니다.\");window.open('','_self').close();</script>"
+  );
 });
 
 module.exports = router;

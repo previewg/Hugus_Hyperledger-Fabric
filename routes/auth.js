@@ -6,16 +6,9 @@ const jwt = require("jsonwebtoken");
 const smtpTransporter = require("nodemailer-smtp-transport");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const server = require("../app");
 
 const { User, Email_confirm } = require("../models");
-
-// socket 설정
-const io = require("socket.io");
-const server = io.listen(3333);
-
-server.on("connection", function (socket) {
-  socket.emit("hugus", "connected");
-});
 
 // 회원가입
 router.post("/signup", async (req, res, next) => {
@@ -105,7 +98,7 @@ router.post("/requestEmail", async (req, res) => {
     })
   );
 
-  const url = `http://127.0.0.1:3000/auth/confirmEmail/${key_for_verify}`;
+  const url = `http://127.0.0.1:3000/auth/confirmEmail/${key_for_verify}/${email}`;
 
   try {
     if (regEmail.test(req.body.email)) {
@@ -138,7 +131,7 @@ router.post("/requestEmail", async (req, res) => {
   }
 });
 
-router.get("/confirmEmail/:key", async (req, res) => {
+router.get("/confirmEmail/:key/:email", async (req, res) => {
   const data = Email_confirm.findOne({
     where: { key_for_verify: req.params.key },
   });
@@ -149,7 +142,7 @@ router.get("/confirmEmail/:key", async (req, res) => {
         { email_verified: true },
         { where: { key_for_verify: req.params.key } }
       );
-      server.emit("hugus", "SUCCESS");
+      server.emit(req.params.email, "SUCCESS");
 
       res.send(
         "<script type=\"text/javascript\">alert(\"인증이 성공적으로 완료되었습니다. 회원가입을 이어서 진행해주세요.\");window.open('','_self').close();</script>"
