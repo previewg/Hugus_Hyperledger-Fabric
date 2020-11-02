@@ -2,9 +2,8 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-// import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
-// import { storyLike } from "../../actions/story";
+import { talkLike } from "../../actions/talk";
 
 const TalkCommentFalseStyle = styled.div`
   font-weight: bold;
@@ -117,15 +116,16 @@ const errorMsg = "댓글을 입력하세요";
 const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
-  // const like = useSelector((state) => state.talk.like.user);
+  const like = useSelector((state) => state.talk.like.user);
   const total = talkCommentList.total;
   const talk_id = talkId.data.id;
+  const id = talk_id;
   const [error, setError] = useState(false);
   const comment = useRef();
 
-  // const likeHandler = (status) => {
-  //   dispatch(storyLike(data.id, status));
-  // };
+  const likeHandler = ( status ) => {
+    dispatch(talkLike( id, status ));
+  }
 
   const Input = () => {
     const [comments, setComments] = useState("");
@@ -172,7 +172,7 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList }) => {
         <div className="header">
           <p>댓글 {total}개</p>
           <div className="icon">
-            {/* {like ? (
+            {like ? (
               <img
                 onClick={() => likeHandler(true)}
                 alt="like"
@@ -186,7 +186,7 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList }) => {
                 className="unlike"
                 src="/icons/unlike.svg"
               />
-            )} */}
+            )}
           </div>
         </div>
         <input

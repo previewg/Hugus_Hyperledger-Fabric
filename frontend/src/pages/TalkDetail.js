@@ -17,7 +17,7 @@ const TalkDetail = ({ match,history }) => {
   const [talkCommentList, setTalkCommentList] = useState([]);
   useEffect(() => {
     const id = match.params.id;
-    const page = 1;
+    const page = match.params.page;
 
     const initFunc = async () => {
       const data = await axios.get(`/talk/${id}`);

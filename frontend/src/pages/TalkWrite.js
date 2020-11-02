@@ -473,10 +473,15 @@ const TalkWrite = ({ props, match, history  }) => {
       } else {
         formData.append("files", "");
       }
-      const result = await axios.post(`/talk/add` , formData );
-      setTalkCommentList(result.data);
-      history.push("/talk");
-    }
+      await axios.post(`/talk/add` , formData ).then((res) => { 
+        setTalkCommentList(res.data)
+        alert("성공적으로 등록되었습니다.");
+        history.push("/talk");
+      }).catch(err=>{
+        alert("등록에 실패했습니다.");
+        console.error(err);
+      })
+    };
   };
 
   const previewImg = (e) => {

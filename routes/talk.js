@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Talk, User, Talk_File, Sequelize } = require("../models");
+const { Talk, User, Talk_File, Talk_Like, Sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -88,7 +88,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
     }
   });
   
-  // talk 수정
+  // Talk 수정
   router.post("/update", upload.array("files"), async (req, res) => {
     try {
       const {
@@ -104,10 +104,9 @@ router.post("/add", upload.array("files"), async (req, res) => {
         });
       }
   
-      await Story.update(
+      await Talk.update(
         {
           talk_title,
-          user_info,
           talk_content,
         },
         {
@@ -207,7 +206,7 @@ router.get("/:id", async (req, res) => {
     }
   });
 
-// Act 조회수 추가
+// Talk 조회수 추가
 router.put("/visit", async (req, res) => {
     try {
       const { talk_id } = req.body;
@@ -226,6 +225,37 @@ router.put("/visit", async (req, res) => {
       res.status(400).json({ success: 3 });
     }
   });
+
+
+// Talk 좋아요 등록/삭제
+router.put("/like", async (req, res) => {
+  try {
+    const { talk_id, status } = req.body;
+    const { user_email } = req.session.loginInfo;
+
+    const history = await Talk_Like.findOne({
+      where: { talk_id, user_email },
+    });
+    console.log(talk_id);
+    console.log(user_email);
+    console.log(history);
+
+    if (history) {
+      await Talk_Like.destroy({
+        where: { talk_id, user_email },
+      });
+    } else {
+      await Talk_Like.create({
+        talk_id,
+        user_email,
+      });
+    }
+
+    res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
 
 
 module.exports = router;

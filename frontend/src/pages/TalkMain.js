@@ -24,7 +24,7 @@ const TalkStyle = styled.section`
       justify-content: flex-start;
       > p {
         font-size: 30px;
-        border-bottom: solid orange 3px;
+        border-bottom: solid orange 2px;
         padding-bottom: 2px;
       }
     }

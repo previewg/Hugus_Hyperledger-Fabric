@@ -358,6 +358,7 @@ router.get("/list/:page", async (req, res) => {
       if (total > page * 10) more = true;
 
       res.json({ list: list, success: 1, more: more });
+
     }
   } catch (error) {
     res.status(400).json({ success: 3 });
@@ -467,6 +468,7 @@ router.put("/like", async (req, res) => {
     console.log(story_id);
     console.log(user_email);
     console.log(history);
+    
     if (history) {
       await Story_Like.destroy({
         where: { story_id, user_email },

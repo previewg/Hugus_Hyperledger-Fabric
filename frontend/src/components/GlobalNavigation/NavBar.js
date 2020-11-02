@@ -400,11 +400,9 @@ const NavBar = () => {
           </div>
           <div className="dropdown">
             <Link to="/act">Act</Link>
-            <ul>
-              <Link to="">물품 구매 인증</Link>
-              <Link to="">물품 전달 과정</Link>
-              <Link to="/talk">수혜자의 이야기</Link>
-            </ul>
+          </div>
+          <div className="dropdown">
+            <Link to="/talk">Talk</Link>
           </div>
         </div>
         <div className="user">
@@ -461,21 +459,9 @@ const NavBar = () => {
             </div>
             <div>
               <div>ACT</div>
-              <p>
-                물품
-                <br />
-                구매인증
-              </p>
-              <p>
-                물품
-                <br />
-                전달과정
-              </p>
-              <p>
-                수혜자의
-                <br />
-                이야기
-              </p>
+            </div>
+            <div>
+              <div>TALK</div>
             </div>
           </article>
           <article className="res__menu__info">

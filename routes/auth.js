@@ -197,6 +197,7 @@ router.post("/signIn", async (req, res) => {
               profile: user.user_profile,
               email: user.email,
               hash_email: user.hash,
+              phone_number: user.phone_number
             });
           }
         );
