@@ -3,10 +3,11 @@ import React, { useCallback, useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-const TalkWriteStyle = styled.div`
+const TalkWriteStyle = styled.section`
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 70px;
+  margin-bottom: 200px;
   .layout {
     margin-top: 100px;
     width: 700px;
@@ -349,6 +350,7 @@ const TalkWriteStyle = styled.div`
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      margin-top: 50px;
       button {
         margin-top: 15px;
         border: none;
@@ -394,13 +396,9 @@ const ErrorBoxStyle = styled.p`
   font-size: 15px;
 `;
 
-const errorMsg = [
-  "",
-  "제목을 입력 바랍니다",
-  "소식을 입력 바랍니다",
-];
+const errorMsg = ["", "제목을 입력 바랍니다", "소식을 입력 바랍니다"];
 
-const TalkWrite = ({ props, match, history  }) => {
+const TalkWrite = ({ props, match, history }) => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
@@ -457,9 +455,9 @@ const TalkWrite = ({ props, match, history  }) => {
         content: false,
       });
       return false;
-    } 
+    }
     return true;
-  }, [data,filled]);
+  }, [data, filled]);
 
   const talkAddHandler = async () => {
     if (errorHandler()) {
@@ -473,15 +471,18 @@ const TalkWrite = ({ props, match, history  }) => {
       } else {
         formData.append("files", "");
       }
-      await axios.post(`/talk/add` , formData ).then((res) => { 
-        setTalkCommentList(res.data)
-        alert("성공적으로 등록되었습니다.");
-        history.push("/talk");
-      }).catch(err=>{
-        alert("등록에 실패했습니다.");
-        console.error(err);
-      })
-    };
+      await axios
+        .post(`/talk/add`, formData)
+        .then((res) => {
+          setTalkCommentList(res.data);
+          alert("성공적으로 등록되었습니다.");
+          history.push("/talk");
+        })
+        .catch((err) => {
+          alert("등록에 실패했습니다.");
+          console.error(err);
+        });
+    }
   };
 
   const previewImg = (e) => {
@@ -521,7 +522,6 @@ const TalkWrite = ({ props, match, history  }) => {
   return (
     <>
       <TalkWriteStyle>
-        <a>asdfsfsafsafdsa</a>
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -572,7 +572,6 @@ const TalkWrite = ({ props, match, history  }) => {
               onChange={onChangeHandler}
             />
           </div>
-
 
           <div className="submit">
             <button onClick={talkAddHandler}>

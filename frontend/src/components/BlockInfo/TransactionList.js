@@ -65,7 +65,7 @@ const TransactionListStyle = styled.div`
         }
       }
       :hover {
-        background-color: #c5e8f6;
+        background-color: peachpuff;
       }
     }
   }

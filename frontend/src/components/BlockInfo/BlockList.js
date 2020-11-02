@@ -65,7 +65,7 @@ const BlockListStyle = styled.div`
         align-items: center;
       }
       :hover {
-        background-color: #c5e8f6;
+        background-color: peachpuff;
       }
     }
   }

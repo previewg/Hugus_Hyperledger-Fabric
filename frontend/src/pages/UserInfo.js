@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { EditInfo, History, MyHome, MyNews } from "components";
-import { useSelector } from "react-redux";
-import axios from "axios";
 
-const UserInfoStyle = styled.div`
+const UserInfoStyle = styled.section`
+  height: 80vh;
   display: flex;
   padding-top: 200px;
   .side {
@@ -121,7 +121,6 @@ const UserInfo = (props) => {
 
             <p>{nickname}님</p>
             <p>hash : {hashEmail}</p>
-
           </div>
           <div className="side__menu">
             <p id="my__home" onClick={typeChangeHandler}>
