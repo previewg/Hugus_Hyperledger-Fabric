@@ -41,7 +41,6 @@ const talkLoadSuccess = (data) => {
     likeNum: data.data.talk_like,
   };
 };
-
 const talkLoadFailure = () => {
   return { type: TALK_LOAD_FAILURE };
 };
@@ -59,15 +58,15 @@ const talkLikeStart = () => {
 
 
 // 게시물 수정 요청
-export const talkUpdate = (data, props) => async (dispatch) => {
+export const talkUpdate = ( data, props ) => async (dispatch) => {
   dispatch(talkUpdateStart());
   await axios.post("/talk/update", data, {
       headers: { "content-type": "multipart/form-data" },
     })
     .then(() => {
       alert("성공적으로 수정되었습니다.");
-      dispatch(talkUpdateSuccess());
       props.history.push("/talk");
+      dispatch(talkUpdateSuccess());
     })
     .catch((error) => {
       alert("수정에 실패했습니다.");
@@ -81,6 +80,7 @@ export const talkLoader = (id) => async (dispatch) => {
   dispatch(talkLoadStart());
   await axios.get(`/talk/${id}`)
     .then((response) => {
+      console.log(response.data);
       dispatch(talkLoadSuccess(response.data));
     })
     .catch((error) => {

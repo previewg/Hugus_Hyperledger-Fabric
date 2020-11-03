@@ -299,7 +299,7 @@ const errorMsg = [
   "내용을 입력 바랍니다",
 ];
 
-const TalkUpdate = ({ props, match, history }) => {
+const TalkUpdate = (props) => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
@@ -348,18 +348,18 @@ const TalkUpdate = ({ props, match, history }) => {
   const talkUpdateHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
-      formData.append("id", match.params.id);
+      formData.append("id", props.match.params.id);
       formData.append("talk_title", data.title);
       formData.append("talk_content", data.content);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
         }
-      } else {
+      } else {  
         formData.append("files", "");
       }
       dispatch(talkUpdate(formData, { ...props }));
-      // history.push("/talk");
+
     }
   };
 
@@ -408,7 +408,7 @@ const TalkUpdate = ({ props, match, history }) => {
 
   useEffect(() => {
     if (load.current) {
-      dispatch(talkLoader(match.params.id));
+      dispatch(talkLoader(props.match.params.id));
       load.current = false;
     }
     if (loadStatus === "SUCCESS") 

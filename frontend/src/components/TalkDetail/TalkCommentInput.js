@@ -113,19 +113,28 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList }) => {
+const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLikenum }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
-  const like = useSelector((state) => state.talk.like.user);
+  // const like = useSelector((state) => state.talk.like.user);
+  const [like,setLike] = useState(talkId.like);
   const total = talkCommentList.total;
   const talk_id = talkId.data.id;
   const id = talk_id;
   const [error, setError] = useState(false);
   const comment = useRef();
 
-  const likeHandler = ( status ) => {
-    dispatch(talkLike( id, status ));
+  const likeHandler = async( status ) => {
+    // dispatch(talkLike( id, status ));
+      const result = await axios.put('/talk/like', { talk_id: id, status: status });
+      if(result.data.success===1) {
+        if(like) setLikenum(likenum => likenum -1);
+        else setLikenum(likenum => likenum +1)
+        setLike(!like)
+      }
   }
+
+
 
   const Input = () => {
     const [comments, setComments] = useState("");

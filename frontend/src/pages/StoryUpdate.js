@@ -384,6 +384,7 @@ const StoryUpdate = (props) => {
       formData.append("story_content", data.content);
       formData.append("hashtags", JSON.stringify(data.hashtags));
       formData.append("del_hashtags", JSON.stringify(data.del_hashtags));
+      console.log(formData);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);

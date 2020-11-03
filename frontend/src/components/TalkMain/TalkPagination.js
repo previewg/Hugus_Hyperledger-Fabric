@@ -14,7 +14,7 @@ const PaginationStyle = styled.div`
     > button {
       outline: none;
       font-weight: bold;
-      height: 25px;
+      height: 27px;
       width: 28px;
       border: none;
       border-radius: 50%;
