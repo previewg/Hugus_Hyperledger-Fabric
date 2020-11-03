@@ -4,6 +4,7 @@ import Flow from "./Flow";
 
 const TransactionListStyle = styled.div`
   min-width: 900px;
+  width: 60%;
   display: flex;
   justify-content: center;
   > div {
@@ -53,7 +54,7 @@ const TransactionListStyle = styled.div`
         }
       }
       .tx_id {
-        justify-self: right;
+        justify-self: center;
         display: flex;
         align-items: center;
         input {

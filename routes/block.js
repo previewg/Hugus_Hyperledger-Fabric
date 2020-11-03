@@ -56,35 +56,20 @@ router.get("/list/:page", async (req, res) => {
 });
 router.post("/search", async (req, res) => {
   try {
-    console.log("dddd");
-    // const page = req.params.page
-    const word = req.body.word
-    console.log(word);
-    let list;
-    // let count;
+    const word = req.body.word;
+    let searchData;
 
-    await Block.find({"tx_id":word}, (err, data) => {
-      if (err) console.log(err);
-      list=data;
-      if(list === 0) res.status(400).json({ success: 3 });
-    })
-    .sort({ timestamp: -1 })
-    // .skip((page-1)*10)
-    // .limit(10)
-    console.log(list)
+    if (word.length < 64) {
+      searchData = await Transaction.find({ sender_id: word });
+    } else {
+      searchData = await Transaction.findOne({ tx_id: word });
+      if (!searchData) {
+        searchData = await Block.findOne({ block_hash: word });
+      }
+    }
 
-    // await Block.findone({word}, (err, data) => {
-    //   if (err) console.log(err);
-    //   console.log(data);
-
-    //   count=data;
-    // })
-    // .count()
-
-    // count=parseInt(count/10)+1
-    // console.log(count);
-     
-    res.json({ list: list, success: 1 });
+    if (!searchData) res.status(400).json({ success: 3 });
+    res.json({ result: searchData, success: 1 });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);
