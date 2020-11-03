@@ -184,7 +184,7 @@ const StoryList = ({ storyType, changed, setChanged }) => {
       setLoading(true);
       const initData = await axios.get(`/story/list/1?type=${storyType}`);
       setList(initData.data.list);
-      if (initData.data.more) {
+      if (initData.data.more || initData.data.list.length % 9 === 0) {
         setPage(page + 1);
       }
       setLoading(false);

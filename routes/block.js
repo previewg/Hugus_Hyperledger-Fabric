@@ -67,7 +67,6 @@ router.post("/search", async (req, res) => {
         searchData = await Block.findOne({ block_hash: word });
       }
     }
-
     if (!searchData) res.status(400).json({ success: 3 });
     res.json({ result: searchData, success: 1 });
   } catch (err) {
