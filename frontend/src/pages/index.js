@@ -9,6 +9,7 @@ import User from "./User";
 import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
 import BlockInfoList from "./BlockInfoList";
+import BlockInfoSearch from "./BlockInfoSearch";
 import ActMain from "./ActMain";
 import ActDetail from "./ActDetail";
 import ActWrite from "./ActWrite";
@@ -17,6 +18,7 @@ import TalkDetail from "./TalkDetail";
 import CampaignDetail from "./CampaignDetail";
 import TalkWrite from "./TalkWrite";
 import TalkUpdate from "./TalkUpdate";
+
 
 export {
   Home,
@@ -29,6 +31,7 @@ export {
   UserInfo,
   BlockInfo,
   BlockInfoList,
+  BlockInfoSearch,
   SearchResult,
   ActMain,
   ActDetail,

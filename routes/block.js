@@ -54,4 +54,24 @@ router.get("/list/:page", async (req, res) => {
     console.log(err);
   }
 });
+router.post("/search", async (req, res) => {
+  try {
+    const word = req.body.word;
+    let searchData;
+
+    if (word.length < 64) {
+      searchData = await Transaction.find({ sender_id: word });
+    } else {
+      searchData = await Transaction.findOne({ tx_id: word });
+      if (!searchData) {
+        searchData = await Block.findOne({ block_hash: word });
+      }
+    }
+    if (!searchData) res.status(400).json({ success: 3 });
+    res.json({ result: searchData, success: 1 });
+  } catch (err) {
+    res.status(400).json({ success: 3 });
+    console.log(err);
+  }
+});
 module.exports = router;

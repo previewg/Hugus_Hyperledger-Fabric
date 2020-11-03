@@ -4,6 +4,7 @@ import Flow from "./Flow";
 
 const BlockListStyle = styled.div`
   min-width: 700px;
+  width: 40%;
   display: flex;
   justify-content: center;
   > div {
