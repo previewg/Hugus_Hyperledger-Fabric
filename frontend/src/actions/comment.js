@@ -13,14 +13,15 @@ export const COMMENT_DELETE = "COMMENT_DELETE";
 export const COMMENT_DELETE_SUCCESS = "COMMENT_DELETE_SUCCESS";
 export const COMMENT_DELETE_FAILURE = "COMMENT_DELETE_FAILURE";
 
+export const COMMENT_LIKE_START = "COMMENT_LIKE_START";
+export const COMMENT_LIKE_SUCCESS = "COMMENT_LIKE_SUCCESS";
+export const COMMENT_LIKE_FAILURE = "COMMENT_LIKE_FAILURE";
+
 export const COMMENT_CHILD_ADD = "COMMENT_CHILD_ADD";
 export const COMMENT_CHILD_ADD_SUCCESS = "COMMENT_CHILD_ADD_SUCCESS";
 export const COMMENT_CHILD_ADD_FAILURE = "COMMENT_CHILD_ADD_FAILURE";
 
 export const COMMENT_LIST_INIT = "COMMENT_LIST_INIT";
-// export const COMMENT_CHILD_LIST_LOAD = "COMMENT_CHILD_LIST_LOAD";
-// export const COMMENT_CHILD_LIST_LOAD_SUCCESS = "COMMENT_CHILD_LIST_LOAD_SUCCESS";
-// export const COMMENT_CHILD_LIST_LOAD_FAILURE = "COMMENT_CHILD_LIST_LOAD_FAILURE";
 
 // 댓글 등록
 const commentAddStart = () => {
@@ -68,6 +69,19 @@ const commentDeleteSuccess = (list, more, total) => {
 
 const commentDeleteFailure = () => {
   return { type: COMMENT_DELETE_FAILURE };
+};
+
+// 댓글 좋아요 등록 / 삭제 요청
+const commentLikeStart = () => {
+  return { type: COMMENT_LIKE_START };
+};
+
+const commentLikeSuccess = () => {
+  return { type: COMMENT_LIKE_SUCCESS };
+};
+
+const commentLikeFailure = () => {
+  return { type: COMMENT_LIKE_FAILURE };
 };
 
 // 대댓글 등록
@@ -145,6 +159,20 @@ export const commentListLoader = (story_id, section) => async (dispatch) => {
     .catch((error) => {
       dispatch(commentListLoadFailure());
       console.error(error);
+    });
+};
+
+// 댓글 좋아요 추가/제거 요청
+export const commentLike = (id) => async (dispatch) => {
+  dispatch(commentLikeStart());
+  await axios
+    .put("/comment/like", { comment_id: id })
+    .then(() => {
+      dispatch(commentLikeSuccess());
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(commentLikeFailure());
     });
 };
 

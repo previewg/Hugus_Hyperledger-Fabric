@@ -165,8 +165,27 @@ router.get("/list/:story_id/:section", async (req, res) => {
 });
 
 // 댓글 좋아요 등록 / 삭제
-router.post("/like", async (req, res) => {
+router.put("/like", async (req, res) => {
   try {
+    const { user_email } = req.session.loginInfo;
+    const { comment_id } = req.body;
+
+    const history = await Story_Comment_Like.findOne({
+      where: { user_email, comment_id },
+    });
+
+    if (history) {
+      await Story_Comment_Like.destroy({
+        where: { comment_id, user_email },
+      });
+    } else {
+      await Story_Comment_Like.create({
+        comment_id,
+        user_email,
+      });
+    }
+
+    res.json({ success: 1 });
   } catch (error) {
     console.log(error);
     res.status(400).json({ success: 3 });

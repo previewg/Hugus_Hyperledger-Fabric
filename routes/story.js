@@ -463,9 +463,6 @@ router.put("/like", async (req, res) => {
     const history = await Story_Like.findOne({
       where: { story_id, user_email },
     });
-    console.log(story_id);
-    console.log(user_email);
-    console.log(history);
 
     if (history) {
       await Story_Like.destroy({
