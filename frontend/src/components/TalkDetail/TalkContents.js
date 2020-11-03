@@ -90,11 +90,9 @@ const TalkContentsStyle = styled.div`
 
 `;
 
-const TalkContents = ({ talkId,history }) => {
-const likeNum = useSelector((state) => state.talk.like.likeNum);
-const email = useSelector((state) => state.auth.user.email);
+const TalkContents = ({ talkId,history,likenum }) => {
+// const likeNum = useSelector((state) => state.talk.like.likeNum);
 const data = talkId.data;
-
 const IfOwner = ({ history, data }) => {
   const email = useSelector((state) => state.auth.user.email);
   
@@ -115,16 +113,6 @@ const IfOwner = ({ history, data }) => {
 
   const onUpdateHandler = () => {
     history.push(`/talk/update/${data.id}`);
-    // if (confirmed) {
-    //   .then(() => {
-    //   alert("성공적으로 삭제되었습니다.");
-    //   history.push("/talk");
-    //   }) 
-    //   .catch((error) => {
-    //   alert("삭제에 실패했습니다.");
-    //   console.error(error);
-    //   });
-    // };
   };
 
   if (data.user_email === email)
@@ -162,7 +150,7 @@ return (
       </div>
 
       <div className="visited">
-      <p>좋아요 {likeNum}</p>
+      <p>좋아요 {likenum}</p>
       <p>조회수 {data.visited}</p>
       </div>
       
