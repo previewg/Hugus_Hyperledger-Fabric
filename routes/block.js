@@ -51,16 +51,17 @@ router.get("/list/:page", async (req, res) => {
 });
 router.post("/search", async (req, res) => {
   try {
-    // console.log("dddd");
+    console.log("dddd");
     // const page = req.params.page
     const word = req.body.word
     console.log(word);
     let list;
-    let count;
+    // let count;
 
     await Block.find({"tx_id":word}, (err, data) => {
       if (err) console.log(err);
       list=data;
+      if(list === 0) res.status(400).json({ success: 3 });
     })
     .sort({ timestamp: -1 })
     // .skip((page-1)*10)

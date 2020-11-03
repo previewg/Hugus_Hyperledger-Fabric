@@ -11,13 +11,7 @@ const BlockSearchResultStyle = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 70px;
-  div {
-    width: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 90px;
+  padding-top: 70px;    
     input {
       transition: all 1s ease-in-out;
       margin-right: 70px;
@@ -36,7 +30,13 @@ const BlockSearchResultStyle = styled.div`
       right: 105px;
       cursor: pointer;
     }
-  }
+    p{
+      font-size: 20px;
+        border-bottom: solid orange 3px;
+        padding-bottom: 2px;
+
+    }
+  
 `;
 
 
@@ -49,7 +49,7 @@ const BlockInfoSearch = () => {
   console.log(search_list);
   const list = useSelector((state) => state.block.blockSearch.list);
 console.log(list);
-  const [search, setSearch] = useState("");
+  const [word, setWord] = useState("");
   
 
   // const compare = (block) => {
@@ -60,7 +60,7 @@ console.log(list);
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    setSearch(e.target.value);
+    setWord(e.target.value);
     if (e.key === "Enter") {
       onClick();
     }
@@ -70,12 +70,12 @@ console.log(list);
     await axios.put("/block/search", { word: word });
   };
   const onClick = () => {
-   dispatch(blockListSearchLoader(search)) ;
+   dispatch(blockListSearchLoader(word)) ;
   };
   useEffect(() => {
     
-    if (search !== "") {
-      setSearch(search_list);
+    if (word !== "") {
+      setWord(word);
     }
   },[]);
       const copyTx = () => {
@@ -83,31 +83,33 @@ console.log(list);
         tx_id.select();
         document.execCommand("Copy");
       }
-if (list.length===0) return <BlockInfoSearchLoader/>
-  return (
-    <BlockSearchResultStyle search={search}>
+if (list.length === 0) return <BlockInfoSearchLoader/>
+ 
+    return (
+    <BlockSearchResultStyle word={word}>
       <div className="layout">
-        <div className="search__bar">
+        <div >
           <input
             name="search"
-            value={search}
+            value={word}
             className="search_form"
             type="text"
             placeholder="User ID, Tx ID"
             onChange={onChangeHandler}
             onKeyPress={onChangeHandler}
           />
-          <div onClick={()=> visitHandler(search)}>
+          <div onClick={()=> visitHandler(word)}>
             <img alt="search__icon" src="/icons/search.png" />
           </div>
         </div>
+        <div >
         {list.map((block, key) => {
           return (
             <div className="BlockInfoMain__body" key={key}>
               <p className="block_height">{block.block_height}</p>
               <p className="tx_id">
                 {block.tx_id.slice(0, 40)}...
-                <input readOnly id="tx_id" value={block.tx_id} />
+               
                 <button onClick={copyTx}>복사</button>
               </p>
               <p className="tx_type">{block.tx_type}</p>
@@ -117,6 +119,7 @@ if (list.length===0) return <BlockInfoSearchLoader/>
             </div>
           );
         })}
+        </div>
 
 
         

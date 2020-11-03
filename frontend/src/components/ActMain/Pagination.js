@@ -16,7 +16,7 @@ const PaginationStyle = styled.div`
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
-      box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       :hover {
         background-color: orange;
@@ -34,7 +34,7 @@ const createArr = (n) => {
 const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
   const [blockNum, setBlockNum] = useState(0);
   const [currPage, setCurrPage] = useState(1);
-  
+
   const v = Number(blockNum * pageLimit);
   const iArr = createArr(Number(total));
   const pArr = iArr.slice(v, Number(pageLimit) + v);
@@ -63,16 +63,14 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
     }
     setCurrPage((n) => n + 1);
   };
-  
+
   useEffect(() => {
     nowPage(currPage);
-  }, [currPage,clicked]);
+  }, [currPage, clicked]);
 
   return (
     <PaginationStyle>
-        
-
-        <div>
+      <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
         {pArr.map((n, key) => (

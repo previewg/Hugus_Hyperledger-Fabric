@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
+import axios from "axios";
+import CountUp from "react-countup";
+import { Link } from "react-router-dom";
 
 const CampaignSliderStyle = styled.section`
   display: flex;
@@ -46,25 +49,36 @@ const CampaignSliderStyle = styled.section`
       box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
       border-radius: 5px;
       cursor: pointer;
+      text-decoration: none;
+
       :focus {
         outline: none;
       }
       .campaign__hashtag {
+        display: flex;
+        justify-content: flex-end;
         font-size: 12px;
         text-align: end;
         color: orange;
         margin-right: 10px;
+        > p {
+          margin-left: 5px;
+        }
       }
 
-      img {
-        width: 100%;
-        height: auto;
+      .campaign__img {
+        width: 290px;
+        height: 290px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
       }
       .campaign__title {
         padding: 10px;
         padding-top: 0;
         padding-bottom: 0;
         font-size: 17px;
+        color: black;
       }
     }
 
@@ -77,6 +91,40 @@ const CampaignSliderStyle = styled.section`
       .slick-slide > div {
         padding: 20px;
       }
+    }
+  }
+`;
+
+const BarStyle = styled.div`
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  .count {
+    width: 90%;
+    background: transparent;
+    margin: 0;
+    font-size: 13px;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+  }
+  div {
+    width: 90%;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    height: 5px;
+    transition: all 2s ease-in-out;
+
+    > div {
+      height: 5px;
+      background-color: white;
+      border-radius: 10px;
+      font-size: 13px;
+      ${(props) => `width:${props.ratio}%`};
     }
   }
 `;
@@ -127,31 +175,82 @@ const CampaignSlider = ({ scroll }) => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+
+  const [list, setList] = useState([]);
+  const init = useRef(true);
+
+  const visitHandler = async (campaign_id) => {
+    await axios.put("/campaign/visit", { campaign_id: campaign_id });
+  };
+
+  const ProgressBar = ({ vote, goal }) => {
+    const [ratio, setRatio] = useState(0);
+
+    useEffect(() => {
+      const init = setTimeout(() => {
+        if (vote > goal) setRatio(100);
+        setRatio((vote / goal) * 100);
+      });
+      return () => clearTimeout(init);
+    }, []);
+
+    return (
+      <BarStyle ratio={ratio}>
+        <div className="count">
+          <CountUp end={ratio} duration={2} />
+          <span> %</span>
+        </div>
+        <div>
+          <div></div>
+        </div>
+      </BarStyle>
+    );
+  };
+
+  const loadInit = async () => {
+    const initData = await axios.get(`/campaign/init`);
+    setList(initData.data.list);
+  };
+
+  useEffect(() => {
+    if (init.current) {
+      loadInit();
+      init.current = false;
+    }
+  }, []);
+
   return (
     <CampaignSliderStyle scroll={scroll}>
       <p>진행 중인 캠페인</p>
       <div>
         <Slider {...settings}>
-          <div className="campaign">
-            <p className="campaign__hashtag">#해시태그</p>
-            <img alt="" src="/pics/1.jpg" />
-            <p className="campaign__title">게시물1의 제목</p>
-          </div>
-          <div className="campaign">
-            <p className="campaign__hashtag">#해시태그</p>
-            <img alt="" src="/pics/2.jpg" />
-            <p className="campaign__title">게시물2의 제목</p>
-          </div>
-          <div className="campaign">
-            <p className="campaign__hashtag">#해시태그</p>
-            <img alt="" src="/pics/3.jpg" />
-            <p className="campaign__title">게시물3의 제목</p>
-          </div>
-          <div className="campaign">
-            <p className="campaign__hashtag">#해시태그</p>
-            <img alt="" src="/pics/4.jpg" />
-            <p className="campaign__title">게시물4의 제목</p>
-          </div>
+          {list.map((campaign, key) => {
+            return (
+              <Link
+                className="campaign"
+                key={key}
+                to={`/campaign/${campaign.id}`}
+                onClick={() => visitHandler(campaign.id)}
+              >
+                <div className="campaign__hashtag">
+                  {campaign.Hashtags.slice(0, 3).map((tag, key) => {
+                    return <p key={key}>#{tag.hashtag}</p>;
+                  })}
+                </div>
+                <div
+                  className="campaign__img"
+                  style={{
+                    backgroundImage: `url("${campaign.Campaign_Files[0].file}") `,
+                  }}
+                />
+                <p className="campaign__title">{campaign.campaign_title}</p>
+                <ProgressBar
+                  vote={campaign.campaign_vote}
+                  goal={campaign.campaign_goal}
+                />
+              </Link>
+            );
+          })}
         </Slider>
       </div>
     </CampaignSliderStyle>

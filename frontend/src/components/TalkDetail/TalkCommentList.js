@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import TalkCommentChild from "../../components/TalkDetail/TalkCommentChild";
+import {  useSelector } from "react-redux";
+import TalkCommentChild from "./TalkCommentChild";
 import TalkCommentChildInput from "./TalkCommentChildInput";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -228,14 +228,18 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
           </p>
         )}
         
-        {status && <TalkCommentChild id={comment.id} setTalkCommentList={setTalkCommentList} talkCommentList={talkCommentList} />}
+        {status && <TalkCommentChild id={comment.id} />}
       </>
     );
   };
 
-  // const loadMore = () => {
-  //   dispatch(commentListLoader(data.id, num));
-  // };
+  const loadMore = ({ match }) => {
+    const id = match.params.id;
+    const page = 1;
+    // dispatch(commentListLoader(data.id, num));
+    const comment = axios.get(`/talk_comment/list/${id}/${page}`);
+    setTalkCommentList(comment.data);
+  };
 
   return (
     <TalkCommentListStyle>
@@ -261,8 +265,8 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
               <div className="header">
                 <a>{comment.User.nickname}</a>
                 <div>
-                  {email == comment.user_email && (
-                    <button onClick={() => commentDeleteHandler(comment.id)}>
+                  {email == comment.user_email && 
+                  ( <button onClick={() => commentDeleteHandler(comment.id)}>
                       삭제
                     </button>
                   )}
@@ -270,14 +274,14 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
                 </div>
               </div> 
               <p>{comment.comment}</p>
-              <TalkCommentChildInput comment={comment} talk_id={talk_id} />
+              <TalkCommentChildInput comment={comment} talk_id={talk_id} setTalkCommentList={setTalkCommentList} />
               <TalkCommentChildMain comment={comment} />
             </div>
           </article>
         );
       })}
       <div className="bottom">
-        {/* <p onClick={loadMore}>댓글 더보기</p> */}
+        <p onClick={loadMore}>댓글 더보기</p>
       </div>
     </TalkCommentListStyle>
   );

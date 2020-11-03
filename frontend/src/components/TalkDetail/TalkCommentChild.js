@@ -86,33 +86,16 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const TalkCommentChild = ({ id, talkCommentList, setTalkCommentList }) => { //특정 댓글들의 id를 가져왔음 !
+const TalkCommentChild = ({ id }) => { 
   const init = useRef(true);
-  console.log(talkCommentList);
-  // const [comments, setComments] = useState({
-  //   status: "WAITING",
-  //   list: [],
-  // });
-  // const flag = useRef(true);
-  // const childAddStatus = useSelector((state) => state.comment.child_add.status);
-
-  // useEffect(() => {
-  //   if (flag.current || childAddStatus === "SUCCESS") {
-  //     const init = async () => {
-  //       const result = await axios.get(`/comment/childList/${id}`);
-  //       setComments({ status: "SUCCESS", list: result.data.list });
-  //     };
-  //     init();
-  //   }
-  //   return () => {
-  //     flag.current = false;
-  //   };
-  // }, [childAddStatus]);
+  const [comments, setComments] = useState({ status: "WAITING" });
+  const [childList, setChildList] = useState([]);
 
   useEffect(() => {
     const initFunc = async () => {
-      const result = await axios.get(`/talk_comment/childList/${id}`)
-      setTalkCommentList(result.data.list);
+      const comment = await axios.get(`/talk_comment/childList/${id}`);
+      setChildList(comment.data);
+      setComments("SUCCESS");
     };
     if (init.current) {
       init.current = false;
@@ -120,10 +103,10 @@ const TalkCommentChild = ({ id, talkCommentList, setTalkCommentList }) => { //�
     }
   }, []);
 
-  // if (comments.status === "WAITING") return <Loader />;
+  if (comments.status === "WAITING") return <Loader />;
   return (
     <CommentChildStyle>
-      {talkCommentList.list.length !== 0 && talkCommentList.list.map((re, key) => {
+      {childList.list.length !== 0 && childList.list.map((re, key) => {
         return (
           <article className="comment_child" key={key}>
             {re.User.user_profile ? (

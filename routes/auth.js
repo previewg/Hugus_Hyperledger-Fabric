@@ -277,6 +277,7 @@ router.post("/kakao", async (req, res) => {
   if (user) {
     user_profile = user.getDataValue("user_profile");
     nickname = user.getDataValue("nickname");
+    hash = user.getDataValue("hash");
   } else {
     crypto.randomBytes(8, (err, buf) => {
       crypto.pbkdf2(
@@ -347,6 +348,7 @@ router.post("/naver", async (req, res) => {
   if (user) {
     user_profile = user.getDataValue("user_profile");
     user_nickname = user.getDataValue("nickname");
+    hash = user.getDataValue("hash");
   } else {
     crypto.randomBytes(8, (err, buf) => {
       crypto.pbkdf2(

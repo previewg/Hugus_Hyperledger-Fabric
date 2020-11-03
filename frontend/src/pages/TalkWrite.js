@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import React, { useCallback, useRef, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-const ActWriteStyle = styled.div`
+const TalkWriteStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
@@ -396,23 +397,40 @@ const ErrorBoxStyle = styled.p`
 const errorMsg = [
   "",
   "제목을 입력 바랍니다",
-  "내용을 입력 바랍니다",
+  "소식을 입력 바랍니다",
 ];
 
-const ActWrite = () => {
+const TalkWrite = ({ props, match, history  }) => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
+  const init = useRef(true);
+  const [talkId, setTalkId] = useState([]);
+  const [talkCommentList, setTalkCommentList] = useState([]);
+  useEffect(() => {
+    const id = match.params.id;
+    const page = 1;
+
+    const initFunc = async () => {
+      const data = await axios.get(`/talk/${id}`);
+      const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
+      setTalkId(data.data);
+      setTalkCommentList(comment.data);
+    };
+    if (init.current) {
+      init.current = false;
+      initFunc();
+    }
+  }, []);
+
   const [data, setData] = useState({
     title: "",
-    info: "",
     content: "",
     files: null,
   });
 
   const [filled, setFilled] = useState({
     title: true,
-    info: true,
     content: true,
   });
 
@@ -422,10 +440,83 @@ const ActWrite = () => {
 
   const [fileReaderState, setFileReaderState] = useState("");
 
+  const errorHandler = useCallback(() => {
+    if (!data.title) {
+      setErrorCode(1);
+      title.current.focus();
+      setFilled({
+        ...filled,
+        title: false,
+      });
+      return false;
+    } else if (!data.content) {
+      setErrorCode(2);
+      content.current.focus();
+      setFilled({
+        ...filled,
+        content: false,
+      });
+      return false;
+    } 
+    return true;
+  }, [data,filled]);
+
+  const talkAddHandler = async () => {
+    if (errorHandler()) {
+      const formData = new FormData();
+      formData.append("talk_title", data.title);
+      formData.append("talk_content", data.content);
+      if (data.files !== null) {
+        for (const file of data.files) {
+          formData.append(`files`, file);
+        }
+      } else {
+        formData.append("files", "");
+      }
+      const result = await axios.post(`/talk/add` , formData );
+      setTalkCommentList(result.data);
+      history.push("/talk");
+    }
+  };
+
+  const previewImg = (e) => {
+    setPreImg([]);
+    for (const file of e.target.files) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        let newPreImg = preImg;
+        newPreImg.push({
+          file: file,
+          previewURL: reader.result,
+        });
+        setPreImg(newPreImg);
+        setFileReaderState(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const onChangeHandler = (e) => {
+    e.preventDefault();
+    if (e.target.name === "files") {
+      previewImg(e);
+      setData({
+        ...data,
+        [e.target.name]: e.target.files,
+      });
+    } else {
+      setData({
+        ...data,
+        [e.target.name]: e.target.value,
+      });
+      setErrorCode(0);
+    }
+  };
 
   return (
     <>
-      <ActWriteStyle>
+      <TalkWriteStyle>
+        <a>asdfsfsafsafdsa</a>
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -438,22 +529,57 @@ const ActWrite = () => {
               value={data.title}
               type="text"
               placeholder="제목을 입력하세요."
+              onChange={onChangeHandler}
+            />
+          </div>
+
+          <div className="content">
+            <p>소식</p>
+            <div>
+              {preImg.map((item, key) => {
+                return (
+                  <div key={key}>
+                    <img
+                      className="preImg"
+                      src={item.previewURL}
+                      key={key}
+                      alt="preview"
+                    />
+                  </div>
+                );
+              })}
+              <label htmlFor="files">파일 첨부</label>
+              <input
+                id="files"
+                name="files"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={onChangeHandler}
+              />
+            </div>
+            <textarea
+              name="content"
+              ref={content}
+              value={data.content}
+              required
+              placeholder="수혜자의 소식을 입력하세요. "
+              onChange={onChangeHandler}
             />
           </div>
 
 
           <div className="submit">
-            <button>
+            <button onClick={talkAddHandler}>
               제출하기
               <img alt="submit" src="/icons/PaperPlane.png" />
             </button>
           </div>
-          
         </div>
-      </ActWriteStyle>
+      </TalkWriteStyle>
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );
 };
 
-export default ActWrite;
+export default TalkWrite;

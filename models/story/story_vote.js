@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Story_Like",
+    "Story_Vote",
     {
       user_email: {
         type: DataTypes.STRING,
@@ -12,13 +12,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      like: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
     },
     {
-      tableName: "story_like",
+      tableName: "story_vote",
       freezeTableName: true,
       underscored: true,
       charset: "utf8mb4",

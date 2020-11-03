@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {blockListSearchLoader} from "actions/block";
+
 
 const BlockSearchStyle = styled.article`
   width: 100%;
@@ -16,7 +17,7 @@ const BlockSearchStyle = styled.article`
     justify-content: center;
     padding-left: 90px;
     input {
-      transition: all 1s ease-in-out;
+      transition: all 0.7s ease-in-out;
       margin-right: 70px;
       width: ${(props) => (props.isClicked ? "600px" : "320px")};
       height: 40px;
@@ -74,6 +75,7 @@ const BlockSearch = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [placeholder, setPlaceholder] = useState("SEARCH");
   const [img, setImg] = useState("/icons/Search.png");
+  const [search, setSearch] = useState("");
   const here = useRef();
   const dispatch = useDispatch();
   const list = useSelector((state) => state.block.blockSearch.list);
@@ -84,8 +86,10 @@ const BlockSearch = () => {
     setword(e.target.value);
     if (e.key === "Enter") {
       onClick();
+      
     }
   };
+
   const onClick = () => {
       dispatch(blockListSearchLoader(word))
       console.log(word);
@@ -107,27 +111,33 @@ const BlockSearch = () => {
   };
 
   const inputClose = () => {
+    setSearch("");
     setIsClicked(false);
     setPlaceholder("SEARCH");
-    setImg("/icons/Search.png");
+     setImg("/icons/Search.png");
   };
   return (
-    <BlockSearchStyle word={word}>
+    <BlockSearchStyle isClicked={isClicked}>
       <div>
-        <input ref={here}onClick={inputOpen}
+  
+        <input ref={here} 
                         name="search"
                         value={word}
                         className="search_form"
                         type="text"
                         placeholder="User ID, Tx ID"
-                        onChange={onChangeHandler} />
+                        onChange={onChangeHandler}
+                        onKeyPress={onChangeHandler}
+                        onClick={onClick}
+                        onClick={inputOpen} 
+                        />
                         <Link to="/block/search"onClick={onClick}>
                         <div >
-                            <img alt="search__icon" src="/icons/search.png"/>
+        <img onClick={inputClose} src={img} />
+                            {/* <img alt="search__icon" src="/icons/search.png"/> */}
                         </div>
                     </Link>
       </div>
-        <img onClick={inputClose} src={img} />
         {/* <div className="live__suggestion">
                     {list.map((block, key) => {                        
                             return (
