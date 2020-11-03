@@ -10,7 +10,6 @@ const PaginationStyle = styled.div`
     justify-content: space-around;
     margin-top: 12px;
     text-align: center;
-    
 
     > button {
       outline: none;
@@ -20,7 +19,7 @@ const PaginationStyle = styled.div`
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
-      box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       :hover {
         background-color: orange;
@@ -71,23 +70,32 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
 
   useEffect(() => {
     nowPage(currPage);
-  }, [currPage,clicked]);
+  }, [currPage, clicked]);
 
   return (
     <PaginationStyle>
-      {/* <p>currPage : {currPage}</p>
-      <p>blockNum : {blockNum}</p> */}
       <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
-        {pArr.map((n, key) => (
-          <button key={key} onClick={() => setCurrPage(n)}>
-            {n}
-          </button>
-        ))}
+        {pArr.map((n, key) =>
+          currPage === n ? (
+            <button
+              key={key}
+              onClick={() => setCurrPage(n)}
+              style={{ backgroundColor: "orange" }}
+            >
+              {n}
+            </button>
+          ) : (
+            <button key={key} onClick={() => setCurrPage(n)}>
+              {n}
+            </button>
+          )
+        )}
         <button onClick={nextPage}>&gt;</button>
         <button onClick={lastPage}>&gt;&gt;</button>
       </div>
+      <div className="current_show"></div>
     </PaginationStyle>
   );
 };

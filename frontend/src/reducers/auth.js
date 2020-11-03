@@ -111,6 +111,8 @@ export default function auth(state = initialState, action) {
           profile: { $set: action.data.profile },
           email: { $set: action.data.email },
           hash_email: { $set: action.data.hash_email },
+          phone_number:{$set:action.data.phone_number}
+
         },
       });
     case AUTH_SIGNIN_FAILURE:

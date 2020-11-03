@@ -6,7 +6,7 @@ import { storyAdd } from "actions/story";
 const StoryWriteStyle = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 70px;
+  margin-bottom: 200px;
   .layout {
     margin-top: 100px;
     width: 700px;

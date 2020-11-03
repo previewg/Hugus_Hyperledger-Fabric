@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { PayLoader } from "components";
+import { PayLoader, PaySocket, Pending } from "components";
+import { useSelector } from "react-redux";
 
 const PayStyle = styled.section`
   padding-top: 150px;
@@ -98,7 +99,7 @@ const PayStyle = styled.section`
   }
 
   .pay__type {
-    margin-top: 100px;
+    margin-top: 170px;
     width: 700px;
     display: flex;
     flex-direction: column;
@@ -120,10 +121,10 @@ const PayStyle = styled.section`
         justify-content: center;
         width: 150px;
         height: 100px;
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color 0.5s ease-in-out;
         border-radius: 10px;
         background-color: ${(props) =>
-          props.pay == "kakaopay" ? "rgba(0,0,0,0.1)" : "transparent"};
+          props.pay == "kakaopay" ? "rgba(0,0,0,0.15)" : "transparent"};
         img {
           cursor: pointer;
           width: 70px;
@@ -137,9 +138,9 @@ const PayStyle = styled.section`
         width: 150px;
         height: 100px;
         border-radius: 10px;
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color 0.5s ease-in-out;
         background-color: ${(props) =>
-          props.pay == "naverpay" ? "rgba(0,0,0,0.1)" : "transparent"};
+          props.pay == "naverpay" ? "rgba(0,0,0,0.15)" : "transparent"};
 
         img {
           width: 60px;
@@ -153,10 +154,10 @@ const PayStyle = styled.section`
         justify-content: center;
         width: 150px;
         height: 100px;
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color 0.5s ease-in-out;
         border-radius: 10px;
         background-color: ${(props) =>
-          props.pay == "samsungpay" ? "rgba(0,0,0,0.1)" : "transparent"};
+          props.pay == "samsungpay" ? "rgba(0,0,0,0.15)" : "transparent"};
         img {
           width: 60px;
           cursor: pointer;
@@ -169,10 +170,10 @@ const PayStyle = styled.section`
         justify-content: center;
         width: 150px;
         height: 100px;
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color 0.5s ease-in-out;
         border-radius: 10px;
         background-color: ${(props) =>
-          props.pay == "card" ? "rgba(0,0,0,0.1)" : "transparent"};
+          props.pay == "card" ? "rgba(0,0,0,0.15)" : "transparent"};
         margin-right: 15px;
         p {
           cursor: pointer;
@@ -184,10 +185,10 @@ const PayStyle = styled.section`
         justify-content: center;
         width: 150px;
         height: 100px;
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color 0.5s ease-in-out;
         border-radius: 10px;
         background-color: ${(props) =>
-          props.pay == "money" ? "rgba(0,0,0,0.1)" : "transparent"};
+          props.pay == "money" ? "rgba(0,0,0,0.15)" : "transparent"};
         p {
           cursor: pointer;
         }
@@ -232,15 +233,54 @@ const PayStyle = styled.section`
   }
 `;
 
-const Pay = ({ match }) => {
+const ErrorBoxStyle = styled.p`
+  ${(props) => {
+    if (props.error == 0) {
+      return "display:none;opacity:0";
+    } else {
+      return "opacity:1;transform: translateX(-100px);";
+    }
+  }};
+  right: 0;
+  background-color: #ffa500;
+  border-radius: 5px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 100px;
+  width: 180px;
+  height: 50px;
+  transition: 0.7s ease-in-out;
+  font-size: 15px;
+`;
+
+const errorMsg = [
+  "",
+  "제목을 입력 바랍니다",
+  "소개를 입력 바랍니다",
+  "내용을 입력 바랍니다",
+  "물품 내용을 입력 바랍니다",
+  "물품 금액을 입력 바랍니다",
+  "물품 수량을 입력 바랍니다",
+  "필요물품을 등록 바랍니다",
+  "해시태그를 입력 바랍니다",
+];
+
+const Pay = ({ match, history }) => {
   const [pay, setPay] = useState("kakaopay");
   const [amount, setAmount] = useState(0);
   const amountInput = useRef(false);
   const [status, setStatus] = useState(false);
+  const [pending, setPending] = useState("INIT");
   const [data, setData] = useState({});
+  const [error, setError] = useState(false);
   const init = useRef(true);
+  const email = useSelector((state) => state.auth.user.email);
 
   const kakaoPay = async () => {
+    setPending("WAITING");
     const data = await axios.post("/pay/", {
       campaign_id: match.params.id,
       total_amount: amount,
@@ -248,23 +288,27 @@ const Pay = ({ match }) => {
     window.open(
       `${data.data.data.next_redirect_pc_url}`,
       "HUGUS_pay",
-      "width=430,height=500"
+      "width=500,height=500"
     );
   };
 
   const payReady = () => {
-    if (amount === "") {
-      amountInput.current.focus();
-      return;
-    }
     if (pay === "kakaopay") {
+      if (amount === 0) {
+        setError(true);
+        amountInput.current.focus();
+        return;
+      }
       return kakaoPay();
+    } else {
+      alert("개발 진행중입니다.");
+      return;
     }
   };
 
   const amountChange = (e) => {
     setAmount(e.target.value);
-    amountInput.current = true;
+    setError(false);
   };
 
   const payTypeChange = useCallback((e) => {
@@ -297,96 +341,121 @@ const Pay = ({ match }) => {
 
   if (!status) return <PayLoader />;
   return (
-    <PayStyle pay={pay}>
-      <article className="pay__header">
-        <p>결제 확인</p>
-        <div className="pay__header__contents">
-          <div
-            className="pay__header__img"
-            style={{
-              backgroundImage: `url("${data.Campaign_Files[0].file}")`,
-            }}
-          ></div>
-          <div className="pay__header__data">
-            <div className="pay__header__top">
-              <p>캠페인 명</p>
-              <p>기부금액</p>
-            </div>
-            <div className="pay__header__bottom">
-              <p>{data.campaign_title}</p>
-              <div>
-                <input
-                  ref={amountInput}
-                  type="number"
-                  value={amount}
-                  onChange={amountChange}
-                />
-                <span>원</span>
+    <>
+      {pending === "WAITING" && <Pending />}
+      <PaySocket
+        pending={pending}
+        setPending={setPending}
+        email={email}
+        history={history}
+      />
+      <PayStyle pay={pay}>
+        <article className="pay__header">
+          <p>결제 확인</p>
+          <div className="pay__header__contents">
+            <div
+              className="pay__header__img"
+              style={{
+                backgroundImage: `url("${data.Campaign_Files[0].file}")`,
+              }}
+            ></div>
+            <div className="pay__header__data">
+              <div className="pay__header__top">
+                <p>캠페인 명</p>
+                <p>기부금액</p>
+              </div>
+              <div className="pay__header__bottom">
+                <p>{data.campaign_title}</p>
+                <div>
+                  <input
+                    ref={amountInput}
+                    type="number"
+                    value={amount}
+                    onChange={amountChange}
+                  />
+                  <span>원</span>
+                </div>
+              </div>
+              <div className="pay__header__select">
+                <div></div>
+                <div>
+                  <button
+                    onClick={() => {
+                      setError(false);
+                      setAmount(Number(amount) + 1000);
+                    }}
+                  >
+                    +1천원
+                  </button>
+                  <button
+                    onClick={() => {
+                      setError(false);
+                      setAmount(Number(amount) + 10000);
+                    }}
+                  >
+                    +1만원
+                  </button>
+                  <button
+                    onClick={() => {
+                      setError(false);
+                      setAmount(Number(amount) + 100000);
+                    }}
+                  >
+                    +1십만원
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="pay__header__select">
-              <div></div>
-              <div>
-                <button onClick={() => setAmount(Number(amount) + 1000)}>
-                  +1천원
-                </button>
-                <button onClick={() => setAmount(Number(amount) + 10000)}>
-                  +1만원
-                </button>
-                <button onClick={() => setAmount(Number(amount) + 100000)}>
-                  +1십만원
-                </button>
-              </div>
+          </div>
+        </article>
+        <article className="pay__type">
+          <p>결제 방법</p>
+          <div>
+            <div className="kakaopay">
+              <img
+                src="/icons/kakaopay.png"
+                id="kakaopay"
+                onClick={payTypeChange}
+              />
+            </div>
+            <div className="naverpay">
+              <img
+                src="/icons/naverpay.png"
+                id="naverpay"
+                onClick={payTypeChange}
+              />
+            </div>
+            <div className="samsungpay">
+              <img
+                src="/icons/samsungpay2.png"
+                id="samsungpay"
+                onClick={payTypeChange}
+              />
+            </div>
+            <div className="card">
+              <p id="card" onClick={payTypeChange}>
+                신용카드
+              </p>
+            </div>
+            <div className="money">
+              <p id="money" onClick={payTypeChange}>
+                실시간 계좌이체
+              </p>
             </div>
           </div>
-        </div>
-      </article>
-      <article className="pay__type">
-        <p>결제 방법</p>
-        <div>
-          <div className="kakaopay">
-            <img
-              src="/icons/kakaopay.png"
-              id="kakaopay"
-              onClick={payTypeChange}
-            />
-          </div>
-          <div className="naverpay">
-            <img
-              src="/icons/naverpay.png"
-              id="naverpay"
-              onClick={payTypeChange}
-            />
-          </div>
-          <div className="samsungpay">
-            <img
-              src="/icons/samsungpay2.png"
-              id="samsungpay"
-              onClick={payTypeChange}
-            />
-          </div>
-          <div className="card">
-            <p id="card" onClick={payTypeChange}>
-              신용카드
-            </p>
-          </div>
-          <div className="money">
-            <p id="money" onClick={payTypeChange}>
-              실시간 계좌이체
-            </p>
-          </div>
-        </div>
-      </article>
-      <article className="pay__summary">
-        <p>결제금액</p>
-        <p>
-          <strong>{amount.toLocaleString()}</strong>원
-        </p>
-      </article>
-      <article className="pay__button">
-        <button onClick={payReady}>결제하기</button>
-      </article>
-    </PayStyle>
+        </article>
+        <article className="pay__summary">
+          <p>결제금액</p>
+          <p>
+            <strong>{amount.toLocaleString()}</strong>원
+          </p>
+        </article>
+        <article className="pay__button">
+          <button onClick={payReady}>결제하기</button>
+        </article>
+      </PayStyle>
+      <ErrorBoxStyle error={error}>금액을 입력 바랍니다</ErrorBoxStyle>
+    </>
   );
 };
 
