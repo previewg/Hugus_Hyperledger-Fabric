@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0,
       },
+      hash: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       tableName: "campaign",

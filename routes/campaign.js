@@ -5,11 +5,11 @@ const {
   Campaign,
   Campaign_File,
   Campaign_Like,
-  Campaign_Donate,
   Hashtag,
   User,
   sequelize,
 } = require("../models");
+const Transaction = require("../models/block/transaction");
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -87,6 +87,7 @@ router.get("/init", async (req, res) => {
         "id",
         "campaign_title",
         "campaign_goal",
+        // "hash",
         "user_email",
         "visited",
         "createdAt",
@@ -116,6 +117,12 @@ router.get("/init", async (req, res) => {
       limit: 10,
       order: [["created_at", "DESC"]],
     });
+
+    for (const campaign of list) {
+      const hash = campaign.getDataValue("hash");
+    }
+
+    // await Transaction.find({});
     res.json({ list: list, success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
