@@ -201,6 +201,9 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
   const data = talkCommentList.list;
   const talk_id = talkId.data.id;
 
+
+
+
   const commentDeleteHandler = async (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
@@ -211,10 +214,13 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
 
   const TalkCommentChildMain = ({ comment }) => {
     const [status, setStatus] = useState(false);
+
+
     const onClickHandler = () => {
       if (status) setStatus(false);
       else setStatus(true);
     };
+
     return (
       <>
         {comment.child_count !== 0 && !status && (
@@ -233,11 +239,12 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
     );
   };
 
-  const loadMore = ({ match }) => {
-    const id = match.params.id;
+  const loadMore = async () => {
+    const id = talk_id;
     const page = 1;
     // dispatch(commentListLoader(data.id, num));
-    const comment = axios.get(`/talk_comment/list/${id}/${page}`);
+    const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
+    console.log(comment);
     setTalkCommentList(comment.data);
   };
 

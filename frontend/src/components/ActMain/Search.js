@@ -39,7 +39,7 @@ const SearchStyle = styled.div`
 `;
 
 const Search = ({ search, setSearch, setClicked }) => {
-
+    
     
     const onChangeHandler = (e) => {
         e.preventDefault();
