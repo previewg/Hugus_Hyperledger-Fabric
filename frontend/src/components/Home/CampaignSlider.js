@@ -12,7 +12,6 @@ const CampaignSliderStyle = styled.section`
   margin-top: 150px;
   height: 80vh;
   transition: all 1s ease-in-out;
-  transform: scale(${(props) => (props.scroll > 400 ? 1 : 0)});
   opacity: ${(props) => (props.scroll > 400 ? 1 : 0)};
   > p {
     text-align: left;

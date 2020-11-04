@@ -10,7 +10,6 @@ const {
   User,
   Story_Like,
   Story_Vote,
-  Story_Comment,
   sequelize,
 } = require("../models");
 const multer = require("multer");
@@ -41,6 +40,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
     const { story_title, user_info, story_content, story_goal } = req.body;
+
     const story = await Story.create({
       story_title,
       user_info,

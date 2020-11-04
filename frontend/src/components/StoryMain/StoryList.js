@@ -139,6 +139,15 @@ const BarStyle = styled.div`
   }
 `;
 
+const ThereIsNoFavorite = styled.p`
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: gray;
+`;
+
 const StoryList = ({ storyType, changed, setChanged }) => {
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
@@ -238,7 +247,8 @@ const StoryList = ({ storyType, changed, setChanged }) => {
       init.current = true;
     }
   }, [changed]);
-
+  if (storyType === "my" && list.length === 0)
+    return <ThereIsNoFavorite>관심 스토리가 없습니다</ThereIsNoFavorite>;
   return (
     <StoryListStyle>
       <LoadHandler storyType={storyType} />
