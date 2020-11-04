@@ -12,17 +12,21 @@ const PaginationStyle = styled.div`
     text-align: center;
 
     > button {
+      background-color: transparent;
       outline: none;
       font-weight: bold;
-      height: 27px;
-      width: 28px;
+      height: 35px;
+      width: 35px;
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      transition: all 0.3s ease-in-out;
       :hover {
-        background-color: orange;
+        background-color: lightgray;
       }
     }
   }
@@ -82,7 +86,11 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
             <button
               key={key}
               onClick={() => setCurrPage(n)}
-              style={{ backgroundColor: "orange" }}
+              style={{
+                backgroundColor: "orange",
+                color: "white",
+                transform: "scale(1.2)",
+              }}
             >
               {n}
             </button>

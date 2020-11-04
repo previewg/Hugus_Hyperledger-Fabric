@@ -11,7 +11,7 @@ const CampaignSliderStyle = styled.section`
   align-items: center;
   margin-top: 150px;
   height: 80vh;
-  transition: all 1s ease-in-out;
+  transition: all 0.7s ease-in-out;
   opacity: ${(props) => (props.scroll > 400 ? 1 : 0)};
   > p {
     text-align: left;
@@ -256,4 +256,4 @@ const CampaignSlider = ({ scroll }) => {
   );
 };
 
-export default CampaignSlider;
+export default React.memo(CampaignSlider);

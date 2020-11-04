@@ -12,6 +12,8 @@ const {
   Story_Vote,
   sequelize,
 } = require("../models");
+
+// multer 설정
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -113,27 +115,27 @@ router.post("/delete", async (req, res) => {
       }
     });
 
-    // const hashtags = await Story_Hashtag.findAll({
-    //   attributes: [
-    //     "hashtag_id",
-    //     [
-    //       sequelize.literal(
-    //         "(SELECT COUNT(1) FROM story_hashtag WHERE hashtag_id = `Story_Hashtag`.hashtag_id)"
-    //       ),
-    //       "count",
-    //     ],
-    //   ],
-    //   where: { story_id: id },
-    // });
-    //
-    // for (const hashtag of hashtags) {
-    //   const unique = hashtag.getDataValue("count") === 1 ? true : false;
-    //   if (unique) {
-    //     await Hashtag.destroy({
-    //       where: { id: hashtag.getDataValue("hashtag_id") },
-    //     });
-    //   }
-    // }
+    const hashtags = await Story_Hashtag.findAll({
+      attributes: [
+        "hashtag_id",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_hashtag WHERE hashtag_id = `Story_Hashtag`.hashtag_id)"
+          ),
+          "count",
+        ],
+      ],
+      where: { story_id: id },
+    });
+
+    for (const hashtag of hashtags) {
+      const unique = hashtag.getDataValue("count") === 1 ? true : false;
+      if (unique) {
+        await Hashtag.destroy({
+          where: { id: hashtag.getDataValue("hashtag_id") },
+        });
+      }
+    }
 
     await Story.destroy({ where: { id } });
     res.json({ success: 1 });
@@ -164,21 +166,21 @@ router.post("/update", upload.array("files"), async (req, res) => {
 
     const delHashtagList = JSON.parse(del_hashtags);
     for (const del of delHashtagList) {
-      // const count = await Story_Hashtag.count({
-      //   where: { hashtag_id: del.id },
-      // });
+      const count = await Story_Hashtag.count({
+        where: { hashtag_id: del.id },
+      });
 
       await Story_Hashtag.destroy({
         where: { hashtag_id: del.id },
       });
 
-      // if (count === 1) {
-      //   await Hashtag.destroy({
-      //     where: {
-      //       hashtag: del.hashtag,
-      //     },
-      //   });
-      // }
+      if (count === 1) {
+        await Hashtag.destroy({
+          where: {
+            hashtag: del.hashtag,
+          },
+        });
+      }
     }
 
     const hashtagList = JSON.parse(hashtags);
@@ -457,7 +459,7 @@ router.put("/visit", async (req, res) => {
 // 스토리 좋아요 등록/삭제
 router.put("/like", async (req, res) => {
   try {
-    const { story_id, status } = req.body;
+    const { story_id } = req.body;
     const { user_email } = req.session.loginInfo;
 
     const history = await Story_Like.findOne({
@@ -484,7 +486,7 @@ router.put("/like", async (req, res) => {
 // 스토리 투표 등록/삭제
 router.put("/vote", async (req, res) => {
   try {
-    const { story_id, status } = req.body;
+    const { story_id } = req.body;
     const { user_email } = req.session.loginInfo;
 
     const history = await Story_Vote.findOne({
