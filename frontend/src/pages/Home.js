@@ -29,7 +29,7 @@ const Home = (props) => {
   return (
     <HomeStyle>
       <Main scroll={scroll} />
-      <CampaignSlider scroll={scroll} />
+      <CampaignSlider />
       <HugusInfo />
       <CampaignList />
     </HomeStyle>
