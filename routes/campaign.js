@@ -82,26 +82,40 @@ router.post("/delete", async (req, res) => {
 // 캠페인 리스트 조회 ( 메인 슬라이더용  - 도달 임박순 )
 router.get("/init", async (req, res) => {
   try {
+    const campaignData = await Transaction.aggregate([
+      { $group: { _id: "$receiver_id", value: { $sum: "$value" } } },
+    ]);
+
+    for (const campaign of campaignData) {
+      await Campaign.update(
+        {
+          campaign_value: campaign.value,
+        },
+        { where: { hash: campaign._id } }
+      );
+    }
+
     const list = await Campaign.findAll({
       attributes: [
         "id",
         "campaign_title",
         "campaign_goal",
-        // "hash",
+        "hash",
         "user_email",
         "visited",
         "createdAt",
+        "campaign_value",
+        [
+          sequelize.literal(
+            "(SELECT (campaign_value)/(campaign_goal) FROM campaign WHERE id = `Campaign`.id)"
+          ),
+          "campaign_ratio",
+        ],
         [
           sequelize.literal(
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id)"
           ),
           "campaign_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
-          ),
-          "campaign_donate",
         ],
         [
           sequelize.literal(
@@ -114,15 +128,10 @@ router.get("/init", async (req, res) => {
         { model: Hashtag, attributes: ["hashtag"] },
         { model: Campaign_File, attributes: ["file"] },
       ],
-      limit: 10,
-      order: [["created_at", "DESC"]],
+      order: [
+        [sequelize.cast(sequelize.col("campaign_ratio"), "FLOAT"), "DESC"],
+      ],
     });
-
-    for (const campaign of list) {
-      const hash = campaign.getDataValue("hash");
-    }
-
-    // await Transaction.find({});
     res.json({ list: list, success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
@@ -144,6 +153,7 @@ router.get("/list/:page", async (req, res) => {
         "id",
         "campaign_title",
         "campaign_goal",
+        "hash",
         "user_email",
         "visited",
         "createdAt",
@@ -152,12 +162,6 @@ router.get("/list/:page", async (req, res) => {
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id)"
           ),
           "campaign_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
-          ),
-          "campaign_donate",
         ],
         [
           sequelize.literal(

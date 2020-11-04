@@ -6,7 +6,7 @@ const txSchema = new mongoose.Schema({
   tx_type: String,
   sender_id: String,
   receiver_id: String,
-  value: String,
+  value: Number,
   timestamp: String,
 });
 module.exports = mongoose.model("transaction", txSchema);

@@ -244,7 +244,7 @@ const CampaignSlider = ({ scroll }) => {
                 />
                 <p className="campaign__title">{campaign.campaign_title}</p>
                 <ProgressBar
-                  vote={campaign.campaign_vote}
+                  value={campaign.campaign_value}
                   goal={campaign.campaign_goal}
                 />
               </Link>

@@ -6,10 +6,9 @@ import { signUpBtnIsClicked } from "../../actions/user";
 
 const HugusInfoStyle = styled.section`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
   height: 300px;
-  background-color: #e9e9e9;
   margin-top: 100px;
   align-items: center;
   margin-bottom: 200px;
@@ -50,7 +49,6 @@ const HugusInfoStyle = styled.section`
   }
   .info__right {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: space-around;
     width: 100%;
@@ -60,39 +58,23 @@ const HugusInfoStyle = styled.section`
       border: none;
       font-size: 16px;
       width: 100%;
-      height: 150px;
+      height: 300px;
       cursor: pointer;
       display: flex;
       justify-content: center;
-      background-size: 15%;
-      background-repeat: no-repeat;
-      background-position: center;
       align-items: center;
       transition: all 0.3s ease-in-out;
       :nth-child(2) {
         background-size: 15%;
       }
       > p {
-        width: 100%;
-        height: 150px;
-        color: white;
+        width: 200px;
+        height: 80px;
+        color: gray;
         display: flex;
         justify-content: center;
         align-items: center;
-        backdrop-filter: blur(5px);
-        font-size: 20px;
-        background-color: rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease-in-out;
-      }
-      :hover {
-        background-size: 30%;
-        :nth-child(2) {
-          background-size: 30%;
-        }
-        > p {
-          font-size: 40px;
-          backdrop-filter: blur(1px);
-        }
       }
     }
   }
@@ -112,16 +94,11 @@ const HugusInfo = () => {
         </div>
       </article>
       <article className="info__right">
-        <Link
-          to="/info"
-          style={{ backgroundImage: 'url("/icons/hugus_icon.png")' }}
-        >
+        <Link to="/info">
           <p>허그 소개</p>
         </Link>
-        <Link
-          to="/block"
-          style={{ backgroundImage: 'url("/icons/blockchain.svg")' }}
-        >
+
+        <Link to="/block">
           <p>실시간 블록체인 정보</p>
         </Link>
       </article>
