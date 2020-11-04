@@ -131,8 +131,6 @@ router.post("/add", upload.array("files"), async (req, res) => {
     }
   });
 
-
-
   
 // Talk 목록 조회
 router.get("/list/:page", async (req, res) => {

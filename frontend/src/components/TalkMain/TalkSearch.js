@@ -40,20 +40,20 @@ const SearchStyle = styled.div`
 `;
 
 const Search = ({ search, setSearch, setClicked }) => {
-    const [isClicked, setIsClicked] = useState(false);
-    const [placeholder, setPlaceholder] = useState("SEARCH");
-    const here = useRef();
+    // const [isClicked, setIsClicked] = useState(false);
+    // const [placeholder, setPlaceholder] = useState("SEARCH");
+    // const here = useRef();
 
-    const inputOpen = () => {
-        setIsClicked(true);
-        setPlaceholder("검색어를 입력하세요");
-        here.current.focus();  
-    };
+    // const inputOpen = () => {
+    //     setIsClicked(true);
+    //     setPlaceholder("검색어를 입력하세요");
+    //     here.current.focus();  
+    // };
 
-    const inputClose = (e) => {
-        setSearch("")
-        setIsClicked(false);
-      };
+    // const inputClose = (e) => {
+    //     setSearch("")
+    //     setIsClicked(false);
+    //   };
 
     const onChangeHandler = (e) => {
         e.preventDefault();
@@ -63,13 +63,14 @@ const Search = ({ search, setSearch, setClicked }) => {
 
 
     return(
-        <SearchStyle isClicked={isClicked}>
+        <SearchStyle 
+        >
             <input
-            ref={here}
-            onClick={inputOpen}
+            // ref={here}
+            // onClick={inputOpen}
             name="search"
             value={search}
-            placeholder={placeholder}
+            // placeholder={placeholder}
             className="search_form"
             type="text"
             onChange={onChangeHandler}
