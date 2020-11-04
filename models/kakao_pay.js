@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      hashed_email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       tid: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -20,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      total_amount: {
+      value: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

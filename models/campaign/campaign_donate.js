@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     "Campaign_Donate",
     {
-      user_email: {
+      hashed_email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      amount: {
+      value: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

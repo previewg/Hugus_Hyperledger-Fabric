@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signUpBtnIsClicked } from "../../actions/user";
 
 const HugusInfoStyle = styled.section`
   display: grid;
@@ -10,16 +12,17 @@ const HugusInfoStyle = styled.section`
   background-color: #e9e9e9;
   margin-top: 100px;
   align-items: center;
+  margin-bottom: 200px;
   .info__left {
     justify-self: center;
     display: flex;
     align-items: center;
-
     .slogan {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       font-size: 25px;
+      cursor: pointer;
       > p {
         margin: 10px;
         :nth-child(1) {
@@ -28,6 +31,20 @@ const HugusInfoStyle = styled.section`
         :nth-child(2) {
           font-weight: bold;
         }
+      }
+    }
+    > div:nth-child(2) {
+      cursor: pointer;
+      margin-left: 50px;
+      width: 70px;
+      height: 70px;
+      border-radius: 35px;
+      background-color: rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > img {
+        width: 40px;
       }
     }
   }
@@ -90,12 +107,16 @@ const HugusInfoStyle = styled.section`
 `;
 
 const HugusInfo = () => {
+  const dispatch = useDispatch();
   return (
     <HugusInfoStyle>
       <article className="info__left">
-        <div className="slogan">
+        <div className="slogan" onClick={() => dispatch(signUpBtnIsClicked())}>
           <p>회원가입하고</p>
           <p>허그에 참여하세요!</p>
+        </div>
+        <div onClick={() => dispatch(signUpBtnIsClicked())}>
+          <img src="/icons/Nexticon.png" />
         </div>
       </article>
       <article className="info__right">

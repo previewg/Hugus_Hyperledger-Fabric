@@ -98,7 +98,7 @@ router.get("/init", async (req, res) => {
         ],
         [
           sequelize.literal(
-            "(SELECT SUM(amount) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
+            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
           ),
           "campaign_donate",
         ],
@@ -148,7 +148,7 @@ router.get("/list/:page", async (req, res) => {
         ],
         [
           sequelize.literal(
-            "(SELECT SUM(amount) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
+            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id)"
           ),
           "campaign_donate",
         ],
@@ -199,7 +199,7 @@ router.get("/:id", async (req, res) => {
         ],
         [
           sequelize.literal(
-            "(SELECT SUM(amount) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
+            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
           ),
           "campaign_donate",
         ],
@@ -259,66 +259,26 @@ router.put("/visit", async (req, res) => {
   }
 });
 
-// 스토리 좋아요 등록/삭제
+// 캠페인 좋아요 등록/삭제
 router.put("/like", async (req, res) => {
   try {
-    const { story_id, status } = req.body;
+    const { campaign_id, status } = req.body;
     const { user_email } = req.session.loginInfo;
 
-    const history = await Story_Like.findOne({
-      where: { story_id, user_email },
+    const history = await Campaign_Like.findOne({
+      where: { campaign_id, user_email },
     });
 
     if (history) {
-      await Story_Like.update(
-        {
-          like: !status,
-        },
-        {
-          where: { story_id, user_email },
-        }
-      );
+      await Campaign_Like.destroy({
+        where: { campaign_id, user_email },
+      });
     } else {
-      await Story_Like.create({
-        story_id,
+      await Campaign_Like.create({
+        campaign_id,
         user_email,
-        like: !status,
       });
     }
-
-    res.json({ success: 1 });
-  } catch (error) {
-    res.status(400).json({ success: 3 });
-  }
-});
-
-// 스토리 투표 등록/삭제
-router.put("/vote", async (req, res) => {
-  try {
-    const { story_id, status } = req.body;
-    const { user_email } = req.session.loginInfo;
-
-    const history = await Story_Vote.findOne({
-      where: { story_id, user_email },
-    });
-
-    if (history) {
-      await Story_Vote.update(
-        {
-          vote: !status,
-        },
-        {
-          where: { story_id, user_email },
-        }
-      );
-    } else {
-      await Story_Vote.create({
-        story_id,
-        user_email,
-        vote: !status,
-      });
-    }
-
     res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
