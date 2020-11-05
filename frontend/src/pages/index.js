@@ -19,7 +19,6 @@ import CampaignDetail from "./CampaignDetail";
 import TalkWrite from "./TalkWrite";
 import TalkUpdate from "./TalkUpdate";
 
-
 export {
   Home,
   StoryMain,

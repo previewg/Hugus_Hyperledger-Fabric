@@ -63,6 +63,11 @@ const initialState = {
     isPopup: false,
     loginButton: { color: "green", type: 3, height: 60 },
   }),
+  naverPayObj: window.Naver.Pay.create({
+    mode: "development",
+    payType : "normal",
+    clientId: "dQPaTGkl7UD9gyUVttF3",
+  }),
   profileChange: {
     status: "INIT",
   },

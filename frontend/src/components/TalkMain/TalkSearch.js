@@ -6,6 +6,7 @@ const SearchStyle = styled.div`
     display:flex;
     justify-content:flex-end;
             .search_form {
+            outline: none;
             width:180px;
             height:23px;
             border-radius:3px;
@@ -42,7 +43,7 @@ const SearchStyle = styled.div`
 const Search = ({ search, setSearch, setClicked }) => {
     // const [isClicked, setIsClicked] = useState(false);
     // const [placeholder, setPlaceholder] = useState("SEARCH");
-    // const here = useRef();
+    const here = useRef();
 
     // const inputOpen = () => {
     //     setIsClicked(true);
@@ -66,7 +67,7 @@ const Search = ({ search, setSearch, setClicked }) => {
         <SearchStyle 
         >
             <input
-            // ref={here}
+            ref={here}
             // onClick={inputOpen}
             name="search"
             value={search}
