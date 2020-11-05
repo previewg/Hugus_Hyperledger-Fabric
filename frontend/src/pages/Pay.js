@@ -278,8 +278,9 @@ const Pay = ({ match, history }) => {
   const [error, setError] = useState(false);
   const init = useRef(true);
   const email = useSelector((state) => state.auth.user.email);
-
+  const naverPayObj = useSelector(state=>state.auth.naverPayObj);
   const kakaoPay = async () => {
+    
     setPending("WAITING");
     const data = await axios.post("/pay/", {
       campaign_id: match.params.id,
@@ -292,6 +293,18 @@ const Pay = ({ match, history }) => {
     );
   };
 
+  const naverPay = async () => {
+    naverPayObj.open({
+      "merchantUserKey": "partner-userkey",
+      "merchantPayKey": "partnder-orderkey",
+      "productName": data.campaign_title ,
+      "totalPayAmount": amount,
+      "taxScopeAmount": amount,
+      "taxExScopeAmount": "0",
+      "returnUrl": "http://localhost:3001"
+    });
+  };
+
   const payReady = () => {
     if (pay === "kakaopay") {
       if (amount === 0) {
@@ -300,6 +313,13 @@ const Pay = ({ match, history }) => {
         return;
       }
       return kakaoPay();
+    } else if (pay === "naverpay") {
+      if (amount === 0) {
+        setError(true);
+        amountInput.current.focus();
+        return;
+      }
+      return naverPay();
     } else {
       alert("개발 진행중입니다.");
       return;

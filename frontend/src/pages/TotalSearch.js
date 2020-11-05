@@ -44,7 +44,6 @@ const TotalSearchStyle = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-
       input {
         min-width: 300px;
         font-size: 15px;
@@ -53,7 +52,7 @@ const TotalSearchStyle = styled.div`
         height: 35px;
         border-radius: 4px;
         transition: 0.3s ease-in-out;
-        border: solid orange 6px;
+        border: solid orange 3px;
         :focus {
           outline: none;
         }
