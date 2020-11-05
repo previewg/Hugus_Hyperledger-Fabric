@@ -10,50 +10,51 @@ router.get("/init", async (req, res) => {
     const blockHeight = await Block.countDocuments({});
     const txList = await Transaction.find({}).sort({ timestamp: -1 }).limit(10);
     const txHeight = await Transaction.countDocuments({});
-
+    const totalAmount = await Transaction.aggregate([
+      { $group: { _id: "totalAmount", value: { $sum: "$value" } } },
+    ]);
     res.json({
       success: 1,
       blockList: blockList,
       blockHeight: blockHeight,
       txList: txList,
       txHeight: txHeight,
+      totalAmount: totalAmount[0].value,
     });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);
   }
 });
+
 router.get("/list/:page", async (req, res) => {
   try {
-    const page = req.params.page;
-    let list;
-    let count;
-
-    await Block.find({}, (err, data) => {
-      if (err) console.log(err);
-      console.log(data);
-      list = data;
-    })
-      .sort({ timestamp: -1 })
-      .skip((page - 1) * 10)
-      .limit(10);
-
-    await Block.find({}, (err, data) => {
-      if (err) console.log(err);
-      console.log(data);
-
-      count = data;
-    }).count();
-
-    count = parseInt(count / 10) + 1;
-    console.log(count);
-
-    res.json({ list: list, count: count, success: 1 });
+    const { type } = req.query;
+    const { page } = req.params;
+    const offset = (page - 1) * 20;
+    if (type === "block") {
+      const height = await Block.countDocuments({});
+      const blockList = await Block.find({})
+        .sort({ timestamp: -1 })
+        .limit(20)
+        .skip(offset);
+      const more = offset + 20 < height;
+      res.json({ list: blockList, height: height, success: 1, more: more });
+    } else if (type === "tx") {
+      const height = await Transaction.countDocuments({});
+      const txList = await Transaction.find({})
+        .sort({ timestamp: -1 })
+        .limit(20)
+        .skip(offset);
+      const more = offset + 20 < height;
+      res.json({ list: txList, height: height, success: 1, more: more });
+    }
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);
   }
 });
+
 router.post("/search", async (req, res) => {
   try {
     const word = req.body.word;
