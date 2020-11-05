@@ -113,19 +113,20 @@ const BarStyle = styled.div`
     margin-bottom: 5px;
     > div:nth-child(2) {
       color: orange;
-      font-size: 16px;
       font-weight: bold;
       font-style: italic;
+      > span:nth-child(1) {
+        font-size: 20px;
+      }
     }
   }
   .count__bar {
     width: 100%;
     display: flex;
-    transition: all 2s ease-in-out;
     > div {
+      transition: all 2s ease-in-out;
       height: 5px;
       background-color: orange;
-      font-size: 13px;
       ${(props) => `width:${props.ratio}%`};
     }
   }

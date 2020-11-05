@@ -131,6 +131,7 @@ router.get("/init", async (req, res) => {
       order: [
         [sequelize.cast(sequelize.col("campaign_ratio"), "FLOAT"), "DESC"],
       ],
+      limit: 10,
     });
     res.json({ list: list, success: 1 });
   } catch (error) {
@@ -148,6 +149,19 @@ router.get("/list/:page", async (req, res) => {
       offset = 9 * (page - 1);
     }
 
+    const campaignData = await Transaction.aggregate([
+      { $group: { _id: "$receiver_id", value: { $sum: "$value" } } },
+    ]);
+
+    for (const campaign of campaignData) {
+      await Campaign.update(
+        {
+          campaign_value: campaign.value,
+        },
+        { where: { hash: campaign._id } }
+      );
+    }
+
     const list = await Campaign.findAll({
       attributes: [
         "id",
@@ -157,6 +171,7 @@ router.get("/list/:page", async (req, res) => {
         "user_email",
         "visited",
         "createdAt",
+        "campaign_value",
         [
           sequelize.literal(
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id)"
@@ -195,11 +210,27 @@ router.get("/:id", async (req, res) => {
     if (req.session.loginInfo) user_email = req.session.loginInfo.user_email;
     else user_email = null;
 
+    const campaign = await Campaign.findOne({ where: { id: campaign_id } });
+    const hash = campaign.getDataValue("hash");
+
+    const campaignData = await Transaction.aggregate([
+      { $match: { receiver_id: `${hash}` } },
+      { $group: { _id: `${hash}`, value: { $sum: "$value" } } },
+    ]);
+
+    await Campaign.update(
+      {
+        campaign_value: campaignData[0].value,
+      },
+      { where: { hash: campaignData[0]._id } }
+    );
+
     const data = await Campaign.findOne({
       attributes: [
         "id",
         "campaign_title",
         "campaign_goal",
+        "campaign_value",
         "user_email",
         "visited",
         [

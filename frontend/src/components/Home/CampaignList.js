@@ -149,13 +149,13 @@ const CampaignList = () => {
   const visitHandler = async (campaign_id) => {
     await axios.put("/campaign/visit", { campaign_id: campaign_id });
   };
-  const ProgressBar = ({ donate, goal }) => {
+  const ProgressBar = ({ value, goal }) => {
     const [ratio, setRatio] = useState(0);
 
     useEffect(() => {
       const init = setTimeout(() => {
-        if (donate > goal) setRatio(100);
-        setRatio((donate / goal) * 100);
+        if (value > goal) setRatio(100);
+        setRatio((value / goal) * 100);
       });
       return () => clearTimeout(init);
     }, []);
@@ -248,7 +248,7 @@ const CampaignList = () => {
 
                 <p className="campaign__title">{campaign.campaign_title}</p>
                 <ProgressBar
-                  donate={campaign.campaign_donate}
+                  value={campaign.campaign_value}
                   goal={campaign.campaign_goal}
                 />
               </div>
