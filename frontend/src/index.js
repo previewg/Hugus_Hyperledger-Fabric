@@ -24,6 +24,7 @@ import {
   UserInfo,
   BlockInfo,
   BlockInfoList,
+  BlockInfoSearch,
   SearchResult,
   StoryUpdate,
   ActMain,
@@ -33,6 +34,7 @@ import {
   TalkDetail,
   CampaignDetail,
   TalkWrite,
+  TalkUpdate,
 } from "pages";
 
 // Common components
@@ -69,11 +71,13 @@ ReactDOM.render(
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route exact path="/block" component={Auth(BlockInfo, null)} />
         <Route path="/block/List" component={Auth(BlockInfoList, null)} />
+        <Route path="/block/search" component={Auth(BlockInfoSearch, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
         <Route path="/talk/write" component={Auth(TalkWrite, null)} />
+        <Route path="/talk/update/:id" component={Auth(TalkUpdate, true)} />
         <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />
         <Route path="/pay/:id" component={Auth(Pay, true)} />

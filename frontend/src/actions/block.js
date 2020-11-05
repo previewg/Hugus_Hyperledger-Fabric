@@ -3,6 +3,9 @@ import axios from "axios";
 export const BLOCK_LIST_LOADER = "BLOCK_LIST_LOADER_LOADER";
 export const BLOCK_LIST_LOADER_SUCCESS = "BLOCK_LIST_LOADER_SUCCESS";
 export const BLOCK_LIST_LOADER_FAILURE = "BLOCK_LIST_LOADER_FAILURE";
+export const BLOCK_LIST_SEARCH_LOADER = "BLOCK_LIST_SEARCH_LOADER_LOADER";
+export const BLOCK_LIST_SEARCH_LOADER_SUCCESS = "BLOCK_LIST_SEARCH_LOADER_SUCCESS";
+export const BLOCK_LIST_SEARCH_LOADER_FAILURE = "BLOCK_LIST_SEARCH_LOADER_FAILURE";
 
 export const blockListLoaderStart = () => {
     return {type: BLOCK_LIST_LOADER};
@@ -12,6 +15,15 @@ export const blockListLoaderSuccess = (list) => {
 }
 export const blockListLoaderFailure = () => {
     return {type: BLOCK_LIST_LOADER_FAILURE};
+}
+export const blockListSearchLoaderStart = () => {
+    return {type: BLOCK_LIST_SEARCH_LOADER};
+}
+export const blockListSearchLoaderSuccess = (list) => {
+    return {type: BLOCK_LIST_SEARCH_LOADER_SUCCESS, list: list};
+}
+export const blockListSearchLoaderFailure = () => {
+    return {type: BLOCK_LIST_SEARCH_LOADER_FAILURE};
 }
 
 
@@ -36,5 +48,21 @@ export const blockListLoader = () => async (dispatch) => {
         .catch((error) => {
             dispatch(blockListLoaderFailure(error))
         })
+
+}
+export const blockListSearchLoader = (word) => async (dispatch) => {
+    dispatch(blockListSearchLoaderStart());
+    await axios
+        .post("/block/search",{word:word})
+        .then((response) => {
+            console.log(response)
+            if (response.data.success === 1) {
+                dispatch(blockListSearchLoaderSuccess(response.data.list))
+            }
+        })
+        .catch((error) => {
+            dispatch(blockListSearchLoaderFailure(error))
+        })
+      
 
 }

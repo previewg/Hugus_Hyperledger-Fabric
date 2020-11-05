@@ -6,16 +6,10 @@ const jwt = require("jsonwebtoken");
 const smtpTransporter = require("nodemailer-smtp-transport");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const server = require("../app");
+const axios = require("axios");
 
 const { User, Email_confirm } = require("../models");
-
-// socket 설정
-const io = require("socket.io");
-const server = io.listen(3333);
-
-server.on("connection", function (socket) {
-  socket.emit("hugus", "connected");
-});
 
 // 회원가입
 router.post("/signup", async (req, res, next) => {
@@ -61,19 +55,23 @@ router.post("/signup", async (req, res, next) => {
 
     const hash = await bcrypt.hash(password, 12);
 
-    crypto.randomBytes(8, (err, buf) => {
+    await crypto.randomBytes(8, (err, buf) => {
       crypto.pbkdf2(
         email,
         buf.toString("base64"),
         100000,
         8,
         "sha512",
-        (err, key) => {
-          User.create({
+        async (err, key) => {
+          const hashedEmail = key.toString("base64");
+          await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
+            user_id: hashedEmail,
+          });
+          await User.create({
             email,
             nickname,
             password: hash,
-            hash: key.toString("base64"),
+            hash: hashedEmail,
           });
         }
       );
@@ -115,7 +113,7 @@ router.post("/requestEmail", async (req, res) => {
       });
       setTimeout(function () {
         Email_confirm.destroy({ where: { email: email } });
-      }, 100000);
+      }, 180000);
     }
     let mailOpt = {
       from: "yh9407@gmail.com",
@@ -134,22 +132,21 @@ router.post("/requestEmail", async (req, res) => {
     });
     res.status(200).json({ success: 1 });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 });
 
 router.get("/confirmEmail/:key", async (req, res) => {
-  const data = Email_confirm.findOne({
-    where: { key_for_verify: req.params.key },
-  });
-
   try {
+    const data = Email_confirm.findOne({
+      where: { key_for_verify: req.params.key },
+    });
     if (data) {
-      await Email_confirm.update(
-        { email_verified: true },
-        { where: { key_for_verify: req.params.key } }
-      );
-      server.emit("hugus", "SUCCESS");
+      await Email_confirm.destroy({
+        where: { key_for_verify: req.params.key },
+      });
+      const email = data.getDataValue("email");
+      server.emit(email, "SUCCESS");
 
       res.send(
         "<script type=\"text/javascript\">alert(\"인증이 성공적으로 완료되었습니다. 회원가입을 이어서 진행해주세요.\");window.open('','_self').close();</script>"
@@ -204,7 +201,7 @@ router.post("/signIn", async (req, res) => {
               profile: user.user_profile,
               email: user.email,
               hash_email: user.hash,
-              phone_number: user.phone_number
+              phone_number: user.phone_number,
             });
           }
         );
@@ -226,7 +223,7 @@ router.post("/signOut", (req, res) => {
 });
 
 // 회원탈퇴
-router.post("/destroy", (req, res, next) => {
+router.post("/destroy", async (req, res, next) => {
   const { email } = req.body;
   let store = req.sessionStore;
 
@@ -235,9 +232,13 @@ router.post("/destroy", (req, res, next) => {
       if (err) throw err;
     });
     res.clearCookie("hugus");
-    User.destroy({ where: { email } }).then((result) => {
-      return res.status(200).json({ success: 1 });
+    const user = await User.findOne({ where: { email } });
+
+    await axios.post(`${process.env.FABRIC_URL}/auth/delete`, {
+      user_id: user.getDataValue("hash"),
     });
+    await User.destroy({ where: { email } });
+    return res.json({ success: 1 });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
@@ -247,7 +248,6 @@ router.post("/destroy", (req, res, next) => {
 // 회원비밀번호 재확인
 router.post("/confirm", async (req, res) => {
   const { nickname, password } = req.body;
-  console.log(nickname, password);
   const user = await User.findOne({ where: { nickname } });
   if (user) {
     const isMatched = await bcrypt.compare(password, user.password);
@@ -287,9 +287,12 @@ router.post("/kakao", async (req, res) => {
         100000,
         8,
         "sha512",
-        (err, key) => {
+        async (err, key) => {
           hash = key.toString("base64");
-          User.create({
+          await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
+            user_id: hash,
+          });
+          await User.create({
             email: email,
             nickname: nickname,
             user_profile: user_profile,
@@ -306,6 +309,7 @@ router.post("/kakao", async (req, res) => {
     user_email: email,
     user_nickname: nickname,
   };
+
   const payload = {
     email: email,
     nickname: nickname,
@@ -313,6 +317,7 @@ router.post("/kakao", async (req, res) => {
     social: "kakao",
     hash_email: hash,
   };
+
   jwt.sign(
     payload,
     process.env.JWT_SECRET,
@@ -358,9 +363,12 @@ router.post("/naver", async (req, res) => {
         100000,
         8,
         "sha512",
-        (err, key) => {
+        async (err, key) => {
           hash = key.toString("base64");
-          User.create({
+          await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
+            user_id: hash,
+          });
+          await User.create({
             email: email,
             nickname: nickname,
             user_profile: profile,

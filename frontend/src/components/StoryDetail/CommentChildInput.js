@@ -55,7 +55,9 @@ const CommentChildInput = ({ comment, story_id }) => {
           comment_id: id,
           story_id: story_id,
         })
-      ).then(setComments(""));
+      );
+      setComments("");
+      commentChild.current.focus();
     }
   };
 

@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      like: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
     },
     {
       tableName: "story_comment_like",

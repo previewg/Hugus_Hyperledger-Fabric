@@ -12,6 +12,9 @@ import {
   COMMENT_CHILD_ADD_SUCCESS,
   COMMENT_CHILD_ADD_FAILURE,
   COMMENT_LIST_INIT,
+  COMMENT_LIKE_START,
+  COMMENT_LIKE_SUCCESS,
+  COMMENT_LIKE_FAILURE,
 } from "../actions/comment";
 import update from "react-addons-update";
 
@@ -28,6 +31,10 @@ const initialState = {
     data: [],
     num: 1,
     more: false,
+  },
+  like: {
+    user: false,
+    status: "INIT",
   },
   child_add: {
     status: "INIT",
@@ -151,6 +158,26 @@ export default function comment(state = initialState, action) {
           status: { $set: "FAILURE" },
         },
       });
+    case COMMENT_LIKE_START:
+      return update(state, {
+        like: {
+          status: { $set: "WAITING" },
+        },
+      });
+    case COMMENT_LIKE_SUCCESS:
+      return update(state, {
+        like: {
+          user: { $set: !state.like.user },
+          status: { $set: "SUCCESS" },
+        },
+      });
+    case COMMENT_LIKE_FAILURE:
+      return update(state, {
+        like: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
     case COMMENT_CHILD_ADD:
       return update(state, {
         child_add: {

@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Talk, User, Talk_File, Sequelize } = require("../models");
+const { Talk, User, Talk_File, Talk_Like, sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -29,7 +29,6 @@ let upload = multer({
 router.post("/add", upload.array("files"), async (req, res) => {
     try {
       const { user_email } = req.session.loginInfo;
-      // const user_email = "moonnr94@gmail.com";
       const { talk_title, talk_content } = req.body;
       const list = await Talk.create({
         talk_title,
@@ -88,7 +87,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
     }
   });
   
-  // talk 수정
+  // Talk 수정
   router.post("/update", upload.array("files"), async (req, res) => {
     try {
       const {
@@ -96,18 +95,17 @@ router.post("/add", upload.array("files"), async (req, res) => {
         talk_content,
         id,
       } = req.body;
-  
+
       for (const file of req.files) {
         await Talk_File.create({
-          talk_id: talk.dataValues.id,
-          file: file.filename,
+          talk_id: id,
+          file: file.location,
         });
       }
   
-      await Story.update(
+      await Talk.update(
         {
           talk_title,
-          user_info,
           talk_content,
         },
         {
@@ -115,16 +113,16 @@ router.post("/add", upload.array("files"), async (req, res) => {
         }
       );
   
-      // // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
-      // await Talk_File.destroy({
-      //   where: { talk_id: id },
-      // });
-      // for (const file of req.files) {
-      //   await Talk_File.create({
-      //     talk_id: id,
-      //     file: file.filename,
-      //   });
-      // }
+      // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
+      await Talk_File.destroy({
+        where: { talk_id: id },
+      });
+      for (const file of req.files) {
+        await Talk_File.create({
+          talk_id: id,
+          file: file.location,
+        });
+      }
   
       res.json({ success: 1 });
     } catch (err) {
@@ -132,8 +130,6 @@ router.post("/add", upload.array("files"), async (req, res) => {
       res.json({ message: false });
     }
   });
-
-
 
   
 // Talk 목록 조회
@@ -198,16 +194,48 @@ router.get("/:id", async (req, res) => {
       else user_email = null;
   
       const data = await Talk.findOne({
+        attributes: [
+          "id",
+          "talk_title",
+          "talk_content",
+          "user_email",
+          "visited",
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM talk_like WHERE talk_id = `Talk`.id)"
+            ),
+            "talk_like",
+          ],
+        ],
         where: { id: talk_id },
-        include: [{ model: Talk_File, attributes: ["file"] }],
+        include: [
+          { model: Talk_File, attributes: ["file"] },
+          { model: User, attributes: ["nickname"] },
+      ],
+    });
+
+    if (user_email) {
+      const like = await Talk_Like.findOne({
+        where: { talk_id: talk_id, user_email: user_email },
       });
-      res.json({ data: data, success: 1 });
-    } catch (error) {
+      res.json({
+        data: data,
+        like: like ? true : false,
+        success: 1,
+      });
+    } else {
+      res.json({
+        data: data,
+        like: false,
+        success: 1,
+      });
+    }
+  } catch (error) {
       res.status(400).json({ success: 3 });
     }
   });
 
-// Act 조회수 추가
+// Talk 조회수 추가
 router.put("/visit", async (req, res) => {
     try {
       const { talk_id } = req.body;
@@ -226,6 +254,37 @@ router.put("/visit", async (req, res) => {
       res.status(400).json({ success: 3 });
     }
   });
+
+
+// Talk 좋아요 등록/삭제
+router.put("/like", async (req, res) => {
+  try {
+    const { talk_id, status } = req.body;
+    const { user_email } = req.session.loginInfo;
+
+    const history = await Talk_Like.findOne({
+      where: { talk_id, user_email },
+    });
+    console.log(talk_id);
+    console.log(user_email);
+    console.log(history);
+
+    if (history) {
+      await Talk_Like.destroy({
+        where: { talk_id, user_email },
+      });
+    } else {
+      await Talk_Like.create({
+        talk_id,
+        user_email,
+      });
+    }
+
+    res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
 
 
 module.exports = router;

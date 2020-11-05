@@ -68,6 +68,7 @@ db.Act_File = require("./act/act_file")(sequelize, Sequelize);
 db.Talk = require("./talk/talk")(sequelize, Sequelize);
 db.Talk_File = require("./talk/talk_file")(sequelize, Sequelize);
 db.Talk_Comment = require("./talk/talk_comment")(sequelize, Sequelize);
+db.Talk_Like = require("./talk/talk_like")(sequelize, Sequelize);
 db.Talk_Comment_Child = require("./talk/talk_comment_child")(
   sequelize,
   Sequelize
@@ -134,6 +135,10 @@ db.User.hasMany(db.Talk_Comment, {
   sourceKey: "email",
 });
 db.User.hasMany(db.Talk_Comment_Child, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+});
+db.User.hasMany(db.Talk_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
@@ -334,6 +339,7 @@ db.Act_File.belongsTo(db.Act, { foreignKey: "act_id", targetKey: "id" });
 db.Talk.hasMany(db.Talk_Comment, { foreignKey: "talk_id", sourceKey: "id" });
 db.Talk.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 db.Talk.hasMany(db.Talk_File, { foreignKey: "talk_id", sourceKey: "id" });
+db.Talk.hasMany(db.Talk_Like, { foreignKey: "talk_id", sourceKey: "id" });
 
 //Talk_File
 db.Talk_File.belongsTo(db.Talk, { foreignKey: "talk_id", targetKey: "id" });
@@ -366,10 +372,12 @@ db.Talk_Comment_Child.belongsTo(db.User, {
   targetKey: "email",
 });
 
-//Talk_Comment_Like
-db.Talk_Comment_Like.belongsTo(db.Talk_Comment, {
-  foreignKey: "comment_id",
-  targetKey: "id",
+// Talk_Like
+db.Talk_Like.belongsTo(db.Talk, { foreignKey: "talk_id", targetKey: "id" });
+db.Talk_Like.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "email",
 });
+
 
 module.exports = db;

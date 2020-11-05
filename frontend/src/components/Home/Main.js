@@ -17,13 +17,9 @@ const MainStyle = styled.section`
   .slogan {
     transition: all 1s ease-in-out;
     opacity: ${(props) => (props.scroll > 300 ? 0 : 1)};
-    position: relative;
-    top: 50px;
-    left: ${(props) => (props.scroll > 300 ? 500 : 0)}px;
     width: 80%;
     min-width: 290px;
-    height: 350px;
-    display: ${(props) => (props.scroll > 1000 ? "none" : "flex")};
+    height: 200px;
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-end;
@@ -35,6 +31,7 @@ const MainStyle = styled.section`
       font-weight: bold;
       font-family: "Kcc", sans-serif !important;
       margin: 0;
+      text-align: end;
       > p {
         margin: 10px;
         strong {
@@ -45,6 +42,7 @@ const MainStyle = styled.section`
     .slogan__sub {
       color: gray;
       padding: 20px;
+      text-align: end;
     }
   }
 `;

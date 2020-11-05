@@ -21,41 +21,6 @@ const actAddFailure = () => {
   return { type: ACT_ADD_FAILURE };
 };
 
-// act 게시물 목록 조회
-const actListLoadStart = () => {
-  return { type: ACT_LIST_LOAD };
-};
-const actListLoadSuccess = (list, status) => {
-  return {
-    type: ACT_LIST_LOAD_SUCCESS,
-    list: list,
-    status: status,
-  };
-};
-const actListLoadFailure = () => {
-  return { type: ACT_LIST_LOAD_FAILURE };
-};
-
-// act 게시물 상세 정보
-// export const actLoadInit = () => {
-//   return { type: act_LOAD_INIT };
-// };
-
-// const actLoadStart = () => {
-//   return { type: ACT_LOAD };
-// };
-// const actLoadSuccess = (data, status) => {
-//   return {
-//     type: ACT_LOAD_SUCCESS,
-//     data: data.data,
-//     status: status,
-//   };
-// };
-// const actLoadFailure = () => {
-//   return { type: ACT_LOAD_FAILURE };
-// };
-
-
 // act 게시글 등록 요청
 export const actAdd = (data) => async (dispatch) => {
   dispatch(actAddStart());
@@ -70,37 +35,6 @@ export const actAdd = (data) => async (dispatch) => {
     });
 };
 
-// // act 게시물 목록 조회 요청
-// export const actListLoader = (page) => async (dispatch) => {
-//     dispatch(actListLoadStart());
-//     await axios
-//       .get(`/act/list/${page}`)
-//       .then((response) => {
-//         let status = true;
-//         if (response.data.list.length !== 10) status = false;
-//         dispatch(actListLoadSuccess(response.data.list, status));
-//       })
-//       .catch((error) => {
-//         dispatch(actListLoadFailure());
-//         console.error(error);
-//       });
-//   };
-  
-// // 게시물 상세 조회 요청
-// export const actLoader = (id) => async (dispatch) => {
-//   dispatch(actLoadStart());
-//   await axios
-//     .get(`/act/${id}`)
-//     .then((response) => {
-//       console.log(response.data);
-//       dispatch(actLoadSuccess(response.data));
-//     })
-//     .catch((error) => {
-//       dispatch(actLoadFailure());
-//       console.log(error);
-//     });
-// };
-  
   // 게시물 조회수 추가 요청
 export const actVisit = (id) => async () => {
     await axios

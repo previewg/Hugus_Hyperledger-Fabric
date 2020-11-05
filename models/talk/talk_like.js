@@ -2,23 +2,19 @@
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Campaign_Donate",
+    "Talk_Like",
     {
-      hashed_email: {
+      user_email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      campaign_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      value: {
+      talk_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
-      tableName: "campaign_donate",
+      tableName: "talk_like",
       freezeTableName: true,
       underscored: true,
       charset: "utf8mb4",

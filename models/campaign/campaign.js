@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      campaign_value: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       user_email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -24,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
+      },
+      hash: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
     },
     {

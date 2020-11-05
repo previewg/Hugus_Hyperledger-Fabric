@@ -11,9 +11,8 @@ const CampaignSliderStyle = styled.section`
   align-items: center;
   margin-top: 150px;
   height: 80vh;
-  transition: all 1s ease-in-out;
-  transform: scale(${(props) => (props.scroll > 400 ? 1 : 0)});
-  opacity: ${(props) => (props.scroll > 400 ? 1 : 0)};
+  transition: all 0.7s ease-in-out;
+  //opacity: ${(props) => (props.scroll > 400 ? 1 : 0)};
   > p {
     text-align: left;
     font-size: 25px;
@@ -44,8 +43,9 @@ const CampaignSliderStyle = styled.section`
     .slick-center {
       transform: scale(1.2);
     }
-
     .campaign {
+      display: flex;
+      flex-direction: column;
       box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
       border-radius: 5px;
       cursor: pointer;
@@ -65,7 +65,6 @@ const CampaignSliderStyle = styled.section`
           margin-left: 5px;
         }
       }
-
       .campaign__img {
         width: 290px;
         height: 290px;
@@ -102,27 +101,30 @@ const BarStyle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  .count {
+  .count__info {
     width: 90%;
     background: transparent;
     margin: 0;
-    font-size: 13px;
-    color: white;
+    color: gray;
+    font-size: 12px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    > div:nth-child(2) {
+      color: orange;
+      font-size: 16px;
+      font-weight: bold;
+      font-style: italic;
+    }
   }
-  div {
-    width: 90%;
+  .count__bar {
+    width: 100%;
     display: flex;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    height: 5px;
     transition: all 2s ease-in-out;
-
     > div {
       height: 5px;
-      background-color: white;
-      border-radius: 10px;
+      background-color: orange;
       font-size: 13px;
       ${(props) => `width:${props.ratio}%`};
     }
@@ -163,7 +165,7 @@ const PrevArrow = (props) => {
   );
 };
 
-const CampaignSlider = ({ scroll }) => {
+const CampaignSlider = () => {
   const settings = {
     infinite: true,
     autopspeed: 5000,
@@ -183,24 +185,34 @@ const CampaignSlider = ({ scroll }) => {
     await axios.put("/campaign/visit", { campaign_id: campaign_id });
   };
 
-  const ProgressBar = ({ vote, goal }) => {
+  const ProgressBar = ({ value, goal }) => {
     const [ratio, setRatio] = useState(0);
 
     useEffect(() => {
       const init = setTimeout(() => {
-        if (vote > goal) setRatio(100);
-        setRatio((vote / goal) * 100);
+        if (value > goal) setRatio(100);
+        setRatio((value / goal) * 100);
       });
       return () => clearTimeout(init);
     }, []);
 
     return (
       <BarStyle ratio={ratio}>
-        <div className="count">
-          <CountUp end={ratio} duration={2} />
-          <span> %</span>
+        <div className="count__info">
+          <div>
+            <CountUp
+              formattingFn={(num) => num.toLocaleString()}
+              end={value}
+              duration={2}
+            />
+            <span> 원</span>
+          </div>
+          <div>
+            <CountUp end={ratio} duration={2} />
+            <span> %</span>
+          </div>
         </div>
-        <div>
+        <div className="count__bar">
           <div></div>
         </div>
       </BarStyle>
@@ -220,7 +232,7 @@ const CampaignSlider = ({ scroll }) => {
   }, []);
 
   return (
-    <CampaignSliderStyle scroll={scroll}>
+    <CampaignSliderStyle>
       <p>진행 중인 캠페인</p>
       <div>
         <Slider {...settings}>
@@ -245,7 +257,7 @@ const CampaignSlider = ({ scroll }) => {
                 />
                 <p className="campaign__title">{campaign.campaign_title}</p>
                 <ProgressBar
-                  vote={campaign.campaign_vote}
+                  value={campaign.campaign_value}
                   goal={campaign.campaign_goal}
                 />
               </Link>
@@ -257,4 +269,4 @@ const CampaignSlider = ({ scroll }) => {
   );
 };
 
-export default CampaignSlider;
+export default React.memo(CampaignSlider);

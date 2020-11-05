@@ -317,7 +317,7 @@ const SignUp = () => {
   const Socket = () => {
     useEffect(() => {
       const socket = socketIOClient("http://127.0.0.1:3333");
-      socket.on("hugus", (data) => {
+      socket.on(user.email, (data) => {
         if (data === "SUCCESS") {
           setUser({ ...user, email_verify: "SUCCESS" });
         }
@@ -325,7 +325,7 @@ const SignUp = () => {
       return () => {
         socket.disconnect();
       };
-    }, []);
+    }, [user.email_verify]);
     return null;
   };
 

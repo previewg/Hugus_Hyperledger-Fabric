@@ -5,14 +5,14 @@ const PaginationStyle = styled.div`
   div {
     display: flex;
     justify-content: space-around;
-    margin-top: 12px;
+    margin-top: 30px;
     text-align: center;
 
     > button {
       outline: none;
       font-weight: bold;
-      height: 32px;
-      width: 35px;
+      height: 27px;
+      width: 28px;
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
@@ -73,10 +73,15 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
       <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
-        {pArr.map((n, key) => (
-          <button key={key} onClick={() => setCurrPage(n)}>
+        {pArr.map((n, key) => 
+        currPage === n ? (
+          <button key={key} onClick={() => setCurrPage(n)} style={ {backgroundColor: "orange" }}>
             {n}
           </button>
+        ) : (
+          <button key={key} onClick={() => setCurrPage(n)} >
+          {n}
+        </button>
         ))}
         <button onClick={nextPage}>&gt;</button>
         <button onClick={lastPage}>&gt;&gt;</button>

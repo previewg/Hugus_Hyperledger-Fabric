@@ -7,10 +7,10 @@ import axios from "axios";
 
 const TalkContentsStyle = styled.div`
   display: flex;
-  padding-top:70px;
+  padding-top:50px;
   justify-content: center;
   flex-direction:column;
-  width: 70%;
+  width: 700px;
  
  .talk_contents {
    width:100%;
@@ -19,15 +19,13 @@ const TalkContentsStyle = styled.div`
    margin-top: 70px;
           >p {
             font-size:25px;
-            border-bottom:solid orange 3px;
+            border-bottom:solid orange 2px;
             padding-bottom:2px;
             }
  }
 
  .content {
-
   .giveProcessForm {
-    margin-top: 50px;
     p:nth-child(1) {
       font-weight: bold;
     }
@@ -57,16 +55,6 @@ const TalkContentsStyle = styled.div`
   }
 }
 
-  .visited {
-    margin-top: 50px;
-    display: flex;
-    justify-content: flex-end;
-    font-size: 13px;
-    > p {
-      margin: 0;
-      margin-left: 10px;
-    }
-  }
 
   .if_owner {
     margin-top: 20px;
@@ -85,24 +73,46 @@ const TalkContentsStyle = styled.div`
     }
   }
 
+  .visited {
+    margin-top: 50px;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 13px;
+    p:nth-child(1) {
+      margin: 0;
+      margin-left: 10px;
+    }
+    p:nth-child(2) {
+      margin: 0;
+      margin-left: 10px;
+    }
+  }
+
 `;
 
-const TalkContents = ({ talkId,history }) => {
-const email = useSelector((state) => state.auth.user.email);
+const TalkContents = ({ talkId,history,likenum }) => {
+// const likeNum = useSelector((state) => state.talk.like.likeNum);
 const data = talkId.data;
-
-
-const IfOwner = () => {
+const IfOwner = ({ history, data }) => {
+  const email = useSelector((state) => state.auth.user.email);
+  
   const onDeleteHandler = async () => {
-    const confirmed = window.confirm("삭제하시겠습니까?");
+    const confirmed = window.confirm("삭제 하시겠습니까?");
     if (confirmed) {
-      await axios.post("/talk/delete", {talk_id:data.id} );
+      await axios.post("/talk/delete", {talk_id:data.id} )
+      .then(() => {
+      alert("성공적으로 삭제되었습니다.");
       history.push("/talk");
-    }
+      }) 
+      .catch((error) => {
+      alert("삭제에 실패했습니다.");
+      console.error(error);
+      });
+    };
   };
 
   const onUpdateHandler = () => {
-    // history.push(`/talk/update/${data.id}`);
+    history.push(`/talk/update/${data.id}`);
   };
 
   if (data.user_email === email)
@@ -130,10 +140,7 @@ return (
 
       <TalkSlider files={data.Talk_Files} />
       
-      <div className="visited">
-      <p>조회수 {data.visited}</p>
-      </div>
-      <IfOwner />
+      <IfOwner history={history} data={data} />
       <div className="content">
       <div className="giveProcessForm">
       <p>수혜자의 소식</p>
@@ -141,6 +148,12 @@ return (
       {data.talk_content}  
       </p>
       </div>
+
+      <div className="visited">
+      <p>좋아요 {likenum}</p>
+      <p>조회수 {data.visited}</p>
+      </div>
+      
       </div>
 
     </TalkContentsStyle>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Donate from "./Donate";
@@ -95,7 +95,6 @@ const CampaignContentsStyle = styled.div`
 const CampaignContents = ({ data, history }) => {
   const email = useSelector((state) => state.auth.user.email);
 
-  console.log(data);
   return (
     <CampaignContentsStyle>
       <div className="title">

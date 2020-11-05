@@ -54,7 +54,7 @@ const BlockInfoHeadStyle = styled.article`
   }
 `;
 
-const BlockInfoHead = () => {
+const BlockInfoHead = ({ txHeight, blockHeight }) => {
   return (
     <BlockInfoHeadStyle>
       <div>
@@ -64,11 +64,11 @@ const BlockInfoHead = () => {
       <div className="summary">
         <div>
           <p>LATEST BLOCK</p>
-          <p>1,220,200</p>
+          <p>{blockHeight}</p>
         </div>
         <div>
           <p>TOTAL TX</p>
-          <p>1,220,200</p>
+          <p>{txHeight}</p>
         </div>
         <div>
           <p>TOTAL HUG</p>

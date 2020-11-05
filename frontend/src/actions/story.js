@@ -73,40 +73,6 @@ const storyDeleteFailure = () => {
   return { type: STORY_DELETE_FAILURE };
 };
 
-// 게시물 목록 조회
-const storyListLoadInitStart = () => {
-  return { type: STORY_LIST_LOAD_INIT };
-};
-
-const storyListLoadInitSuccess = (list, status) => {
-  return {
-    type: STORY_LIST_LOAD_INIT_SUCCESS,
-    list: list,
-    status: status,
-  };
-};
-
-const storyListLoadInitFailure = () => {
-  return { type: STORY_LIST_LOAD_INIT_FAILURE };
-};
-
-// 게시물 목록 조회
-const storyListLoadStart = () => {
-  return { type: STORY_LIST_LOAD };
-};
-
-const storyListLoadSuccess = (list, status) => {
-  return {
-    type: STORY_LIST_LOAD_SUCCESS,
-    list: list,
-    status: status,
-  };
-};
-
-const storyListLoadFailure = () => {
-  return { type: STORY_LIST_LOAD_FAILURE };
-};
-
 // 게시물 좋아요
 const storyLikeStart = () => {
   return { type: STORY_LIKE };
@@ -227,10 +193,10 @@ export const storyLoader = (id) => async (dispatch) => {
 };
 
 // 게시물 좋아요 추가/제거 요청
-export const storyLike = (id, status) => async (dispatch) => {
+export const storyLike = (id) => async (dispatch) => {
   dispatch(storyLikeStart());
   await axios
-    .put("/story/like", { story_id: id, status: status })
+    .put("/story/like", { story_id: id })
     .then(() => {
       dispatch(storyLikeSuccess());
     })

@@ -10,9 +10,10 @@ const {
   User,
   Story_Like,
   Story_Vote,
-  Story_Comment,
   sequelize,
 } = require("../models");
+
+// multer 설정
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -41,6 +42,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
     const { story_title, user_info, story_content, story_goal } = req.body;
+
     const story = await Story.create({
       story_title,
       user_info,
@@ -113,27 +115,27 @@ router.post("/delete", async (req, res) => {
       }
     });
 
-    // const hashtags = await Story_Hashtag.findAll({
-    //   attributes: [
-    //     "hashtag_id",
-    //     [
-    //       sequelize.literal(
-    //         "(SELECT COUNT(1) FROM story_hashtag WHERE hashtag_id = `Story_Hashtag`.hashtag_id)"
-    //       ),
-    //       "count",
-    //     ],
-    //   ],
-    //   where: { story_id: id },
-    // });
-    //
-    // for (const hashtag of hashtags) {
-    //   const unique = hashtag.getDataValue("count") === 1 ? true : false;
-    //   if (unique) {
-    //     await Hashtag.destroy({
-    //       where: { id: hashtag.getDataValue("hashtag_id") },
-    //     });
-    //   }
-    // }
+    const hashtags = await Story_Hashtag.findAll({
+      attributes: [
+        "hashtag_id",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_hashtag WHERE hashtag_id = `Story_Hashtag`.hashtag_id)"
+          ),
+          "count",
+        ],
+      ],
+      where: { story_id: id },
+    });
+
+    for (const hashtag of hashtags) {
+      const unique = hashtag.getDataValue("count") === 1 ? true : false;
+      if (unique) {
+        await Hashtag.destroy({
+          where: { id: hashtag.getDataValue("hashtag_id") },
+        });
+      }
+    }
 
     await Story.destroy({ where: { id } });
     res.json({ success: 1 });
@@ -164,21 +166,21 @@ router.post("/update", upload.array("files"), async (req, res) => {
 
     const delHashtagList = JSON.parse(del_hashtags);
     for (const del of delHashtagList) {
-      // const count = await Story_Hashtag.count({
-      //   where: { hashtag_id: del.id },
-      // });
+      const count = await Story_Hashtag.count({
+        where: { hashtag_id: del.id },
+      });
 
       await Story_Hashtag.destroy({
         where: { hashtag_id: del.id },
       });
 
-      // if (count === 1) {
-      //   await Hashtag.destroy({
-      //     where: {
-      //       hashtag: del.hashtag,
-      //     },
-      //   });
-      // }
+      if (count === 1) {
+        await Hashtag.destroy({
+          where: {
+            hashtag: del.hashtag,
+          },
+        });
+      }
     }
 
     const hashtagList = JSON.parse(hashtags);
@@ -303,7 +305,7 @@ router.get("/list/:page", async (req, res) => {
         where: {
           id: [
             sequelize.literal(
-              `(SELECT story_id FROM story_like WHERE user_email = '${user_email}'`
+              `(SELECT story_id FROM story_like WHERE user_email = '${user_email}')`
             ),
           ],
         },
@@ -312,8 +314,7 @@ router.get("/list/:page", async (req, res) => {
       });
       const total = await Story.count({ where: {} });
       let more = false;
-      if (total > page * 10) more = true;
-
+      if (total > page * 9) more = true;
       res.json({ list: list, success: 1, more: more });
     } else {
       list = await Story.findAll({
@@ -358,7 +359,6 @@ router.get("/list/:page", async (req, res) => {
       if (total > page * 10) more = true;
 
       res.json({ list: list, success: 1, more: more });
-
     }
   } catch (error) {
     res.status(400).json({ success: 3 });
@@ -459,15 +459,13 @@ router.put("/visit", async (req, res) => {
 // 스토리 좋아요 등록/삭제
 router.put("/like", async (req, res) => {
   try {
-    const { story_id, status } = req.body;
+    const { story_id } = req.body;
     const { user_email } = req.session.loginInfo;
 
     const history = await Story_Like.findOne({
       where: { story_id, user_email },
     });
-    console.log(story_id);
-    console.log(user_email);
-    console.log(history);
+
     if (history) {
       await Story_Like.destroy({
         where: { story_id, user_email },
@@ -488,7 +486,7 @@ router.put("/like", async (req, res) => {
 // 스토리 투표 등록/삭제
 router.put("/vote", async (req, res) => {
   try {
-    const { story_id, status } = req.body;
+    const { story_id } = req.body;
     const { user_email } = req.session.loginInfo;
 
     const history = await Story_Vote.findOne({

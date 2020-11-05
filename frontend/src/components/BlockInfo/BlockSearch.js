@@ -1,5 +1,8 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { blockListSearchLoader } from "actions/block";
 
 const BlockSearchStyle = styled.article`
   width: 100%;
@@ -33,15 +36,21 @@ const BlockSearchStyle = styled.article`
   }
 `;
 
-const BlockSearch = () => {
+const BlockSearch = ({ history }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [placeholder, setPlaceholder] = useState("SEARCH");
   const [img, setImg] = useState("/icons/Search.png");
   const [search, setSearch] = useState("");
   const here = useRef();
+  const dispatch = useDispatch();
+  const list = useSelector((state) => state.block.blockSearch.list);
 
   const onChangeHandler = (e) => {
     setSearch(e.target.value);
+    if (e.key === "Enter") {
+      dispatch(blockListSearchLoader(search));
+      history.push("/block/search");
+    }
   };
 
   const inputOpen = () => {
@@ -57,15 +66,20 @@ const BlockSearch = () => {
     setPlaceholder("SEARCH");
     setImg("/icons/Search.png");
   };
+
   return (
     <BlockSearchStyle isClicked={isClicked}>
       <div>
         <input
           ref={here}
-          onClick={inputOpen}
+          name="search"
           value={search}
-          onChange={onChangeHandler}
+          className="search_form"
+          type="text"
           placeholder={placeholder}
+          onChange={onChangeHandler}
+          onKeyPress={onChangeHandler}
+          onClick={inputOpen}
         />
         <img onClick={inputClose} src={img} />
       </div>

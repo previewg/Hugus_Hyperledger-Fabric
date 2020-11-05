@@ -24,7 +24,7 @@ const TalkStyle = styled.section`
       justify-content: flex-start;
       > p {
         font-size: 30px;
-        border-bottom: solid orange 3px;
+        border-bottom: solid orange 2px;
         padding-bottom: 2px;
       }
     }
@@ -49,14 +49,13 @@ const TalkStyle = styled.section`
 const TalkMain = (props) => {
   const dispatch = useDispatch();
   const isLoggedIn = props.isLoggedIn;
-
   const [total, setTotal] = useState(0);
   const [talkList, setTalkList] = useState([]);
   const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
 
-  const nowPage = async (talk_id) => {
-    const data = await axios.get(`/talk/list/${talk_id}?keyword=${search}`);
+  const nowPage = async (page) => {
+    const data = await axios.get(`/talk/list/${page}?keyword=${search}`);
     setTalkList(data.data.list);
     setTotal(data.data.count);
     setClicked(false);

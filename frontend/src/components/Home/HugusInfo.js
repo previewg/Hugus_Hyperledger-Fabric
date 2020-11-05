@@ -1,89 +1,106 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signUpBtnIsClicked } from "../../actions/user";
 
 const HugusInfoStyle = styled.section`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
   height: 300px;
-  background-color: #e9e9e9;
   margin-top: 100px;
-  justify-content: space-between;
   align-items: center;
-  .logo {
-    padding: 50px;
-    width: 30%;
+  margin-bottom: 200px;
+  .info__left {
+    justify-self: center;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    img {
-      width: 5rem;
-    }
-  }
-  .slogan {
-    padding: 50px;
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-around;
-    p:nth-child(1) {
+    .slogan {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
       font-size: 25px;
-      font-weight: bold;
-    }
-  }
-  .menu {
-    padding: 50px;
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-around;
-    height: 70%;
-    button,
-    a {
-      color: black;
-      outline: none;
-      text-decoration: none;
-      border: none;
-      font-size: 15px;
-      width: 160px;
-      height: 50px;
       cursor: pointer;
-      background-color: #ffffff;
-      box-shadow: -10px -10px 10px 0px rgba(0, 0, 0, 0.3);
+      > p {
+        margin: 10px;
+        :nth-child(1) {
+          color: gray;
+        }
+        :nth-child(2) {
+          font-weight: bold;
+        }
+      }
+    }
+    > div:nth-child(2) {
+      cursor: pointer;
+      margin-left: 50px;
+      width: 70px;
+      height: 70px;
+      border-radius: 35px;
+      background-color: rgba(0, 0, 0, 0.2);
       display: flex;
       justify-content: center;
       align-items: center;
-      :hover {
-        font-weight: bold;
-        color: orange;
+      > img {
+        width: 40px;
+      }
+    }
+  }
+  .info__right {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    a {
+      outline: none;
+      text-decoration: none;
+      border: none;
+      font-size: 16px;
+      width: 100%;
+      height: 300px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease-in-out;
+      :nth-child(2) {
+        background-size: 15%;
+      }
+      > p {
+        width: 200px;
+        height: 80px;
+        color: gray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
       }
     }
   }
 `;
 
 const HugusInfo = () => {
+  const dispatch = useDispatch();
   return (
     <HugusInfoStyle>
-      <article className="logo">
-        <img src="/icons/hugus.png" alt="hugus" />
+      <article className="info__left">
+        <div className="slogan" onClick={() => dispatch(signUpBtnIsClicked())}>
+          <p>회원가입하고</p>
+          <p>허그에 참여하세요!</p>
+        </div>
+        <div onClick={() => dispatch(signUpBtnIsClicked())}>
+          <img src="/icons/Nexticon.png" />
+        </div>
       </article>
-      <article className="slogan">
-        <p>
-          마음을 담는 기부
-          <br />
-          허그에 담기다
-        </p>
-        <p>
-          따뜻하게 안아줄 수 있는
-          <br />
-          투명하고 자율적인 기부플랫폼
-        </p>
-      </article>
-      <article className="menu">
-        <button>허그 소개</button>
-        <Link to="/block">실시간 블록체인 정보</Link>
+      <article className="info__right">
+        <Link to="/info">
+          <p>허그 소개</p>
+        </Link>
+
+        <Link to="/block">
+          <p>실시간 블록체인 정보</p>
+        </Link>
       </article>
     </HugusInfoStyle>
   );

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { talkLoader, talkUpdate } from "actions/talk";
 
 const TalkUpdateStyle = styled.div`
   display: flex;
@@ -302,6 +303,9 @@ const TalkUpdate = (props) => {
   const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
+  const load = useRef(true);
+  const preData = useSelector((state) => state.talk.detail.data);
+  const loadStatus = useSelector((state) => state.talk.detail.status);
 
   const [data, setData] = useState({
     title: "",
@@ -341,7 +345,7 @@ const TalkUpdate = (props) => {
     return true;
   }, [filled, data]);
 
-  const talkUpdateHandler = async () => {
+  const talkUpdateHandler = () => {
     if (errorHandler()) {
       const formData = new FormData();
       formData.append("id", props.match.params.id);
@@ -351,12 +355,11 @@ const TalkUpdate = (props) => {
         for (const file of data.files) {
           formData.append(`files`, file);
         }
-      } else {
+      } else {  
         formData.append("files", "");
       }
-      // dispatch(storyUpdate(formData, { ...props }));
-      await axios.post("/talk/update", formData )
-      history.push("/talk");
+      dispatch(talkUpdate(formData, { ...props }));
+
     }
   };
 
@@ -405,11 +408,11 @@ const TalkUpdate = (props) => {
 
   useEffect(() => {
     if (load.current) {
-      // dispatch(storyLoader(props.match.params.id));
-
+      dispatch(talkLoader(props.match.params.id));
       load.current = false;
     }
-    if (loadStatus === "SUCCESS") init();
+    if (loadStatus === "SUCCESS") 
+    init();
   }, [loadStatus]);
 
   return (
