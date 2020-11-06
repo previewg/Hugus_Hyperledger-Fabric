@@ -1,21 +1,30 @@
 import React from "react";
-import { SyncLoader } from "react-spinners";
+import { HashLoader } from "react-spinners";
 import { css } from "@emotion/core";
+import styled from "styled-components";
+
+const LoaderStyle = styled.section`
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Loader = () => {
   return (
-    <SyncLoader
-      css={css`
-        height: 100vh;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      `}
-      size={10}
-      color={"#f69a53"}
-      loading={true}
-    />
+    <LoaderStyle>
+      <HashLoader
+        css={css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        `}
+        size={60}
+        color={"#f69a53"}
+        loading={true}
+      />
+    </LoaderStyle>
   );
 };
 
