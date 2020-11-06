@@ -240,7 +240,7 @@ const SearchBar = ({ history }) => {
               />
               {search !== "" ? (
                 <a>
-                  <img alt="search__icon" src="/icons/search.png" />
+                  <img alt="search__icon" src="/icons/Search.png" />
                 </a>
               ) : null}
             </div>
@@ -269,7 +269,7 @@ const SearchBar = ({ history }) => {
           />
           <Link to="/search/result">
             <div onClick={onClick}>
-              <img alt="search__icon" src="/icons/search.png" />
+              <img alt="search__icon" src="/icons/Search.png" />
             </div>
           </Link>
         </div>
