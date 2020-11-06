@@ -24,7 +24,9 @@ import {
   UserInfo,
   BlockInfo,
   BlockInfoList,
-  BlockInfoSearch,
+  BlockInfoBlock,
+  BlockInfoUser,
+  BlockInfoTx,
   SearchResult,
   StoryUpdate,
   ActMain,
@@ -35,6 +37,7 @@ import {
   CampaignDetail,
   TalkWrite,
   TalkUpdate,
+  
 } from "pages";
 
 // Common components
@@ -70,8 +73,10 @@ ReactDOM.render(
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route exact path="/block" component={Auth(BlockInfo, null)} />
-        <Route path="/block/List" component={Auth(BlockInfoList, null)} />
-        <Route path="/block/search" component={Auth(BlockInfoSearch, null)} />
+        
+        <Route path="/block/search/block" component={Auth(BlockInfoBlock, null)} />
+        <Route path="/block/search/tx" component={Auth(BlockInfoTx, null)} />
+        <Route path="/block/search/user" component={Auth(BlockInfoUser, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route path="/act/write" component={Auth(ActWrite, null)} />

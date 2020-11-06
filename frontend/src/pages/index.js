@@ -8,8 +8,9 @@ import SearchResult from "./SearchResult";
 import User from "./User";
 import UserInfo from "./UserInfo";
 import BlockInfo from "./BlockInfo";
-import BlockInfoList from "./BlockInfoList";
-import BlockInfoSearch from "./BlockInfoSearch";
+import BlockInfoBlock from "./BlockInfoBlock";
+import BlockInfoTx from "./BlockInfoTx";
+import BlockInfoUser from "./BlockInfoUser";
 import ActMain from "./ActMain";
 import ActDetail from "./ActDetail";
 import ActWrite from "./ActWrite";
@@ -29,9 +30,10 @@ export {
   TotalSearch,
   User,
   UserInfo,
-  BlockInfo,
-  BlockInfoList,
-  BlockInfoSearch,
+  BlockInfo,  
+  BlockInfoBlock,
+  BlockInfoUser,
+  BlockInfoTx,
   SearchResult,
   ActMain,
   ActDetail,

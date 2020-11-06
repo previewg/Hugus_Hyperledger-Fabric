@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Block = require("../models/block/block");
+const transaction = require("../models/block/transaction");
 const Transaction = require("../models/block/transaction");
 
 router.get("/init", async (req, res) => {
@@ -54,21 +55,37 @@ router.get("/list/:page", async (req, res) => {
     console.log(err);
   }
 });
-router.post("/search", async (req, res) => {
+router.post("/search/:type", async (req, res) => {
   try {
     const word = req.body.word;
-    let searchData;
+    const type = "user";
+    let searchUser;
+    let searchTx;
+    let searchBlock;    
+    let searchUserCount;
+    let page;
 
-    if (word.length < 64) {
-      searchData = await Transaction.find({ sender_id: word });
-    } else {
-      searchData = await Transaction.findOne({ tx_id: word });
-      if (!searchData) {
-        searchData = await Block.findOne({ block_hash: word });
+
+    if (type === "user") {
+      searchUser = await Transaction.find({ sender_id: word }).sort({timestamp: -1}).skip((page -1)*10).limit(10);
+      console.log(searchUser)
+      searchUserCount = await Transaction.find({sender_id: word}).count();  
+      searchUserCount = parseInt(searchUserCount / 10) + 1;  
+      console.log(searchUserCount);    
+      res.json({ list: searchUser, count:searchUserCount, success: 1 });
+     }if(type === "tx"){
+      searchTx = await Transaction.findOne({ tx_id: word });
+      console.log(searchTx)    
+      res.json({ list: searchTx, success: 1 });
+      }if (type === "block") {
+        searchBlock = await Block.findOne({ block_hash: word });
+        console.log(searchBlock);
+        res.json({ list: searchBlock, success: 1 });
       }
-    }
-    if (!searchData) res.status(400).json({ success: 3 });
-    res.json({ result: searchData, success: 1 });
+      if (!type) res.status(400).json({ success: 3 });
+      
+    
+   
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);

@@ -41,6 +41,7 @@ const BlockSearch = ({ history }) => {
   const [placeholder, setPlaceholder] = useState("SEARCH");
   const [img, setImg] = useState("/icons/Search.png");
   const [search, setSearch] = useState("");
+  
   const here = useRef();
   const dispatch = useDispatch();
   const list = useSelector((state) => state.block.blockSearch.list);
@@ -49,9 +50,10 @@ const BlockSearch = ({ history }) => {
     setSearch(e.target.value);
     if (e.key === "Enter") {
       dispatch(blockListSearchLoader(search));
-      history.push("/block/search");
+      history.push(`/block/search/user`);
     }
   };
+
 
   const inputOpen = () => {
     setIsClicked(true);
@@ -70,6 +72,7 @@ const BlockSearch = ({ history }) => {
   return (
     <BlockSearchStyle isClicked={isClicked}>
       <div>
+        
         <input
           ref={here}
           name="search"

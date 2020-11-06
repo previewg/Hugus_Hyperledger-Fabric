@@ -36,7 +36,10 @@ import BlockSearch from "./BlockInfo/BlockSearch";
 import BlockInfoHead from "./BlockInfo/BlockInfoHead";
 import BlockInfoMain from "./BlockInfo/BlockInfoMain";
 import BlockInfoList from "./BlockInfoList/BlockInfoList";
-import BlockInfoSearchLoader from "./BlockInfoSearch/Loader"
+import BlockInfoTx from "./BlockInfoSearch/BlockInfoTx";
+import BlockInfoBlock from "./BlockInfoSearch/BlockInfoBlock";
+import BlockInfoUser from "./BlockInfoSearch/BlockInfoUser";
+import BlockInfoSearchLoader from "./BlockInfoSearch/Loader";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
 import PayLoader from "./Pay/Loader";
@@ -81,6 +84,9 @@ export {
   BlockSearch,
   BlockInfoHead,
   BlockInfoMain,
+  BlockInfoTx,
+  BlockInfoBlock,
+  BlockInfoUser,
   BlockInfoList,
   BlockInfoSearchLoader,
   CampaignDetailLoader,
