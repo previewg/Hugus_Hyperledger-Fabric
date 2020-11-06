@@ -67,7 +67,7 @@ ReactDOM.render(
         <Route path="/story/update/:id" component={Auth(StoryUpdate, true)} />
         <Route path="/story/:id" component={Auth(StoryDetail, null)} />
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
-        <Route path="/search/result" component={Auth(SearchResult, null)} />
+        <Route path="/search/:hashtag" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route exact path="/block" component={Auth(BlockInfo, null)} />
         <Route exact path="/block/all/block" component={Auth(BlockAll, null)} />

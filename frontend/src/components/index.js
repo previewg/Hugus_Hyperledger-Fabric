@@ -49,6 +49,10 @@ import BlockAllLoader from "./BlockAll/Loader";
 import TxAllHead from "./TxAll/TxAllHead";
 import TxAllMain from "./TxAll/TxAllMain";
 import TxAllLoader from "./TxAll/Loader";
+import SearchResultHead from "./SearchResult/SearchResultHead";
+import SearchResultList from "./SearchResult/SearchResultList";
+import SearchResultLoader from "./SearchResult/Loader";
+
 export {
   Main,
   NavBar,
@@ -101,4 +105,7 @@ export {
   TxAllHead,
   TxAllMain,
   TxAllLoader,
+  SearchResultHead,
+  SearchResultList,
+  SearchResultLoader,
 };

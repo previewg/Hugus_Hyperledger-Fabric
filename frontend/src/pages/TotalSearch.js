@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { hashtagAll, hashtagSearch } from "actions/hashtag";
 import * as Hangul from "hangul-js";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { HashLoader } from "react-spinners";
+import { css } from "@emotion/core";
 
 const TotalSearchStyle = styled.div`
   display: flex;
@@ -75,7 +76,7 @@ const TotalSearchStyle = styled.div`
     .live__suggestion {
       display: ${(props) => (props.search ? "flex" : "none")};
       position: absolute;
-      top: 570px;
+      top: 564px;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -105,6 +106,13 @@ const TotalSearchStyle = styled.div`
           position: relative;
           z-index: -100;
           right: 30px;
+        }
+        :nth-child(${(props) => props.now}) {
+          input {
+            background-color: #faf4e7;
+            color: orange;
+            font-weight: bold;
+          }
         }
       }
     }
@@ -139,42 +147,115 @@ const TotalSearchStyle = styled.div`
   }
 `;
 
+const LoaderStyle = styled.div`
+  width: 40%;
+  height: 20vh;
+  display: flex;
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+`;
+
 const TotalSearch = ({ history }) => {
-  const dispatch = useDispatch();
-  const list = useSelector((state) => state.hashtag.list.data);
+  const [hashtagList, setHashtagList] = useState([]);
+  const [matchedList, setMatchedList] = useState([]);
   const [search, setSearch] = useState("");
   const [now, setNow] = useState(0);
+
   const onChangeHandler = (e) => {
-    e.preventDefault();
     setSearch(e.target.value);
-  };
-  const onClick = () => {
-    dispatch(hashtagSearch(search));
+    const matchedList = hashtagList.filter((row) =>
+      compare(row.hashtag, e.target.value)
+    );
+    setMatchedList(matchedList.slice(0, 10));
   };
 
-  const compare = (hashtag) => {
+  const onClick = () => {
+    history.push(`/search/${search}`);
+  };
+
+  const compare = (hashtag, inputWord) => {
     const dis = Hangul.disassemble(hashtag);
-    if (hashtag.match(search) || dis.includes(search)) return true;
+    if (hashtag.match(inputWord) || dis.includes(inputWord)) return true;
     else return false;
   };
 
   const onKeyDownHandler = (e) => {
     if (e.key === "ArrowDown") {
-      console.log(document.getElementById(`suggest${now}`));
-      setNow((now) => now + 1);
+      if (now < matchedList.length) {
+        setSearch(document.getElementById(`suggest${now}`).value);
+        setNow((now) => now + 1);
+      } else if (now === matchedList.length) {
+        setNow(1);
+        setSearch(document.getElementById(`suggest0`).value);
+      }
     }
     if (e.key === "ArrowUp") {
-      setNow((now) => now - 1);
-      document.getElementById(`suggest${now}`).focus();
+      if (now > 0) {
+        if (now > 1) {
+          setSearch(document.getElementById(`suggest${now - 2}`).value);
+        }
+        setNow((now) => now - 1);
+      }
+    }
+    if (e.key === "Enter") {
+      history.push(`/search/${search}`);
     }
   };
 
+  const initLoad = async () => {
+    const initData = await axios.get("/hashtag/all");
+    setHashtagList(initData.data.list);
+  };
+
+  const LiveSuggestion = () => {
+    if (hashtagList.length === 0) {
+      return (
+        <LoaderStyle className="live__suggestion">
+          <HashLoader
+            css={css`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            `}
+            size={40}
+            color={"#f69a53"}
+            loading={true}
+          />
+        </LoaderStyle>
+      );
+    }
+    return (
+      <div className="live__suggestion">
+        {matchedList.map((row, key) => {
+          return (
+            <div key={key}>
+              <input
+                id={`suggest${key}`}
+                value={row.hashtag}
+                readOnly
+                onClick={() => {
+                  history.push(`/search/${row.hashtag}`);
+                }}
+              />
+              {search !== "" ? (
+                <a>
+                  <img alt="search__icon" src="/icons/search.png" />
+                </a>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   useEffect(() => {
-    dispatch(hashtagAll());
+    initLoad();
   }, []);
 
   return (
-    <TotalSearchStyle search={search}>
+    <TotalSearchStyle search={search} now={now}>
       <div className="layout">
         <div className="content">
           <img className="logo" alt="hugus" src="/icons/hugus.svg" />
@@ -208,29 +289,7 @@ const TotalSearch = ({ history }) => {
             </div>
           </Link>
         </div>
-        <div className="live__suggestion">
-          {list.map((row, key) => {
-            if (compare(row.hashtag))
-              return (
-                <div id={`suggest${key}`} key={key}>
-                  <input
-                    value={row.hashtag}
-                    readOnly
-                    onClick={async () => {
-                      await setSearch(row.hashtag);
-                      dispatch(hashtagSearch(row.hashtag));
-                      history.push("/search/result");
-                    }}
-                  />
-                  {search !== "" ? (
-                    <Link to="/search/result">
-                      <img alt="search__icon" src="/icons/search.png" />
-                    </Link>
-                  ) : null}
-                </div>
-              );
-          })}
-        </div>
+        <LiveSuggestion />
         <div className="suggestion">
           <p>#추천태그1</p>
           <p>#추천태그2</p>
