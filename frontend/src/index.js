@@ -38,6 +38,7 @@ import {
   TalkUpdate,
   BlockAll,
   TxAll,
+  Info,
 } from "pages";
 
 // Common components
@@ -60,6 +61,7 @@ ReactDOM.render(
       <User />
       <Switch>
         <Route exact path="/" component={Auth(Home, null)} />
+        <Route exact path="/info" component={Auth(Info, null)} />
         <Route
           exact
           path="/campaign/:id"
@@ -70,7 +72,7 @@ ReactDOM.render(
         <Route path="/story/update/:id" component={Auth(StoryUpdate, true)} />
         <Route path="/story/:id" component={Auth(StoryDetail, null)} />
         <Route exact path="/search" component={Auth(TotalSearch, null)} />
-        <Route path="/search/result" component={Auth(SearchResult, null)} />
+        <Route path="/search/:hashtag" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route exact path="/block" component={Auth(BlockInfo, null)} />
         <Route path="/block/search/block/:id" component={Auth(BlockDetail, null)} />

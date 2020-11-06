@@ -47,9 +47,6 @@ const ActMain = () => {
     setClicked(false);
   };
 
-  //   const onClickHandler = () => {
-  //     props.history.push("/act/write");
-  //   };
 
   const Loader = () => {
     return (

@@ -21,7 +21,7 @@ import TalkDetail from "./TalkDetail";
 import CampaignDetail from "./CampaignDetail";
 import TalkWrite from "./TalkWrite";
 import TalkUpdate from "./TalkUpdate";
-
+import Info from "./Info";
 export {
   Home,
   StoryMain,
@@ -46,4 +46,5 @@ export {
   TalkWrite,
   CampaignDetail,
   TalkUpdate,
+  Info,
 };

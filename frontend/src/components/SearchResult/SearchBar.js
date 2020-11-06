@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import * as Hangul from "hangul-js";
-import { Link } from "react-router-dom";
+import Hangul from "hangul-js";
 import axios from "axios";
 import { HashLoader } from "react-spinners";
 import { css } from "@emotion/core";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
-const TotalSearchStyle = styled.div`
+const SearchBarStyle = styled.div`
   display: flex;
   justify-content: center;
-  padding-top: 50px;
-  height: 100vh;
+  padding-top: 100px;
   .layout {
-    margin-top: 180px;
     width: 80%;
     display: flex;
     flex-direction: column;
@@ -76,7 +74,7 @@ const TotalSearchStyle = styled.div`
     .live__suggestion {
       display: ${(props) => (props.search ? "flex" : "none")};
       position: absolute;
-      top: 564px;
+      top: 184px;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -156,7 +154,7 @@ const LoaderStyle = styled.div`
   align-items: center;
 `;
 
-const TotalSearch = ({ history }) => {
+const SearchBar = ({ history }) => {
   const [hashtagList, setHashtagList] = useState([]);
   const [matchedList, setMatchedList] = useState([]);
   const [search, setSearch] = useState("");
@@ -185,7 +183,7 @@ const TotalSearch = ({ history }) => {
       if (now < matchedList.length) {
         setSearch(document.getElementById(`suggest${now}`).value);
         setNow((now) => now + 1);
-      } else if (now === matchedList.length) {
+      } else if (now === matchedList.length && matchedList.length !== 0) {
         setNow(1);
         setSearch(document.getElementById(`suggest0`).value);
       }
@@ -199,6 +197,8 @@ const TotalSearch = ({ history }) => {
       }
     }
     if (e.key === "Enter") {
+      setMatchedList([]);
+      setNow(0);
       history.push(`/search/${search}`);
     }
   };
@@ -255,24 +255,8 @@ const TotalSearch = ({ history }) => {
   }, []);
 
   return (
-    <TotalSearchStyle search={search} now={now}>
+    <SearchBarStyle search={search} now={now}>
       <div className="layout">
-        <div className="content">
-          <img className="logo" alt="hugus" src="/icons/hugus.svg" />
-          <div className="title_text">
-            <p>
-              마음을 담는 기부
-              <br />
-              허그에 담기다
-            </p>
-            <p>
-              따뜻하게 안아줄 수 있는
-              <br />
-              투명하고 자율적인 기부 플랫폼
-            </p>
-          </div>
-        </div>
-
         <div className="search__bar">
           <input
             name="search"
@@ -290,13 +274,9 @@ const TotalSearch = ({ history }) => {
           </Link>
         </div>
         <LiveSuggestion />
-        <div className="suggestion">
-          <p>#추천태그1</p>
-          <p>#추천태그2</p>
-        </div>
       </div>
-    </TotalSearchStyle>
+    </SearchBarStyle>
   );
 };
 
-export default TotalSearch;
+export default SearchBar;
