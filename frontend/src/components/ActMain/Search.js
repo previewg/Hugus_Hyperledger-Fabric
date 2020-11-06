@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
 const SearchStyle = styled.div`
     width:100%;
     display:flex;
     justify-content:flex-end;
-            .search_form {
+    .search_form {
+            outline: none;
             width:180px;
             height:23px;
             border-radius:3px;
-            border: solid grey 2px;
-            transition: 0.2s ease-in-out;
-            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+            border: solid 1px grey;
+            transition: all 0.5s ease-in-out;
             padding-left:3px;
+            width: ${(props) => (props.isClicked ? "300px" : "150px")};
             :hover { 
-            border: solid orange 2px;
+                border: solid 1px orange;
                 :focus {
                 outline: none;
                 }
@@ -39,21 +40,36 @@ const SearchStyle = styled.div`
 `;
 
 const Search = ({ search, setSearch, setClicked }) => {
-    
-    
+    const [isClicked, setIsClicked] = useState(false);
+    const [placeholder, setPlaceholder] = useState("SEARCH");
+    const here = useRef();
+
+    const inputOpen = () => {
+        setIsClicked(true);
+        setPlaceholder("SEARCH");
+        here.current.focus();  
+    };
+
+    // const inputClose = (e) => {
+    //     setSearch("")
+    //     setIsClicked(false);
+    //   };
+
     const onChangeHandler = (e) => {
         e.preventDefault();
         setSearch(e.target.value);
       };
 
     return(
-        <SearchStyle>
-            <input
+        <SearchStyle isClicked={isClicked}>
+             <input
+            ref={here}
+            onClick={inputOpen}
             name="search"
             value={search}
+            placeholder={placeholder}
             className="search_form"
             type="text"
-            placeholder="검색어를 입력하세요"
             onChange={onChangeHandler}
             onKeyDown={(e) => {
                 if (e.key === "Enter") setClicked();

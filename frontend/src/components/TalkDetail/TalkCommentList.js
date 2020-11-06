@@ -200,9 +200,9 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
   const email = useSelector((state) => state.auth.user.email);
   const data = talkCommentList.list;
   const talk_id = talkId.data.id;
-
-
-
+  const [status, setStatus] = useState("WAITING");
+  const [num, setNum] = useState(2);
+  const [more,setMore] = useState(talkCommentList.more);
 
   const commentDeleteHandler = async (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
@@ -214,7 +214,6 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
 
   const TalkCommentChildMain = ({ comment }) => {
     const [status, setStatus] = useState(false);
-
 
     const onClickHandler = () => {
       if (status) setStatus(false);
@@ -238,14 +237,24 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
       </>
     );
   };
+  console.log(talkCommentList.more);
 
-  const loadMore = async (page) => {
+  const loadMore = async () => {
     const id = talk_id;
-    // dispatch(commentListLoader(data.id, num));
-    const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
-    console.log(comment);
-    setTalkCommentList(comment.data);
+    const comment = await axios.get(`/talk_comment/list/${id}/${num}`);
+    const newCommentList = talkCommentList.list.concat(comment.data.list);
+
+    talkCommentList.list = newCommentList;
+    setTalkCommentList(talkCommentList);
+    if (comment.data.more === true) {
+          setNum(num => num + 1);
+          setMore(true)
+    } else {
+          setMore(false)
+        };
+    setStatus("SUCCESS");
   };
+
 
   return (
     <TalkCommentListStyle>
@@ -286,9 +295,11 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
           </article>
         );
       })}
-      <div className="bottom">
-        <p onClick={loadMore}>댓글 더보기</p>
-      </div>
+      {more &&
+        <div className="bottom">
+          <p onClick={loadMore}>댓글 더보기</p>
+        </div>
+      }
     </TalkCommentListStyle>
   );
 };
