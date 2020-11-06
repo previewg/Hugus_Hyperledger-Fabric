@@ -1,29 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import {
-  BlockInfoSearchLoader,
-  SearchUserHead,
-  SearchUser,
-  BlockSearch,
-  
-} from "components";
+import { SearchUserHead, SearchUser, BlockSearch } from "components";
 
-const BlockInfoUserStyle = styled.section`
-    padding-top: 50px;
+const UserDetailStyle = styled.section`
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const BlockInfoUserList = (props,{match,history}) => {
+const UserDetail = ({ match, history }) => {
   const init = useRef(true);
   const [List, setList] = useState([]);
   const [txHeight, setTxHeight] = useState(0);
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(false);
   const [loading, setLoading] = useState(false);
-  
 
   const load = async (page) => {
     setLoading(true);
@@ -34,7 +27,7 @@ const BlockInfoUserList = (props,{match,history}) => {
       setMore(list.data.more);
       setLoading(false);
     }
-  };  
+  };
   useEffect(() => {
     if (init.current) {
       load(1);
@@ -44,19 +37,18 @@ const BlockInfoUserList = (props,{match,history}) => {
   }, []);
 
   return (
-    <BlockInfoUserStyle>      
-      <BlockSearch history={props.history} />
-      <BlockInfoSearchLoader />
+    <UserDetailStyle>
+      <BlockSearch history={history} />
       <SearchUserHead
-      setPage={setPage}
-      txHeight={txHeight}
-      page={page}
-      more={more}
-      load={load}
+        setPage={setPage}
+        txHeight={txHeight}
+        page={page}
+        more={more}
+        load={load}
       />
-      <SearchUser history = {history} />
-    </BlockInfoUserStyle>
+      <SearchUser history={history} />
+    </UserDetailStyle>
   );
 };
 
-export default BlockInfoUserList;
+export default UserDetail;

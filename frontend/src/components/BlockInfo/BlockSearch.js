@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-
 
 const BlockSearchStyle = styled.article`
   width: 100%;
@@ -40,21 +38,15 @@ const BlockSearch = ({ history }) => {
   const [placeholder, setPlaceholder] = useState("SEARCH");
   const [img, setImg] = useState("/icons/Search.png");
   const [search, setSearch] = useState("");
-  
+
   const here = useRef();
-  const dispatch = useDispatch();
 
   const onChangeHandler = (e) => {
     setSearch(e.target.value);
     if (e.key === "Enter") {
-      // dispatch(blockListSearchLoader(type, search));
-      // history.push(`/block/search/user/${e.target.value}`);
-      history.push(`/block/search/block/${e.target.value}`);
+      history.push(`/search/block/${e.target.value}`);
     }
   };
-// useEffect((search)=>{
-// BlockSearch(search)
-// });
 
   const inputOpen = () => {
     setIsClicked(true);
@@ -73,7 +65,6 @@ const BlockSearch = ({ history }) => {
   return (
     <BlockSearchStyle isClicked={isClicked}>
       <div>
-        
         <input
           ref={here}
           name="search"

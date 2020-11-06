@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { BlockInfoSearchLoader } from "components";
-import { Link } from "react-router-dom";
-import { blockListSearchLoader } from "../../actions/block";
 
-const BlockSearchUserStyle = styled.div`
-   width: 80%;
+const SearchUserStyle = styled.div`
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .TxList__header {
     display: grid;
-    grid-template-columns:  1fr 3fr 1fr 1fr 1fr 1fr 3fr;
+    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr 3fr;
     border-top: solid 0.1px orange;
     border-bottom: solid 0.1px lightgray;
     font-size: 15px;
@@ -64,39 +60,22 @@ const BlockSearchUserStyle = styled.div`
   }
 `;
 
-
-
-const BlockInfoUser = () => {
-
-  const dispatch = useDispatch();
-  const list = useSelector((state) => state.block.blockSearch.list);
-  console.log(list);
-
-  const visitHandler = (list) => {
-    dispatch(blockListSearchLoader(list));
-  };
-
-  if (!list) return <BlockInfoSearchLoader />
+const SearchUser = ({ list }) => {
   return (
-    <BlockSearchUserStyle >
-       <div className="TxList__header">
+    <SearchUserStyle>
+      <div className="TxList__header">
         <div> block_height/ sender_id </div>
         <div> block_height/ sender_id </div>
         <div> block_height/ sender_id </div>
         <div> block_height/ sender_id </div>
         <div> tx_id/value </div>
-        <div>  tx_type </div>
+        <div> tx_type </div>
         <div className="acenter"> receiver_id/time </div>
       </div>
 
-      <div >
-      {list.map((block, key) => {
-        return (
-          // <Link
-          //   to={`/block/${act.id}`}
-          //   onClick={() => visitHandler(block.tx_id)}
-          //   key={key}
-          // >
+      <div>
+        {list.map((block, key) => {
+          return (
             <div className="TxList__body" key={key}>
               <div className="block_height">{block.block_height}</div>
               <div className="tx_id">{block.tx_id}</div>
@@ -107,13 +86,11 @@ const BlockInfoUser = () => {
               <div className="receipt">{block.receipt}</div>
               <div className="timestamp">{block.timestamp}</div>
             </div>
-          // </Link>
-        );
-      })}
+          );
+        })}
       </div>
-
-    </BlockSearchUserStyle>
+    </SearchUserStyle>
   );
 };
 
-export default BlockInfoUser;
+export default SearchUser;

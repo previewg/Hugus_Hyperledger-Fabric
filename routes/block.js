@@ -56,51 +56,47 @@ router.get("/list/:page", async (req, res) => {
   }
 });
 
-router.post("/search/user/:page", async (req, res) => {
+router.get("/search/user/:page", async (req, res) => {
   try {
     const word = req.body.word;
-    
-    let searchUser;     
+
+    let searchUser;
     let searchUserCount;
     let page;
-    
-      searchUser = await Transaction.find({ sender_id: word }).sort({timestamp: -1}).skip((page -1)*10).limit(10);
-      console.log(searchUser)
-      searchUserCount = await Transaction.find({sender_id: word}).count();  
-      searchUserCount = parseInt(searchUserCount / 10) + 1;  
-      console.log(searchUserCount);    
-      res.json({ list: searchUser, count:searchUserCount, success: 1 });
-       
+
+    searchUser = await Transaction.find({ sender_id: word })
+      .sort({ timestamp: -1 })
+      .skip((page - 1) * 10)
+      .limit(10);
+    console.log(searchUser);
+    searchUserCount = await Transaction.find({ sender_id: word }).count();
+    searchUserCount = parseInt(searchUserCount / 10) + 1;
+    console.log(searchUserCount);
+    res.json({ list: searchUser, count: searchUserCount, success: 1 });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);
   }
 });
-router.post("/search/tx", async (req, res) => {
+router.get("/search/tx", async (req, res) => {
   try {
     const word = req.body.word;
-    const type = "user";    
-    let searchTx;   
-     
-      searchTx = await Transaction.findOne({ tx_id: word });
-      console.log(searchTx)    
-      res.json({ list: searchTx, success: 1 });
-      
+    const type = "user";
+    let searchTx;
+
+    searchTx = await Transaction.findOne({ tx_id: word });
+    console.log(searchTx);
+    res.json({ list: searchTx, success: 1 });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);
   }
 });
-
-router.post("/search/block/", async (req, res) => {
+router.get("/search/block/:hash", async (req, res) => {
   try {
-    const word = req.params; 
-    let searchBlock;    
-  
-        searchBlock = await Block.findOne({ block_hash: word });
-        console.log(searchBlock);
-        res.json({ list: searchBlock, success: 1 });
-      
+    const { hash } = req.params;
+    const data = await Block.findOne({ block_hash: hash });
+    res.json({ data: data, success: 1 });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);

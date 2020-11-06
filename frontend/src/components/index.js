@@ -37,9 +37,8 @@ import BlockInfoHead from "./BlockInfo/BlockInfoHead";
 import BlockInfoMain from "./BlockInfo/BlockInfoMain";
 import SearchTx from "./TxDetail/SearchTx";
 import SearchBlock from "./BlockDetail/SearchBlock";
-import SearchUser from "./UserTxDetail/SearchUser";
-import SearchUserHead from "./UserTxDetail/SearchUserHead";
-import BlockInfoSearchLoader from "./BlockInfoSearch/Loader";
+import SearchUser from "./UserDetail/SearchUser";
+import SearchUserHead from "./UserDetail/SearchUserHead";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
 import PayLoader from "./Pay/Loader";
@@ -56,7 +55,7 @@ import SearchResultCampaignList from "./SearchResult/SearchResultCampaignList";
 import SearchResultStoryList from "./SearchResult/SearchResultStoryList";
 import SearchResultLoader from "./SearchResult/Loader";
 import SearchBar from "./SearchResult/SearchBar";
-
+import Loader from "./Loader";
 export {
   Main,
   NavBar,
@@ -99,7 +98,6 @@ export {
   SearchBlock,
   SearchUser,
   SearchUserHead,
-  BlockInfoSearchLoader,
   CampaignDetailLoader,
   CampaignContents,
   PayLoader,
@@ -116,4 +114,5 @@ export {
   SearchResultStoryList,
   SearchResultLoader,
   SearchBar,
+  Loader,
 };

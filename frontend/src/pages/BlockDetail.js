@@ -1,42 +1,35 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import {
-  BlockInfoSearchLoader,
-  SearchBlock,
-  BlockSearch,
-  
-} from "components";
+import { SearchBlock, BlockSearch } from "components";
 
 const BlockDetailStyle = styled.section`
   width: 100%;
-
+  height: 100vh;
   display: flex;
   flex-direction: column;
   padding-top: 50px;
   align-items: center;
 `;
 
-const BlockDetail = (props,{match}) => {
-  const init = useRef(true);
-  //  match.params.id
+const BlockDetail = ({ match, history }) => {
+  const [data, setData] = useState();
 
-  
-
-  useEffect(() => {
-    if (init.current) {
-     (init.current = false);
-      window.scrollTo(0, 0);
-
+  const init = async () => {
+    const initData = await axios.get(`/block/search/block/${match.params.id}`);
+    if (initData.data.success === 1) {
+      setData(initData.data.data);
     }
+  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    init();
   }, []);
 
   return (
     <BlockDetailStyle>
-      
-      <BlockSearch history={props.history} />
-      <BlockInfoSearchLoader />
-      <SearchBlock />
+      <BlockSearch history={history} />
+      <SearchBlock data={data} />
     </BlockDetailStyle>
   );
 };

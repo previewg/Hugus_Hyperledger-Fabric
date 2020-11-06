@@ -7,10 +7,10 @@ import TotalSearch from "./TotalSearch";
 import SearchResult from "./SearchResult";
 import User from "./User";
 import UserInfo from "./UserInfo";
-import BlockInfo from './BlockInfo'
+import BlockInfo from "./BlockInfo";
 import BlockDetail from "./BlockDetail";
 import TxDetail from "./TxDetail";
-import UserTxList from "./UserTxList";
+import UserDetail from "./UserDetail";
 import BlockAll from "./BlockAll";
 import TxAll from "./TxAll";
 import ActMain from "./ActMain";
@@ -32,7 +32,7 @@ export {
   User,
   UserInfo,
   BlockDetail,
-  UserTxList,
+  UserDetail,
   TxDetail,
   BlockInfo,
   BlockAll,
