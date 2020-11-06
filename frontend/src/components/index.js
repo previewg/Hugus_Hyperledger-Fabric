@@ -49,9 +49,10 @@ import BlockAllLoader from "./BlockAll/Loader";
 import TxAllHead from "./TxAll/TxAllHead";
 import TxAllMain from "./TxAll/TxAllMain";
 import TxAllLoader from "./TxAll/Loader";
-import SearchResultHead from "./SearchResult/SearchResultHead";
-import SearchResultList from "./SearchResult/SearchResultList";
+import SearchResultCampaignList from "./SearchResult/SearchResultCampaignList";
+import SearchResultStoryList from "./SearchResult/SearchResultStoryList";
 import SearchResultLoader from "./SearchResult/Loader";
+import SearchBar from "./SearchResult/SearchBar";
 
 export {
   Main,
@@ -105,7 +106,8 @@ export {
   TxAllHead,
   TxAllMain,
   TxAllLoader,
-  SearchResultHead,
-  SearchResultList,
+  SearchResultCampaignList,
+  SearchResultStoryList,
   SearchResultLoader,
+  SearchBar,
 };

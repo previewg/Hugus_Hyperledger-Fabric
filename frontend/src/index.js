@@ -35,6 +35,7 @@ import {
   TalkUpdate,
   BlockAll,
   TxAll,
+  Info,
 } from "pages";
 
 // Common components
@@ -57,6 +58,7 @@ ReactDOM.render(
       <User />
       <Switch>
         <Route exact path="/" component={Auth(Home, null)} />
+        <Route exact path="/info" component={Auth(Info, null)} />
         <Route
           exact
           path="/campaign/:id"
