@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { hashtagAll } from "actions/hashtag";
 import * as Hangul from "hangul-js";
 import { Link } from "react-router-dom";
+import CountUp from "react-countup";
 import { hashtagSearch } from "../actions/hashtag";
 import { storyVisit } from "../actions/story";
 import axios from "axios";
+import Loader from "./Loader";
 
 const SearchResultStyle = styled.section`
   display: flex;
@@ -27,7 +29,6 @@ const SearchResultStyle = styled.section`
       display: flex;
       align-items: center;
       justify-content: center;
-
       input {
         min-width: 300px;
         font-size: 15px;
@@ -36,7 +37,7 @@ const SearchResultStyle = styled.section`
         height: 35px;
         border-radius: 4px;
         transition: 0.3s ease-in-out;
-        border: solid orange 6px;
+        border: solid orange 4px;
         :focus {
           outline: none;
         }
@@ -58,10 +59,13 @@ const SearchResultStyle = styled.section`
     }
     .live__suggestion {
       display: ${(props) => (props.search ? "flex" : "none")};
+      position: absolute;
+      top:300px;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       width: 50%;
+      height:300px;
       > div {
         display: flex;
         justify-content: center;
@@ -193,17 +197,83 @@ const StoryListStyle = styled.div`
     }
   }
 `;
+const BarStyle = styled.div`
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  .count {
+    width: 90%;
+    background: transparent;
+    margin: 0;
+    font-size: 13px;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+  }
+  div {
+    width: 90%;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    height: 5px;
+    transition: all 2s ease-in-out;
+
+    > div {
+      height: 5px;
+      background-color: white;
+      border-radius: 10px;
+      font-size: 13px;
+      ${(props) => `width:${props.ratio}%`};
+    }
+  }
+`;
 
 const SearchResult = () => {
+  const init = useRef(true);
   const dispatch = useDispatch();
-  const search_list = useSelector((state) => state.hashtag.search.data);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const search_list = useSelector((state) => state.hashtag.search.data);
+  const search_status = useSelector((state) => state.hashtag.search.status);
   const list = useSelector((state) => state.hashtag.list.data);
 
   const compare = (hashtag) => {
     const dis = Hangul.disassemble(hashtag);
     if (hashtag.match(search) || dis.includes(search)) return true;
     else return false;
+  };
+
+  const UserInfo = ({ story }) => {
+    if (story.user_info.length > 100)
+      return <p>{story.user_info.substr(0, 100)}...</p>;
+    return <p>{story.user_info}</p>;
+  };
+
+  const ProgressBar = ({ vote, goal }) => {
+    const [ratio, setRatio] = useState(0);
+
+    useEffect(() => {
+      const init = setTimeout(() => {
+        if (vote > goal) setRatio(100);
+        setRatio((vote / goal) * 100);
+      });
+      return () => clearTimeout(init);
+    }, []);
+
+    return (
+      <BarStyle ratio={ratio}>
+        <div className="count">
+          <CountUp end={ratio} duration={2} />
+          <span> %</span>
+        </div>
+        <div>
+          <div></div>
+        </div>
+      </BarStyle>
+    );
   };
 
   const onChangeHandler = (e) => {
@@ -213,21 +283,31 @@ const SearchResult = () => {
       onClick();
     }
   };
+
   const visitHandler = async (story_id) => {
     await axios.put("/story/visit", { story_id: story_id });
   };
+
   const onClick = () => {
     dispatch(hashtagSearch(search));
   };
+
   useEffect(() => {
+    const initFunc = () => {
+    setLoading(true);
     dispatch(hashtagAll());
     if (search !== "") {
-      setSearch(search_list[0].Hashtag.hashtag);
+      setSearch(search_list[0].Hashtags.hashtag);
     }
-    dispatch(hashtagAll());
+  }
+  if (init.current) {
+    init.current = false;
+    initFunc();
+  }
   }, [search_list]);
 
   return (
+    
     <SearchResultStyle search={search}>
       <div className="layout">
         <div className="search__bar">
@@ -244,6 +324,7 @@ const SearchResult = () => {
             <img alt="search__icon" src="/icons/search.png" />
           </div>
         </div>
+        
         <div className="live__suggestion">
           {list.map((row, key) => {
             if (row.hashtag !== undefined) {
@@ -267,10 +348,11 @@ const SearchResult = () => {
             }
           })}
         </div>
+
         <div className="search__comment">
           {search_list.length !== 0 && search_list !== "NOTHING"
             ? '"' +
-              search_list[0].Hashtag.hashtag +
+              search_list[0].Hashtags[0].hashtag +
               '"' +
               " 검색결과 총" +
               search_list.length +
@@ -283,25 +365,41 @@ const SearchResult = () => {
           <StoryListStyle>
             <section>
               {search_list.map((story, key) => {
+                if (search_status === "WAITING") return <Loader />;
                 if (story.Story_Files[0]) {
                   return (
                     <Link
-                      to={`/story/${story.story_id}`}
+                      to={`/story/${story.id}`}
                       style={{
                         backgroundImage: `url("${story.Story_Files[0].file}")`,
                       }}
-                      onClick={() => visitHandler(story.story_id)}
+                      onClick={() => visitHandler(story.id)}
                       key={key}
                     >
                       <div>
                         <div className="story__hashtag">
-                          {story.Hashtag.hashtag}
+                          {story.Hashtags.slice(0, 3).map((tag, key) => {
+                            return <p key={key}>#{tag.hashtag}</p>;
+                          })}
                         </div>
 
                         <p className="story__title">
-                          {story.Story.story_title}
+                          {story.story_title}
                         </p>
+                        <ProgressBar
+                    vote={story.story_vote}
+                    goal={story.story_goal}
+                  />
                       </div>
+                      <div className="more__info">
+                  <div>
+                    <img src="/icons/love.svg" />
+                    <p>{story.story_like}</p>
+                    <img src="/icons/comment.svg" />
+                    <p>{story.story_comment}</p>
+                  </div>
+                  <UserInfo story={story} />
+                </div>
                     </Link>
                   );
                 } else {
@@ -316,12 +414,25 @@ const SearchResult = () => {
                     >
                       <div>
                         <div className="story__hashtag">
-                          {story.Hashtag.hashtag}
+                          {story.Hashtags.slice(0, 3).map((tag, key) => {
+                            return <p key={key}>#{tag.hashtag}</p>;
+                          })}
                         </div>
 
-                        <p className="story__title">
-                          {story.Story.story_title}
-                        </p>
+                        <p className="story__title">{story.story_title}</p>
+                        <ProgressBar
+                          vote={story.story_vote}
+                          goal={story.story_goal}
+                        />
+                      </div>
+                      <div className="more__info">
+                        <div>
+                          <img src="/icons/love.svg" />
+                          <p>{story.story_like}</p>
+                          <img src="/icons/comment.svg" />
+                          <p>{story.story_comment}</p>
+                        </div>
+                        <UserInfo story={story} />
                       </div>
                     </Link>
                   );
@@ -330,17 +441,7 @@ const SearchResult = () => {
             </section>
           </StoryListStyle>
         )}
-        {/*<div className="live__suggestion">*/}
-        {/*    {list.map((row, key) => {*/}
-        {/*        if (compare(row.hashtag))*/}
-        {/*            return (*/}
-        {/*                <div key={key}>*/}
-        {/*                    <input value={row.hashtag} readOnly/>*/}
-        {/*                    <img alt="search__icon" src="/icons/search.png"/>*/}
-        {/*                </div>*/}
-        {/*            );*/}
-        {/*    })}*/}
-        {/*</div>*/}
+
       </div>
     </SearchResultStyle>
   );

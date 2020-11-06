@@ -36,13 +36,13 @@ router.post("/add", upload.array("files"), async (req, res) => {
       user_email: user_email,
     });
 
-    // const act_id = list.getDataValue("id");
-    // for (const file of req.files) {
-    //   await Act_File.create({
-    //     act_id: act_id,
-    //     file: file.location,
-    //   });
-    // }
+    const act_id = list.getDataValue("id");
+    for (const file of req.files) {
+      await Act_File.create({
+        act_id: act_id,
+        file: file.location,
+      });
+    }
 
     res.json({ list: list, success: 1 });
   } catch (error) {

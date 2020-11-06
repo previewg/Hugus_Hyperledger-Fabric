@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      campaign_id: {
-        type: DataTypes.INTEGER,
+      campaign_hash: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       value: {

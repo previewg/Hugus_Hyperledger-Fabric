@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { blockListSearchLoader } from "actions/block";
 
 const BlockSearchStyle = styled.article`
@@ -44,13 +43,12 @@ const BlockSearch = ({ history }) => {
   
   const here = useRef();
   const dispatch = useDispatch();
-  const list = useSelector((state) => state.block.blockSearch.list);
 
   const onChangeHandler = (e) => {
     setSearch(e.target.value);
     if (e.key === "Enter") {
-      dispatch(blockListSearchLoader(search));
-      history.push(`/block/search/user`);
+      // dispatch(blockListSearchLoader(type, search));
+      history.push(`/block/search/user/${e.target.value}`);
     }
   };
 

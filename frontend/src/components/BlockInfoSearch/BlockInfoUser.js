@@ -6,49 +6,60 @@ import { Link } from "react-router-dom";
 import { blockListSearchLoader } from "../../actions/block";
 
 const BlockSearchUserStyle = styled.div`
-   margin-top: 50px;
-  width: 100%;
-  a {
-    text-decoration: none;
-  }
-  .list_tit {
-    border-bottom: solid orange 2px;
-    color: black;
-    font-weight: bold;
-    padding-bottom: 3px;
-  }
-  .list_grid {
+   width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .TxList__header {
     display: grid;
-    grid-template-columns: 20% 50% 10% 20%;
+    grid-template-columns:  1fr 3fr 1fr 1fr 1fr 1fr 3fr;
+    border-top: solid 0.1px orange;
+    border-bottom: solid 0.1px lightgray;
+    font-size: 15px;
+    > p {
+      justify-self: center;
+    }
+    .tx_id {
+      justify-self: start;
+    }
   }
-  .acenter {
-    text-align: center;
-  }
-  .list_data {
-    width: 100%;
-    line-height: 40px;
-    border-bottom: solid gray 0.1px;
-    color: black;
-    font-size: 17px;
-    transition: 0.1s ease-in-out;
-    outline: none;
-    cursor: pointer;
+  .TxList__body {
+    transition: background-color 0.2s ease-in-out;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr 3fr;
+    font-size: 15px;
+    > p,
+    span {
+      justify-self: center;
+      margin: 5px;
+      button {
+        background: transparent;
+        outline: none;
+        color: gray;
+        border: none;
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+        :hover {
+          color: #0c7eff;
+          font-weight: bold;
+        }
+      }
+    }
+    .tx_id {
+      justify-self: start;
+      display: flex;
+      align-items: center;
+      input {
+        outline: none;
+        border: none;
+        background: transparent;
+        width: 520px;
+        font-size: 15px;
+      }
+    }
     :hover {
-      color: orange;
-    }
-    .act__id {
-      width: 20%;
-      display: flex;
-      justify-content: center;
-    }
-    .act__title {
-    }
-    .act__visit {
-      margin-left: 13px;
-    }
-    .create__time {
-      display: flex;
-      justify-content: center;
+      background-color: peachpuff;
     }
   }
 `;
@@ -68,7 +79,10 @@ const BlockInfoUser = () => {
   if (!list) return <BlockInfoSearchLoader />
   return (
     <BlockSearchUserStyle >
-       <div className="list_grid list_tit">
+       <div className="TxList__header">
+        <div> block_height/ sender_id </div>
+        <div> block_height/ sender_id </div>
+        <div> block_height/ sender_id </div>
         <div> block_height/ sender_id </div>
         <div> tx_id/value </div>
         <div>  tx_type </div>
@@ -83,7 +97,7 @@ const BlockInfoUser = () => {
           //   onClick={() => visitHandler(block.tx_id)}
           //   key={key}
           // >
-            <div className="list_grid list_data" key={key}>
+            <div className="TxList__body" key={key}>
               <div className="block_height">{block.block_height}</div>
               <div className="tx_id">{block.tx_id}</div>
               <div className="tx_type">{block.tx_type}</div>

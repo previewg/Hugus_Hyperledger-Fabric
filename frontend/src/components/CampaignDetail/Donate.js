@@ -11,7 +11,7 @@ const BarStyle = styled.div`
   flex-direction: column;
   margin-bottom: 40px;
 
-  .campaign_donate {
+  .campaign_value {
     font-size: 25px;
     font-weight: bold;
     color: orange;
@@ -39,20 +39,20 @@ const BarStyle = styled.div`
 const Donate = ({ data, history }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
-  const campaign_donate = Number(data.campaign_donate);
+  const campaign_value = data.campaign_value;
   const campaign_goal = data.campaign_goal;
 
   const [scroll, setScroll] = useState(0);
 
   const ProgressBar = () => {
-    let ratio = (campaign_donate / campaign_goal) * 100;
+    let ratio = (campaign_value / campaign_goal) * 100;
     if (ratio > 100) ratio = 100;
     return (
       <BarStyle ratio={ratio}>
-        <p className="campaign_donate">
+        <p className="campaign_value">
           <CountUp
             formattingFn={(num) => num.toLocaleString()}
-            end={campaign_donate}
+            end={campaign_value}
             duration={1.5}
           />
           원

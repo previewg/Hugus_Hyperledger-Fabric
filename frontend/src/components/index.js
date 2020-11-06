@@ -35,10 +35,10 @@ import Main from "./Home/Main";
 import BlockSearch from "./BlockInfo/BlockSearch";
 import BlockInfoHead from "./BlockInfo/BlockInfoHead";
 import BlockInfoMain from "./BlockInfo/BlockInfoMain";
-import BlockInfoList from "./BlockInfoList/BlockInfoList";
 import BlockInfoTx from "./BlockInfoSearch/BlockInfoTx";
 import BlockInfoBlock from "./BlockInfoSearch/BlockInfoBlock";
 import BlockInfoUser from "./BlockInfoSearch/BlockInfoUser";
+import BlockInfoUserHead from "./BlockInfoSearch/BlockInfoUserHead";
 import BlockInfoSearchLoader from "./BlockInfoSearch/Loader";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
@@ -46,6 +46,12 @@ import PayLoader from "./Pay/Loader";
 import Pending from "./Pay/Pending";
 import BlockSocket from "./BlockInfo/BlockSocket";
 import PaySocket from "./Pay/PaySocket";
+import BlockAllHead from "./BlockAll/BlockAllHead";
+import BlockAllMain from "./BlockAll/BlockAllMain";
+import BlockAllLoader from "./BlockAll/Loader";
+import TxAllHead from "./TxAll/TxAllHead";
+import TxAllMain from "./TxAll/TxAllMain";
+import TxAllLoader from "./TxAll/Loader";
 export {
   Main,
   NavBar,
@@ -87,7 +93,7 @@ export {
   BlockInfoTx,
   BlockInfoBlock,
   BlockInfoUser,
-  BlockInfoList,
+  BlockInfoUserHead,
   BlockInfoSearchLoader,
   CampaignDetailLoader,
   CampaignContents,
@@ -95,4 +101,10 @@ export {
   Pending,
   BlockSocket,
   PaySocket,
+  BlockAllHead,
+  BlockAllMain,
+  BlockAllLoader,
+  TxAllHead,
+  TxAllMain,
+  TxAllLoader,
 };

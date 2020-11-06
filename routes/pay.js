@@ -9,6 +9,7 @@ router.post("/", async (req, res) => {
   const { user_email } = req.session.loginInfo;
   const { campaign_id, total_amount } = req.body;
   const campaign = await Campaign.findOne({ where: { id: campaign_id } });
+  const campaign_hash = campaign.getDataValue("hash");
   const user = await User.findOne({ where: { email: user_email } });
   const hashedEmail = user.getDataValue("hash");
   const campaign_title = campaign.getDataValue("campaign_title");
@@ -25,7 +26,7 @@ router.post("/", async (req, res) => {
       await Kakao_Pay.create({
         user_email: user_email,
         tid: response.data.tid,
-        campaign_id: campaign_id,
+        campaign_hash: campaign_hash,
         hashed_email: hashedEmail,
         campaign_title: campaign_title,
         value: total_amount,
@@ -46,12 +47,11 @@ router.get("/approval", async (req, res) => {
     const hashed_email = campaign.getDataValue("hashed_email");
     const tid = campaign.getDataValue("tid");
     const value = campaign.getDataValue("value");
-    const campaign_id = campaign.getDataValue("campaign_id");
-
+    const campaign_hash = campaign.getDataValue("campaign_hash");
     const data = `cid=TC0ONETIME&tid=${tid}&partner_order_id=HUGUS_PAY&partner_user_id=hugus&pg_token=${pg_token}`;
     const transferData = {
       senderId: hashed_email,
-      receiverId: campaign_id,
+      receiverId: campaign_hash,
       value: value,
     };
     const headers = {

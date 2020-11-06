@@ -50,10 +50,10 @@ export const blockListLoader = () => async (dispatch) => {
         })
 
 }
-export const blockListSearchLoader = (word,type) => async (dispatch) => {
+export const blockListSearchLoader = (word) => async (dispatch) => {
     dispatch(blockListSearchLoaderStart());
     await axios
-        .post(`/block/search/tx`,{word:word})
+        .post(`/block/search`,{word:word})
         .then((response) => {
             if (response.data.success === 1) {
                 dispatch(blockListSearchLoaderSuccess(response.data.list))
@@ -62,5 +62,7 @@ export const blockListSearchLoader = (word,type) => async (dispatch) => {
         .catch((error) => {
             dispatch(blockListSearchLoaderFailure(error))
         })
+
+     
 
 }

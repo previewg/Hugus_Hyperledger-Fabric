@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 const PaginationStyle = styled.div`
-  width: 40%;
+    margin-top: 30px;
+  margin-bottom: 50px;
+  width: 35%;
   div {
     display: flex;
     justify-content: space-around;
-    margin-top: 30px;
+    margin-top: 12px;
     text-align: center;
 
     > button {
+      background-color: transparent;
       outline: none;
       font-weight: bold;
-      height: 27px;
-      width: 28px;
+      height: 35px;
+      width: 35px;
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      transition: all 0.3s ease-in-out;
       :hover {
-        background-color: orange;
+        background-color: lightgray;
       }
     }
   }

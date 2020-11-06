@@ -17,9 +17,9 @@ const BlockInfoBlockStyle = styled.section`
   align-items: center;
 `;
 
-const BlockSearchBlock = (props) => {
+const BlockSearchBlock = ({match}) => {
   const init = useRef(true);
-  
+  //  match.params.id
 
   
 
@@ -33,7 +33,7 @@ const BlockSearchBlock = (props) => {
   return (
     <BlockInfoBlockStyle>
       
-      <BlockSearch history={props.history} />
+      <BlockSearch />
       <BlockInfoBlock />
     </BlockInfoBlockStyle>
   );

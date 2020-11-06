@@ -54,7 +54,7 @@ const BlockInfoHeadStyle = styled.article`
   }
 `;
 
-const BlockInfoHead = ({ txHeight, blockHeight }) => {
+const BlockInfoHead = ({ txHeight, blockHeight, totalAmount }) => {
   return (
     <BlockInfoHeadStyle>
       <div>
@@ -72,7 +72,7 @@ const BlockInfoHead = ({ txHeight, blockHeight }) => {
         </div>
         <div>
           <p>TOTAL HUG</p>
-          <p>358,220,200</p>
+          <p>{totalAmount.toLocaleString()}</p>
         </div>
       </div>
     </BlockInfoHeadStyle>
