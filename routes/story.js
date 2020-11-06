@@ -259,12 +259,54 @@ router.get("/list/:page", async (req, res) => {
     } else if (type === "new") {
       order = [["created_at", "DESC"]];
     }
+    else if(type==="all"){
+      order = [["visited", "DESC"]];
+    }
     // 9개씩 조회
     if (page > 1) {
       offset = 9 * (page - 1);
     }
 
     let list;
+    if(type==="all"){
+      list = await Story.findAll({
+        attributes: [
+          "id",
+          "story_title",
+          "user_info",
+          "story_content",
+          "story_goal",
+          "user_email",
+          "visited",
+          "createdAt",
+          [
+            sequelize.literal(
+                "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
+            ),
+            "story_like",
+          ],
+          [
+            sequelize.literal(
+                "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
+            ),
+            "story_vote",
+          ],
+          [
+            sequelize.literal(
+                "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+            ),
+            "story_comment",
+          ],
+        ],
+        include: [
+          { model: Hashtag, attributes: ["hashtag"] },
+          { model: Story_File, attributes: ["file"], limit: 1 },
+        ],
+        offset: offset,
+        order: order,
+      });
+      res.json({ list: list });
+    }
     if (type === "my") {
       const { user_email } = req.session.loginInfo;
       list = await Story.findAll({
