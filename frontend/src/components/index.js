@@ -35,10 +35,10 @@ import Main from "./Home/Main";
 import BlockSearch from "./BlockInfo/BlockSearch";
 import BlockInfoHead from "./BlockInfo/BlockInfoHead";
 import BlockInfoMain from "./BlockInfo/BlockInfoMain";
-import BlockInfoTx from "./BlockInfoSearch/BlockInfoTx";
-import BlockInfoBlock from "./BlockInfoSearch/BlockInfoBlock";
-import BlockInfoUser from "./BlockInfoSearch/BlockInfoUser";
-import BlockInfoUserHead from "./BlockInfoSearch/BlockInfoUserHead";
+import SearchTx from "./TxDetail/SearchTx";
+import SearchBlock from "./BlockDetail/SearchBlock";
+import SearchUser from "./UserTxDetail/SearchUser";
+import SearchUserHead from "./UserTxDetail/SearchUserHead";
 import BlockInfoSearchLoader from "./BlockInfoSearch/Loader";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
@@ -90,10 +90,10 @@ export {
   BlockSearch,
   BlockInfoHead,
   BlockInfoMain,
-  BlockInfoTx,
-  BlockInfoBlock,
-  BlockInfoUser,
-  BlockInfoUserHead,
+  SearchTx,
+  SearchBlock,
+  SearchUser,
+  SearchUserHead,
   BlockInfoSearchLoader,
   CampaignDetailLoader,
   CampaignContents,

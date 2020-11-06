@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { blockListSearchLoader } from "actions/block";
+
 
 const BlockSearchStyle = styled.article`
   width: 100%;
@@ -48,10 +48,13 @@ const BlockSearch = ({ history }) => {
     setSearch(e.target.value);
     if (e.key === "Enter") {
       // dispatch(blockListSearchLoader(type, search));
-      history.push(`/block/search/user/${e.target.value}`);
+      // history.push(`/block/search/user/${e.target.value}`);
+      history.push(`/block/search/block/${e.target.value}`);
     }
   };
-
+// useEffect((search)=>{
+// BlockSearch(search)
+// });
 
   const inputOpen = () => {
     setIsClicked(true);

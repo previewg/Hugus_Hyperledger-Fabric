@@ -23,9 +23,9 @@ import {
   User,
   UserInfo,
   BlockInfo,
-  BlockInfoBlock,
-  BlockInfoUser,
-  BlockInfoTx,
+  BlockDetail,
+  UserTxList,
+  TxDetail,
   SearchResult,
   StoryUpdate,
   ActMain,
@@ -73,9 +73,9 @@ ReactDOM.render(
         <Route path="/search/result" component={Auth(SearchResult, null)} />
         <Route path="/my" component={Auth(UserInfo, true)} />
         <Route exact path="/block" component={Auth(BlockInfo, null)} />
-        <Route path="/block/search/block/:id" component={Auth(BlockInfoBlock, null)} />
-        <Route path="/block/search/tx/:id" component={Auth(BlockInfoTx, null)} />
-        <Route path="/block/search/user/:id" component={Auth(BlockInfoUser, null)} />
+        <Route path="/block/search/block/:id" component={Auth(BlockDetail, null)} />
+        <Route path="/block/search/tx/:id" component={Auth(TxDetail, null)} />
+        <Route path="/block/search/user/:id" component={Auth(UserTxList, null)} />
         <Route exact path="/block/all/block" component={Auth(BlockAll, null)} />
         <Route exact path="/block/all/tx" component={Auth(TxAll, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />

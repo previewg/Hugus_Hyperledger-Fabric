@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import {
-  BlockInfoUserHead,
-  BlockInfoUser,
+  BlockInfoSearchLoader,
+  SearchUserHead,
+  SearchUser,
   BlockSearch,
   
 } from "components";
@@ -15,7 +16,7 @@ const BlockInfoUserStyle = styled.section`
   align-items: center;
 `;
 
-const BlockInfoUserList = ({match,history}) => {
+const BlockInfoUserList = (props,{match,history}) => {
   const init = useRef(true);
   const [List, setList] = useState([]);
   const [txHeight, setTxHeight] = useState(0);
@@ -44,15 +45,16 @@ const BlockInfoUserList = ({match,history}) => {
 
   return (
     <BlockInfoUserStyle>      
-      <BlockSearch history={history} />
-      <blockInfoUserHead
+      <BlockSearch history={props.history} />
+      <BlockInfoSearchLoader />
+      <SearchUserHead
       setPage={setPage}
       txHeight={txHeight}
       page={page}
       more={more}
       load={load}
       />
-      <BlockInfoUser history = {history} />
+      <SearchUser history = {history} />
     </BlockInfoUserStyle>
   );
 };

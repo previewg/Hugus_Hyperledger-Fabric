@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import {  
-  BlockInfoTx,
-  BlockSearch,  
+import {
+  BlockInfoSearchLoader,
+  SearchBlock,
+  BlockSearch,
+  
 } from "components";
 
-const BlockInfoTxStyle = styled.section`
+const BlockDetailStyle = styled.section`
   width: 100%;
 
   display: flex;
@@ -15,25 +17,28 @@ const BlockInfoTxStyle = styled.section`
   align-items: center;
 `;
 
-const BlockSearchTx = (props) => {
+const BlockDetail = (props,{match}) => {
   const init = useRef(true);
+  //  match.params.id
+
   
-
-
 
   useEffect(() => {
     if (init.current) {
-      (init.current = false);
+     (init.current = false);
       window.scrollTo(0, 0);
+
     }
   }, []);
 
   return (
-    <BlockInfoTxStyle>      
+    <BlockDetailStyle>
+      
       <BlockSearch history={props.history} />
-      <BlockInfoTx />
-    </BlockInfoTxStyle>
+      <BlockInfoSearchLoader />
+      <SearchBlock />
+    </BlockDetailStyle>
   );
 };
 
-export default BlockSearchTx;
+export default BlockDetail;

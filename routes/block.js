@@ -92,9 +92,9 @@ router.post("/search/tx", async (req, res) => {
   }
 });
 
-router.post("/search/block", async (req, res) => {
+router.post("/search/block/", async (req, res) => {
   try {
-    const word = req.body.word; 
+    const word = req.params; 
     let searchBlock;    
   
         searchBlock = await Block.findOne({ block_hash: word });
