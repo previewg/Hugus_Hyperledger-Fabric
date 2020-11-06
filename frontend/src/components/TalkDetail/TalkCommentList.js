@@ -196,7 +196,7 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
+const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList }) => {
   const email = useSelector((state) => state.auth.user.email);
   const data = talkCommentList.list;
   const talk_id = talkId.data.id;
@@ -239,9 +239,8 @@ const TalkCommentList = ({ talkId, talkCommentList, setTalkCommentList }) => {
     );
   };
 
-  const loadMore = async () => {
+  const loadMore = async (page) => {
     const id = talk_id;
-    const page = 1;
     // dispatch(commentListLoader(data.id, num));
     const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
     console.log(comment);

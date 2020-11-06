@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Talk, User, Talk_File, Talk_Like, sequelize } = require("../models");
+const { Talk, User, Talk_File, Talk_Like, sequelize, Sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -176,7 +176,6 @@ router.get("/list/:page", async (req, res) => {
           limit: 10,
         });
       }
-  
       let count = await Talk.count({});
       count = Math.ceil(count / 10);
       res.json({ list: list, count: count, success: 1 });

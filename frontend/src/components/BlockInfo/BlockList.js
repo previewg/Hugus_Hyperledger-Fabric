@@ -17,7 +17,10 @@ const BlockListStyle = styled.div`
       justify-content: space-between;
       align-items: center;
       p:nth-child(1) {
-        font-size: 20px;
+        font-size: 23px;
+      }
+      .BlockViewAll__btn {
+        cursor: pointer;
       }
     }
     .BlockList__header {
@@ -84,7 +87,7 @@ const CopiedAlertStyle = styled.span`
 
 const BlockList = ({ blockList, history }) => {
   const onClickHandler = () => {
-    history.push("/Block/List");
+    history.push("/block/all/block");
   };
   const CopiedAlert = ({ id }) => {
     const [time, setTime] = useState(false);

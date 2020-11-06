@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const {Hashtag, Story_Hashtag, Story_File, Story } = require("../models");
+const {Hashtag, Story_Hashtag, Story_File, Story, sequelize } = require("../models");
 
 // 해시태그 목록 조회
 router.get("/all", async (req, res) => {
@@ -20,16 +20,51 @@ router.post("/search", async (req, res) => {
     try {
         const search_data = await Hashtag.findOne({
             where: {hashtag: search}, attributes: ["id"],
+            include:[{model:Story_Hashtag,attributes: ["story_id"]}]
         })
-        if(search_data !== null){
-            const list = await Story_Hashtag.findAll({
-                where: {hashtag_id: search_data.dataValues.id},
+          const candidate = [];
+          const stories = search_data.getDataValue("Story_Hashtags");
+          for(const story of stories){
+            candidate.push(story.getDataValue("story_id"));
+          }
+          console.log(candidate);
+        if(candidate !== null) {
+            const list = await Story.findAll({
+              attributes: [
+                "id",
+                "story_title",
+                "user_info",
+                "story_content",
+                "story_goal",
+                "user_email",
+                "visited",
+                [
+                  sequelize.literal(
+                    "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
+                  ),
+                  "story_like",
+                ],
+                [
+                  sequelize.literal(
+                    "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
+                  ),
+                  "story_vote",
+                ],
+                [
+                  sequelize.literal(
+                    "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+                  ),
+                  "story_comment",
+                ],
+              ],
+                where: {id:candidate},
                 include: [
-                    {model: Story,attributes:[ "story_title", "story_goal", "visited"]},
                     {model: Hashtag, attributes: ["hashtag"]},
                     {model: Story_File, attributes: ["file"], limit: 1},
+
                 ],
             });
+            console.log(list);
             res.json({list: list, success: 1})
         }
         else{

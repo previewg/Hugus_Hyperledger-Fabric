@@ -17,7 +17,10 @@ const TransactionListStyle = styled.div`
       justify-content: space-between;
       align-items: center;
       p:nth-child(1) {
-        font-size: 20px;
+        font-size: 23px;
+      }
+      .TransactionViewAll__btn {
+        cursor: pointer;
       }
     }
     .TxList__header {
@@ -84,7 +87,7 @@ const CopiedAlertStyle = styled.span`
 
 const TransactionList = ({ txList, history }) => {
   const onClickHandler = () => {
-    history.push("/Block/List");
+    history.push("/block/all/tx");
   };
   const CopiedAlert = ({ id }) => {
     const [time, setTime] = useState(false);

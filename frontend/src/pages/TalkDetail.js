@@ -25,7 +25,6 @@ const TalkDetail = ({ match,history }) => {
     const page = match.params.page;
 
     const initFunc = async () => {
-      // dispatch(talkLoader(match.params.id));
       const data = await axios.get(`/talk/${id}`);
       const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
       setTalkId(data.data);

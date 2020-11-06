@@ -306,6 +306,10 @@ db.Campaign_Donate.belongsTo(db.User, {
 });
 
 // Hashtag
+db.Hashtag.hasMany(db.Story_Hashtag, {
+  foreignKey: "hashtag_id",
+  sourceKey: "id",
+});
 db.Hashtag.belongsToMany(db.Story, {
   through: "Story_Hashtag",
   foreignKey: "hashtag_id",

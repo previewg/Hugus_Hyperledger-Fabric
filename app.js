@@ -10,7 +10,7 @@ require("dotenv").config();
 require("morgan")("dev");
 require("cors")();
 require("cookie-parser")();
-require('./db')()
+require("./db")();
 
 const app = express();
 app.use(express.json());

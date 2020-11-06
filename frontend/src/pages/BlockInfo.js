@@ -23,7 +23,7 @@ const BlockInfo = (props) => {
   const [blockList, setBlockList] = useState([]);
   const [txHeight, setTxHeight] = useState(0);
   const [blockHeight, setBlockHeight] = useState(0);
-  console.log("초기화");
+  const [totalAmount, setTotalAmount] = useState(0);
 
   const initLoad = useCallback(async () => {
     const initData = await axios.get("/block/init");
@@ -31,6 +31,7 @@ const BlockInfo = (props) => {
     setBlockList(initData.data.blockList);
     setTxHeight(initData.data.txHeight);
     setBlockHeight(initData.data.blockHeight);
+    setTotalAmount(initData.data.totalAmount);
   }, []);
 
   useEffect(() => {
@@ -49,7 +50,11 @@ const BlockInfo = (props) => {
         setBlockList={setBlockList}
       />
       <BlockSearch history={props.history} />
-      <BlockInfoHead txHeight={txHeight} blockHeight={blockHeight} />
+      <BlockInfoHead
+        txHeight={txHeight}
+        blockHeight={blockHeight}
+        totalAmount={totalAmount}
+      />
       <BlockInfoMain
         txList={txList}
         blockList={blockList}

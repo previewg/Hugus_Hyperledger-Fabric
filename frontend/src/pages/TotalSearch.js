@@ -44,7 +44,6 @@ const TotalSearchStyle = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-
       input {
         min-width: 300px;
         font-size: 15px;
@@ -53,7 +52,7 @@ const TotalSearchStyle = styled.div`
         height: 35px;
         border-radius: 4px;
         transition: 0.3s ease-in-out;
-        border: solid orange 6px;
+        border: solid orange 3px;
         :focus {
           outline: none;
         }
@@ -75,10 +74,12 @@ const TotalSearchStyle = styled.div`
     }
     .live__suggestion {
       display: ${(props) => (props.search ? "flex" : "none")};
+      position: absolute;
+      top: 570px;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 50%;
+      width: 40%;
       > div {
         display: flex;
         justify-content: center;
@@ -142,6 +143,7 @@ const TotalSearch = ({ history }) => {
   const dispatch = useDispatch();
   const list = useSelector((state) => state.hashtag.list.data);
   const [search, setSearch] = useState("");
+  const [now, setNow] = useState(0);
   const onChangeHandler = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
@@ -154,6 +156,17 @@ const TotalSearch = ({ history }) => {
     const dis = Hangul.disassemble(hashtag);
     if (hashtag.match(search) || dis.includes(search)) return true;
     else return false;
+  };
+
+  const onKeyDownHandler = (e) => {
+    if (e.key === "ArrowDown") {
+      console.log(document.getElementById(`suggest${now}`));
+      setNow((now) => now + 1);
+    }
+    if (e.key === "ArrowUp") {
+      setNow((now) => now - 1);
+      document.getElementById(`suggest${now}`).focus();
+    }
   };
 
   useEffect(() => {
@@ -187,6 +200,7 @@ const TotalSearch = ({ history }) => {
             type="text"
             placeholder="해시태그로 검색해보세요!"
             onChange={onChangeHandler}
+            onKeyDown={onKeyDownHandler}
           />
           <Link to="/search/result">
             <div onClick={onClick}>
@@ -198,7 +212,7 @@ const TotalSearch = ({ history }) => {
           {list.map((row, key) => {
             if (compare(row.hashtag))
               return (
-                <div key={key}>
+                <div id={`suggest${key}`} key={key}>
                   <input
                     value={row.hashtag}
                     readOnly
