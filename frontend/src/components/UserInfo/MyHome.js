@@ -104,6 +104,14 @@ const MyHomeStyle = styled.section`
         }
       }
     }
+    .no__history {
+      width: 100%;
+      height: 30vh;
+      color: gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 `;
 
@@ -145,20 +153,34 @@ const MyHome = ({ totalValue, storyList, userHistory }) => {
         </div>
       </article>
       <article className="my__home__body">
-        {userHistory.map((donation, key) => {
-          if (
-            key === 0 ||
-            getHeadDate(userHistory[key - 1].timestamp) !==
-              getHeadDate(donation.timestamp)
-          ) {
-            return (
-              <div key={key}>
-                <div className="head__date">
-                  <p></p>
-                  <p>{getHeadDate(donation.timestamp)}</p>
-                  <p></p>
+        {userHistory.length !== 0 ? (
+          userHistory.map((donation, key) => {
+            if (
+              key === 0 ||
+              getHeadDate(userHistory[key - 1].timestamp) !==
+                getHeadDate(donation.timestamp)
+            ) {
+              return (
+                <div key={key}>
+                  <div className="head__date">
+                    <p></p>
+                    <p>{getHeadDate(donation.timestamp)}</p>
+                    <p></p>
+                  </div>
+                  <div className="user__history">
+                    <img />
+                    <div>
+                      <p>{getFormatDate(donation.timestamp)}</p>
+                      <p>허그 기부</p>
+                      <p>{donation.receiver_id}</p>
+                    </div>
+                    <p>{donation.value.toLocaleString()}원</p>
+                  </div>
                 </div>
-                <div className="user__history">
+              );
+            } else {
+              return (
+                <div className="user__history" key={key}>
                   <img />
                   <div>
                     <p>{getFormatDate(donation.timestamp)}</p>
@@ -167,22 +189,12 @@ const MyHome = ({ totalValue, storyList, userHistory }) => {
                   </div>
                   <p>{donation.value.toLocaleString()}원</p>
                 </div>
-              </div>
-            );
-          } else {
-            return (
-              <div className="user__history" key={key}>
-                <img />
-                <div>
-                  <p>{getFormatDate(donation.timestamp)}</p>
-                  <p>허그 기부</p>
-                  <p>{donation.receiver_id}</p>
-                </div>
-                <p>{donation.value.toLocaleString()}원</p>
-              </div>
-            );
-          }
-        })}
+              );
+            }
+          })
+        ) : (
+          <div className="no__history">기부 내역이 없습니다</div>
+        )}
       </article>
     </MyHomeStyle>
   );
