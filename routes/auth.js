@@ -178,6 +178,7 @@ router.post("/signIn", async (req, res) => {
         session.loginInfo = {
           user_email: user.email,
           user_nickname: user.nickname,
+          user_hash: user.hash,
         };
         const payload = {
           nickname: user.nickname,
@@ -308,6 +309,7 @@ router.post("/kakao", async (req, res) => {
   session.loginInfo = {
     user_email: email,
     user_nickname: nickname,
+    user_hash: hash,
   };
 
   const payload = {
@@ -386,6 +388,7 @@ router.post("/naver", async (req, res) => {
   session.loginInfo = {
     user_email: email,
     user_nickname: user_nickname,
+    user_hash: hash,
   };
   const payload = {
     email: email,

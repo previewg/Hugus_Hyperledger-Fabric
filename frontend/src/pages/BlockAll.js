@@ -1,11 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import {
-  BlockSearch,
-  BlockAllHead,
-  BlockAllMain,
-  BlockAllLoader,
-} from "components";
+import { BlockSearch, BlockAllHead, BlockAllMain } from "components";
 import axios from "axios";
 
 const BlockAllStyle = styled.section`
@@ -52,11 +47,8 @@ const BlockAll = ({ history }) => {
         more={more}
         load={load}
       />
-      {loading ? (
-        <BlockAllLoader />
-      ) : (
-        <BlockAllMain blockList={blockList} history={history} />
-      )}
+
+      <BlockAllMain blockList={blockList} history={history} loading={loading} />
     </BlockAllStyle>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import axios from "axios";
 import styled from "styled-components";
-import { EditInfo, History, MyHome, MyNews } from "components";
+import { EditInfo, History, MyHome, MyNews, UserInfoLoader } from "components";
 
 const UserInfoStyle = styled.section`
   height: 80vh;
@@ -70,9 +71,11 @@ const UserInfoStyle = styled.section`
 
 const UserInfo = (props) => {
   const [infoType, setInfoType] = useState("my__home");
-  const [myHome, setMyHome] = useState({
-    story: null,
-  });
+  const [storyList, setStoryList] = useState(null);
+  const [campaignList, setCampaignList] = useState(null);
+  const [userHistory, setUserHistory] = useState(null);
+  const [totalValue, setTotalValue] = useState(0);
+  const [loading, setLoading] = useState(true);
   const flag = useRef(true);
   const profile = useSelector((state) => state.auth.user.profile);
   const nickname = useSelector((state) => state.auth.user.nickname);
@@ -83,21 +86,21 @@ const UserInfo = (props) => {
     setInfoType(e.target.id);
   };
 
-  // useEffect(() => {
-  //   if (flag.current) {
-  //     const init = async () => {
-  //       const result = await axios.get(`/story?user=${nickname}`);
-  //       setMyHome({ story: result.data.list });
-  //     };
-  //     init();
-  //   }
-  //   return () => {
-  //     flag.current = false;
-  //   };
-  // }, [profile]);
+  const init = async () => {
+    const result = await axios.post("/myPage/init");
+    setStoryList(result.data.storyList);
+    setCampaignList(result.data.campaignList);
+    setUserHistory(result.data.userHistory);
+    setTotalValue(result.data.totalValue);
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (!isLoggedIn) props.history.push("/");
+    if (flag.current) {
+      init();
+      flag.current = false;
+    }
   }, [isLoggedIn]);
 
   return (
@@ -139,18 +142,28 @@ const UserInfo = (props) => {
         </article>
       </section>
 
-      <section className="main">
-        {infoType === "my__home" && <MyHome nickname={nickname} />}
-        {infoType === "my__news" && <MyNews />}
-        {infoType === "my__history" && <History />}
-        {infoType === "edit__profile" && (
-          <EditInfo
-            setInfoType={setInfoType}
-            profile={profile}
-            nickname={nickname}
-          />
-        )}
-      </section>
+      {loading ? (
+        <UserInfoLoader />
+      ) : (
+        <section className="main">
+          {infoType === "my__home" && (
+            <MyHome
+              totalValue={totalValue}
+              storyList={storyList}
+              userHistory={userHistory}
+            />
+          )}
+          {infoType === "my__news" && <MyNews />}
+          {infoType === "my__history" && <History />}
+          {infoType === "edit__profile" && (
+            <EditInfo
+              setInfoType={setInfoType}
+              profile={profile}
+              nickname={nickname}
+            />
+          )}
+        </section>
+      )}
     </UserInfoStyle>
   );
 };

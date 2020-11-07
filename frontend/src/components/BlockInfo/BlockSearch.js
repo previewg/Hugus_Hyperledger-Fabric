@@ -40,7 +40,7 @@ const BlockSearchStyle = styled.article`
         color: ${(props) => (props.typeChangeReady ? "white" : "orange")};
       }
       p:nth-child(1) {
-        border: 1px solid orange;
+        border: 0.1px solid orange;
         border-top-left-radius: 20px;
         border-bottom-left-radius: ${(props) =>
           props.typeChangeReady ? 0 : "20px"};
@@ -49,18 +49,18 @@ const BlockSearchStyle = styled.article`
         background-color: #fdbe49;
         opacity: ${(props) => (props.typeChangeReady ? 1 : 0)};
         position: absolute;
-        border: 1px solid #fdbe49;
+        border: 0.1px solid #fdbe49;
         border-top: white solid 0.1px;
         border-bottom: white solid 0.1px;
-        top: ${(props) => (props.typeChangeReady ? "161px" : "121px")};
+        top: ${(props) => (props.typeChangeReady ? "162px" : "122px")};
       }
       p:nth-child(3) {
         background-color: #ffd98f;
         opacity: ${(props) => (props.typeChangeReady ? 1 : 0)};
         position: absolute;
-        top: ${(props) => (props.typeChangeReady ? "203px" : "163px")};
-        border-left: 1px solid #ffd98f;
-        border-right: 1px solid #ffd98f;
+        top: ${(props) => (props.typeChangeReady ? "204px" : "164px")};
+        border-left: 0.1px solid #ffd98f;
+        border-right: 0.1px solid #ffd98f;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
       }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Flow from "../BlockInfo/Flow";
+import { TxAllLoader } from "components";
 
 const TxAllMainStyle = styled.article`
   width: 80%;
@@ -71,7 +72,7 @@ const CopiedAlertStyle = styled.span`
   }
 `;
 
-const TxAllMain = ({ txList, history }) => {
+const TxAllMain = ({ txList, history, loading }) => {
   const CopiedAlert = ({ id }) => {
     const [time, setTime] = useState(false);
     const copyTx = () => {
@@ -98,19 +99,23 @@ const TxAllMain = ({ txList, history }) => {
         <p className="sender_id">FROM</p>
         <p className="receiver_id">TO</p>
       </div>
-      {txList.map((tx, key) => {
-        return (
-          <div className="TxList__body" key={key}>
-            <p className="tx_id">
-              <input readOnly id={tx.tx_id} value={tx.tx_id} />
-              <CopiedAlert id={tx.tx_id} />
-            </p>
-            <Flow className="age" block_time={tx.timestamp} />
-            <p className="sender_id">{tx.sender_id}</p>
-            <p className="receiver_id">{tx.receiver_id}</p>
-          </div>
-        );
-      })}
+      {loading ? (
+        <TxAllLoader />
+      ) : (
+        txList.map((tx, key) => {
+          return (
+            <div className="TxList__body" key={key}>
+              <p className="tx_id">
+                <input readOnly id={tx.tx_id} value={tx.tx_id} />
+                <CopiedAlert id={tx.tx_id} />
+              </p>
+              <Flow className="age" block_time={tx.timestamp} />
+              <p className="sender_id">{tx.sender_id}</p>
+              <p className="receiver_id">{tx.receiver_id}</p>
+            </div>
+          );
+        })
+      )}
     </TxAllMainStyle>
   );
 };

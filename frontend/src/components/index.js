@@ -56,6 +56,7 @@ import SearchResultStoryList from "./SearchResult/SearchResultStoryList";
 import SearchResultLoader from "./SearchResult/Loader";
 import SearchBar from "./SearchResult/SearchBar";
 import Loader from "./Loader";
+import UserInfoLoader from "./UserInfo/Loader";
 export {
   Main,
   NavBar,
@@ -115,4 +116,5 @@ export {
   SearchResultLoader,
   SearchBar,
   Loader,
+  UserInfoLoader,
 };

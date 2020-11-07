@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Flow from "../BlockInfo/Flow";
+import { BlockAllLoader } from "components";
 
 const BlockAllMainStyle = styled.article`
   width: 80%;
@@ -67,7 +68,7 @@ const CopiedAlertStyle = styled.span`
   }
 `;
 
-const BlockAllMain = ({ blockList, history }) => {
+const BlockAllMain = ({ blockList, history, loading }) => {
   const CopiedAlert = ({ id }) => {
     const [time, setTime] = useState(false);
     const copyTx = () => {
@@ -94,20 +95,27 @@ const BlockAllMain = ({ blockList, history }) => {
         <p className="age">AGE</p>
         <p className="tx_count">TX COUNT</p>
       </div>
-
-      {blockList.map((block, key) => {
-        return (
-          <div className="BlockAllMain__body" key={key}>
-            <p className="block_height">{block.block_height}</p>
-            <p className="block_hash">
-              <input readOnly id={block.block_hash} value={block.block_hash} />
-              <CopiedAlert id={block.block_hash} />
-            </p>
-            <Flow className="age" block_time={block.timestamp} />
-            <p className="tx_count">{block.tx_count}</p>
-          </div>
-        );
-      })}
+      {loading ? (
+        <BlockAllLoader />
+      ) : (
+        blockList.map((block, key) => {
+          return (
+            <div className="BlockAllMain__body" key={key}>
+              <p className="block_height">{block.block_height}</p>
+              <p className="block_hash">
+                <input
+                  readOnly
+                  id={block.block_hash}
+                  value={block.block_hash}
+                />
+                <CopiedAlert id={block.block_hash} />
+              </p>
+              <Flow className="age" block_time={block.timestamp} />
+              <p className="tx_count">{block.tx_count}</p>
+            </div>
+          );
+        })
+      )}
     </BlockAllMainStyle>
   );
 };

@@ -2,9 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const Block = require("../models/block/block");
-const transaction = require("../models/block/transaction");
 const Transaction = require("../models/block/transaction");
 
+// BlockInfo page initLoad
 router.get("/init", async (req, res) => {
   try {
     const blockList = await Block.find({}).sort({ timestamp: -1 }).limit(10);
@@ -28,6 +28,7 @@ router.get("/init", async (req, res) => {
   }
 });
 
+// Block/Tx All
 router.get("/list/:page", async (req, res) => {
   try {
     const { type } = req.query;
@@ -56,6 +57,7 @@ router.get("/list/:page", async (req, res) => {
   }
 });
 
+// Search User
 router.get("/search/user/:page", async (req, res) => {
   try {
     const word = req.body.word;
@@ -78,6 +80,8 @@ router.get("/search/user/:page", async (req, res) => {
     console.log(err);
   }
 });
+
+// Search Tx
 router.get("/search/tx", async (req, res) => {
   try {
     const word = req.body.word;
@@ -92,6 +96,8 @@ router.get("/search/tx", async (req, res) => {
     console.log(err);
   }
 });
+
+// Search Block
 router.get("/search/block/:hash", async (req, res) => {
   try {
     const { hash } = req.params;

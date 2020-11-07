@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { BlockSearch, TxAllHead, TxAllMain, TxAllLoader } from "components";
+import { BlockSearch, TxAllHead, TxAllMain } from "components";
 import axios from "axios";
 
 const TxAllStyle = styled.section`
@@ -47,11 +47,8 @@ const TxAll = ({ history }) => {
         more={more}
         load={load}
       />
-      {loading ? (
-        <TxAllLoader />
-      ) : (
-        <TxAllMain txList={txList} history={history} />
-      )}
+
+      <TxAllMain txList={txList} history={history} loading={loading} />
     </TxAllStyle>
   );
 };

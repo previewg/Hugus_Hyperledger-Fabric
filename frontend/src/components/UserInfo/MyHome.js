@@ -4,8 +4,8 @@ import styled from "styled-components";
 const MyHomeStyle = styled.section`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin-left: 100px;
+  width: 80%;
+  padding-left: 100px;
   .my__home__header {
     display: flex;
     width: 700px;
@@ -54,23 +54,23 @@ const MyHomeStyle = styled.section`
   }
 `;
 
-const MyHome = ({ nickname }) => {
+const MyHome = ({ totalValue, storyList, userHistory }) => {
   return (
     <MyHomeStyle>
       <article className="my__home__header">
         <div className="header__left">
           <div>
             <p>기부 건수</p>
-            <strong>1건</strong>
+            <strong>{userHistory.length}건</strong>
           </div>
           <div>
             <p>내가 쓴 글</p>
-            <strong>1건</strong>
+            <strong>{storyList.length}건</strong>
           </div>
         </div>
         <div className="header__right">
           <p>총 후원금액</p>
-          <strong>100,000원</strong>
+          <strong>{totalValue.toLocaleString()}원</strong>
         </div>
       </article>
     </MyHomeStyle>
