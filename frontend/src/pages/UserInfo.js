@@ -5,16 +5,18 @@ import styled from "styled-components";
 import { EditInfo, History, MyHome, MyNews, UserInfoLoader } from "components";
 
 const UserInfoStyle = styled.section`
-  height: 80vh;
+  min-height: 80vh;
   display: flex;
   padding-top: 200px;
   .side {
     display: flex;
     align-content: center;
     justify-content: center;
-    width: 25%;
+    width: 500px;
+    min-width: 500px;
     article {
-      min-width: 170px;
+      width: 180px;
+      min-width: 180px;
       .side__user {
         height: 170px;
         background-color: #9c9c9c;

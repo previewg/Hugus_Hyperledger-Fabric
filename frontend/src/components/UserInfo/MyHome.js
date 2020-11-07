@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const MyHomeStyle = styled.section`
   display: flex;
   flex-direction: column;
   width: 80%;
-  padding-left: 100px;
+  margin-left: 100px;
   .my__home__header {
     display: flex;
     width: 700px;
@@ -52,9 +52,80 @@ const MyHomeStyle = styled.section`
       }
     }
   }
+  .my__home__body {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    //height: 500px;
+    //overflow: hidden;
+    .head__date {
+      display: grid;
+      grid-template-columns: 5fr 1fr 5fr;
+      font-size: 14px;
+      p {
+        padding-left: 20px;
+        padding-right: 20px;
+        color: gray;
+        :nth-child(1) {
+          position: relative;
+          bottom: 8px;
+          border-bottom: lightgray 0.1px solid;
+        }
+        :nth-child(3) {
+          position: relative;
+          bottom: 8px;
+          border-bottom: lightgray 0.1px solid;
+        }
+      }
+    }
+    .user__history {
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1fr 8fr 3fr;
+      align-items: center;
+      width: 100%;
+      p {
+        margin: 2px;
+      }
+      > p {
+        justify-self: end;
+      }
+      > div {
+        display: flex;
+        flex-direction: column;
+        p {
+          color: gray;
+          font-size: 13px;
+          :nth-child(2) {
+            color: black;
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
 `;
 
 const MyHome = ({ totalValue, storyList, userHistory }) => {
+  const getFormatDate = useCallback((date) => {
+    let FormatDate = new Date(date);
+    let year = FormatDate.getFullYear();
+    let month = 1 + FormatDate.getMonth();
+    month = month >= 10 ? month : "0" + month;
+    let day = FormatDate.getDate();
+    day = day >= 10 ? day : "0" + day;
+    return `${year}.${month}.${day}`;
+  }, []);
+
+  const getHeadDate = useCallback((date) => {
+    let FormatDate = new Date(date);
+    let year = FormatDate.getFullYear();
+    let month = 1 + FormatDate.getMonth();
+    month = month >= 10 ? month : "0" + month;
+    return `${year}.${month}`;
+  }, []);
+
   return (
     <MyHomeStyle>
       <article className="my__home__header">
@@ -72,6 +143,46 @@ const MyHome = ({ totalValue, storyList, userHistory }) => {
           <p>총 후원금액</p>
           <strong>{totalValue.toLocaleString()}원</strong>
         </div>
+      </article>
+      <article className="my__home__body">
+        {userHistory.map((donation, key) => {
+          if (
+            key === 0 ||
+            getHeadDate(userHistory[key - 1].timestamp) !==
+              getHeadDate(donation.timestamp)
+          ) {
+            return (
+              <div key={key}>
+                <div className="head__date">
+                  <p></p>
+                  <p>{getHeadDate(donation.timestamp)}</p>
+                  <p></p>
+                </div>
+                <div className="user__history">
+                  <img />
+                  <div>
+                    <p>{getFormatDate(donation.timestamp)}</p>
+                    <p>허그 기부</p>
+                    <p>{donation.receiver_id}</p>
+                  </div>
+                  <p>{donation.value.toLocaleString()}원</p>
+                </div>
+              </div>
+            );
+          } else {
+            return (
+              <div className="user__history" key={key}>
+                <img />
+                <div>
+                  <p>{getFormatDate(donation.timestamp)}</p>
+                  <p>허그 기부</p>
+                  <p>{donation.receiver_id}</p>
+                </div>
+                <p>{donation.value.toLocaleString()}원</p>
+              </div>
+            );
+          }
+        })}
       </article>
     </MyHomeStyle>
   );

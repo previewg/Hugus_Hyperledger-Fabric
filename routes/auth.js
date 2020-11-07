@@ -390,6 +390,7 @@ router.post("/naver", async (req, res) => {
     user_nickname: user_nickname,
     user_hash: hash,
   };
+
   const payload = {
     email: email,
     nickname: user_nickname,

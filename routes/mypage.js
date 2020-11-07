@@ -177,7 +177,6 @@ router.post("/update", async (req, res) => {
 router.post("/init", async (req, res) => {
   try {
     const { user_hash, user_email } = req.session.loginInfo;
-
     const storyList = await Story.findAll({
       attributes: [
         "id",
