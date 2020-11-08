@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Block = require("../models/block/block");
+const transaction = require("../models/block/transaction");
 const Transaction = require("../models/block/transaction");
 
 // BlockInfo page initLoad
@@ -58,23 +59,21 @@ router.get("/list/:page", async (req, res) => {
 });
 
 // Search User
-router.get("/search/user/:page", async (req, res) => {
+router.get("/search/user/:hash/:page", async (req, res) => {
   try {
-    const word = req.body.word;
+    const { hash } = req.params; 
+    const { page } = req.params;    
+    const offset = (page - 1) * 20;
 
-    let searchUser;
-    let searchUserCount;
-    let page;
-
-    searchUser = await Transaction.find({ sender_id: word })
+    const height = await Transaction.countDocuments({sender_id: hash});
+    const userList = await Transaction.find({ sender_id: hash })
       .sort({ timestamp: -1 })
-      .skip((page - 1) * 10)
-      .limit(10);
-    console.log(searchUser);
-    searchUserCount = await Transaction.find({ sender_id: word }).count();
-    searchUserCount = parseInt(searchUserCount / 10) + 1;
-    console.log(searchUserCount);
-    res.json({ list: searchUser, count: searchUserCount, success: 1 });
+      .skip(offset)
+      .limit(20);
+      console.log(userList);      
+      const more = offset + 20 < height;
+      console.log(height);
+    res.json({ list: userList, height: height, success: 1, more: more });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);
@@ -82,15 +81,11 @@ router.get("/search/user/:page", async (req, res) => {
 });
 
 // Search Tx
-router.get("/search/tx", async (req, res) => {
+router.get("/search/tx/:hash", async (req, res) => {
   try {
-    const word = req.body.word;
-    const type = "user";
-    let searchTx;
-
-    searchTx = await Transaction.findOne({ tx_id: word });
-    console.log(searchTx);
-    res.json({ list: searchTx, success: 1 });
+    const { hash } = req.params;
+    const data = await transaction.findOne({ tx_id: hash });
+    res.json({ data: data, success: 1 });
   } catch (err) {
     res.status(400).json({ success: 3 });
     console.log(err);

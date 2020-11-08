@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { BlockInfoSearchLoader, SearchTx, BlockSearch } from "components";
+import {  SearchTx, BlockSearch } from "components";
 
 const TxDetailStyle = styled.section`
   width: 100%;
@@ -12,15 +12,24 @@ const TxDetailStyle = styled.section`
   align-items: center;
 `;
 
-const TxDetail = ({ history, match }) => {
+const TxDetail = ({ match, history }) => {
+  const [data, setData] = useState();
+
+  const init = async () => {
+    const initData = await axios.get(`/block/search/tx/${match.params.id}`);
+    if (initData.data.success === 1) {
+      setData(initData.data.data);
+    }
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
+    init();
   }, []);
 
   return (
     <TxDetailStyle>
       <BlockSearch history={history} />
-      <SearchTx />
+      <SearchTx data ={data}/>
     </TxDetailStyle>
   );
 };

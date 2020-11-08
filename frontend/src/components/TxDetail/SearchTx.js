@@ -1,19 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import { Loader } from "components";
 
 const SearchTxStyle = styled.div`
-  width: 100%;
+   width: 100%;
   display: flex;
   justify-content: center;
-  p {
-    font-size: 20px;
-    border-bottom: solid orange 1px;
-    padding-bottom: 2px;
-  }
+  padding-top: 70px;
 `;
 
 const SearchTx = ({ data }) => {
+  if (!data) return <Loader />;
   return (
     <SearchTxStyle>
       <div>

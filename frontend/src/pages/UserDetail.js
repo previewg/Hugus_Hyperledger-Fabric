@@ -11,30 +11,29 @@ const UserDetailStyle = styled.section`
 `;
 
 const UserDetail = ({ match, history }) => {
-  const init = useRef(true);
-  const [List, setList] = useState([]);
+  const [data, setData] = useState();
+  const [userList, setUserList] = useState([]);
   const [txHeight, setTxHeight] = useState(0);
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const load = async (page) => {
-    setLoading(true);
-    const list = await axios.get(`/block/search/user/${page}`);
-    if (list.data.success === 1) {
-      setList(list.data.list);
-      setTxHeight(list.data.height);
-      setMore(list.data.more);
-      setLoading(false);
+  
+  const init = async (page) => {
+    const initData = await axios.get(`/block/search/user/${match.params.id}/${page}`);
+    if (initData.data.success === 1) {
+      setData(initData.data.data);
+      setUserList(initData.data.list);
+      setTxHeight(initData.data.height);
+      setMore(initData.data.more);
+      
     }
   };
   useEffect(() => {
-    if (init.current) {
-      load(1);
-      init.current = false;
-      window.scrollTo(0, 0);
-    }
+    window.scrollTo(0, 0);
+    init(1);
   }, []);
+
+
+
 
   return (
     <UserDetailStyle>
@@ -43,10 +42,11 @@ const UserDetail = ({ match, history }) => {
         setPage={setPage}
         txHeight={txHeight}
         page={page}
+        init={init}
         more={more}
-        load={load}
+        
       />
-      <SearchUser history={history} />
+      <SearchUser data ={data} list = {userList} />
     </UserDetailStyle>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-
+import { Loader } from "components";
 const SearchUserStyle = styled.div`
   width: 80%;
   display: flex;
@@ -61,12 +61,11 @@ const SearchUserStyle = styled.div`
 `;
 
 const SearchUser = ({ list }) => {
+  console.log(list)
+  if (!list) return <Loader />;
   return (
     <SearchUserStyle>
       <div className="TxList__header">
-        <div> block_height/ sender_id </div>
-        <div> block_height/ sender_id </div>
-        <div> block_height/ sender_id </div>
         <div> block_height/ sender_id </div>
         <div> tx_id/value </div>
         <div> tx_type </div>

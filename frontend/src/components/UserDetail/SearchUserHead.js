@@ -41,7 +41,7 @@ const BlockInfoUserHeadStyle = styled.article`
   }
 `;
 
-const BlockInfoUserHead = ({ txHeight, setPage, page, more, load }) => {
+const BlockInfoUserHead = ({ txHeight, setPage, page, more, init }) => {
   const pageInfo = () => {
     let lastPage = page * 20;
     if (page * 20 > txHeight) lastPage = txHeight;
@@ -50,14 +50,14 @@ const BlockInfoUserHead = ({ txHeight, setPage, page, more, load }) => {
 
   const prevHandler = () => {
     if (page !== 1) {
-      load(page - 1);
+      init(page - 1);
       setPage((page) => page - 1);
     }
   };
 
   const nextHandler = () => {
     if (more) {
-      load(page + 1);
+      init(page + 1);
       setPage((page) => page + 1);
     }
   };
