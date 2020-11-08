@@ -177,7 +177,6 @@ router.post("/update", async (req, res) => {
 router.post("/init", async (req, res) => {
   try {
     const { user_hash, user_email } = req.session.loginInfo;
-
     const storyList = await Story.findAll({
       attributes: [
         "id",
@@ -218,12 +217,12 @@ router.post("/init", async (req, res) => {
       { $match: { sender_id: `${user_hash}` } },
       { $group: { _id: `${user_hash}`, value: { $sum: "$value" } } },
     ]);
-    totalValue = totalValue[0].value;
+    if (totalValue.length !== 0) totalValue = totalValue[0].value;
+    else totalValue = 0;
 
     const campaignData = await Transaction.aggregate([
       { $group: { _id: "$receiver_id", value: { $sum: "$value" } } },
     ]);
-
     for (const campaign of campaignData) {
       await Campaign.update(
         {
@@ -236,7 +235,6 @@ router.post("/init", async (req, res) => {
     const userHistory = await Transaction.find({ sender_id: user_hash }).sort({
       timestamp: -1,
     });
-
     let candidate = new Set();
     for (const row of userHistory) {
       candidate.add(row.receiver_id);
@@ -286,6 +284,7 @@ router.post("/init", async (req, res) => {
       success: 1,
     });
   } catch (error) {
+    console.error(error);
     res.status(400).json({ success: 3 });
   }
 });
