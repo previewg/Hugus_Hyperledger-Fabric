@@ -15,12 +15,17 @@ const BlockListStyle = styled.div`
       display: flex;
       width: 100%;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
       p:nth-child(1) {
         font-size: 23px;
       }
       .BlockViewAll__btn {
         cursor: pointer;
+        color: gray;
+        transition: color 0.3s ease-in-out;
+        :hover {
+          color: orange;
+        }
       }
     }
     .BlockList__header {
@@ -44,6 +49,7 @@ const BlockListStyle = styled.div`
         justify-self: center;
         margin: 5px;
         input {
+          cursor: pointer;
           outline: none;
           border: none;
           background: transparent;
@@ -132,6 +138,9 @@ const BlockList = ({ blockList, history }) => {
                   readOnly
                   id={block.block_hash}
                   value={block.block_hash}
+                  onClick={() =>
+                    history.push(`/search/block/${block.block_hash}`)
+                  }
                 />
                 ...
                 <CopiedAlert id={block.block_hash} />

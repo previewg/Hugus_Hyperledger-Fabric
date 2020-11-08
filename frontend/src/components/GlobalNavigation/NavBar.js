@@ -393,10 +393,10 @@ const NavBar = () => {
             ) : (
               <a onClick={() => dispatch(signInBtnIsClicked())}>My</a>
             )}
-            <ul>
-              <Link to="">캠페인 모금현황</Link>
-              <Link to="">스토리 투표현황</Link>
-            </ul>
+            {/*<ul>*/}
+            {/*  <Link to="">캠페인 모금현황</Link>*/}
+            {/*  <Link to="">스토리 투표현황</Link>*/}
+            {/*</ul>*/}
           </div>
           <div className="dropdown">
             <Link to="/act">Act</Link>

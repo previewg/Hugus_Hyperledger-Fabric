@@ -13,13 +13,14 @@ const BlockDetailStyle = styled.section`
 `;
 
 const BlockDetail = ({ match, history }) => {
-  const [data, setData] = useState();
-
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const init = async () => {
     const initData = await axios.get(`/block/search/block/${match.params.id}`);
     if (initData.data.success === 1) {
       setData(initData.data.data);
     }
+    setLoading(false);
   };
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -29,7 +30,7 @@ const BlockDetail = ({ match, history }) => {
   return (
     <BlockDetailStyle>
       <BlockSearch history={history} />
-      <SearchBlock data={data} />
+      <SearchBlock data={data} loading={loading} />
     </BlockDetailStyle>
   );
 };

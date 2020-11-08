@@ -54,6 +54,7 @@ const StoryContentsStyle = styled.div`
       border: solid 0.1px lightgray;
       padding: 15px;
       padding-left: 20px;
+      white-space: pre;
     }
   }
 
@@ -66,6 +67,7 @@ const StoryContentsStyle = styled.div`
       border: solid 0.1px lightgray;
       padding: 15px;
       padding-left: 20px;
+      white-space: pre;
     }
   }
 
@@ -126,13 +128,12 @@ const StoryContentsStyle = styled.div`
       cursor: pointer;
       font-weight: bold;
       color: dodgerblue;
-      transition: 0.3s ease-in-out;
+      transition: 0.2s ease-in-out;
       border-radius: 5px;
       outline: none;
       :hover {
         background-color: dodgerblue;
         color: white;
-        transform: scale(1.2);
       }
     }
     .vote_true {

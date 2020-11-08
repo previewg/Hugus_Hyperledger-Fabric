@@ -15,12 +15,17 @@ const TransactionListStyle = styled.div`
       display: flex;
       width: 100%;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
       p:nth-child(1) {
         font-size: 23px;
       }
       .TransactionViewAll__btn {
         cursor: pointer;
+        color: gray;
+        transition: color 0.3s ease-in-out;
+        :hover {
+          color: orange;
+        }
       }
     }
     .TxList__header {
@@ -61,6 +66,7 @@ const TransactionListStyle = styled.div`
         display: flex;
         align-items: center;
         input {
+          cursor: pointer;
           outline: none;
           border: none;
           background: transparent;
@@ -126,7 +132,12 @@ const TransactionList = ({ txList, history }) => {
           return (
             <div className="TxList__body" key={key}>
               <p className="tx_id">
-                <input readOnly id={tx.tx_id} value={tx.tx_id} />
+                <input
+                  readOnly
+                  id={tx.tx_id}
+                  value={tx.tx_id}
+                  onClick={() => history.push(`/search/tx/${tx.tx_id}`)}
+                />
                 ...
                 <CopiedAlert id={tx.tx_id} />
               </p>

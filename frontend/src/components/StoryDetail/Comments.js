@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CommentInput from "./CommentInput";
 import CommentList from "./CommentList";
-import { commentListInit } from "../../actions/comment";
 
 const CommentStyle = styled.div`
   width: 700px;

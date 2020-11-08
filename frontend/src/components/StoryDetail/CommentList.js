@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  commentChildAdd,
-  commentDelete,
-  commentListLoader,
-} from "../../actions/comment";
+import { commentDelete, commentListLoader } from "../../actions/comment";
 import CommentChild from "../../components/StoryDetail/CommentChild";
 import CommentChildInput from "./CommentChildInput";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 const CommentListStyle = styled.section`
@@ -203,8 +198,9 @@ const time = (value) => {
 
 const CommentList = ({ commentList, data, num }) => {
   const dispatch = useDispatch();
-  const nickname = useSelector((state) => state.auth.user.nickname);
   const email = useSelector((state) => state.auth.user.email);
+  const more = useSelector((state) => state.comment.list.more);
+
   const commentDeleteHandler = (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
@@ -280,7 +276,7 @@ const CommentList = ({ commentList, data, num }) => {
         );
       })}
       <div className="bottom">
-        <p onClick={loadMore}>댓글 더보기</p>
+        {more ? <p onClick={loadMore}>댓글 더보기</p> : <p></p>}
         <Link className="back_btn" to="/story">
           글목록
         </Link>

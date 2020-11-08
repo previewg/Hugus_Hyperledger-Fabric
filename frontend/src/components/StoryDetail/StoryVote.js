@@ -16,9 +16,6 @@ const BarStyle = styled.div`
       opacity: 1;
       transform: translate(-13px, -20px);
     }
-    .bar > div {
-      box-shadow: 0 0 10px 1px rgba(255, 165, 0, 1);
-    }
   }
   .ratio {
     transition: 0.3s ease-in-out;

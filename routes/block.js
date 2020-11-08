@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const Block = require("../models/block/block");
-const transaction = require("../models/block/transaction");
 const Transaction = require("../models/block/transaction");
 
 // BlockInfo page initLoad
@@ -61,18 +60,18 @@ router.get("/list/:page", async (req, res) => {
 // Search User
 router.get("/search/user/:hash/:page", async (req, res) => {
   try {
-    const { hash } = req.params; 
-    const { page } = req.params;    
+    const { hash } = req.params;
+    const { page } = req.params;
     const offset = (page - 1) * 20;
 
-    const height = await Transaction.countDocuments({sender_id: hash});
+    const height = await Transaction.countDocuments({ sender_id: hash });
     const userList = await Transaction.find({ sender_id: hash })
       .sort({ timestamp: -1 })
       .skip(offset)
       .limit(20);
-      console.log(userList);      
-      const more = offset + 20 < height;
-      console.log(height);
+    console.log(userList);
+    const more = offset + 20 < height;
+    console.log(height);
     res.json({ list: userList, height: height, success: 1, more: more });
   } catch (err) {
     res.status(400).json({ success: 3 });
@@ -84,7 +83,7 @@ router.get("/search/user/:hash/:page", async (req, res) => {
 router.get("/search/tx/:hash", async (req, res) => {
   try {
     const { hash } = req.params;
-    const data = await transaction.findOne({ tx_id: hash });
+    const data = await Transaction.findOne({ tx_id: hash });
     res.json({ data: data, success: 1 });
   } catch (err) {
     res.status(400).json({ success: 3 });
