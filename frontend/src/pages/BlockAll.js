@@ -39,7 +39,7 @@ const BlockAll = ({ history }) => {
 
   return (
     <BlockAllStyle>
-      <BlockSearch />
+      <BlockSearch history={history} />
       <BlockAllHead
         setPage={setPage}
         blockHeight={blockHeight}
@@ -47,7 +47,6 @@ const BlockAll = ({ history }) => {
         more={more}
         load={load}
       />
-
       <BlockAllMain blockList={blockList} history={history} loading={loading} />
     </BlockAllStyle>
   );

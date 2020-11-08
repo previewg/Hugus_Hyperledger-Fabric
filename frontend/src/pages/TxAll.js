@@ -39,7 +39,7 @@ const TxAll = ({ history }) => {
 
   return (
     <TxAllStyle>
-      <BlockSearch />
+      <BlockSearch history={history} />
       <TxAllHead
         setPage={setPage}
         txHeight={txHeight}

@@ -255,11 +255,10 @@ router.get("/list/:page", async (req, res) => {
     const type = req.query.type;
     let order;
     if (type === "hot") {
-      order = [["visited", "DESC"]];
+      order = [[sequelize.cast(sequelize.col("story_ratio"), "FLOAT"), "DESC"]];
     } else if (type === "new") {
       order = [["created_at", "DESC"]];
-    }
-    else if(type==="all"){
+    } else if (type === "all") {
       order = [["visited", "DESC"]];
     }
     // 9개씩 조회
@@ -268,7 +267,7 @@ router.get("/list/:page", async (req, res) => {
     }
 
     let list;
-    if(type==="all"){
+    if (type === "all") {
       list = await Story.findAll({
         attributes: [
           "id",
@@ -281,19 +280,19 @@ router.get("/list/:page", async (req, res) => {
           "createdAt",
           [
             sequelize.literal(
-                "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
+              "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
             ),
             "story_like",
           ],
           [
             sequelize.literal(
-                "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
+              "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
             ),
             "story_vote",
           ],
           [
             sequelize.literal(
-                "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+              "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
             ),
             "story_comment",
           ],
@@ -387,6 +386,12 @@ router.get("/list/:page", async (req, res) => {
             ),
             "story_comment",
           ],
+          [
+            sequelize.literal(
+              "(SELECT (story_vote)/(story_goal) FROM story WHERE id = `Story`.id)"
+            ),
+            "story_ratio",
+          ],
         ],
         include: [
           { model: Hashtag, attributes: ["hashtag"] },
@@ -399,7 +404,6 @@ router.get("/list/:page", async (req, res) => {
       const total = await Story.count({});
       let more = false;
       if (total > page * 10) more = true;
-
       res.json({ list: list, success: 1, more: more });
     }
   } catch (error) {

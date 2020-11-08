@@ -98,6 +98,7 @@ const UserInfo = (props) => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!isLoggedIn) props.history.push("/");
     if (flag.current) {
       init();

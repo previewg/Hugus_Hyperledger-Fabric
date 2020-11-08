@@ -6,6 +6,7 @@ import {
   BlockInfoMain,
   BlockSearch,
   BlockSocket,
+  UserInfoLoader,
 } from "components";
 
 const BlockInfoStyle = styled.section`
@@ -24,6 +25,7 @@ const BlockInfo = (props) => {
   const [txHeight, setTxHeight] = useState(0);
   const [blockHeight, setBlockHeight] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const initLoad = useCallback(async () => {
     const initData = await axios.get("/block/init");
@@ -32,12 +34,14 @@ const BlockInfo = (props) => {
     setTxHeight(initData.data.txHeight);
     setBlockHeight(initData.data.blockHeight);
     setTotalAmount(initData.data.totalAmount);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (init.current) {
-      initLoad().then(() => (init.current = false));
-      window.scrollTo(0, 0);
+      initLoad();
+      init.current = false;
     }
   }, []);
 
@@ -60,6 +64,7 @@ const BlockInfo = (props) => {
         blockList={blockList}
         history={props.history}
       />
+      {loading && <UserInfoLoader />}
     </BlockInfoStyle>
   );
 };
