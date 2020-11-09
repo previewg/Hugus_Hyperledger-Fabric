@@ -12,26 +12,25 @@ const {
 // 해시태그 목록 조회
 router.get("/all", async (req, res) => {
   try {
-    const hashtags = await Hashtag.findAll({ attributes: ["hashtag"] });
-    // const mostTags = await Story_Hashtag.findAll({
-    //   attributes: [
-    //     [
-    //       sequelize.literal(
-    //         "(SELECT (campaign_value)/(campaign_goal) FROM campaign WHERE id = `Campaign`.id)"
-    //       ),
-    //       "campaign_ratio",
-    //     ],
-    //   ],
-    //   include: [{ model: Hashtag, attributes: ["hashtag"] }],
-    //
-    //   limit: 10,
-    // });
+    const hashtags = await Hashtag.findAll({
+      attributes: [
+        "hashtag",
+        [
+          sequelize.literal(
+            "(SELECT count(1) FROM story_hashtag WHERE hashtag_id = `Hashtag`.id)"
+          ),
+          "count",
+        ],
+      ],
+      order: [[sequelize.cast(sequelize.col("count"), "INTEGER"), "DESC"]],
+    });
     res.json({ success: 1, list: hashtags });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
   }
 });
+
 router.post("/search", async (req, res) => {
   const search = req.body.search;
 
@@ -81,7 +80,6 @@ router.post("/search", async (req, res) => {
           { model: Story_File, attributes: ["file"], limit: 1 },
         ],
       });
-      console.log(list);
       res.json({ list: list, success: 1 });
     } else {
       res.json({ success: 3 });
@@ -93,24 +91,23 @@ router.post("/search", async (req, res) => {
 });
 
 // 해당 해시태그 게시물 조회
-router.post("/list", async (req, res) => {
-  try {
-    const { hashtag } = req.body;
-    const hashtag_id = await Hashtag.findOne({
-      attributes: ["id"],
-      where: { hashtag: hashtag },
-    });
-    console.log(hashtag_id);
-    const list = await Story_Hashtag.findAll({
-      where: { hashtag_id: 7 },
-      include: [{ model: Story }],
-    });
-
-    res.json({ success: 1, list: list });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ success: 3 });
-  }
-});
+// router.post("/list", async (req, res) => {
+//   try {
+//     const { hashtag } = req.body;
+//     const hashtag_id = await Hashtag.findOne({
+//       attributes: ["id"],
+//       where: { hashtag: hashtag },
+//     });
+//     const list = await Story_Hashtag.findAll({
+//       where: { hashtag_id: 7 },
+//       include: [{ model: Story }],
+//     });
+//
+//     res.json({ success: 1, list: list });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).json({ success: 3 });
+//   }
+// });
 
 module.exports = router;

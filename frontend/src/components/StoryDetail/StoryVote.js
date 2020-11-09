@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { signInBtnIsClicked } from "../../actions/user";
-import { storyVote } from "../../actions/story";
+import { signInBtnIsClicked } from "actions/user";
+import { storyVote } from "actions/story";
 import { useDispatch, useSelector } from "react-redux";
 
 const BarStyle = styled.div`

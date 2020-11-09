@@ -10,11 +10,17 @@ const BlockInfoUserHeadStyle = styled.article`
     font-size: 40px;
     color: orange;
     font-weight: 900;
+    > p {
+      justify-self: center;
+    }
   }
   .BlockUser_head {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    > p {
+      justify-self: center;
+    }
     .BlockUser_pagination {
       > button {
         transition: all 0.3s ease-in-out;

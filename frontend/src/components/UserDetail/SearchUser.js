@@ -6,25 +6,25 @@ const SearchUserStyle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  .TxList__header {
+  .TxList__header {    
+    justify-content: space-between;
+    align-items: center;
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr 3fr;
+    grid-template-columns: 50% 10% 10% 10% 20%;
     border-top: solid 0.1px orange;
     border-bottom: solid 0.1px lightgray;
-    font-size: 15px;
-    > p {
+    font-size: 20px;
+    height:50px;    
       justify-self: center;
-    }
-    .tx_id {
-      justify-self: start;
+    > p {
     }
   }
   .TxList__body {
     transition: background-color 0.2s ease-in-out;
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr 3fr;
-    font-size: 15px;
+    grid-template-columns: 50% 10% 10% 10% 20%;
+    font-size: 20px;
     > p,
     span {
       justify-self: center;
@@ -42,7 +42,7 @@ const SearchUserStyle = styled.div`
         }
       }
     }
-    .tx_id {
+    .Tx_id {
       justify-self: start;
       display: flex;
       align-items: center;
@@ -51,7 +51,7 @@ const SearchUserStyle = styled.div`
         border: none;
         background: transparent;
         width: 520px;
-        font-size: 15px;
+        font-size: 20px;
       }
     }
     :hover {
@@ -59,30 +59,66 @@ const SearchUserStyle = styled.div`
     }
   }
 `;
+const CopiedAlertStyle = styled.span`
+  display: flex;
+  align-items: center;
+  .time {
+    transition: opacity 0.3s ease-in-out;
+    opacity: ${(props) => (props.time ? 1 : 0)};
+    font-size: 13px;
+  }
+`;
 
-const SearchUser = ({ list }) => {
+const SearchUser = ({ list, history }) => {
   console.log(list)
+  const CopiedAlert = ({ id }) => {
+    const [time, setTime] = useState(false);
+    const copyTx = () => {
+      setTime(true);
+      setTimeout(() => setTime(false), 1000);
+      const tx_id = document.getElementById(id);
+      tx_id.select();
+      document.execCommand("Copy");
+    };
+
+    return (
+      <CopiedAlertStyle time={time}>
+        <button onClick={copyTx}>복사</button>
+        <span className="time">복사완료!</span>
+      </CopiedAlertStyle>
+    );
+  };
   if (!list) return <Loader />;
   return (
     <SearchUserStyle>
       <div className="TxList__header">
-        <div> block_height/ sender_id </div>
-        <div> tx_id/value </div>
-        <div> tx_type </div>
-        <div className="acenter"> receiver_id/time </div>
+        
+        <div> TX_ID </div>
+        <div> TX_TYPE </div>
+        <div> SENDER_ID</div>
+        <div> RECEIVER_ID </div>        
+        <div> AGE</div>
       </div>
 
       <div>
         {list.map((block, key) => {
           return (
             <div className="TxList__body" key={key}>
-              <div className="block_height">{block.block_height}</div>
-              <div className="tx_id">{block.tx_id}</div>
+             
+              <p className="Tx_id">
+                <input
+                  readOnly
+                  id={block.tx_id}
+                  value={block.tx_id}
+                  onClick={() =>
+                    history.push(`/search/tx/${block.tx_id}`)
+                  }
+                />
+                <CopiedAlert id={block.tx_id} />
+              </p>
               <div className="tx_type">{block.tx_type}</div>
               <div className="sender_id">{block.sender_id}</div>
-              <div className="receiver_id">{block.receiver_id}</div>
-              <div className="value">{block.value}</div>
-              <div className="receipt">{block.receipt}</div>
+              <div className="receiver_id">{block.receiver_id}</div>              
               <div className="timestamp">{block.timestamp}</div>
             </div>
           );
