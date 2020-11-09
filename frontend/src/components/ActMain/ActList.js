@@ -28,7 +28,7 @@ const ActListStyle = styled.div`
     line-height: 40px;
     border-bottom: solid gray 0.1px;
     color: black;
-    font-size: 17px;
+    font-size: 15px;
     transition: 0.1s ease-in-out;
     outline: none;
     cursor: pointer;

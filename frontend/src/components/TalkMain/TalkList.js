@@ -27,21 +27,29 @@ const TalkListStyle = styled.div`
     line-height: 40px;
     border-bottom: solid gray 0.1px;
     color: black;
-    font-size: 17px;
+    font-size: 15px;
     transition: 0.1s ease-in-out;
     outline: none;
     cursor: pointer;
     :hover {
       color: orange;
     }
-    .act__id {
+    .talk__id {
+      margin-left: 2px;
       width: 20%;
       display: flex;
       justify-content: center;
     }
-    .act__title {
+    .talk__title {
+      display: flex;
+    .comment_count{
+      outline: none;
+      font-size: 12px;
+      color: red;
+      font-weight: bold;
     }
-    .act__visit {
+    }
+    .talk__visit {
       margin-left: 13px;
     }
     .create__time {
@@ -75,7 +83,15 @@ const TalkList = ({ talkList }) => {
           >
             <div className="list_grid list_data" key={key}>
               <div className="talk__id">{talk.id}</div>
-              <div className="talk__title">{talk.talk_title}</div>
+
+              <div className="talk__title">
+                {talk.talk_title}
+                &nbsp;&nbsp;   
+                <div className="comment_count">
+                [{talk.CCount}]
+                </div>
+              </div>
+
               <div className="talk__visit">{talk.visited}</div>
               <div className="create__time">{talk.created_at}</div>
             </div>

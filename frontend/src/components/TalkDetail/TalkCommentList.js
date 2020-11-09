@@ -169,6 +169,24 @@ const TalkCommentListStyle = styled.section`
       color: black;
     }
   }
+
+ .back {
+  width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  .back_btn {
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    color: grey;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+    outline: none;
+    :hover {
+    color: orange;
+    }
+  }
+}
 `;
 
 const time = (value) => {
@@ -237,7 +255,6 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
       </>
     );
   };
-  console.log(talkCommentList.more);
 
   const loadMore = async () => {
     const id = talk_id;
@@ -254,7 +271,6 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
         };
     setStatus("SUCCESS");
   };
-
 
   return (
     <TalkCommentListStyle>
@@ -300,6 +316,13 @@ const TalkCommentList = ({ match, talkId, talkCommentList, setTalkCommentList })
           <p onClick={loadMore}>댓글 더보기</p>
         </div>
       }
+
+      <div className="back">
+      <Link className="back_btn" to="/talk">
+      글목록
+      </Link>
+      </div>
+      
     </TalkCommentListStyle>
   );
 };

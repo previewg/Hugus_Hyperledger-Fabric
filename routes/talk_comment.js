@@ -150,7 +150,6 @@ router.get("/list/:id/:page", async (req, res) => {
         limit: 10,
       });
 
-
       const total = await Talk_Comment.count({
         where: {
           talk_id: talk_id,
