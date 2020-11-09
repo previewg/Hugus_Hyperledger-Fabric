@@ -58,12 +58,14 @@ const TalkMain = (props) => {
   const [talkList, setTalkList] = useState([]);
   const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const nowPage = async (page) => {
     const data = await axios.get(`/talk/list/${page}?keyword=${search}`);
     setTalkList(data.data.list);
     setTotal(data.data.count);
     setClicked(false);
+    setLoading(false)
   };
 
   const onClickHandler = () => {
@@ -100,7 +102,7 @@ const TalkMain = (props) => {
         <div className="write">
         <span className="talkWrite__btn" onClick={onClickHandler}>글작성</span>
         </div>
-        {talkList.length !== 0 ? <TalkList talkList={talkList} /> : <Loader />}
+        {!loading ? <TalkList talkList={talkList} /> : <Loader />}
         <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
       </div>
     </TalkStyle>

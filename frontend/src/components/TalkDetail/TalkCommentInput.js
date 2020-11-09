@@ -148,7 +148,7 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
         setTalkCommentList(result.data);
         setComments("");
         setLoading(false);
-      }else{
+      } else {
         comments.current.focus();
         setError(true);
       }

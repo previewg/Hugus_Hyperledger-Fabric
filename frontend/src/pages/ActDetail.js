@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 
 const ActDetailStyle = styled.div`
+  min-height: 900px;
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
