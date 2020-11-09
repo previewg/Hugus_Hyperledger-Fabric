@@ -46,7 +46,7 @@ const UserDetail = ({ match, history }) => {
         more={more}
         
       />
-      <SearchUser data ={data} list = {userList} />
+      <SearchUser data ={data} list = {userList} history={history} />
     </UserDetailStyle>
   );
 };
