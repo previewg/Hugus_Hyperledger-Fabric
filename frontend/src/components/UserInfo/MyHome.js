@@ -86,9 +86,7 @@ const MyHomeStyle = styled.section`
       grid-template-columns: 1fr 8fr 3fr;
       align-items: center;
       cursor: pointer;
-      :hover {
-        background-color: navajowhite;
-      }
+
       img {
         width: 40px;
       }
@@ -134,14 +132,18 @@ const UserHistoryStyle = styled.div`
   display: flex;
   flex-direction: column;
   .user__history {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    ${(props) => props.clicked && "background-color: rgba(0, 0, 0, 0.05)"};
+    ${(props) =>
+      props.clicked
+        ? "border-top-right-radius: 10px;border-top-left-radius: 10px;background-color: rgba(0, 0, 0, 0.05)"
+        : "border-radius: 10px"};
+    :hover {
+      box-shadow: ${(props) =>
+        props.clicked ? "none" : "0px 0px 10px 0px rgba(0, 0, 0, 0.2);"};
+    }
   }
   .user__history__detail {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    //box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
     display: grid;
     grid-template-columns: 1fr 9fr;
     padding: 10px;
