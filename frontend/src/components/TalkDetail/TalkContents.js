@@ -9,7 +9,7 @@ const TalkContentsStyle = styled.div`
   padding-top:50px;
   justify-content: center;
   flex-direction:column;
-  width: 700px;
+  width: 750px;
  
  .talk_contents {
     width:100%;

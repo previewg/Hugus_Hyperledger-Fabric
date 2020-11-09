@@ -59,11 +59,23 @@ const TalkListStyle = styled.div`
   }
 `;
 
+const ThereIsNoFavorite = styled.p`
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: gray;
+`;
+
 const TalkList = ({ talkList }) => {
 
   const visitHandler = async (id) => {
     await axios.put('/talk/visit', { talk_id: id });
   };
+
+  if (talkList.length === 0)
+    return <ThereIsNoFavorite>검색 결과가 없습니다</ThereIsNoFavorite>;
 
   return (
     <TalkListStyle>

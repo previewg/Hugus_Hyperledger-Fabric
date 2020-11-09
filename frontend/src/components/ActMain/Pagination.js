@@ -81,7 +81,10 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
         <button onClick={prePage}>&lt;</button>
         {pArr.map((n, key) => 
         currPage === n ? (
-          <button key={key} onClick={() => setCurrPage(n)} style={ {backgroundColor: "orange" }}>
+          <button 
+          key={key} 
+          onClick={() => setCurrPage(n)} 
+          style={{backgroundColor: "orange" }}>
             {n}
           </button>
         ) : (

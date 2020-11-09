@@ -88,7 +88,7 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
               onClick={() => setCurrPage(n)}
               style={{
                 backgroundColor: "orange",
-                color: "white",
+                color: "black",
                 transform: "scale(1.2)",
               }}
             >

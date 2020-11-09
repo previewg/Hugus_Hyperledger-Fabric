@@ -8,7 +8,7 @@ const ActContentsStyle = styled.div`
   padding-top:70px;
   justify-content: center;
   flex-direction:column;
-  width: 70%;
+  width: 750px;
  
  .act_contents {
    width:100%;
@@ -86,7 +86,7 @@ const data = actId.data;
     <ActContentsStyle>
     <div className="act_contents">
 
-      <p>{data.act_title}에 대한 소식입니다.</p>
+      <p>{data.act_title}의 소식입니다.</p>
       </div>
 
       <ActSlider files={data.Act_Files} />

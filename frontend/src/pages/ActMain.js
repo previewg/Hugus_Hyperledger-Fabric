@@ -47,12 +47,14 @@ const ActMain = () => {
   const [actList, setActList] = useState([]);
   const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const nowPage = async (page) => {
     const data = await axios.get(`/act/list/${page}?keyword=${search}`);
     setActList(data.data.list);
     setTotal(data.data.count);
     setClicked(false);
+    setLoading(false);
   };
 
 
@@ -82,7 +84,7 @@ const ActMain = () => {
           <p>전달 스토리</p>
         </div>
         <Search search={search} setSearch={setSearch} setClicked={setClicked} />
-        {actList.length !== 0 ? <ActList actList={actList} /> : <Loader />}
+        {!loading ? <ActList actList={actList} /> : <Loader />}
         <Pagination
           clicked={clicked}
           total={total}

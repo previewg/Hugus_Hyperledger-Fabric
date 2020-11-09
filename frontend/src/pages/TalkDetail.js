@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { talkLoader, talkLoadInit } from "actions/talk";
 
 const TalkDetailStyle = styled.div`
+  min-height: 900px;
   display: flex;
   justify-content: center;
   margin-bottom: 70px;
