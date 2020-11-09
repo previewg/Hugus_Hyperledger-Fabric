@@ -213,6 +213,7 @@ const MyHome = ({
   historyMore,
   historyLoad,
   campaignList,
+  totalCount,
 }) => {
   const getFormatDate = useCallback((date) => {
     let FormatDate = new Date(date);
@@ -323,7 +324,7 @@ const MyHome = ({
         <div className="header__left">
           <div>
             <p>기부 건수</p>
-            <strong>{userHistory.length}건</strong>
+            <strong>{totalCount}건</strong>
           </div>
           <div>
             <p>내가 쓴 글</p>
@@ -355,15 +356,6 @@ const MyHome = ({
               );
             } else {
               return (
-                // <div className="user__history" key={key}>
-                //   <img src="/icons/approval.png" />
-                //   <div>
-                //     <p>{getFormatDate(donation.timestamp)}</p>
-                //     <p>허그 기부</p>
-                //     <p>{donation.receiver_id}</p>
-                //   </div>
-                //   <p>{donation.value.toLocaleString()}원</p>
-                // </div>
                 <div key={key}>
                   <UserHistory donation={donation} />
                 </div>

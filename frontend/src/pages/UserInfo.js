@@ -79,6 +79,7 @@ const UserInfo = (props) => {
   const [campaignList, setCampaignList] = useState(null);
   const [userHistory, setUserHistory] = useState(null);
   const [totalValue, setTotalValue] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [historyPage, setHistoryPage] = useState(1);
   const [historyMore, setHistoryMore] = useState(false);
@@ -101,6 +102,7 @@ const UserInfo = (props) => {
     setTotalValue(result.data.totalValue);
     setLoading(false);
     setHistoryMore(result.data.historyMore);
+    setTotalCount(result.data.totalCount);
   };
 
   const historyLoad = async () => {
@@ -173,9 +175,10 @@ const UserInfo = (props) => {
               historyMore={historyMore}
               historyLoad={historyLoad}
               campaignList={campaignList}
+              totalCount={totalCount}
             />
           )}
-          {infoType === "my__news" && <MyNews />}
+          {infoType === "my__news" && <MyNews storyList={storyList} />}
           {infoType === "edit__profile" && (
             <EditInfo
               setInfoType={setInfoType}

@@ -73,21 +73,16 @@ const CampaignListStyle = styled.div`
         > div {
           display: flex;
           align-items: center;
-          justify-content: flex-end;
-          width: 90%;
-          height: 20%;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
           img {
-            width: 20px;
+            width: 22px;
           }
           > p {
-            font-size: 12px;
+            font-size: 14px;
             padding: 5px;
           }
-        }
-        > p {
-          width: 90%;
-          height: 60%;
-          margin: 0;
         }
       }
 

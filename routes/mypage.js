@@ -238,6 +238,10 @@ router.post("/init", async (req, res) => {
       })
       .limit(5);
 
+    const totalCount = await Transaction.countDocuments({
+      sender_id: user_hash,
+    });
+
     const historyMore = await Transaction.findOne({
       sender_id: user_hash,
     })
@@ -285,11 +289,11 @@ router.post("/init", async (req, res) => {
         { model: Campaign_File, attributes: ["file"] },
       ],
     });
-
     res.json({
       storyList: storyList,
       totalValue: totalValue,
       campaignList: campaignList,
+      totalCount: totalCount,
       userHistory: userHistory,
       historyMore: historyMore !== null,
       success: 1,
