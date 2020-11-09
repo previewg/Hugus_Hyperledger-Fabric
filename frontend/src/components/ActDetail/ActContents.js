@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import ActSlider from "./ActSlider";
 import { Link } from "react-router-dom";
 
@@ -17,15 +15,14 @@ const ActContentsStyle = styled.div`
    display:flex;
    justify-content:flex-start;
    margin-top: 70px;
-          >p {
-            font-size:25px;
-            border-bottom:solid orange 3px;
-            padding-bottom:2px;
+   >p {
+            font-size:30px;
             }
  }
 
  .content {
   .buyAuthForm {
+    white-space: pre;
     margin-top: 50px;
     p:nth-child(1) {
       font-weight: bold;
@@ -39,6 +36,7 @@ const ActContentsStyle = styled.div`
 
   .giveProcessForm {
     margin-top: 50px;
+    white-space: pre;
     p:nth-child(1) {
       font-weight: bold;
     }
@@ -52,6 +50,7 @@ const ActContentsStyle = styled.div`
 
 
   .back_btn {
+    margin-top: 20px;
     display: flex;
     width: 100%;
     justify-content: flex-end;
@@ -90,10 +89,6 @@ const data = actId.data;
       <p>{data.act_title}에 대한 소식입니다.</p>
       </div>
 
-      <Link className="back_btn" to="/act">
-      글목록
-      </Link>
-
       <ActSlider files={data.Act_Files} />
       
       <div className="visited">
@@ -104,7 +99,7 @@ const data = actId.data;
       <div className="buyAuthForm">
       <p>구매내역</p>
       <p>
-      asdads
+      {data.act_buy}
       </p>
       </div>
 
@@ -116,7 +111,9 @@ const data = actId.data;
       </div>
       </div>
 
-
+      <Link className="back_btn" to="/act">
+      글목록
+      </Link>
 
     </ActContentsStyle>
   );

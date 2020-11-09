@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Talk, User, Talk_File, Talk_Like, sequelize, Sequelize } = require("../models");
+const { Talk, Talk_Comment, User, Talk_File, Talk_Like, sequelize, Sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
@@ -154,6 +154,9 @@ router.get("/list/:page", async (req, res) => {
             "visited",
             "created_at",
           ],
+          include: [
+            { model: Talk_File, attributes: ["file"], limit: 1 },
+          ],
           order: [["created_at", "DESC"]],
           offset: offset,
           limit: 10,
@@ -170,6 +173,15 @@ router.get("/list/:page", async (req, res) => {
             "user_email",
             "visited",
             "created_at",
+            [
+              sequelize.literal(
+                "(SELECT COUNT(1) FROM talk_comment WHERE talk_id = `Talk`.id)"
+              ),
+              "CCount",
+            ],
+          ],
+          include: [
+            { model: Talk_File, attributes: ["file"], limit: 1 },
           ],
           order: [["created_at", "DESC"]],
           offset: offset,
@@ -178,6 +190,8 @@ router.get("/list/:page", async (req, res) => {
       }
       let count = await Talk.count({});
       count = Math.ceil(count / 10);
+
+
       res.json({ list: list, count: count, success: 1 });
     } catch (error) {
       res.status(400).json({ success: 3 });

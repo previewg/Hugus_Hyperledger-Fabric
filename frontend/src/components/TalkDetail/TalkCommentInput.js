@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { signInBtnIsClicked } from "../../actions/user";
-import { talkLike } from "../../actions/talk";
 
 const TalkCommentFalseStyle = styled.div`
   font-weight: bold;
@@ -116,7 +115,6 @@ const errorMsg = "댓글을 입력하세요";
 const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLikenum }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
-  // const like = useSelector((state) => state.talk.like.user);
   const [like,setLike] = useState(talkId.like);
   const total = talkCommentList.total;
   const talk_id = talkId.data.id;
@@ -134,10 +132,9 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
       }
   }
 
-
-
   const Input = () => {
     const [comments, setComments] = useState("");
+    const [loading,setLoading] = useState(false);
 
     const commentChangeHandler = (e) => {
       setComments(e.target.value);
@@ -145,12 +142,15 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
     };
 
     const commentAddHandler = async () => {
-      if (comments === "") {
-        comment.current.focus();
-        setError(true);
-      } else {
+      if (comments !== "" && !loading) {
+        setLoading(true);
         const result = await axios.post('/talk_comment/add', { talk_id: talk_id, comment:comments });
         setTalkCommentList(result.data);
+        setComments("");
+        setLoading(false);
+      }else{
+        comments.current.focus();
+        setError(true);
       }
     };
 

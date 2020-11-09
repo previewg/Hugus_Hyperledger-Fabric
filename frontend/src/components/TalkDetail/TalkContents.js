@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import TalkSlider from "./TalkSlider";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 const TalkContentsStyle = styled.div`
@@ -13,19 +12,18 @@ const TalkContentsStyle = styled.div`
   width: 700px;
  
  .talk_contents {
-   width:100%;
-   display:flex;
-   justify-content:flex-start;
-   margin-top: 70px;
+    width:100%;
+    display:flex;
+    justify-content:flex-start;
+    margin-top: 70px;
           >p {
-            font-size:25px;
-            border-bottom:solid orange 2px;
-            padding-bottom:2px;
+            font-size:30px;
             }
  }
 
  .content {
-  .giveProcessForm {
+  .sosick {
+    white-space: pre;
     p:nth-child(1) {
       font-weight: bold;
     }
@@ -36,25 +34,6 @@ const TalkContentsStyle = styled.div`
     }
     }
  }
-
- .back {
-  width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  .back_btn {
-    font-size: 15px;
-    font-weight: bold;
-    text-decoration: none;
-    color: grey;
-    cursor: pointer;
-    transition: 0.1s ease-in-out;
-    outline: none;
-    :hover {
-    color: orange;
-    }
-  }
-}
-
 
   .if_owner {
     margin-top: 20px;
@@ -91,7 +70,6 @@ const TalkContentsStyle = styled.div`
 `;
 
 const TalkContents = ({ talkId,history,likenum }) => {
-// const likeNum = useSelector((state) => state.talk.like.likeNum);
 const data = talkId.data;
 const IfOwner = ({ history, data }) => {
   const email = useSelector((state) => state.auth.user.email);
@@ -132,20 +110,14 @@ return (
       <p>{data.talk_title}</p>
       </div>
 
-      <div className="back">
-      <Link className="back_btn" to="/talk">
-      글목록
-      </Link>
-      </div>
-
       <TalkSlider files={data.Talk_Files} />
       
       <IfOwner history={history} data={data} />
       <div className="content">
-      <div className="giveProcessForm">
+      <div className="sosick">
       <p>수혜자의 소식</p>
       <p>
-      {data.talk_content}  
+      {data.talk_content}
       </p>
       </div>
 
@@ -153,8 +125,8 @@ return (
       <p>좋아요 {likenum}</p>
       <p>조회수 {data.visited}</p>
       </div>
-      
       </div>
+
 
     </TalkContentsStyle>
   );

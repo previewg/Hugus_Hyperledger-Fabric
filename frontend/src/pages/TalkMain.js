@@ -17,7 +17,7 @@ const TalkStyle = styled.section`
     align-items: center;
     flex-direction: column;
     margin-top: 100px;
-    width: 75%;
+    width: 950px;
     .title {
       width: 100%;
       display: flex;
@@ -34,7 +34,7 @@ const TalkStyle = styled.section`
       display: flex;
       justify-content: flex-end;
     .talkWrite__btn {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       :hover {
@@ -42,8 +42,13 @@ const TalkStyle = styled.section`
       }
     }
   }
-
   }
+`;
+
+const LoaderStyle = styled.div`
+  min-height: 464px;
+  display: flex;
+  align-items: center;
 `;
 
 const TalkMain = (props) => {
@@ -68,6 +73,7 @@ const TalkMain = (props) => {
 
   const Loader = () => {
     return (
+      <LoaderStyle>
       <ClipLoader
         css={css`
           margin-top: 10px;
@@ -79,6 +85,7 @@ const TalkMain = (props) => {
         color={"#f69a53"}
         loading={true}
       />
+      </LoaderStyle>
     );
   };
 

@@ -26,6 +26,7 @@ const TalkDetail = ({ match, history }) => {
     const initFunc = async () => {
       const data = await axios.get(`/talk/${id}`);
       const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
+
       setTalkId(data.data);
       setTalkCommentList(comment.data);
       setLikenum(data.data.data.talk_like);
