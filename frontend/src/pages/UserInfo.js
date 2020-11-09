@@ -17,6 +17,7 @@ const UserInfoStyle = styled.section`
     article {
       width: 180px;
       min-width: 180px;
+      position: fixed;
       .side__user {
         height: 170px;
         background-color: #9c9c9c;
@@ -43,10 +44,11 @@ const UserInfoStyle = styled.section`
       }
       .side__menu {
         background-color: #f1f1f1;
-        height: 300px;
+        height: 220px;
         display: flex;
         flex-direction: column;
         padding: 10px;
+        padding-top: 20px;
         > p {
           margin: 10px;
           width: 130px;
@@ -92,6 +94,7 @@ const UserInfo = (props) => {
 
   const init = async () => {
     const result = await axios.post("/myPage/init");
+    console.log(result.data);
     setStoryList(result.data.storyList);
     setCampaignList(result.data.campaignList);
     setUserHistory(result.data.userHistory);
@@ -108,6 +111,9 @@ const UserInfo = (props) => {
     }
     setUserHistory(newUserHistory);
     setHistoryMore(result.data.historyMore);
+    let newCampaignList = campaignList.concat(result.data.campaignList);
+    newCampaignList = new Set(newCampaignList);
+    setCampaignList(Array.from(newCampaignList));
   };
 
   useEffect(() => {
@@ -148,9 +154,6 @@ const UserInfo = (props) => {
             <p id="my__news" onClick={typeChangeHandler}>
               내 소식
             </p>
-            <p id="my__history" onClick={typeChangeHandler}>
-              후원 이력
-            </p>
             <p id="edit__profile" onClick={typeChangeHandler}>
               회원 정보 관리
             </p>
@@ -169,10 +172,10 @@ const UserInfo = (props) => {
               userHistory={userHistory}
               historyMore={historyMore}
               historyLoad={historyLoad}
+              campaignList={campaignList}
             />
           )}
           {infoType === "my__news" && <MyNews />}
-          {infoType === "my__history" && <History />}
           {infoType === "edit__profile" && (
             <EditInfo
               setInfoType={setInfoType}

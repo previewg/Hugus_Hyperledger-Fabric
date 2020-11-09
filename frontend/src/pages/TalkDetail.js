@@ -11,19 +11,18 @@ const TalkDetailStyle = styled.div`
   margin-bottom: 70px;
   align-items: center;
   flex-direction: column;
-`;  
+`;
 
-const TalkDetail = ({ match,history }) => {
+const TalkDetail = ({ match, history }) => {
   const dispatch = useDispatch();
   const init = useRef(true);
   const [talkId, setTalkId] = useState([]);
   const [talkCommentList, setTalkCommentList] = useState([]);
-  const [likenum,setLikenum] = useState(0);
+  const [likenum, setLikenum] = useState(0);
 
   useEffect(() => {
     const id = match.params.id;
     const page = match.params.page;
-
     const initFunc = async () => {
       const data = await axios.get(`/talk/${id}`);
       const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
@@ -36,13 +35,20 @@ const TalkDetail = ({ match,history }) => {
       initFunc();
     }
   }, []);
-  
 
   return (
     <TalkDetailStyle>
-      {talkId.length !== 0 && <TalkContents talkId={talkId} history={history} likenum={likenum}/>}
-      {talkCommentList.length !== 0 && <TalkComments talkId={talkId}  setLikenum={setLikenum}
-      talkCommentList={talkCommentList} setTalkCommentList={setTalkCommentList}/>}
+      {talkId.length !== 0 && (
+        <TalkContents talkId={talkId} history={history} likenum={likenum} />
+      )}
+      {talkCommentList.length !== 0 && (
+        <TalkComments
+          talkId={talkId}
+          setLikenum={setLikenum}
+          talkCommentList={talkCommentList}
+          setTalkCommentList={setTalkCommentList}
+        />
+      )}
     </TalkDetailStyle>
   );
 };

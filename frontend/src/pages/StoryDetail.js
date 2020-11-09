@@ -19,6 +19,7 @@ const StoryDetail = ({ match, history }) => {
   const status = useSelector((state) => state.story.detail.status);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     dispatch(storyLoader(match.params.id));
     dispatch(commentListLoader(match.params.id, 1));
     return () => {

@@ -258,6 +258,7 @@ router.post("/init", async (req, res) => {
         "campaign_value",
         "user_email",
         "visited",
+        "hash",
         [
           sequelize.literal(
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id )"
@@ -314,9 +315,53 @@ router.post("/load/history/:page", async (req, res) => {
     })
       .skip(5 + page * 10)
       .limit(1);
+
+    let candidate = new Set();
+    for (const row of userHistory) {
+      candidate.add(row.receiver_id);
+    }
+    candidate = Array.from(candidate);
+
+    const campaignList = await Campaign.findAll({
+      attributes: [
+        "id",
+        "campaign_title",
+        "campaign_goal",
+        "campaign_value",
+        "user_email",
+        "visited",
+        "hash",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id )"
+          ),
+          "campaign_like",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
+          ),
+          "campaign_donate",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM campaign_comment WHERE campaign_id = `Campaign`.id)"
+          ),
+          "campaign_comment",
+        ],
+      ],
+      where: { hash: candidate },
+      include: [
+        { model: Hashtag, attributes: ["hashtag"] },
+        { model: User, attributes: ["nickname"] },
+        { model: Campaign_File, attributes: ["file"] },
+      ],
+    });
+
     res.json({
       userHistory: userHistory,
       historyMore: historyMore !== null,
+      campaignList: campaignList,
       success: 1,
     });
   } catch (error) {
