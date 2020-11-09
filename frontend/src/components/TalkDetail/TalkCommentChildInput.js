@@ -32,23 +32,7 @@ const TalkCommentChildInput = ({ comment, talk_id, setTalkCommentList }) => {
   const [comments, setComments] = useState("");
   const [error, setError] = useState(false);
   const commentChild = useRef();
-
-  const init = useRef(true);
-  const [childStatus, setChildStatus] = useState({ status: "WAITING" });
-  const [childList, setChildList] = useState([]);
-
-  useEffect(() => {
-    const id = comment.id;
-    const initFunc = async () => {
-      const comment = await axios.get(`/talk_comment/childList/${id}`);
-      setChildList(comment.data);
-      setChildStatus("SUCCESS");
-    };
-    if (init.current) {
-      init.current = false;
-    initFunc();
-    }
-  }, []);
+  const [loading,setLoading] = useState(false);
 
   const onCommentChangeHandler = (e) => {
     setComments(e.target.value);
@@ -60,12 +44,18 @@ const TalkCommentChildInput = ({ comment, talk_id, setTalkCommentList }) => {
   };
 
   const commentChildAddHandler = async () => {
-    if (comments === "") {
+     if(comments !== "" && !loading) {
+      setLoading(true)
+      const result = await axios.post("/talk_comment/child/add", 
+      { 
+        comment: comments, comment_id: comment.id, talk_id: talk_id 
+      })
+      setTalkCommentList(result.data);
+      setComments("");
+      setLoading(false)
+    }else{
       commentChild.current.focus();
       setError(true);
-    } else {
-      const result = await axios.post("/talk_comment/child/add", { comment: comments, comment_id: comment.id, talk_id: talk_id })
-      setTalkCommentList(result.data);
     }
   };
 

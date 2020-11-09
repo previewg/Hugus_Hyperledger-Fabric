@@ -6,6 +6,7 @@ const SearchStyle = styled.div`
     display:flex;
     justify-content:flex-end;
             .search_form {
+            font-size: 13px;
             outline: none;
             width:180px;
             height:23px;
@@ -13,6 +14,7 @@ const SearchStyle = styled.div`
             border: solid 1px grey;
             transition: all 0.5s ease-in-out;
             padding-left:3px;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
             width: ${(props) => (props.isClicked ? "300px" : "150px")};
             :hover { 
                 border: solid 1px orange;
@@ -22,20 +24,21 @@ const SearchStyle = styled.div`
             }
             }   
             .search__bar {
+            font-size: 13px;
             width:60px;
             height:29px;
             margin-left:20px;
             background-color:orange;
             border:none;
-            color:white;
+            color:black;
             border-radius:3px;
             transition: 0.2s ease-in-out;
             outline:none;
             box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
             cursor: pointer;
                 :hover {
-                color:black;
-                }
+                    transform: translateY(-2px);
+                }   
             }
 `;
 

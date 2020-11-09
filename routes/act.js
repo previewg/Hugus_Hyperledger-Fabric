@@ -29,20 +29,22 @@ router.post("/add", upload.array("files"), async (req, res) => {
   try {
     // const { user_email } = req.session.loginInfo;
     const user_email = "moonnr94@gmail.com";
-    const { act_title, act_content } = req.body;
+    const { act_title, act_buy, act_content } = req.body;
     const list = await Act.create({
       act_title,
+      act_buy,
       act_content,
       user_email: user_email,
     });
 
     const act_id = list.getDataValue("id");
+
     for (const file of req.files) {
       await Act_File.create({
         act_id: act_id,
         file: file.location,
       });
-    }
+    };
 
     res.json({ list: list, success: 1 });
   } catch (error) {
@@ -73,6 +75,9 @@ router.get("/list/:page", async (req, res) => {
           "visited",
           "created_at",
         ],
+        include: [
+          { model: Act_File, attributes: ["file"], limit: 1 },
+        ],
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
@@ -89,6 +94,9 @@ router.get("/list/:page", async (req, res) => {
           "user_email",
           "visited",
           "created_at",
+        ],
+        include: [
+          { model: Act_File, attributes: ["file"], limit: 1 },
         ],
         order: [["created_at", "DESC"]],
         offset: offset,
