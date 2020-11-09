@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 const MyHomeStyle = styled.section`
@@ -57,8 +57,6 @@ const MyHomeStyle = styled.section`
     display: flex;
     flex-direction: column;
     width: 700px;
-    //height: 500px;
-    //overflow: hidden;
     .head__date {
       display: grid;
       grid-template-columns: 5fr 1fr 5fr;
@@ -85,6 +83,9 @@ const MyHomeStyle = styled.section`
       grid-template-columns: 1fr 8fr 3fr;
       align-items: center;
       width: 100%;
+      img {
+        width: 40px;
+      }
       p {
         margin: 2px;
       }
@@ -112,10 +113,24 @@ const MyHomeStyle = styled.section`
       justify-content: center;
       align-items: center;
     }
+    .historyLoad {
+      background-color: transparent;
+      border: none;
+      height: 30px;
+      cursor: pointer;
+      color: gray;
+      outline: none;
+    }
   }
 `;
 
-const MyHome = ({ totalValue, storyList, userHistory }) => {
+const MyHome = ({
+  totalValue,
+  storyList,
+  userHistory,
+  historyMore,
+  historyLoad,
+}) => {
   const getFormatDate = useCallback((date) => {
     let FormatDate = new Date(date);
     let year = FormatDate.getFullYear();
@@ -168,7 +183,7 @@ const MyHome = ({ totalValue, storyList, userHistory }) => {
                     <p></p>
                   </div>
                   <div className="user__history">
-                    <img />
+                    <img src="/icons/approval.png" />
                     <div>
                       <p>{getFormatDate(donation.timestamp)}</p>
                       <p>허그 기부</p>
@@ -181,7 +196,7 @@ const MyHome = ({ totalValue, storyList, userHistory }) => {
             } else {
               return (
                 <div className="user__history" key={key}>
-                  <img />
+                  <img src="/icons/approval.png" />
                   <div>
                     <p>{getFormatDate(donation.timestamp)}</p>
                     <p>허그 기부</p>
@@ -194,6 +209,11 @@ const MyHome = ({ totalValue, storyList, userHistory }) => {
           })
         ) : (
           <div className="no__history">기부 내역이 없습니다</div>
+        )}
+        {historyMore && (
+          <button className="historyLoad" onClick={historyLoad}>
+            기부 이력 더보기
+          </button>
         )}
       </article>
     </MyHomeStyle>

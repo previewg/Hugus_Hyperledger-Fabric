@@ -78,6 +78,8 @@ const UserInfo = (props) => {
   const [userHistory, setUserHistory] = useState(null);
   const [totalValue, setTotalValue] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyMore, setHistoryMore] = useState(false);
   const flag = useRef(true);
   const profile = useSelector((state) => state.auth.user.profile);
   const nickname = useSelector((state) => state.auth.user.nickname);
@@ -95,6 +97,17 @@ const UserInfo = (props) => {
     setUserHistory(result.data.userHistory);
     setTotalValue(result.data.totalValue);
     setLoading(false);
+    setHistoryMore(result.data.historyMore);
+  };
+
+  const historyLoad = async () => {
+    const result = await axios.post(`/myPage/load/history/${historyPage}`);
+    const newUserHistory = userHistory.concat(result.data.userHistory);
+    if (result.data.historyMore) {
+      setHistoryPage((page) => page + 1);
+    }
+    setUserHistory(newUserHistory);
+    setHistoryMore(result.data.historyMore);
   };
 
   useEffect(() => {
@@ -154,6 +167,8 @@ const UserInfo = (props) => {
               totalValue={totalValue}
               storyList={storyList}
               userHistory={userHistory}
+              historyMore={historyMore}
+              historyLoad={historyLoad}
             />
           )}
           {infoType === "my__news" && <MyNews />}

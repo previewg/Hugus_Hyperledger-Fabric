@@ -126,10 +126,9 @@ const TotalSearchStyle = styled.div`
         border: none;
         margin-right: 15px;
         cursor: pointer;
-        transition: 0.3s ease-in-out;
+        transition: 0.2s ease-in-out;
         :hover {
           color: orange;
-          transform: scale(1.2);
         }
       }
     }
@@ -205,6 +204,7 @@ const TotalSearch = ({ history }) => {
 
   const initLoad = async () => {
     const initData = await axios.get("/hashtag/all");
+    console.log(initData.data);
     setHashtagList(initData.data.list);
   };
 
@@ -292,8 +292,18 @@ const TotalSearch = ({ history }) => {
         </div>
         <LiveSuggestion />
         <div className="suggestion">
-          <p>#추천태그1</p>
-          <p>#추천태그2</p>
+          {hashtagList.slice(0, 5).map((tag, key) => {
+            return (
+              <p
+                key={key}
+                onClick={() => {
+                  history.push(`/search/${tag.hashtag}`);
+                }}
+              >
+                #{tag.hashtag}
+              </p>
+            );
+          })}
         </div>
       </div>
     </TotalSearchStyle>

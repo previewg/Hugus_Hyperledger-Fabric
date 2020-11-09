@@ -232,9 +232,18 @@ router.post("/init", async (req, res) => {
       );
     }
 
-    const userHistory = await Transaction.find({ sender_id: user_hash }).sort({
-      timestamp: -1,
-    });
+    const userHistory = await Transaction.find({ sender_id: user_hash })
+      .sort({
+        timestamp: -1,
+      })
+      .limit(5);
+
+    const historyMore = await Transaction.findOne({
+      sender_id: user_hash,
+    })
+      .skip(5)
+      .limit(1);
+
     let candidate = new Set();
     for (const row of userHistory) {
       candidate.add(row.receiver_id);
@@ -281,6 +290,33 @@ router.post("/init", async (req, res) => {
       totalValue: totalValue,
       campaignList: campaignList,
       userHistory: userHistory,
+      historyMore: historyMore !== null,
+      success: 1,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ success: 3 });
+  }
+});
+
+router.post("/load/history/:page", async (req, res) => {
+  try {
+    const { user_hash } = req.session.loginInfo;
+    const { page } = req.params;
+    const userHistory = await Transaction.find({ sender_id: user_hash })
+      .sort({
+        timestamp: -1,
+      })
+      .skip(5 + (page - 1) * 10)
+      .limit(10);
+    const historyMore = await Transaction.findOne({
+      sender_id: user_hash,
+    })
+      .skip(5 + page * 10)
+      .limit(1);
+    res.json({
+      userHistory: userHistory,
+      historyMore: historyMore !== null,
       success: 1,
     });
   } catch (error) {
