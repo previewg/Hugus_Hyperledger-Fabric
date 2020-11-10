@@ -1,11 +1,13 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Act, User, Act_File,Sequelize } = require("../models");
+const { Act, User, Act_File, Sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 const path = require("path");
+const fs = require("fs");
+const axios = require('axios')
 
 let s3 = new AWS.S3();
 
@@ -24,8 +26,10 @@ let upload = multer({
   }),
 });
 
+let upload_memory = multer( { storage: multer.memoryStorage() } )
+
 // Act 등록
-router.post("/add", upload.array("files"), async (req, res) => {
+router.post("/add", upload_memory.array("files"), async (req, res) => {
   try {
     // const { user_email } = req.session.loginInfo;
     const user_email = "moonnr94@gmail.com";
@@ -38,13 +42,15 @@ router.post("/add", upload.array("files"), async (req, res) => {
     });
 
     const act_id = list.getDataValue("id");
-
     for (const file of req.files) {
       await Act_File.create({
         act_id: act_id,
-        file: file.location,
+        file: file.originalname,
       });
     };
+
+    let base64data = await req.files[0].buffer.toString('base64');
+    console.log('Image converted');
 
     res.json({ list: list, success: 1 });
   } catch (error) {

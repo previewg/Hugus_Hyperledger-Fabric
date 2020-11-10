@@ -120,6 +120,7 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
   const talk_id = talkId.data.id;
   const id = talk_id;
   const [error, setError] = useState(false);
+  const [loading,setLoading] = useState(false);
   const comment = useRef();
 
   const likeHandler = async( status ) => {
@@ -134,7 +135,6 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
 
   const Input = () => {
     const [comments, setComments] = useState("");
-    const [loading,setLoading] = useState(false);
 
     const commentChangeHandler = (e) => {
       setComments(e.target.value);
@@ -220,7 +220,7 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
 
   return (
     <>
-      <Input/>
+      <Input />
       <ErrorBoxStyle error={error}>{errorMsg}</ErrorBoxStyle>
     </>
   );

@@ -51,12 +51,13 @@ const ActMain = () => {
 
   const nowPage = async (page) => {
     const data = await axios.get(`/act/list/${page}?keyword=${search}`);
+  console.log(data);
+
     setActList(data.data.list);
     setTotal(data.data.count);
     setClicked(false);
     setLoading(false);
   };
-
 
   const Loader = () => {
     return (
