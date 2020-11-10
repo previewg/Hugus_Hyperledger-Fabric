@@ -131,6 +131,7 @@ router.get("/init", async (req, res) => {
       order: [
         [sequelize.cast(sequelize.col("campaign_ratio"), "FLOAT"), "DESC"],
       ],
+      where: { expired: false },
       limit: 10,
     });
     res.json({ list: list, success: 1 });
@@ -191,6 +192,7 @@ router.get("/list/:page", async (req, res) => {
       ],
       offset: offset,
       limit: 9,
+      where: { expired: false },
       order: [["created_at", "DESC"]],
     });
     const total = await Campaign.count({});

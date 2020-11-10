@@ -59,6 +59,7 @@ import Loader from "./Loader";
 import UserInfoLoader from "./UserInfo/Loader";
 import SideBar from "./Admin/SideBar";
 import Summary from "./Admin/Summary";
+import AdminLoader from "./Admin/Loader";
 
 export {
   Main,
@@ -122,4 +123,5 @@ export {
   UserInfoLoader,
   SideBar,
   Summary,
+  AdminLoader,
 };

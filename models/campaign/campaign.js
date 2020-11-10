@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      expired: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       tableName: "campaign",
@@ -43,3 +47,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 };
+
+// mysql event scheduler
+// CREATE EVENT IF NOT EXISTS set_expired_for_campaign ON SCHEDULE EVERY 1 DAY STARTS CURRENT_TIMESTAMP DO UPDATE campaign SET expired=true WHERE created_at < DATE_ADD(curdate(), INTERVAL -60 DAY);

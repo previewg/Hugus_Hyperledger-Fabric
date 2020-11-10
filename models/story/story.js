@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0,
       },
+      expired: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       tableName: "story",
@@ -39,3 +43,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 };
+
+// mysql event scheduler
+// CREATE EVENT IF NOT EXISTS set_expired_for_story ON SCHEDULE EVERY 1 DAY STARTS CURRENT_TIMESTAMP DO UPDATE story SET expired=true WHERE created_at < DATE_ADD(curdate(), INTERVAL -14 DAY);

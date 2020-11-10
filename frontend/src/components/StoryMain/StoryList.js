@@ -249,6 +249,8 @@ const StoryList = ({ storyType, changed, setChanged }) => {
   }, [changed]);
   if (storyType === "my" && list.length === 0)
     return <ThereIsNoFavorite>관심 스토리가 없습니다</ThereIsNoFavorite>;
+  if (storyType === "past" && list.length === 0)
+    return <ThereIsNoFavorite>지난 스토리가 없습니다</ThereIsNoFavorite>;
   return (
     <StoryListStyle>
       <LoadHandler storyType={storyType} />
