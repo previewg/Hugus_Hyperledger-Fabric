@@ -16,6 +16,8 @@ const UserDetail = ({ match, history }) => {
   const [txHeight, setTxHeight] = useState(0);
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   
   const init = async (page) => {
     const initData = await axios.get(`/block/search/user/${match.params.id}/${page}`);
@@ -24,7 +26,7 @@ const UserDetail = ({ match, history }) => {
       setUserList(initData.data.list);
       setTxHeight(initData.data.height);
       setMore(initData.data.more);
-      
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -45,8 +47,9 @@ const UserDetail = ({ match, history }) => {
         init={init}
         more={more}
         
+        
       />
-      <SearchUser data ={data} list = {userList} history={history} />
+      <SearchUser data ={data} list = {userList} history={history} loading={loading}/>
     </UserDetailStyle>
   );
 };

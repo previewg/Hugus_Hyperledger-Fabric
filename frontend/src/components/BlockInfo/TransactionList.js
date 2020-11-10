@@ -74,6 +74,28 @@ const TransactionListStyle = styled.div`
           font-size: 15px;
         }
       }
+      .sender_id{
+        input{
+          cursor: pointer;
+          outline: none;
+          border: none;
+          background: transparent;
+          width: 100px;
+          font-size: 15px;
+
+        }
+      }
+      .receiver_id{
+        input{
+          cursor: pointer;
+          outline: none;
+          border: none;
+          background: transparent;
+          width: 100px;
+          font-size: 15px;
+
+        }
+      }
       :hover {
         background-color: peachpuff;
       }
@@ -142,8 +164,20 @@ const TransactionList = ({ txList, history }) => {
                 <CopiedAlert id={tx.tx_id} />
               </p>
               <Flow className="age" block_time={tx.timestamp} />
-              <p className="sender_id">{tx.sender_id}</p>
-              <p className="receiver_id">{tx.receiver_id}</p>
+              <p className="sender_id">  
+              <input
+                  readOnly
+                  id={tx.sender_id}
+                  value={tx.sender_id}
+                  onClick={() => history.push(`/search/user/${tx.sender_id}`)}
+                /></p>
+              <p className="receiver_id">
+              <input
+                  readOnly
+                  id={tx.receiver_id}
+                  value={tx.receiver_id}
+                  onClick={() => history.push(`/search/user/${tx.receiver_id}`)}
+                /></p>
             </div>
           );
         })}

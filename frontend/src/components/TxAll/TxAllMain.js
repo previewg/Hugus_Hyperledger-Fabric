@@ -56,6 +56,28 @@ const TxAllMainStyle = styled.article`
         font-size: 15px;
       }
     }
+    .sender_id{
+        input{
+          cursor: pointer;
+          outline: none;
+          border: none;
+          background: transparent;
+          width: 100px;
+          font-size: 15px;
+
+        }
+      }
+      .receiver_id{
+        input{
+          cursor: pointer;
+          outline: none;
+          border: none;
+          background: transparent;
+          width: 100px;
+          font-size: 15px;
+
+        }
+      }
     :hover {
       background-color: peachpuff;
     }
@@ -106,12 +128,27 @@ const TxAllMain = ({ txList, history, loading }) => {
           return (
             <div className="TxList__body" key={key}>
               <p className="tx_id">
-                <input readOnly id={tx.tx_id} value={tx.tx_id} />
+              <input
+                  readOnly
+                  id={tx.tx_id}
+                  value={tx.tx_id}
+                  onClick={() => history.push(`/search/tx/${tx.tx_id}`)}
+                />
                 <CopiedAlert id={tx.tx_id} />
               </p>
               <Flow className="age" block_time={tx.timestamp} />
-              <p className="sender_id">{tx.sender_id}</p>
-              <p className="receiver_id">{tx.receiver_id}</p>
+              <p className="sender_id"><input
+                  readOnly
+                  id={tx.sender_id}
+                  value={tx.sender_id}
+                  onClick={() => history.push(`/search/user/${tx.sender_id}`)}
+                /></p>
+              <p className="receiver_id"><input
+                  readOnly
+                  id={tx.receiver_id}
+                  value={tx.receiver_id}
+                  onClick={() => history.push(`/search/user/${tx.receiver_id}`)}
+                /></p>
             </div>
           );
         })

@@ -64,14 +64,18 @@ router.get("/search/user/:hash/:page", async (req, res) => {
     const { page } = req.params;
     const offset = (page - 1) * 20;
 
-    const height = await Transaction.countDocuments({ sender_id: hash });
-    const userList = await Transaction.find({ sender_id: hash })
+    const height = await Transaction.countDocuments({$or:[{receiver_id: hash},{sender_id: hash}]});
+    
+    const userList = await Transaction.find({$or:[{receiver_id: hash},{sender_id: hash}]})
       .sort({ timestamp: -1 })
       .skip(offset)
-      .limit(20);
+      .limit(20);    
+   
     console.log(userList);
+
     const more = offset + 20 < height;
     console.log(height);
+    
     res.json({ list: userList, height: height, success: 1, more: more });
   } catch (err) {
     res.status(400).json({ success: 3 });
