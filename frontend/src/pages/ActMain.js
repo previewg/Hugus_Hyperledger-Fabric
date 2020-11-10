@@ -48,15 +48,15 @@ const ActMain = () => {
   const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [changed, setChanged] = useState(false);
 
   const nowPage = async (page) => {
-    const data = await axios.get(`/act/list/${page}?keyword=${search}`);
-    setActList(data.data.list);
-    setTotal(data.data.count);
+    // const data = await axios.get(`/act/list/${page}?keyword=${search}`);
+    // setActList(data.data.list);
+    // setTotal(data.data.count);
     setClicked(false);
     setLoading(false);
   };
-
 
   const Loader = () => {
     return (
@@ -73,7 +73,6 @@ const ActMain = () => {
                 loading={true}
               />
       </LoaderStyle>
-     
     );
   };
 
@@ -84,7 +83,7 @@ const ActMain = () => {
           <p>전달 스토리</p>
         </div>
         <Search search={search} setSearch={setSearch} setClicked={setClicked} />
-        {!loading ? <ActList actList={actList} /> : <Loader />}
+        {!loading ? <ActList setChanged={setChanged} changed={changed} /> : <Loader />}
         <Pagination
           clicked={clicked}
           total={total}

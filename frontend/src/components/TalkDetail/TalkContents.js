@@ -21,6 +21,14 @@ const TalkContentsStyle = styled.div`
             }
  }
 
+ .nickname {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 14px;
+    }
+.underBar {
+  border-bottom: solid 1px orange;
+}
  .content {
   .sosick {
     white-space: pre;
@@ -66,7 +74,6 @@ const TalkContentsStyle = styled.div`
       margin-left: 10px;
     }
   }
-
 `;
 
 const TalkContents = ({ talkId,history,likenum }) => {
@@ -105,10 +112,12 @@ const IfOwner = ({ history, data }) => {
 
 return (
     <TalkContentsStyle>
-    <div className="talk_contents">
-
+      <div className="talk_contents">
       <p>{data.talk_title}</p>
       </div>
+
+      <p className="nickname">{data.User.nickname}</p>
+      <div className="underBar"></div>
 
       <TalkSlider files={data.Talk_Files} />
       

@@ -5,19 +5,19 @@ const SearchStyle = styled.div`
     width:100%;
     display:flex;
     justify-content:flex-end;
+    margin-bottom: 30px;
             .search_form {
             font-size: 13px;
             outline: none;
             width:180px;
             height:23px;
-            border-radius:3px;
-            border: solid 1px grey;
+            border: none;
+            border-bottom: solid 1px grey;
             transition: all 0.5s ease-in-out;
             padding-left:3px;
-            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
             width: ${(props) => (props.isClicked ? "300px" : "150px")};
             :hover { 
-                border: solid 1px orange;
+                border-bottom: solid 1px orange;
                 :focus {
                 outline: none;
                 }
@@ -34,7 +34,6 @@ const SearchStyle = styled.div`
             border-radius:3px;
             transition: 0.2s ease-in-out;
             outline:none;
-            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
             cursor: pointer;
                 :hover {
                     transform: translateY(-2px);
@@ -62,8 +61,6 @@ const Search = ({ search, setSearch, setClicked }) => {
         e.preventDefault();
         setSearch(e.target.value);
       };
-
-
 
     return(
         <SearchStyle isClicked={isClicked}>

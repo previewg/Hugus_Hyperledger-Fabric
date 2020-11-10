@@ -17,7 +17,7 @@ const TalkListStyle = styled.div`
   }
   .list_grid {
     display: grid;
-    grid-template-columns: 10% 60% 13% 17%;
+    grid-template-columns: 10% 45% 15% 13% 17%;
   }
   .acenter {
     text-align: center;
@@ -82,6 +82,7 @@ const TalkList = ({ talkList }) => {
       <div className="list_grid list_tit">
         <div> 번호 </div>
         <div> 제목 </div>
+        <div className="writer"> 작성자 </div>
         <div> 조회수 </div>
         <div className="acenter"> 작성일자 </div>
       </div>
@@ -103,7 +104,7 @@ const TalkList = ({ talkList }) => {
                 [{talk.CCount}]
                 </div>
               </div>
-
+              <div className="nickname">{talk.User.nickname}</div>
               <div className="talk__visit">{talk.visited}</div>
               <div className="create__time">{talk.created_at}</div>
             </div>

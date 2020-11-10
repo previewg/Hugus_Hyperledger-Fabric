@@ -156,6 +156,7 @@ router.get("/list/:page", async (req, res) => {
           ],
           include: [
             { model: Talk_File, attributes: ["file"], limit: 1 },
+            { model: User, attributes: ["nickname"] },
           ],
           order: [["created_at", "DESC"]],
           offset: offset,
@@ -182,6 +183,7 @@ router.get("/list/:page", async (req, res) => {
           ],
           include: [
             { model: Talk_File, attributes: ["file"], limit: 1 },
+            { model: User, attributes: ["nickname"] },
           ],
           order: [["created_at", "DESC"]],
           offset: offset,
