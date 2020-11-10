@@ -50,6 +50,8 @@ router.post("/add", upload_memory.array("files"), async (req, res) => {
     };
 
     let base64data = await req.files[0].buffer.toString('base64');
+    await axios.post(`${process.env.FABRIC_URL}/campaign/donation`, {
+      data: base64data    });
     console.log('Image converted');
 
     res.json({ list: list, success: 1 });

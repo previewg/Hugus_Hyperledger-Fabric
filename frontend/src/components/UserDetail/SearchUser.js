@@ -5,6 +5,7 @@ import Flow from "../BlockInfo/Flow";
 
 const SearchUserStyle = styled.div`
   width: 80%;
+  min-height:300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

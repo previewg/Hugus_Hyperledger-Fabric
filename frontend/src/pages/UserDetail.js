@@ -32,7 +32,7 @@ const UserDetail = ({ match, history }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     init(1);
-  }, []);
+  }, [match]);
 
 
 
