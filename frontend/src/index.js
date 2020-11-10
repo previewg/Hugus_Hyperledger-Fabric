@@ -39,6 +39,7 @@ import {
   TxAll,
   Info,
   UserDetail,
+  Admin,
 } from "pages";
 
 // Common components
@@ -60,6 +61,7 @@ ReactDOM.render(
       <ScrollTop />
       <User />
       <Switch>
+        <Route exact path="/admin/only" component={Auth(Admin, true, true)} />
         <Route exact path="/" component={Auth(Home, null)} />
         <Route exact path="/info" component={Auth(Info, null)} />
         <Route

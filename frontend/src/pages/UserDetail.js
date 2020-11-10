@@ -18,9 +18,10 @@ const UserDetail = ({ match, history }) => {
   const [more, setMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  
   const init = async (page) => {
-    const initData = await axios.get(`/block/search/user/${match.params.id}/${page}`);
+    const initData = await axios.get(
+      `/block/search/user/${match.params.id}/${page}`
+    );
     if (initData.data.success === 1) {
       setData(initData.data.data);
       setUserList(initData.data.list);
@@ -32,10 +33,7 @@ const UserDetail = ({ match, history }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     init(1);
-  }, []);
-
-
-
+  }, [match]);
 
   return (
     <UserDetailStyle>
@@ -46,10 +44,13 @@ const UserDetail = ({ match, history }) => {
         page={page}
         init={init}
         more={more}
-        
-        
       />
-      <SearchUser data ={data} list = {userList} history={history} loading={loading}/>
+      <SearchUser
+        data={data}
+        list={userList}
+        history={history}
+        loading={loading}
+      />
     </UserDetailStyle>
   );
 };

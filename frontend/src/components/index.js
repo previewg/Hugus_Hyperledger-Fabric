@@ -57,6 +57,9 @@ import SearchResultLoader from "./SearchResult/Loader";
 import SearchBar from "./SearchResult/SearchBar";
 import Loader from "./Loader";
 import UserInfoLoader from "./UserInfo/Loader";
+import SideBar from "./Admin/SideBar";
+import Summary from "./Admin/Summary";
+
 export {
   Main,
   NavBar,
@@ -117,4 +120,6 @@ export {
   SearchBar,
   Loader,
   UserInfoLoader,
+  SideBar,
+  Summary,
 };

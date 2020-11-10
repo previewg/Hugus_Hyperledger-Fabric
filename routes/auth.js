@@ -12,7 +12,7 @@ const axios = require("axios");
 const { User, Email_confirm } = require("../models");
 
 // 회원가입
-router.post("/signup", async (req, res, next) => {
+router.post("/signup", async (req, res) => {
   const { email, nickname, password } = req.body;
   let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   let regPassword = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^*()\-_=+\\\|\[\]{};:\'",.<>\/?]).{9,}$/i;
@@ -79,7 +79,6 @@ router.post("/signup", async (req, res, next) => {
     return res.status(200).json({ success: 1 });
   } catch (err) {
     console.error(err);
-    return next(err);
   }
 });
 
@@ -138,15 +137,15 @@ router.post("/requestEmail", async (req, res) => {
 
 router.get("/confirmEmail/:key", async (req, res) => {
   try {
-    const data = Email_confirm.findOne({
+    const data = await Email_confirm.findOne({
       where: { key_for_verify: req.params.key },
     });
     if (data) {
+      const email = data.getDataValue("email");
+      server.emit(email, "SUCCESS");
       await Email_confirm.destroy({
         where: { key_for_verify: req.params.key },
       });
-      const email = data.getDataValue("email");
-      server.emit(email, "SUCCESS");
 
       res.send(
         "<script type=\"text/javascript\">alert(\"인증이 성공적으로 완료되었습니다. 회원가입을 이어서 진행해주세요.\");window.open('','_self').close();</script>"
