@@ -69,7 +69,6 @@ const PrevArrow = (props) => {
 };
 
 const TalkSlider = ({ files }) => {
-  console.log(files);
   const settings = {
     customPaging: function (i) {
       return (

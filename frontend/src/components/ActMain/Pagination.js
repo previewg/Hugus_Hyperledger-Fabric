@@ -76,7 +76,7 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
 
   return (
     <PaginationStyle>
-      <div>
+      {/* <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
         {pArr.map((n, key) => 
@@ -94,7 +94,7 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
         ))}
         <button onClick={nextPage}>&gt;</button>
         <button onClick={lastPage}>&gt;&gt;</button>
-      </div>
+      </div> */}
     </PaginationStyle>
   );
 };

@@ -112,9 +112,13 @@ router.get("/list/:page", async (req, res) => {
       });
     }
 
-    let count = await Act.count({});
-    count = Math.ceil(count / 10);
-    res.json({ list: list, count: count, success: 1 });
+    let total = await Act.count({});
+    
+
+    let more = false;
+    if (total > page * 10) more = true;
+
+    res.json({ list: list, success: 1, more: more });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

@@ -29,7 +29,8 @@ const TalkStyle = styled.section`
       }
     }
     .write {
-      margin-top: 60px;
+      margin-right: 20px;
+      margin-top: 20px;
       width: 100%;
       display: flex;
       justify-content: flex-end;
@@ -65,7 +66,7 @@ const TalkMain = (props) => {
     setTalkList(data.data.list);
     setTotal(data.data.count);
     setClicked(false);
-    setLoading(false)
+    setLoading(false);
   };
 
   const onClickHandler = () => {
@@ -99,10 +100,10 @@ const TalkMain = (props) => {
           </div>
 
         <TalkSearch search={search} setSearch={setSearch} setClicked={setClicked}/>
+        {!loading ? <TalkList talkList={talkList} /> : <Loader />}
         <div className="write">
         <span className="talkWrite__btn" onClick={onClickHandler}>글작성</span>
         </div>
-        {!loading ? <TalkList talkList={talkList} /> : <Loader />}
         <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
       </div>
     </TalkStyle>
