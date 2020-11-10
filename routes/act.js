@@ -33,7 +33,7 @@ router.post("/add", upload_memory.array("files"), async (req, res) => {
   try {
     // const { user_email } = req.session.loginInfo;
     const user_email = "moonnr94@gmail.com";
-    const { act_title, act_buy, act_content } = req.body;
+    const { act_title, act_buy, act_content, sender, receiver, value } = req.body;
     const list = await Act.create({
       act_title,
       act_buy,
@@ -51,7 +51,12 @@ router.post("/add", upload_memory.array("files"), async (req, res) => {
 
     let base64data = await req.files[0].buffer.toString('base64');
     await axios.post(`${process.env.FABRIC_URL}/campaign/donation`, {
-      data: base64data    });
+      data: base64data,
+      sender_id:sender,
+      receiver_id: receiver,
+      value: value
+    
+    });
     console.log('Image converted');
 
     res.json({ list: list, success: 1 });
