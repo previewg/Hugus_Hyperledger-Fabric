@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { storyLoader, storyLoadInit } from "actions/story";
 import { commentListInit, commentListLoader } from "actions/comment";
-import { StoryContents, Comments, StoryDetailLoader } from "components";
+import { StoryContents, Comments, StoryDetailLoader, Report } from "components";
 
 const StoryDetailStyle = styled.div`
   display: flex;

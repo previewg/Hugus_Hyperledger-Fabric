@@ -163,6 +163,7 @@ const StoryContentsStyle = styled.div`
 const StoryContents = ({ data, history }) => {
   const dispatch = useDispatch();
   const likeNum = useSelector((state) => state.story.like.likeNum);
+  const reportNum = useSelector((state) => state.story.report.reportNum);
   const email = useSelector((state) => state.auth.user.email);
   const totalPrice = () => {
     let total = 0;
@@ -243,8 +244,9 @@ const StoryContents = ({ data, history }) => {
         })}
       </div>
       <StoryVote data={data} />
-      <div className="visited">
+      <div className="visited"> 
         <p>좋아요 {likeNum}</p>
+        <p>신고하기 {reportNum}</p>
         <p>조회수 {data.visited}</p>
       </div>
     </StoryContentsStyle>

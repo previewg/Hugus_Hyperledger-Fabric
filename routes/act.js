@@ -29,11 +29,11 @@ let upload = multer({
 let upload_memory = multer( { storage: multer.memoryStorage() } )
 
 // Act 등록
-router.post("/add", upload_memory.array("files"), async (req, res) => {
+router.post("/add", upload.array("files"), async (req, res) => {
   try {
     // const { user_email } = req.session.loginInfo;
     const user_email = "moonnr94@gmail.com";
-    const { act_title, act_buy, act_content, sender, receiver, value } = req.body;
+    const { act_title, act_buy, act_content } = req.body;
     const list = await Act.create({
       act_title,
       act_buy,
@@ -45,7 +45,34 @@ router.post("/add", upload_memory.array("files"), async (req, res) => {
     for (const file of req.files) {
       await Act_File.create({
         act_id: act_id,
-        file: file.originalname,
+        file: file.location,
+      });
+    };
+
+
+    res.json({ list: list, success: 1 });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// Act 등록
+router.post("/add/buffer", upload_memory.array("files"), async (req, res) => {
+  try {
+    const { act_title, sender, receiver, value } = req.body;
+
+    const list = await Act.findOne({
+      where: {act_title: act_title,
+      }
+    });
+    console.log(list);
+
+    const act_id = await list.dataValues("id");
+    for (const file of req.files) {
+      await Act_File.create({
+        act_id: act_id,
+        file: file.location,
       });
     };
 
@@ -59,7 +86,7 @@ router.post("/add", upload_memory.array("files"), async (req, res) => {
     });
     console.log('Image converted');
 
-    res.json({ list: list, success: 1 });
+    res.json({ success: 1, buf:buf });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });

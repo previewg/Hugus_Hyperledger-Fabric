@@ -89,15 +89,15 @@ export const talkLoader = (id) => async (dispatch) => {
     });
 };  
 
-// TALK 좋아요 추가/제거 요청
-export const talkLike = (id, status) => async (dispatch) => {
-    dispatch(talkLikeStart());
-    await axios.put('/talk/like', { talk_id: id, status: status })
-      .then(() => {
-        dispatch(talkLikeSuccess());
-      })
-      .catch((error) => {
-        console.log(error);
-        dispatch(talkLikeFailure());
-      });
-  };
+// // TALK 좋아요 추가/제거 요청
+// export const talkLike = (id, status) => async (dispatch) => {
+//     dispatch(talkLikeStart());
+//     await axios.put('/talk/like', { talk_id: id, status: status })
+//       .then(() => {
+//         dispatch(talkLikeSuccess());
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//         dispatch(talkLikeFailure());
+//       });
+//   };

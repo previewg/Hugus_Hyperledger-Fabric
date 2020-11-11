@@ -15,13 +15,13 @@ import MyNews from "./UserInfo/MyNews";
 import MyHome from "./UserInfo/MyHome";
 import Comments from "./StoryDetail/Comments";
 import CommentInput from "./StoryDetail/CommentInput";
+import Report from "./StoryDetail/Report";
 import CommentList from "./StoryDetail/CommentList";
 import StoryContents from "./StoryDetail/StoryContents";
 import StoryVote from "./StoryDetail/StoryVote";
 import StoryDetailLoader from "./StoryDetail/Loader";
 import ActList from "./ActMain/ActList";
 import ActContents from "./ActDetail/ActContents";
-import Pagination from "./ActMain/Pagination";
 import Search from "./ActMain/Search";
 import TalkList from "./TalkMain/TalkList";
 import TalkPagination from "./TalkMain/TalkPagination";
@@ -90,7 +90,7 @@ export {
   ActList,
   ActContents,
   Search,
-  Pagination,
+  Report,
   TalkList,
   TalkPagination,
   TalkSearch,

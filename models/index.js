@@ -30,6 +30,7 @@ db.Story_Comment_Like = require("./story/story_comment_like")(
 );
 db.Comment_Child = require("./story/comment_child")(sequelize, Sequelize);
 db.Story_Like = require("./story/story_like")(sequelize, Sequelize);
+db.Story_Report = require("./story/story_report")(sequelize, Sequelize);
 db.Story_Hashtag = require("./story/story_hashtag")(sequelize, Sequelize);
 db.Story_Item = require("./story/story_item")(sequelize, Sequelize);
 db.Story_File = require("./story/story_file")(sequelize, Sequelize);
@@ -114,6 +115,10 @@ db.User.hasMany(db.Story_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
+db.User.hasMany(db.Story_Report, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+});
 db.User.hasMany(db.Campaign_Donate, {
   foreignKey: "user_email",
   sourceKey: "email",
@@ -146,6 +151,7 @@ db.User.hasMany(db.Talk_Like, {
 // Story
 db.Story.hasMany(db.Story_Comment, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Like, { foreignKey: "story_id", sourceKey: "id" });
+db.Story.hasMany(db.Story_Report, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Item, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Vote, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
@@ -200,7 +206,12 @@ db.Story_Like.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
 });
-
+//Story_Report
+db.Story_Report.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
+db.Story_Report.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "email",
+});
 // Story_Item
 db.Story_Item.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
 
