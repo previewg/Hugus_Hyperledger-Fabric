@@ -55,9 +55,7 @@ const CommentTrueStyle = styled.div`
         cursor: pointer;
         width: 30px;
         height:30px;
-        
-
-      }
+       }
       }
     }
   }
@@ -142,6 +140,7 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
   };
   const reportHandler = (status) => {    
     dispatch(storyReport(data.id, status));
+    setOpenModal(true)
 
   };
   
