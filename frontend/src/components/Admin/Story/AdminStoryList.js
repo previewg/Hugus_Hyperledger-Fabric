@@ -1,16 +1,14 @@
-import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const AdminCampaignListStyle = styled.article`
+const AdminStoryListStyle = styled.article`
   width: 60%;
   height: 470px;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   padding: 20px;
   margin-top: 10px;
-  .campaign__head {
+  .story__head {
     display: grid;
     grid-template-columns: 1fr 5fr 1fr 1fr 2fr 2fr;
     border-bottom: solid 0.1px white;
@@ -24,7 +22,7 @@ const AdminCampaignListStyle = styled.article`
       }
     }
   }
-  .campaign__body {
+  .story__body {
     display: grid;
     grid-template-columns: 1fr 5fr 1fr 1fr 2fr 2fr;
     align-items: center;
@@ -37,7 +35,7 @@ const AdminCampaignListStyle = styled.article`
         justify-self: start;
       }
     }
-    .campaign__control {
+    .story__control {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
@@ -100,10 +98,10 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminCampaignList = ({ list, loading }) => {
+const AdminStoryList = ({ list, loading }) => {
   return (
-    <AdminCampaignListStyle>
-      <div className="campaign__head">
+    <AdminStoryListStyle>
+      <div className="story__head">
         <p>번호</p>
         <p>제목</p>
         <p>작성자</p>
@@ -114,15 +112,15 @@ const AdminCampaignList = ({ list, loading }) => {
       {!loading && list.length === 0 ? (
         <NoResult>검색 결과가 없습니다</NoResult>
       ) : (
-        list.map((campaign, key) => {
+        list.map((story, key) => {
           return (
-            <div className="campaign__body" key={key}>
-              <p className="campaign__id">{campaign.id}</p>
-              <p className="campaign__title">{campaign.campaign_title}</p>
-              <p className="nickname">{campaign.User.nickname}</p>
-              <p className="campaign__visit">{campaign.visited}</p>
-              <p className="created__at">{getTimeStamp(campaign.created_at)}</p>
-              <div className="campaign__control">
+            <div className="story__body" key={key}>
+              <p className="story__id">{story.id}</p>
+              <p className="story__title">{story.story_title}</p>
+              <p className="nickname">{story.User.nickname}</p>
+              <p className="story__visit">{story.visited}</p>
+              <p className="created__at">{getTimeStamp(story.created_at)}</p>
+              <div className="story__control">
                 <button>수정</button>
                 <button>삭제</button>
               </div>
@@ -130,7 +128,7 @@ const AdminCampaignList = ({ list, loading }) => {
           );
         })
       )}
-    </AdminCampaignListStyle>
+    </AdminStoryListStyle>
   );
 };
-export default AdminCampaignList;
+export default AdminStoryList;

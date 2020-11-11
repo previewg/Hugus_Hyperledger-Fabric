@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import AdminCampaignNav from "./AdminCampaignNav";
-import AdminCampaignList from "./AdminCampaignList";
-import AdminCampaignPagination from "./AdminCampaignPagination";
-import AdminCampaignSearch from "./AdminCampaignSearch";
+import AdminActNav from "./AdminActNav";
+import AdminActList from "./AdminActList";
+import AdminActPagination from "./AdminActPagination";
+import AdminActSearch from "./AdminActSearch";
 
-const AdminCampaignStyle = styled.article`
+const AdminActStyle = styled.article`
   width: 100%;
   height: 95vh;
   display: flex;
@@ -17,8 +17,7 @@ const AdminCampaignStyle = styled.article`
   padding-left: ${(props) => (props.open ? 250 : 0)}px;
 `;
 
-const AdminCampaign = ({ open }) => {
-  const [type, setType] = useState("now");
+const AdminAct = ({ open }) => {
   const [order, setOrder] = useState("date");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -28,7 +27,7 @@ const AdminCampaign = ({ open }) => {
 
   const nowPage = async (page) => {
     const result = await axios.get(
-      `/admin/campaign/${page}?keyword=${search}&type=${type}&order=${order}`
+      `/admin/act/${page}?keyword=${search}&order=${order}`
     );
     if (result.data.success === 1) {
       setList(result.data.list);
@@ -39,20 +38,19 @@ const AdminCampaign = ({ open }) => {
   };
 
   return (
-    <AdminCampaignStyle open={open} type={type}>
-      <AdminCampaignNav setType={setType} type={type} />
-      <AdminCampaignSearch setSearch={setSearch} setClicked={setClicked} />
-      <AdminCampaignList list={list} loading={loading} />
-      <AdminCampaignPagination
+    <AdminActStyle open={open}>
+      <AdminActNav />
+      <AdminActSearch setSearch={setSearch} setClicked={setClicked} />
+      <AdminActList list={list} loading={loading} />
+      <AdminActPagination
         nowPage={nowPage}
         pageLimit="10"
         total={total}
         clicked={clicked}
         loading={loading}
-        type={type}
       />
-    </AdminCampaignStyle>
+    </AdminActStyle>
   );
 };
 
-export default AdminCampaign;
+export default AdminAct;

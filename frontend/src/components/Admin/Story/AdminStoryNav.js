@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const AdminCampaignNavStyle = styled.article`
+const AdminStoryNavStyle = styled.article`
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 800px;
@@ -31,19 +31,19 @@ const AdminCampaignNavStyle = styled.article`
   }
 `;
 
-const AdminCampaignNav = ({ type, setType }) => {
+const AdminStoryNav = ({ type, setType }) => {
   return (
-    <AdminCampaignNavStyle type={type}>
+    <AdminStoryNavStyle type={type}>
       <div>
-        <p onClick={() => setType("now")}>모금 진행 중</p>
+        <p onClick={() => setType("now")}>투표 진행 중</p>
         <div></div>
       </div>
       <div>
-        <p onClick={() => setType("done")}>모금 종료</p>
+        <p onClick={() => setType("done")}>투표 종료</p>
         <div></div>
       </div>
-    </AdminCampaignNavStyle>
+    </AdminStoryNavStyle>
   );
 };
 
-export default AdminCampaignNav;
+export default AdminStoryNav;

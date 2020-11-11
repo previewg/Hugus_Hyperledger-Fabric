@@ -60,7 +60,9 @@ import UserInfoLoader from "./UserInfo/Loader";
 import SideBar from "./Admin/SideBar";
 import AdminSummary from "./Admin/AdminSummary";
 import AdminCampaign from "./Admin/Campaign/AdminCampaign";
+import AdminStory from "./Admin/Story/AdminStory";
 import AdminLoader from "./Admin/Loader";
+import AdminAct from "./Admin/Act/AdminAct";
 
 export {
   Main,
@@ -126,4 +128,6 @@ export {
   AdminSummary,
   AdminCampaign,
   AdminLoader,
+  AdminStory,
+  AdminAct,
 };

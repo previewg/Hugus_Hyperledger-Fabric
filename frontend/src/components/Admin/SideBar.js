@@ -9,7 +9,6 @@ const SideBarStyle = styled.article`
   min-width: 250px;
   display: grid;
   height: 95vh;
-  border-right: lightgray 0.1px solid;
   grid-template-rows: 1fr 2fr;
   transform: translateX(${(props) => (props.open ? 0 : -100)}%);
   transition: all 0.5s ease-in-out;
@@ -48,7 +47,7 @@ const SideBarStyle = styled.article`
             if (props.type === "summary") return 1;
             else if (props.type === "campaign") return 2;
             else if (props.type === "story") return 3;
-            else if (props.type === "auth") return 4;
+            else if (props.type === "act") return 4;
             else if (props.type === "report") return 5;
             else if (props.type === "user") return 6;
             else return 7;
@@ -70,7 +69,7 @@ const SideBar = ({ type, setType, open }) => {
         <p onClick={() => setType("summary")}>개요</p>
         <p onClick={() => setType("campaign")}>캠페인 관리</p>
         <p onClick={() => setType("story")}>스토리 관리</p>
-        <p onClick={() => setType("auth")}>인증 관리</p>
+        <p onClick={() => setType("act")}>인증 관리</p>
         <p onClick={() => setType("report")}>신고 관리</p>
         <p onClick={() => setType("user")}>회원 관리</p>
         <p onClick={() => window.open("http://192.168.0.35:8080/")}>

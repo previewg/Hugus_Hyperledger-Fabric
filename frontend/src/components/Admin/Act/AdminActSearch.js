@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 
-const AdminCampaignSearchStyle = styled.div`
+const AdminActSearchStyle = styled.div`
   width: 62%;
   display: flex;
   justify-content: flex-end;
@@ -35,7 +35,7 @@ const AdminCampaignSearchStyle = styled.div`
   }
 `;
 
-const AdminCampaignSearch = ({ search, setSearch, setClicked }) => {
+const AdminActSearch = ({ search, setSearch, setClicked }) => {
   const here = useRef();
 
   const onChangeHandler = (e) => {
@@ -44,7 +44,7 @@ const AdminCampaignSearch = ({ search, setSearch, setClicked }) => {
   };
 
   return (
-    <AdminCampaignSearchStyle>
+    <AdminActSearchStyle>
       <input
         ref={here}
         name="search"
@@ -60,8 +60,8 @@ const AdminCampaignSearch = ({ search, setSearch, setClicked }) => {
       <button className="search__bar" onClick={() => setClicked(true)}>
         검색
       </button>
-    </AdminCampaignSearchStyle>
+    </AdminActSearchStyle>
   );
 };
 
-export default AdminCampaignSearch;
+export default AdminActSearch;

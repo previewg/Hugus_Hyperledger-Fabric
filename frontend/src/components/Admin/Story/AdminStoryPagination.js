@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Loader from "../Loader";
 
-const AdminCampaignPaginationStyle = styled.div`
+const AdminStoryPaginationStyle = styled.div`
   margin-top: 30px;
   margin-bottom: 50px;
   width: 20%;
@@ -41,7 +41,7 @@ const createArr = (n) => {
   return iArr;
 };
 
-const AdminCampaignPagination = ({
+const AdminStoryPagination = ({
   total,
   pageLimit,
   nowPage,
@@ -88,7 +88,7 @@ const AdminCampaignPagination = ({
 
   if (loading) return <Loader />;
   return (
-    <AdminCampaignPaginationStyle>
+    <AdminStoryPaginationStyle>
       <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
@@ -115,8 +115,8 @@ const AdminCampaignPagination = ({
         <button onClick={lastPage}>&gt;&gt;</button>
       </div>
       <div className="current_show"></div>
-    </AdminCampaignPaginationStyle>
+    </AdminStoryPaginationStyle>
   );
 };
 
-export default AdminCampaignPagination;
+export default AdminStoryPagination;

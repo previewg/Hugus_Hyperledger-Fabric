@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { AdminSummary, AdminCampaign, SideBar } from "components";
+import {
+  AdminSummary,
+  AdminCampaign,
+  AdminStory,
+  AdminAct,
+  SideBar,
+} from "components";
 
 const AdminStyle = styled.section`
   width: 100%;
@@ -16,7 +22,7 @@ const AdminStyle = styled.section`
     position: absolute;
     top: 145px;
     transition: all 0.5s ease-in-out;
-    left: ${(props) => (props.open ? 251 : 0)}px;
+    left: ${(props) => (props.open ? 250 : 0)}px;
     background-color: rgba(255, 255, 255, 0.2);
     background-image: url(${(props) =>
       props.open ? "/icons/Backicon-white.png" : "/icons/Nexticon-white.png"});
@@ -48,6 +54,8 @@ const Admin = (props) => {
       <SideBar setType={setType} type={type} open={open} />
       {type === "summary" && <AdminSummary open={open} />}
       {type === "campaign" && <AdminCampaign open={open} />}
+      {type === "story" && <AdminStory open={open} />}
+      {type === "act" && <AdminAct open={open} />}
     </AdminStyle>
   );
 };

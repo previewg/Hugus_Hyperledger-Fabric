@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import AdminCampaignNav from "./AdminCampaignNav";
-import AdminCampaignList from "./AdminCampaignList";
-import AdminCampaignPagination from "./AdminCampaignPagination";
-import AdminCampaignSearch from "./AdminCampaignSearch";
+import AdminStoryNav from "./AdminStoryNav";
+import AdminStoryList from "./AdminStoryList";
+import AdminStoryPagination from "./AdminStoryPagination";
+import AdminStorySearch from "./AdminStorySearch";
 
-const AdminCampaignStyle = styled.article`
+const AdminStoryStyle = styled.article`
   width: 100%;
   height: 95vh;
   display: flex;
@@ -17,7 +17,7 @@ const AdminCampaignStyle = styled.article`
   padding-left: ${(props) => (props.open ? 250 : 0)}px;
 `;
 
-const AdminCampaign = ({ open }) => {
+const AdminStory = ({ open }) => {
   const [type, setType] = useState("now");
   const [order, setOrder] = useState("date");
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ const AdminCampaign = ({ open }) => {
 
   const nowPage = async (page) => {
     const result = await axios.get(
-      `/admin/campaign/${page}?keyword=${search}&type=${type}&order=${order}`
+      `/admin/story/${page}?keyword=${search}&type=${type}&order=${order}`
     );
     if (result.data.success === 1) {
       setList(result.data.list);
@@ -39,11 +39,11 @@ const AdminCampaign = ({ open }) => {
   };
 
   return (
-    <AdminCampaignStyle open={open} type={type}>
-      <AdminCampaignNav setType={setType} type={type} />
-      <AdminCampaignSearch setSearch={setSearch} setClicked={setClicked} />
-      <AdminCampaignList list={list} loading={loading} />
-      <AdminCampaignPagination
+    <AdminStoryStyle open={open} type={type}>
+      <AdminStoryNav setType={setType} type={type} />
+      <AdminStorySearch setSearch={setSearch} setClicked={setClicked} />
+      <AdminStoryList list={list} loading={loading} />
+      <AdminStoryPagination
         nowPage={nowPage}
         pageLimit="10"
         total={total}
@@ -51,8 +51,8 @@ const AdminCampaign = ({ open }) => {
         loading={loading}
         type={type}
       />
-    </AdminCampaignStyle>
+    </AdminStoryStyle>
   );
 };
 
-export default AdminCampaign;
+export default AdminStory;
