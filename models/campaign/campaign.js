@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      campaign_content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
       campaign_goal: {
         type: DataTypes.INTEGER,
         allowNull: false,

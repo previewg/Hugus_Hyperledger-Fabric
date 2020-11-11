@@ -5,11 +5,14 @@ const {
   Campaign,
   Campaign_File,
   Campaign_Like,
+  Campaign_Hashtag,
   Hashtag,
   User,
   sequelize,
 } = require("../models");
 const Transaction = require("../models/block/transaction");
+const crypto = require("crypto");
+const axios = require("axios");
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -37,6 +40,57 @@ let upload = multer({
 // 캠페인 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
+    const { user_email } = req.session.loginInfo;
+    if (user_email !== "admin@admin") res.status(400).json({ success: 3 });
+    const { campaign_title, email, campaign_goal } = req.body;
+    const campaign = await Campaign.create({
+      campaign_title: campaign_title,
+      user_email: email,
+      campaign_goal: campaign_goal,
+    });
+
+    const campaign_id = campaign.getDataValue("id");
+    for (const file of req.files) {
+      let fileName = null;
+      if (file.location !== null) fileName = file.location;
+      await Campaign_File.create({
+        campaign_id: campaign_id,
+        file: fileName,
+      });
+    }
+
+    const hashtags = req.body.hashtags.split(",");
+    for (const hashtag of hashtags) {
+      const result = await Hashtag.findOrCreate({
+        where: { hashtag: hashtag },
+      });
+
+      await Campaign_Hashtag.create({
+        campaign_id: campaign_id,
+        hashtag_id: result[0].getDataValue("id"),
+      });
+    }
+
+    await crypto.randomBytes(8, (err, buf) => {
+      crypto.pbkdf2(
+        email,
+        buf.toString("base64"),
+        100000,
+        8,
+        "sha512",
+        async (err, key) => {
+          const hashedCampaign = key.toString("base64");
+          await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
+            user_id: hashedCampaign,
+          });
+          await Campaign.update({
+            hash: hashedCampaign,
+            where: { id: campaign_id },
+          });
+        }
+      );
+    });
+
     res.json({ success: 1 });
   } catch (error) {
     console.error(error);

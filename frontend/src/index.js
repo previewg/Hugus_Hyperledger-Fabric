@@ -40,6 +40,7 @@ import {
   Info,
   UserDetail,
   Admin,
+  CampaignWrite,
 } from "pages";
 
 // Common components
@@ -62,6 +63,11 @@ ReactDOM.render(
       <User />
       <Switch>
         <Route exact path="/admin/only" component={Auth(Admin, true, true)} />
+        <Route
+          exact
+          path="/campaign/write"
+          component={Auth(CampaignWrite, true, true)}
+        />
         <Route exact path="/" component={Auth(Home, null)} />
         <Route exact path="/info" component={Auth(Info, null)} />
         <Route
