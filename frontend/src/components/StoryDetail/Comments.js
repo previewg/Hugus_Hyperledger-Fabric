@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CommentInput from "./CommentInput";
@@ -11,6 +11,7 @@ const CommentStyle = styled.div`
 const Comments = ({ data }) => {
   const commentList = useSelector((state) => state.comment.list.data);
   const num = useSelector((state) => state.comment.list.num);
+  
   return (
     <CommentStyle>
       <CommentInput commentList={commentList} data={data} num={num} />

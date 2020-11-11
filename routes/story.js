@@ -9,6 +9,7 @@ const {
   Story_Item,
   User,
   Story_Like,
+  Story_Report,
   Story_Vote,
   sequelize,
 } = require("../models");
@@ -286,6 +287,12 @@ router.get("/list/:page", async (req, res) => {
           ],
           [
             sequelize.literal(
+              "(SELECT COUNT(1) FROM story_report WHERE story_id = `Story`.id)"
+            ),
+            "story_Report",
+          ],
+          [
+            sequelize.literal(
               "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
             ),
             "story_vote",
@@ -334,6 +341,12 @@ router.get("/list/:page", async (req, res) => {
               "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
             ),
             "story_like",
+          ], 
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_report WHERE story_id = `Story`.id)"
+            ),
+            "story_report",
           ],
           [
             sequelize.literal(
@@ -379,6 +392,12 @@ router.get("/list/:page", async (req, res) => {
               "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
             ),
             "story_like",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM story_report WHERE story_id = `Story`.id)"
+            ),
+            "story_report",
           ],
           [
             sequelize.literal(
@@ -443,6 +462,12 @@ router.get("/:id", async (req, res) => {
         ],
         [
           sequelize.literal(
+            "(SELECT COUNT(1) FROM story_report WHERE story_id = `Story`.id)"
+          ),
+          "story_report",
+        ],
+        [
+          sequelize.literal(
             "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
           ),
           "story_vote",
@@ -466,6 +491,9 @@ router.get("/:id", async (req, res) => {
       const like = await Story_Like.findOne({
         where: { story_id: story_id, user_email: user_email },
       });
+      const report = await Story_Report.findOne({
+        where: { story_id: story_id, user_email: user_email },
+      });
 
       const vote = await Story_Vote.findOne({
         where: { story_id: story_id, user_email: user_email },
@@ -473,6 +501,7 @@ router.get("/:id", async (req, res) => {
       res.json({
         data: data,
         like: like ? true : false,
+        report: report ? true : false,
         vote: vote ? true : false,
         success: 1,
       });
@@ -480,6 +509,7 @@ router.get("/:id", async (req, res) => {
       res.json({
         data: data,
         like: false,
+        report: false,
         vote: false,
         success: 1,
       });
@@ -525,6 +555,32 @@ router.put("/like", async (req, res) => {
       });
     } else {
       await Story_Like.create({
+        story_id,
+        user_email,
+      });
+    }
+
+    res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+//게시물 신고하기 등록 삭제
+router.put("/report", async (req, res) => {
+  try {
+    const { story_id } = req.body;
+    const { user_email } = req.session.loginInfo;
+
+    const history = await Story_Report.findOne({
+      where: { story_id, user_email },
+    });
+
+    if (history) {
+      await Story_Report.destroy({
+        where: { story_id, user_email },
+      });
+    } else {
+      await Story_Report.create({
         story_id,
         user_email,
       });

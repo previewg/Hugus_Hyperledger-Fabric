@@ -12,6 +12,9 @@ import {
   STORY_LIKE,
   STORY_LIKE_SUCCESS,
   STORY_LIKE_FAILURE,
+  STORY_REPORT,
+  STORY_REPORT_SUCCESS,
+  STORY_REPORT_FAILURE,
   STORY_VOTE,
   STORY_VOTE_SUCCESS,
   STORY_VOTE_FAILURE,
@@ -39,6 +42,11 @@ const initialState = {
     user: false,
     status: "INIT",
     likeNum: 0,
+  },
+  report: {
+    user: false,
+    status: "INIT",
+    reportNum: 0,
   },
   vote: {
     user: false,
@@ -137,6 +145,11 @@ export default function story(state = initialState, action) {
           user: { $set: action.like },
           likeNum: { $set: action.likeNum },
         },
+        report: {
+          status: { $set: "SUCCESS" },
+          user: { $set: action.like },
+          reportNum: { $set: action.reportNum },
+        },
         vote: {
           status: { $set: "SUCCESS" },
           user: { $set: action.vote },
@@ -174,6 +187,33 @@ export default function story(state = initialState, action) {
     case STORY_LIKE_FAILURE:
       return update(state, {
         like: {
+          status: { $set: "FAILURE" },
+        },
+      });
+
+    case STORY_REPORT:
+      return update(state, {
+        report: {
+          status: { $set: "WAITING" },
+        },
+      });
+
+    case STORY_REPORT_SUCCESS:
+      let renum;
+      if (state.report.user) renum = state.report.reportNum -1 ;
+      else renum = state.report.reportNum + 1;
+
+      return update(state, {
+        report: {
+          status: { $set: "SUCCESS" },
+          user: { $set: !state.report.user },
+          reportNum: { $set: renum },
+        },
+      });
+
+    case STORY_REPORT_FAILURE:
+      return update(state, {
+        report: {
           status: { $set: "FAILURE" },
         },
       });
