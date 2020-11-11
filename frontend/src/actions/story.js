@@ -22,6 +22,10 @@ export const STORY_LIKE = "STORY_LIKE";
 export const STORY_LIKE_SUCCESS = "STORY_LIKE_SUCCESS";
 export const STORY_LIKE_FAILURE = "STORY_LIKE_FAILURE";
 
+export const STORY_REPORT = "STORY_REPORT";
+export const STORY_REPORT_SUCCESS = "STORY_REPORT_SUCCESS";
+export const STORY_REPORT_FAILURE = "STORY_REPORT_FAILURE";
+
 export const STORY_VOTE = "STORY_VOTE";
 export const STORY_VOTE_SUCCESS = "STORY_VOTE_SUCCESS";
 export const STORY_VOTE_FAILURE = "STORY_VOTE_FAILURE";
@@ -85,6 +89,18 @@ const storyLikeSuccess = () => {
 const storyLikeFailure = () => {
   return { type: STORY_LIKE_FAILURE };
 };
+// 게시물 신고하기
+const storyReportStart = () => {
+  return { type: STORY_REPORT };
+};
+
+const storyReportSuccess = () => {
+  return { type: STORY_REPORT_SUCCESS };
+};
+
+const storyReportFailure = () => {
+  return { type: STORY_REPORT_FAILURE };
+};
 
 // 게시물 투표
 const storyVoteStart = () => {
@@ -114,6 +130,8 @@ const storyLoadSuccess = (data) => {
     data: data.data,
     like: data.like,
     likeNum: data.data.story_like,
+    report: data.report,
+    reportNum: data.data.story_report,
     vote: data.vote,
     voteNum: data.data.story_vote,
   };
@@ -203,6 +221,19 @@ export const storyLike = (id) => async (dispatch) => {
     .catch((error) => {
       console.log(error);
       dispatch(storyLikeFailure());
+    });
+};
+//게시물 신고하기 
+export const storyReport = (id) => async (dispatch) => {
+  dispatch(storyReportStart());
+  await axios
+    .put("/story/report", { story_id: id })
+    .then(() => {
+      dispatch(storyReportSuccess());
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(storyReportFailure());
     });
 };
 

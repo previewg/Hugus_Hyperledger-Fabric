@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
-import { storyLike } from "../../actions/story";
+import { storyLike, storyReport } from "../../actions/story";
 import KakaoLinkAPI from "./KakaoLinkAPI";
 import FacebookLink from "./FacebookLink";
 import Report from "./Report";
@@ -48,6 +48,16 @@ const CommentTrueStyle = styled.div`
         margin-left: 5px;
         cursor: pointer;
         width: 20px;
+      
+      :nth-child(2){
+        margin-top: 12px;
+        margin-left: 5px;
+        cursor: pointer;
+        width: 30px;
+        height:30px;
+        
+
+      }
       }
     }
   }
@@ -121,13 +131,20 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const like = useSelector((state) => state.story.like.user);
+  const report = useSelector((state) => state.story.report.user);
   const total = useSelector((state) => state.comment.list.total);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(false);  
   const comment = useRef();
 
   const likeHandler = (status) => {
     dispatch(storyLike(data.id, status));
+    
   };
+  const reportHandler = (status) => {    
+    dispatch(storyReport(data.id, status));
+
+  };
+  
 
   const Input = () => {
     const [comments, setComments] = useState("");
@@ -141,7 +158,7 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
         setError(true);
       } else {
         dispatch(
-          commentAdd({ comment: comments, story_id: data.id, num: num })
+          commentAdd({ comment: comments, story_id: data.id, num: num})
         );
       }
     };
@@ -190,12 +207,22 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
                 src="/icons/unlike.svg"
               />
             )}
+            {report ? (
               <img
-                onClick={() => setOpenModal(true)}
+                onClick={() => reportHandler(true)}
+                
                 alt="report"
                 className="report"
-                src="/icons/eye.png"
+                src="/icons/police1.png"
               />
+            ) : (
+              <img
+                onClick={() => reportHandler(false)}
+                alt="unreport"
+                className="unreport"
+                src="/icons/police2.png"
+              />
+            )}
             <KakaoLinkAPI />
             <FacebookLink />
             {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
