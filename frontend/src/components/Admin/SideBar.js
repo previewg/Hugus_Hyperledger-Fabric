@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const SideBarStyle = styled.article`
-  display: ${(props) => (props.open ? "grid" : "none")};
+  position: absolute;
+  top: 60px;
   transition: width 1s ease-in-out;
   width: 250px;
   min-width: 250px;
-  // width: ${(props) => (props.open ? 250 : 0)}px;
-  // min-width: ${(props) => (props.open ? 250 : 0)}px;
+  display: grid;
   height: 95vh;
   border-right: lightgray 0.1px solid;
   grid-template-rows: 1fr 2fr;
+  transform: translateX(${(props) => (props.open ? 0 : -100)}%);
+  transition: all 0.5s ease-in-out;
   .side__top {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: gray;
     width: 100%;
     display: grid;
     grid-template-rows: 2fr 1fr;
@@ -32,9 +34,10 @@ const SideBarStyle = styled.article`
     }
   }
   .side__bottom {
-    margin-top: 50px;
+    background-color: white;
+    padding-top: 50px;
     width: 100%;
-    height: 70%;
+    padding-bottom: 100px;
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
     > p {
@@ -46,8 +49,9 @@ const SideBarStyle = styled.article`
             else if (props.type === "campaign") return 2;
             else if (props.type === "story") return 3;
             else if (props.type === "auth") return 4;
-            else if (props.type === "user") return 5;
-            else return 6;
+            else if (props.type === "report") return 5;
+            else if (props.type === "user") return 6;
+            else return 7;
           }}) {
         color: orange;
       }
@@ -67,9 +71,10 @@ const SideBar = ({ type, setType, open }) => {
         <p onClick={() => setType("campaign")}>캠페인 관리</p>
         <p onClick={() => setType("story")}>스토리 관리</p>
         <p onClick={() => setType("auth")}>인증 관리</p>
+        <p onClick={() => setType("report")}>신고 관리</p>
         <p onClick={() => setType("user")}>회원 관리</p>
         <p onClick={() => window.open("http://192.168.0.35:8080/")}>
-          블록 관리
+          블록 정보
         </p>
       </div>
     </SideBarStyle>
