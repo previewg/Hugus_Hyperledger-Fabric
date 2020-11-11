@@ -35,6 +35,9 @@ const AdminStoryListStyle = styled.article`
         justify-self: start;
       }
     }
+    .story__title {
+      cursor: pointer;
+    }
     .story__control {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -98,7 +101,7 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminStoryList = ({ list, loading }) => {
+const AdminStoryList = ({ list, loading, history, deleteHandler }) => {
   return (
     <AdminStoryListStyle>
       <div className="story__head">
@@ -116,13 +119,22 @@ const AdminStoryList = ({ list, loading }) => {
           return (
             <div className="story__body" key={key}>
               <p className="story__id">{story.id}</p>
-              <p className="story__title">{story.story_title}</p>
+              <p
+                className="story__title"
+                onClick={() => history.push(`/story/${story.id}`)}
+              >
+                {story.story_title}
+              </p>
               <p className="nickname">{story.User.nickname}</p>
               <p className="story__visit">{story.visited}</p>
               <p className="created__at">{getTimeStamp(story.created_at)}</p>
               <div className="story__control">
-                <button>수정</button>
-                <button>삭제</button>
+                <button
+                  onClick={() => history.push(`/story/update/${story.id}`)}
+                >
+                  수정
+                </button>
+                <button onClick={() => deleteHandler(story.id)}>삭제</button>
               </div>
             </div>
           );

@@ -11,11 +11,12 @@ import {
 
 const BlockInfoStyle = styled.section`
   width: 100%;
-
   display: flex;
   flex-direction: column;
   padding-top: 50px;
   align-items: center;
+  min-height: 85vh;
+  margin-bottom: 100px;
 `;
 
 const BlockInfo = (props) => {

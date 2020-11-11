@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import AdminStoryNav from "./AdminStoryNav";
@@ -17,7 +17,7 @@ const AdminStoryStyle = styled.article`
   padding-left: ${(props) => (props.open ? 250 : 0)}px;
 `;
 
-const AdminStory = ({ open }) => {
+const AdminStory = ({ open, history }) => {
   const [type, setType] = useState("now");
   const [order, setOrder] = useState("date");
   const [loading, setLoading] = useState(true);
@@ -38,11 +38,28 @@ const AdminStory = ({ open }) => {
     setLoading(false);
   };
 
+  const deleteHandler = async (story_id) => {
+    setClicked(true);
+    const confirmed = window.confirm("삭제하시겠습니까?");
+    if (confirmed) {
+      const result = await axios.post("/story/delete", { id: story_id });
+      if (result.data.success) {
+        alert("삭제가 완료되었습니다");
+        setClicked(false);
+      } else alert("삭제에 실패하였습니다");
+    }
+  };
+
   return (
     <AdminStoryStyle open={open} type={type}>
       <AdminStoryNav setType={setType} type={type} />
       <AdminStorySearch setSearch={setSearch} setClicked={setClicked} />
-      <AdminStoryList list={list} loading={loading} />
+      <AdminStoryList
+        list={list}
+        loading={loading}
+        history={history}
+        deleteHandler={deleteHandler}
+      />
       <AdminStoryPagination
         nowPage={nowPage}
         pageLimit="10"

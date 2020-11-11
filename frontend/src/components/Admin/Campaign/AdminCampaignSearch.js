@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -11,6 +11,7 @@ const AdminCampaignSearchStyle = styled.div`
   > a {
     text-decoration: none;
     color: white;
+    border-bottom: solid 0.1px white;
   }
   > div {
     .search_form {
@@ -19,7 +20,7 @@ const AdminCampaignSearchStyle = styled.div`
       width: 180px;
       height: 23px;
       border: none;
-      border-bottom: solid 1px orange;
+      border-bottom: solid 1px white;
       transition: all 0.5s ease-in-out;
       background-color: transparent;
       padding-left: 3px;
@@ -34,11 +35,14 @@ const AdminCampaignSearchStyle = styled.div`
       width: 60px;
       height: 30px;
       margin-left: 20px;
-      border: solid 1px orange;
-      color: orange;
+      border: solid 1px white;
+      color: white;
       border-radius: 3px;
       outline: none;
       cursor: pointer;
+      :hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
     }
   }
 `;

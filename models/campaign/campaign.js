@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       campaign_value: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
         allowNull: false,
       },
       user_email: {
@@ -27,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       hash: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       expired: {
         type: DataTypes.BOOLEAN,

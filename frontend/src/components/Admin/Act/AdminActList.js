@@ -35,6 +35,9 @@ const AdminActListStyle = styled.article`
         justify-self: start;
       }
     }
+    .act__title {
+      cursor: pointer;
+    }
     .act__control {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -98,7 +101,7 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminActList = ({ list, loading }) => {
+const AdminActList = ({ list, loading, history }) => {
   return (
     <AdminActListStyle>
       <div className="act__head">
@@ -116,7 +119,12 @@ const AdminActList = ({ list, loading }) => {
           return (
             <div className="act__body" key={key}>
               <p className="act__id">{act.id}</p>
-              <p className="act__title">{act.act_title}</p>
+              <p
+                className="act__title"
+                onClick={() => history.push(`/act/${act.id}`)}
+              >
+                {act.act_title}
+              </p>
               <p className="nickname">{act.User.nickname}</p>
               <p className="act__visit">{act.visited}</p>
               <p className="created__at">{getTimeStamp(act.created_at)}</p>

@@ -8,51 +8,37 @@ const UserDetailStyle = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 50px;
+  min-height: 70vh;
 `;
 
 const UserDetail = ({ match, history }) => {
-  const [data, setData] = useState();
-  const [userList, setUserList] = useState([]);
-  const [txHeight, setTxHeight] = useState(0);
+  const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(false);
-  const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(true);
 
   const init = async (page) => {
-    const initData = await axios.get(`/block/search/user/${match.params.id}/${page}`);
+    const initData = await axios.get(
+      `/block/search/user/${match.params.id}/${page}`
+    );
     if (initData.data.success === 1) {
-      setData(initData.data.data);
-      setUserList(initData.data.list);
-      setTxHeight(initData.data.height);
+      setList(initData.data.list);
       setMore(initData.data.more);
       setLoading(false);
     }
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     init(1);
   }, [match]);
 
-
-
-
   return (
     <UserDetailStyle>
       <BlockSearch history={history} />
-      <SearchUserHead
-        setPage={setPage}
-        txHeight={txHeight}
-        page={page}
-        init={init}
-        more={more}
-      />
-      <SearchUser
-        data={data}
-        list={userList}
-        history={history}
-        loading={loading}
-      />
+      <SearchUserHead setPage={setPage} page={page} init={init} more={more} />
+      <SearchUser list={list} history={history} loading={loading} />
     </UserDetailStyle>
   );
 };

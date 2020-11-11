@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-const CampaignWriteStyle = styled.div`
+const CampaignUpdateStyle = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 200px;
@@ -274,7 +274,7 @@ const errorMsg = [
   "해시태그를 입력 바랍니다",
 ];
 
-const CampaignWrite = (props) => {
+const CampaignUpdate = (props) => {
   const title = useRef();
   const email = useRef();
   const files = useRef();
@@ -363,7 +363,7 @@ const CampaignWrite = (props) => {
         formData.append("files", "");
       }
       await axios
-        .post("/campaign/add", formData, {
+        .post("/campaign/add", data, {
           headers: { "content-type": "multipart/form-data" },
         })
         .then(() => {
@@ -464,7 +464,7 @@ const CampaignWrite = (props) => {
 
   return (
     <>
-      <CampaignWriteStyle>
+      <CampaignUpdateStyle>
         <div className="layout">
           <div className="write_title">
             <p>캠페인 등록</p>
@@ -581,10 +581,10 @@ const CampaignWrite = (props) => {
             </button>
           </div>
         </div>
-      </CampaignWriteStyle>
+      </CampaignUpdateStyle>
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
     </>
   );
 };
 
-export default CampaignWrite;
+export default CampaignUpdate;

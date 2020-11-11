@@ -1,6 +1,4 @@
-import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const AdminCampaignListStyle = styled.article`
@@ -12,7 +10,7 @@ const AdminCampaignListStyle = styled.article`
   margin-top: 10px;
   .campaign__head {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 5fr 1fr 1fr 1fr 2fr 2fr;
     border-bottom: solid 0.1px white;
     margin-bottom: 10px;
     p {
@@ -22,11 +20,14 @@ const AdminCampaignListStyle = styled.article`
       :nth-child(2) {
         text-align: start;
       }
+      :nth-child(3) {
+        font-weight: bold;
+      }
     }
   }
   .campaign__body {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 5fr 1fr 1fr 1fr 2fr 2fr;
     align-items: center;
     p {
       justify-self: center;
@@ -36,6 +37,12 @@ const AdminCampaignListStyle = styled.article`
       :nth-child(2) {
         justify-self: start;
       }
+      :nth-child(3) {
+        font-weight: bold;
+      }
+    }
+    .campaign__title {
+      cursor: pointer;
     }
     .campaign__control {
       display: grid;
@@ -100,12 +107,14 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminCampaignList = ({ list, loading }) => {
+const AdminCampaignList = ({ list, loading, history, deleteHandler }) => {
+  console.log(list);
   return (
     <AdminCampaignListStyle>
       <div className="campaign__head">
         <p>번호</p>
         <p>제목</p>
+        <p>모금율</p>
         <p>작성자</p>
         <p>조회수</p>
         <p>작성일자</p>
@@ -118,13 +127,27 @@ const AdminCampaignList = ({ list, loading }) => {
           return (
             <div className="campaign__body" key={key}>
               <p className="campaign__id">{campaign.id}</p>
-              <p className="campaign__title">{campaign.campaign_title}</p>
+              <p
+                className="campaign__title"
+                onClick={() => history.push(`/campaign/${campaign.id}`)}
+              >
+                {campaign.campaign_title}
+              </p>
+              <p className="campaign__ratio">
+                {campaign.campaign_value / campaign.campaign_goal > 100
+                  ? 100
+                  : (
+                      (campaign.campaign_value / campaign.campaign_goal) *
+                      100
+                    ).toFixed(1)}
+                &nbsp;%
+              </p>
               <p className="nickname">{campaign.User.nickname}</p>
               <p className="campaign__visit">{campaign.visited}</p>
               <p className="created__at">{getTimeStamp(campaign.created_at)}</p>
               <div className="campaign__control">
                 <button>수정</button>
-                <button>삭제</button>
+                <button onClick={() => deleteHandler(campaign.id)}>삭제</button>
               </div>
             </div>
           );

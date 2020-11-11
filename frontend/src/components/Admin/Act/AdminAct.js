@@ -17,7 +17,7 @@ const AdminActStyle = styled.article`
   padding-left: ${(props) => (props.open ? 250 : 0)}px;
 `;
 
-const AdminAct = ({ open }) => {
+const AdminAct = ({ open, history }) => {
   const [order, setOrder] = useState("date");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -41,7 +41,7 @@ const AdminAct = ({ open }) => {
     <AdminActStyle open={open}>
       <AdminActNav />
       <AdminActSearch setSearch={setSearch} setClicked={setClicked} />
-      <AdminActList list={list} loading={loading} />
+      <AdminActList list={list} loading={loading} history={history} />
       <AdminActPagination
         nowPage={nowPage}
         pageLimit="10"

@@ -73,7 +73,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
 
     await crypto.randomBytes(8, (err, buf) => {
       crypto.pbkdf2(
-        email,
+        email + campaign_id,
         buf.toString("base64"),
         100000,
         8,
@@ -83,10 +83,12 @@ router.post("/add", upload.array("files"), async (req, res) => {
           await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
             user_id: hashedCampaign,
           });
-          await Campaign.update({
-            hash: hashedCampaign,
-            where: { id: campaign_id },
-          });
+          await Campaign.update(
+            {
+              hash: hashedCampaign,
+            },
+            { where: { id: campaign_id } }
+          );
         }
       );
     });
@@ -102,30 +104,58 @@ router.post("/add", upload.array("files"), async (req, res) => {
 router.post("/delete", async (req, res) => {
   try {
     const { id } = req.body;
-    const files = await Story_File.findAll({
-      where: { story_id: id },
+    const files = await Campaign_File.findAll({
+      where: { campaign_id: id },
       attributes: ["file"],
     });
 
-    let params = {
-      Bucket: "hugusstory",
-      Delete: {
-        Objects: [],
-      },
-    };
+    if (files.length !== 0) {
+      let params = {
+        Bucket: "huguscampaign",
+        Delete: {
+          Objects: [],
+        },
+      };
 
-    for (const file of files) {
-      const key = file.file.split("/");
-      params.Delete.Objects.push({ Key: decodeURI(key[3]) });
+      for (const file of files) {
+        const key = file.file.split("/");
+        params.Delete.Objects.push({ Key: decodeURI(key[3]) });
+      }
+
+      await s3.deleteObjects(params, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+
+      await Campaign_File.destroy({
+        where: { campaign_id: id },
+      });
     }
 
-    await s3.deleteObjects(params, (err) => {
-      if (err) {
-        throw err;
-      }
+    const hashtags = await Campaign_Hashtag.findAll({
+      attributes: [
+        "hashtag_id",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM campaign_hashtag WHERE hashtag_id = `Campaign_Hashtag`.hashtag_id)"
+          ),
+          "count",
+        ],
+      ],
+      where: { campaign_id: id },
     });
 
-    await Story.destroy({ where: { id } });
+    for (const hashtag of hashtags) {
+      const unique = hashtag.getDataValue("count") === 1 ? true : false;
+      if (unique) {
+        await Hashtag.destroy({
+          where: { id: hashtag.getDataValue("hashtag_id") },
+        });
+      }
+    }
+
+    await Campaign.destroy({ where: { id } });
     res.json({ success: 1 });
   } catch (err) {
     console.error(err);
@@ -262,9 +292,8 @@ router.get("/list/:page", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const campaign_id = req.params.id;
-    let user_email;
+    let user_email = null;
     if (req.session.loginInfo) user_email = req.session.loginInfo.user_email;
-    else user_email = null;
 
     const campaign = await Campaign.findOne({ where: { id: campaign_id } });
     const hash = campaign.getDataValue("hash");
@@ -274,12 +303,14 @@ router.get("/:id", async (req, res) => {
       { $group: { _id: `${hash}`, value: { $sum: "$value" } } },
     ]);
 
-    await Campaign.update(
-      {
-        campaign_value: campaignData[0].value,
-      },
-      { where: { hash: campaignData[0]._id } }
-    );
+    if (campaignData.length !== 0) {
+      await Campaign.update(
+        {
+          campaign_value: campaignData[0].value,
+        },
+        { where: { hash: campaignData[0]._id } }
+      );
+    }
 
     const data = await Campaign.findOne({
       attributes: [
@@ -294,12 +325,6 @@ router.get("/:id", async (req, res) => {
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id )"
           ),
           "campaign_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
-          ),
-          "campaign_donate",
         ],
         [
           sequelize.literal(

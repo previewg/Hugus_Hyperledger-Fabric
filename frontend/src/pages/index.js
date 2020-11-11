@@ -20,6 +20,7 @@ import TalkMain from "./TalkMain";
 import TalkDetail from "./TalkDetail";
 import CampaignDetail from "./CampaignDetail";
 import CampaignWrite from "./CampaignWrite";
+import CampaignUpdate from "./CampaignUpdate";
 import TalkWrite from "./TalkWrite";
 import TalkUpdate from "./TalkUpdate";
 import Info from "./Info";
@@ -49,6 +50,7 @@ export {
   TalkWrite,
   CampaignDetail,
   CampaignWrite,
+  CampaignUpdate,
   TalkUpdate,
   Info,
   Admin,

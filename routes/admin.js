@@ -64,12 +64,26 @@ router.get("/campaign/:page", async (req, res) => {
     let keyword = req.query.keyword;
     let order = req.query.order;
     let offset = 0;
+    let count = 0;
+    let list = null;
+
     // 10개씩 조회
     if (page > 1) {
       offset = 10 * (page - 1);
     }
-    let count = 0;
-    let list = null;
+
+    const campaignData = await Transaction.aggregate([
+      { $group: { _id: "$receiver_id", value: { $sum: "$value" } } },
+    ]);
+
+    for (const campaign of campaignData) {
+      await Campaign.update(
+        {
+          campaign_value: campaign.value,
+        },
+        { where: { hash: campaign._id } }
+      );
+    }
 
     if (keyword) {
       list = await Campaign.findAll({
@@ -79,6 +93,9 @@ router.get("/campaign/:page", async (req, res) => {
           "user_email",
           "visited",
           "created_at",
+          "id",
+          "campaign_goal",
+          "campaign_value",
         ],
         order: [["created_at", "DESC"]],
         offset: offset,
@@ -105,6 +122,9 @@ router.get("/campaign/:page", async (req, res) => {
           "user_email",
           "visited",
           "created_at",
+          "id",
+          "campaign_goal",
+          "campaign_value",
         ],
         order: [["created_at", "DESC"]],
         offset: offset,

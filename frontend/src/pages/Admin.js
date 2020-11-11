@@ -36,14 +36,16 @@ const AdminStyle = styled.section`
 `;
 
 const Admin = (props) => {
-  const [type, setType] = useState("campaign");
+  const [type, setType] = useState("summary");
   const [open, setOpen] = useState(true);
 
   const openHandler = () => {
     if (open) setOpen(false);
     else setOpen(true);
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <AdminStyle
@@ -53,9 +55,11 @@ const Admin = (props) => {
       <div className="opener" onClick={openHandler}></div>
       <SideBar setType={setType} type={type} open={open} />
       {type === "summary" && <AdminSummary open={open} />}
-      {type === "campaign" && <AdminCampaign open={open} />}
-      {type === "story" && <AdminStory open={open} />}
-      {type === "act" && <AdminAct open={open} />}
+      {type === "campaign" && (
+        <AdminCampaign open={open} history={props.history} />
+      )}
+      {type === "story" && <AdminStory open={open} history={props.history} />}
+      {type === "act" && <AdminAct open={open} history={props.history} />}
     </AdminStyle>
   );
 };
