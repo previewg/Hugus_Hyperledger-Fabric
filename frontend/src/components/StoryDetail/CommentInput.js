@@ -6,6 +6,8 @@ import { signInBtnIsClicked } from "../../actions/user";
 import { storyLike } from "../../actions/story";
 import KakaoLinkAPI from "./KakaoLinkAPI";
 import FacebookLink from "./FacebookLink";
+import Report from "./Report";
+import { Button } from "react-scroll";
 
 const CommentFalseStyle = styled.div`
   font-weight: bold;
@@ -115,7 +117,7 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const CommentInput = ({ data, num }) => {
+const CommentInput = ({ data, num, openModal, setOpenModal }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const like = useSelector((state) => state.story.like.user);
@@ -188,6 +190,12 @@ const CommentInput = ({ data, num }) => {
                 src="/icons/unlike.svg"
               />
             )}
+              <img
+                onClick={() => setOpenModal(true)}
+                alt="report"
+                className="report"
+                src="/icons/eye.png"
+              />
             <KakaoLinkAPI />
             <FacebookLink />
             {/*<img alt="share" className="share" src="/icons/share.svg" />*/}

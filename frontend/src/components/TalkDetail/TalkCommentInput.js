@@ -123,10 +123,10 @@ const TalkCommentInput = ({ talkId, talkCommentList, setTalkCommentList,setLiken
   const [loading,setLoading] = useState(false);
   const comment = useRef();
 
-  const likeHandler = async( status ) => {
+  const likeHandler = async ( status ) => {
     // dispatch(talkLike( id, status ));
       const result = await axios.put('/talk/like', { talk_id: id, status: status });
-      if(result.data.success===1) {
+      if( result.data.success===1 ) {
         if(like) setLikenum(likenum => likenum -1);
         else setLikenum(likenum => likenum +1)
         setLike(!like)

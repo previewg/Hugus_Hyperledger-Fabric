@@ -1,4 +1,5 @@
-import React from "react";
+import { Report } from "components";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CommentInput from "./CommentInput";
@@ -11,11 +12,16 @@ const CommentStyle = styled.div`
 const Comments = ({ data }) => {
   const commentList = useSelector((state) => state.comment.list.data);
   const num = useSelector((state) => state.comment.list.num);
+  const [openModal, setOpenModal] = useState(false);
   return (
-    <CommentStyle>
-      <CommentInput commentList={commentList} data={data} num={num} />
+    <>
+      <Report openModal={openModal} setOpenModal={setOpenModal} />
+     <CommentStyle>
+      <CommentInput commentList={commentList} data={data} num={num} openModal={openModal} setOpenModal={setOpenModal}/>
       <CommentList commentList={commentList} data={data} num={num} />
     </CommentStyle>
+    </>
+   
   );
 };
 

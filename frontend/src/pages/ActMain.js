@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import { ClipLoader } from "react-spinners";
 import { css } from "@emotion/core";
-import { ActList, Search, Pagination } from "components";
+import { ActList, Search } from "components";
 
 const ActStyle = styled.section`
   padding-top: 30px;
@@ -43,20 +42,10 @@ const LoaderStyle = styled.div`
 `;
 
 const ActMain = () => {
-  const [total, setTotal] = useState(0);
-  const [actList, setActList] = useState([]);
   const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
-
-  const nowPage = async (page) => {
-    // const data = await axios.get(`/act/list/${page}?keyword=${search}`);
-    // setActList(data.data.list);
-    // setTotal(data.data.count);
-    setClicked(false);
-    setLoading(false);
-  };
 
   const Loader = () => {
     return (
@@ -83,13 +72,8 @@ const ActMain = () => {
           <p>전달 스토리</p>
         </div>
         <Search search={search} setSearch={setSearch} setClicked={setClicked} />
-        {!loading ? <ActList setChanged={setChanged} changed={changed} /> : <Loader />}
-        <Pagination
-          clicked={clicked}
-          total={total}
-          pageLimit="5"
-          nowPage={nowPage}
-        />
+        {loading ? <ActList setChanged={setChanged} changed={changed} search={search}  setClicked={setClicked} /> : <Loader />}
+
       </div>
     </ActStyle>
   );

@@ -61,6 +61,8 @@ const Search = ({ search, setSearch, setClicked }) => {
         setSearch(e.target.value);
       };
 
+
+
     return(
         <SearchStyle isClicked={isClicked}>
              <input
