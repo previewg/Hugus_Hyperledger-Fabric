@@ -12,6 +12,7 @@ import ScrollTop from "./ScrollTop";
 import EditInfo from "./UserInfo/EditInfo";
 import History from "./UserInfo/History";
 import MyNews from "./UserInfo/MyNews";
+import ReportInfo from "./UserInfo/ReportInfo";
 import MyHome from "./UserInfo/MyHome";
 import Comments from "./StoryDetail/Comments";
 import CommentInput from "./StoryDetail/CommentInput";
@@ -81,6 +82,7 @@ export {
   History,
   MyHome,
   MyNews,
+  ReportInfo,
   StoryVote,
   StoryContents,
   CommentList,

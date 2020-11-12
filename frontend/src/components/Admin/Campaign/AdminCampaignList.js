@@ -10,7 +10,7 @@ const AdminCampaignListStyle = styled.article`
   margin-top: 10px;
   .campaign__head {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 5fr 1fr 2fr 1fr 2fr 2fr;
     border-bottom: solid 0.1px white;
     margin-bottom: 10px;
     p {
@@ -27,7 +27,7 @@ const AdminCampaignListStyle = styled.article`
   }
   .campaign__body {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 5fr 1fr 2fr 1fr 2fr 2fr;
     align-items: center;
     p {
       justify-self: center;

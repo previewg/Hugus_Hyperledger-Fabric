@@ -35,9 +35,15 @@ router.post("/summary", async (req, res) => {
     const donationCount = await Transaction.countDocuments({
       tx_type: "transfer",
     });
-    const totalAmount = await Transaction.aggregate([
+    let totalAmount = await Transaction.aggregate([
       { $group: { _id: "totalAmount", value: { $sum: "$value" } } },
     ]);
+
+    if (totalAmount.length === 0) {
+      totalAmount = 0;
+    } else {
+      totalAmount = totalAmount[0].value;
+    }
 
     res.json({
       activeStoryCount: activeStoryCount,
@@ -47,7 +53,7 @@ router.post("/summary", async (req, res) => {
       ActCount: ActCount,
       UserCount: UserCount,
       donationCount: donationCount,
-      totalAmount: totalAmount[0].value,
+      totalAmount: totalAmount,
       success: 1,
     });
   } catch (error) {

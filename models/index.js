@@ -44,10 +44,6 @@ db.Campaign_Comment = require("./campaign/campaign_comment")(
 );
 db.Campaign_Like = require("./campaign/campaign_like")(sequelize, Sequelize);
 db.Campaign_File = require("./campaign/campaign_file")(sequelize, Sequelize);
-db.Campaign_Donate = require("./campaign/campaign_donate")(
-  sequelize,
-  Sequelize
-);
 db.Campaign_Hashtag = require("./campaign/campaign_hashtag")(
   sequelize,
   Sequelize
@@ -119,10 +115,7 @@ db.User.hasMany(db.Story_Report, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
-db.User.hasMany(db.Campaign_Donate, {
-  foreignKey: "user_email",
-  sourceKey: "email",
-});
+
 db.User.hasMany(db.Campaign_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
@@ -153,6 +146,7 @@ db.User.hasMany(db.Talk_Like, {
 });
 
 // Story
+db.Story.hasOne(db.Campaign, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Comment, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Like, { foreignKey: "story_id", sourceKey: "id" });
 db.Story.hasMany(db.Story_Report, { foreignKey: "story_id", sourceKey: "id" });
@@ -234,6 +228,12 @@ db.Story_Vote.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
 db.Story_Vote.belongsTo(db.User, { foreignKey: "user_id", targetKey: "id" });
 
 // Campaign
+db.Campaign.belongsTo(db.Story, {
+  foreignKey: "story_id",
+  targetKey: "id",
+});
+db.Campaign.hasOne(db.Act, { foreignKey: "campaign_id", sourceKey: "id" });
+db.Campaign.hasOne(db.Talk, { foreignKey: "campaign_id", sourceKey: "id" });
 db.Campaign.hasMany(db.Campaign_Comment, {
   foreignKey: "campaign_id",
   sourceKey: "id",
@@ -245,10 +245,6 @@ db.Campaign.hasMany(db.Campaign_Like, {
 db.Campaign.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
-});
-db.Campaign.hasMany(db.Campaign_Donate, {
-  foreignKey: "campaign_id",
-  sourceKey: "id",
 });
 db.Campaign.belongsToMany(db.Hashtag, {
   through: "Campaign_Hashtag",
@@ -314,16 +310,6 @@ db.Campaign_File.belongsTo(db.Campaign, {
   targetKey: "id",
 });
 
-// Campaign_Vote
-db.Campaign_Donate.belongsTo(db.Campaign, {
-  foreignKey: "campaign_id",
-  targetKey: "id",
-});
-db.Campaign_Donate.belongsTo(db.User, {
-  foreignKey: "user_email",
-  targetKey: "id",
-});
-
 // Hashtag
 db.Hashtag.hasMany(db.Story_Hashtag, {
   foreignKey: "hashtag_id",
@@ -360,6 +346,10 @@ db.Campaign_Hashtag.belongsTo(db.Campaign, {
 });
 
 //Act
+db.Act.belongsTo(db.Campaign, {
+  foreignKey: "campaign_id",
+  targetKey: "id",
+});
 db.Act.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 db.Act.hasMany(db.Act_File, { foreignKey: "act_id", sourceKey: "id" });
 
@@ -367,6 +357,10 @@ db.Act.hasMany(db.Act_File, { foreignKey: "act_id", sourceKey: "id" });
 db.Act_File.belongsTo(db.Act, { foreignKey: "act_id", targetKey: "id" });
 
 //Talk
+db.Talk.belongsTo(db.Campaign, {
+  foreignKey: "campaign_id",
+  targetKey: "id",
+});
 db.Talk.hasMany(db.Talk_Comment, { foreignKey: "talk_id", sourceKey: "id" });
 db.Talk.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 db.Talk.hasMany(db.Talk_File, { foreignKey: "talk_id", sourceKey: "id" });

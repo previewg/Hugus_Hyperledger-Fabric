@@ -589,7 +589,9 @@ router.put("/like", async (req, res) => {
 //게시물 신고하기 등록 삭제
 router.put("/report", async (req, res) => {
   try {
+    console.log(req.body)
     const { story_id } = req.body;
+    const { case_detail } = req.body;
     const { user_email } = req.session.loginInfo;
 
     const history = await Story_Report.findOne({
@@ -604,6 +606,7 @@ router.put("/report", async (req, res) => {
       await Story_Report.create({
         story_id,
         user_email,
+        case_detail,
       });
     }
 
@@ -635,6 +638,19 @@ router.put("/vote", async (req, res) => {
     }
 
     res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// 스토리 제목 전체 조회
+router.get("/all/title", async (req, res) => {
+  try {
+    const list = await Story.findAll({
+      attributes: ["story_title"],
+      where: { expired: false },
+    });
+    res.json({ success: 1, list: list });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

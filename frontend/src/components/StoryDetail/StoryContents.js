@@ -246,7 +246,7 @@ const StoryContents = ({ data, history }) => {
       <StoryVote data={data} />
       <div className="visited"> 
         <p>좋아요 {likeNum}</p>
-        <p>신고하기 {reportNum}</p>
+        <p>신고 {reportNum}</p>
         <p>조회수 {data.visited}</p>
       </div>
     </StoryContentsStyle>
