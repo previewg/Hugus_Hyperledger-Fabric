@@ -142,7 +142,7 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
   };
   const reportHandler = (status) => {    
     dispatch(storyReport(data.id, status));
-
+    setOpenModal(true);
   };
   
 

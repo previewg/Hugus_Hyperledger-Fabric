@@ -44,8 +44,7 @@ const LoaderStyle = styled.div`
 const ActMain = () => {
   const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [changed, setChanged] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   const Loader = () => {
     return (
@@ -72,7 +71,11 @@ const ActMain = () => {
           <p>전달 스토리</p>
         </div>
         <Search search={search} setSearch={setSearch} setClicked={setClicked} />
-        {loading ? <ActList setChanged={setChanged} changed={changed} search={search}  setClicked={setClicked} /> : <Loader />}
+        {loader ? <ActList 
+                    search={search} 
+                    setClicked={setClicked} 
+                    setLoader={setLoader}
+                    clicked={clicked} /> : <Loader />}
 
       </div>
     </ActStyle>

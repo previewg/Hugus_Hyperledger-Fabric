@@ -13,7 +13,7 @@ background-color: rgba(0, 0, 0, 0.5);
 z-index: 10;
 section {
   background-color: white;
-  width: 400px;
+  width: 500px;
   height: 550px;
   .header {
     .close__btn {
