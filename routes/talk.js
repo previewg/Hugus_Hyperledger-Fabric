@@ -5,6 +5,7 @@ const {
   Talk,
   Talk_Comment,
   User,
+  Campaign,
   Talk_File,
   Talk_Like,
   sequelize,
@@ -36,10 +37,20 @@ let upload = multer({
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
-    const { talk_title, talk_content } = req.body;
+    // const user_email = "admin@admin";
+
+    const { talk_title, talk_content, campaign_title } = req.body;
+
+    const campaign = await Campaign.findOne({
+      where: { campaign_title },
+    });
+
+    const campaign_id = campaign.getDataValue("id");
+
     const list = await Talk.create({
       talk_title,
       talk_content,
+      campaign_id: campaign_id,
       user_email: user_email,
     });
 

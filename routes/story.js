@@ -641,4 +641,17 @@ router.put("/vote", async (req, res) => {
   }
 });
 
+// 스토리 제목 전체 조회
+router.get("/all/title", async (req, res) => {
+  try {
+    const list = await Story.findAll({
+      attributes: ["story_title"],
+      where: { expired: false },
+    });
+    res.json({ success: 1, list: list });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
 module.exports = router;

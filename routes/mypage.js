@@ -217,6 +217,7 @@ router.post("/init", async (req, res) => {
       { $match: { sender_id: `${user_hash}` } },
       { $group: { _id: `${user_hash}`, value: { $sum: "$value" } } },
     ]);
+
     if (totalValue.length !== 0) totalValue = totalValue[0].value;
     else totalValue = 0;
 

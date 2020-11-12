@@ -7,6 +7,7 @@ const {
   Campaign_Like,
   Campaign_Hashtag,
   Hashtag,
+  Story,
   User,
   sequelize,
 } = require("../models");
@@ -42,11 +43,19 @@ router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
     if (user_email !== "admin@admin") res.status(400).json({ success: 3 });
-    const { campaign_title, email, campaign_goal } = req.body;
+    const { campaign_title, email, campaign_goal, story_title } = req.body;
+
+    const story = await Story.findOne({
+      where: { story_title },
+    });
+
+    const story_id = story.getDataValue("id");
+
     const campaign = await Campaign.create({
       campaign_title: campaign_title,
       user_email: email,
       campaign_goal: campaign_goal,
+      story_id: story_id,
     });
 
     const campaign_id = campaign.getDataValue("id");
