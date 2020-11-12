@@ -536,6 +536,7 @@ router.get("/:id", async (req, res) => {
       });
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({ success: 3 });
   }
 });
@@ -586,10 +587,11 @@ router.put("/like", async (req, res) => {
     res.status(400).json({ success: 3 });
   }
 });
+
 //게시물 신고하기 등록 삭제
 router.put("/report", async (req, res) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const { story_id } = req.body;
     const { case_detail } = req.body;
     const { user_email } = req.session.loginInfo;
