@@ -212,6 +212,21 @@ router.post("/init", async (req, res) => {
         { model: Story_File, attributes: ["file"] },
       ],
     });
+    const reportList = await stroy.findAll({
+      attributes: [
+        "id",
+        "story_id",        
+        "case_detail",        
+        "user_email",       
+        [
+          sequelize.literal(
+          "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
+        ),
+        "story_report",
+      ],
+    ],
+    where: { user_email: user_email },
+    });
 
     let totalValue = await Transaction.aggregate([
       { $match: { sender_id: `${user_hash}` } },
@@ -291,6 +306,7 @@ router.post("/init", async (req, res) => {
       ],
     });
     res.json({
+      reportList: reportList,
       storyList: storyList,
       totalValue: totalValue,
       campaignList: campaignList,
@@ -374,5 +390,6 @@ router.post("/load/history/:page", async (req, res) => {
     res.status(400).json({ success: 3 });
   }
 });
+router.post('/')
 
 module.exports = router;

@@ -2,18 +2,17 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
 const SearchStyle = styled.div`
-    width:100%;
-    display:flex;
-    justify-content:flex-end;
+    width: 93%;
+    display: flex;
+    justify-content: flex-end;
     .search_form {
             font-size: 13px;
             outline: none;
-            width:180px;
-            height:23px;
+            width: 100px;
+            height: 23px;
             border: none;
             border-bottom: solid 1px grey;
             transition: all 0.5s ease-in-out;
-            padding-left:3px;
             width: ${(props) => (props.isClicked ? "300px" : "150px")};
             :hover { 
                 border-bottom: solid 1px orange;
@@ -21,23 +20,20 @@ const SearchStyle = styled.div`
                 outline: none;
                 }
             }
-            }   
-            .search__bar {
-            font-size: 13px;
-            width:60px;
-            height:29px;
-            margin-left:20px;
-            background-color:orange;
-            border:none;
-            color:black;
-            border-radius:3px;
-            transition: 0.2s ease-in-out;
-            outline:none;
-            cursor: pointer;
-                :hover {
-                    transform: translateY(-2px);
-                }   
-            }
+        }   
+        >img {
+        margin-left: 20px;
+        cursor: pointer;
+        width: 30px;
+        z-index: 1;
+        right: 45px;
+        cursor: pointer;
+        transition: 0.1s ease-in-out;
+        :hover {
+          color: orange;
+          transform: scale(1.2);
+        }
+      }
 `;
 
 const Search = ({ search, setSearch, setClicked }) => {
@@ -75,10 +71,10 @@ const Search = ({ search, setSearch, setClicked }) => {
             type="text"
             onChange={onChangeHandler}
             onKeyDown={(e) => {
-                if (e.key === "Enter") setClicked();
+                if (e.key === "Enter") setClicked(true);
               }}
             />
-            <button className="search__bar" onClick={()=>setClicked(true)}>검색</button>    
+            <img className="search__bar" src="/icons/Search.png" onClick={()=>setClicked(true)}/>  
         </SearchStyle>
     
     )

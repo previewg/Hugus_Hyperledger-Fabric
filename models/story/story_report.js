@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      case_detail: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
     },
     {
       tableName: "story_report",

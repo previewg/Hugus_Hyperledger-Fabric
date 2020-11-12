@@ -590,7 +590,9 @@ router.put("/like", async (req, res) => {
 //게시물 신고하기 등록 삭제
 router.put("/report", async (req, res) => {
   try {
+    console.log(req.body)
     const { story_id } = req.body;
+    const { case_detail } = req.body;
     const { user_email } = req.session.loginInfo;
 
     const history = await Story_Report.findOne({
@@ -605,6 +607,7 @@ router.put("/report", async (req, res) => {
       await Story_Report.create({
         story_id,
         user_email,
+        case_detail,
       });
     }
 

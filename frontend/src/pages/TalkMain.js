@@ -95,7 +95,7 @@ const TalkMain = (props) => {
   return (
     <TalkStyle>
       <div className="layout">
-        <div className="title">
+          <div className="title">
           <p>수혜자의 이야기</p>
           </div>
 

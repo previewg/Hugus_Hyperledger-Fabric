@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import styled from "styled-components";
-import { EditInfo, History, MyHome, MyNews, UserInfoLoader } from "components";
+import { EditInfo, History, MyHome, MyNews, UserInfoLoader, ReportInfo } from "components";
 
 const UserInfoStyle = styled.section`
   min-height: 80vh;
@@ -76,6 +76,7 @@ const UserInfoStyle = styled.section`
 const UserInfo = (props) => {
   const [infoType, setInfoType] = useState("my__home");
   const [storyList, setStoryList] = useState(null);
+  const [reportList, setReportList] = useState(null);
   const [campaignList, setCampaignList] = useState(null);
   const [userHistory, setUserHistory] = useState(null);
   const [totalValue, setTotalValue] = useState(0);
@@ -98,6 +99,7 @@ const UserInfo = (props) => {
     const result = await axios.post("/myPage/init");
     console.log(result.data);
     setStoryList(result.data.storyList);
+    setReportList(result.data.reportList);
     setCampaignList(result.data.campaignList);
     setUserHistory(result.data.userHistory);
     setTotalValue(result.data.totalValue);
@@ -160,6 +162,9 @@ const UserInfo = (props) => {
             <p id="edit__profile" onClick={typeChangeHandler}>
               회원 정보 관리
             </p>
+            <p id="report__info" onClick={typeChangeHandler}>
+              신고 정보
+            </p>
           </div>
         </article>
       </section>
@@ -171,6 +176,7 @@ const UserInfo = (props) => {
           {infoType === "my__home" && (
             <MyHome
               totalValue={totalValue}
+              reportList={reportList}
               storyList={storyList}
               userHistory={userHistory}
               historyMore={historyMore}
@@ -187,6 +193,7 @@ const UserInfo = (props) => {
               nickname={nickname}
             />
           )}
+          {infoType === "report__info" && <ReportInfo reportList={reportList} />}
         </section>
       )}
     </UserInfoStyle>
