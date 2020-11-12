@@ -7,7 +7,7 @@ const TxAllMainStyle = styled.article`
   width: 80%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 50vh;
   .TxList__header {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr;
@@ -49,6 +49,7 @@ const TxAllMainStyle = styled.article`
       display: flex;
       align-items: center;
       input {
+        cursor: pointer;
         outline: none;
         border: none;
         background: transparent;
@@ -56,28 +57,28 @@ const TxAllMainStyle = styled.article`
         font-size: 15px;
       }
     }
-    .sender_id{
-        input{
-          cursor: pointer;
-          outline: none;
-          border: none;
-          background: transparent;
-          width: 100px;
-          font-size: 15px;
-
-        }
+    .sender_id {
+      input {
+        text-align: center;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        background: transparent;
+        width: 100px;
+        font-size: 15px;
       }
-      .receiver_id{
-        input{
-          cursor: pointer;
-          outline: none;
-          border: none;
-          background: transparent;
-          width: 100px;
-          font-size: 15px;
-
-        }
+    }
+    .receiver_id {
+      input {
+        text-align: center;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        background: transparent;
+        width: 100px;
+        font-size: 15px;
       }
+    }
     :hover {
       background-color: peachpuff;
     }
@@ -128,7 +129,7 @@ const TxAllMain = ({ txList, history, loading }) => {
           return (
             <div className="TxList__body" key={key}>
               <p className="tx_id">
-              <input
+                <input
                   readOnly
                   id={tx.tx_id}
                   value={tx.tx_id}
@@ -137,18 +138,22 @@ const TxAllMain = ({ txList, history, loading }) => {
                 <CopiedAlert id={tx.tx_id} />
               </p>
               <Flow className="age" block_time={tx.timestamp} />
-              <p className="sender_id"><input
+              <p className="sender_id">
+                <input
                   readOnly
                   id={tx.sender_id}
                   value={tx.sender_id}
                   onClick={() => history.push(`/search/user/${tx.sender_id}`)}
-                /></p>
-              <p className="receiver_id"><input
+                />
+              </p>
+              <p className="receiver_id">
+                <input
                   readOnly
                   id={tx.receiver_id}
                   value={tx.receiver_id}
                   onClick={() => history.push(`/search/user/${tx.receiver_id}`)}
-                /></p>
+                />
+              </p>
             </div>
           );
         })

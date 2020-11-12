@@ -273,6 +273,8 @@ const NavBar = () => {
   const nickname = useSelector((state) => state.auth.user.nickname);
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const profile = useSelector((state) => state.auth.user.profile);
+  const email = useSelector((state) => state.auth.user.email);
+
   const onClickHandler = () => {
     menuClicked ? setMenuClicked(false) : setMenuClicked(true);
   };
@@ -280,9 +282,9 @@ const NavBar = () => {
 
   const SignOutHandler = () => {
     if (window.Kakao.Auth.getAccessToken()) {
-      console.log("카카오 인증 토큰 존재", window.Kakao.Auth.getAccessToken());
+      // console.log("카카오 인증 토큰 존재", window.Kakao.Auth.getAccessToken());
       window.Kakao.Auth.logout(() => {
-        console.log("로그아웃 완료", window.Kakao.Auth.getAccessToken());
+        // console.log("로그아웃 완료", window.Kakao.Auth.getAccessToken());
       });
     } else if (naverObj.getLoginStatus) {
       naverObj.logout();
@@ -330,6 +332,15 @@ const NavBar = () => {
 
   const UserIcon = () => {
     if (isLoggedIn) {
+      if (email === "admin@admin")
+        return (
+          <Link
+            to="/admin/only"
+            style={{
+              backgroundImage: `url("/icons/hugus_icon.png") `,
+            }}
+          ></Link>
+        );
       if (profile) {
         return (
           <Link

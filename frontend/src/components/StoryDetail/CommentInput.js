@@ -55,9 +55,7 @@ const CommentTrueStyle = styled.div`
         cursor: pointer;
         width: 30px;
         height:30px;
-        
-
-      }
+       }
       }
     }
   }

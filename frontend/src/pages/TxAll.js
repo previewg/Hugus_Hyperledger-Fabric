@@ -8,6 +8,7 @@ const TxAllStyle = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 50px;
 `;
 
 const TxAll = ({ history }) => {

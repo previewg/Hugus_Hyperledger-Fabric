@@ -5,12 +5,9 @@ import Flow from "../BlockInfo/Flow";
 
 const SearchUserStyle = styled.div`
   width: 80%;
-  min-height:300px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  .TxList__header {    
-   
+  .TxList__header {
     align-items: center;
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr;
@@ -60,28 +57,26 @@ const SearchUserStyle = styled.div`
         font-size: 15px;
       }
     }
-    .sender_id{
-        input{
-          cursor: pointer;
-          outline: none;
-          border: none;
-          background: transparent;
-          width: 100px;
-          font-size: 15px;
-
-        }
+    .sender_id {
+      input {
+        cursor: pointer;
+        outline: none;
+        border: none;
+        background: transparent;
+        width: 100px;
+        font-size: 15px;
       }
-      .receiver_id{
-        input{
-          cursor: pointer;
-          outline: none;
-          border: none;
-          background: transparent;
-          width: 100px;
-          font-size: 15px;
-
-        }
+    }
+    .receiver_id {
+      input {
+        cursor: pointer;
+        outline: none;
+        border: none;
+        background: transparent;
+        width: 100px;
+        font-size: 15px;
       }
+    }
     :hover {
       background-color: peachpuff;
     }
@@ -96,35 +91,8 @@ const CopiedAlertStyle = styled.span`
     font-size: 13px;
   }
 `;
-// const getTimeStamp = (date) => {
-//   let givenDate = new Date(date);
-//   let newDate =
-//     leadingZeros(givenDate.getFullYear(), 4) +
-//     "-" +
-//     leadingZeros(givenDate.getMonth() + 1, 2) +
-//     "-" +
-//     leadingZeros(givenDate.getDate(), 2) +
-//     " " +
-//     leadingZeros(givenDate.getHours(), 2) +
-//     ":" +
-//     leadingZeros(givenDate.getMinutes(), 2) +
-//     ":" +
-//     leadingZeros(givenDate.getSeconds(), 2);
-//   return newDate;
-// };
-// const leadingZeros = (n, digits) => {
-//   let zero = "";
-//   n = n.toString();
-
-//   if (n.length < digits) {
-//     for (let i = 0; i < digits - n.length; i++) zero += "0";
-//   }
-//   return zero + n;
-// };
-
 
 const SearchUser = ({ list, history, loading }) => {
-  console.log(list)
   const CopiedAlert = ({ id }) => {
     const [time, setTime] = useState(false);
     const copyTx = () => {
@@ -135,7 +103,6 @@ const SearchUser = ({ list, history, loading }) => {
       document.execCommand("Copy");
     };
 
-
     return (
       <CopiedAlertStyle time={time}>
         <button onClick={copyTx}>복사</button>
@@ -143,7 +110,6 @@ const SearchUser = ({ list, history, loading }) => {
       </CopiedAlertStyle>
     );
   };
-  if (!list) return <TxAllLoader />;
   return (
     <SearchUserStyle>
       <div className="TxList__header">
@@ -151,41 +117,47 @@ const SearchUser = ({ list, history, loading }) => {
         <p className="age">AGE</p>
         <p className="sender_id">FROM</p>
         <p className="receiver_id">TO</p>
-      </div>      
-        {loading ? (
-          <TxAllLoader />
-        ) : (
-            list.map((block, key) => {
-              return (
-                <div className="TxList__body" key={key}>
-                  <p className="Tx_id">
-                    <input
-                      readOnly
-                      id={block.tx_id}
-                      value={block.tx_id}
-                      onClick={() =>
-                        history.push(`/search/tx/${block.tx_id}`)} />
-                    <CopiedAlert id={block.tx_id} />
-                  </p>
-                  <Flow className="timestamp" block_time={block.timestamp} />
-                  <p className="sender_id">
-                  <input
+      </div>
+      {loading ? (
+        <TxAllLoader />
+      ) : (
+        list.map((block, key) => {
+          return (
+            <div className="TxList__body" key={key}>
+              <p className="Tx_id">
+                <input
+                  readOnly
+                  id={block.tx_id}
+                  value={block.tx_id}
+                  onClick={() => history.push(`/search/tx/${block.tx_id}`)}
+                />
+                <CopiedAlert id={block.tx_id} />
+              </p>
+              <Flow className="timestamp" block_time={block.timestamp} />
+              <p className="sender_id">
+                <input
                   readOnly
                   id={block.sender_id}
                   value={block.sender_id}
-                  onClick={() => history.push(`/search/user/${block.sender_id}`)}
-                /></p>
-                  <p className="receiver_id">
-                    <input
+                  onClick={() =>
+                    history.push(`/search/user/${block.sender_id}`)
+                  }
+                />
+              </p>
+              <p className="receiver_id">
+                <input
                   readOnly
                   id={block.receiver_id}
                   value={block.receiver_id}
-                  onClick={() => history.push(`/search/user/${block.receiver_id}`)}
-                /></p>
-                </div>
-              );
-            })
-          )}
+                  onClick={() =>
+                    history.push(`/search/user/${block.receiver_id}`)
+                  }
+                />
+              </p>
+            </div>
+          );
+        })
+      )}
     </SearchUserStyle>
   );
 };

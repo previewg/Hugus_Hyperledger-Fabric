@@ -13,8 +13,8 @@ background-color: rgba(0, 0, 0, 0.5);
 z-index: 10;
 section {
   background-color: white;
-  width: 500px;
-  height: 550px;
+  width: 550px;
+  height: 400px;
   .header {
     .close__btn {
       font-size: 12px;

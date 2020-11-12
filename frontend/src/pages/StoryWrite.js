@@ -1,6 +1,8 @@
 import React, { useCallback, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { HashLoader } from "react-spinners";
+import { css } from "@emotion/core";
 import { storyAdd } from "actions/story";
 
 const StoryWriteStyle = styled.div`
@@ -371,6 +373,20 @@ const StoryWriteStyle = styled.div`
   }
 `;
 
+const PendingStyle = styled.div`
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 25px;
+  position: fixed;
+`;
+
 const ErrorBoxStyle = styled.p`
   ${(props) => {
     if (props.error == 0) {
@@ -408,6 +424,7 @@ const errorMsg = [
 
 const StoryWrite = (props) => {
   const dispatch = useDispatch();
+  const status = useSelector((state) => state.story.add.status);
   const title = useRef();
   const info = useRef();
   const content = useRef();
@@ -674,6 +691,24 @@ const StoryWrite = (props) => {
     });
   }, [data]);
 
+  const Pending = useCallback(() => {
+    return (
+      <PendingStyle>
+        <HashLoader
+          css={css`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
+          size={60}
+          color={"#f69a53"}
+          loading={true}
+        />
+        <p>스토리 등록중입니다...</p>
+      </PendingStyle>
+    );
+  }, []);
+
   return (
     <>
       <StoryWriteStyle>
@@ -868,6 +903,7 @@ const StoryWrite = (props) => {
         </div>
       </StoryWriteStyle>
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>
+      {status === "WAITING" && <Pending />}
     </>
   );
 };

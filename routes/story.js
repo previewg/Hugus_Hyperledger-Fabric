@@ -98,23 +98,29 @@ router.post("/delete", async (req, res) => {
       attributes: ["file"],
     });
 
-    let params = {
-      Bucket: "hugusstory",
-      Delete: {
-        Objects: [],
-      },
-    };
+    if (files.length !== 0) {
+      let params = {
+        Bucket: "hugusstory",
+        Delete: {
+          Objects: [],
+        },
+      };
 
-    for (const file of files) {
-      const key = file.file.split("/");
-      params.Delete.Objects.push({ Key: decodeURI(key[3]) });
-    }
-
-    await s3.deleteObjects(params, (err) => {
-      if (err) {
-        throw err;
+      for (const file of files) {
+        const key = file.file.split("/");
+        params.Delete.Objects.push({ Key: decodeURI(key[3]) });
       }
-    });
+
+      await s3.deleteObjects(params, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+
+      await Story_File.destroy({
+        where: { story_id: id },
+      });
+    }
 
     const hashtags = await Story_Hashtag.findAll({
       attributes: [
@@ -157,6 +163,33 @@ router.post("/update", upload.array("files"), async (req, res) => {
       hashtags,
       del_hashtags,
     } = req.body;
+
+    // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
+    // const files = await Story_File.findAll({
+    //   where: { story_id: id },
+    //   attributes: ["file"],
+    // });
+    //
+    // let params = {
+    //   Bucket: "hugusstory",
+    //   Delete: {
+    //     Objects: [],
+    //   },
+    // };
+    //
+    // for (const file of files) {
+    //   const key = file.file.split("/");
+    //   params.Delete.Objects.push({ Key: decodeURI(key[3]) });
+    // }
+    //
+    // await s3.deleteObjects(params, (err) => {
+    //   if (err) {
+    //     throw err;
+    //   }
+    // });
+    // await Story_File.destroy({
+    //   where: { story_id: id },
+    // });
 
     for (const file of req.files) {
       await Story_File.create({
@@ -229,17 +262,6 @@ router.post("/update", upload.array("files"), async (req, res) => {
         where: { id },
       }
     );
-
-    // // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
-    // await Story_File.destroy({
-    //   where: { story_id: id },
-    // });
-    // for (const file of req.files) {
-    //   await Story_File.create({
-    //     story_id: id,
-    //     file: file.filename,
-    //   });
-    // }
 
     res.json({ success: 1 });
   } catch (err) {
@@ -341,7 +363,7 @@ router.get("/list/:page", async (req, res) => {
               "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
             ),
             "story_like",
-          ], 
+          ],
           [
             sequelize.literal(
               "(SELECT COUNT(1) FROM story_report WHERE story_id = `Story`.id)"
