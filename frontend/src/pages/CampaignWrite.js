@@ -5,7 +5,7 @@ import { HashLoader } from "react-spinners";
 import { css } from "@emotion/core";
 import Hangul from "hangul-js";
 
-const CampaignWriteStyle = styled.div`
+const CampaignWriteStyle = styled.section`
   display: flex;
   justify-content: center;
   margin-bottom: 200px;

@@ -55,6 +55,30 @@ const CampaignContentsStyle = styled.div`
     }
   }
 
+  .story {
+    > p {
+      font-weight: bold;
+      margin-top: 35px;
+    }
+    > span {
+      padding: 8px;
+      padding-left: 13px;
+      padding-right: 13px;
+      border-radius: 5px;
+      margin-right: 10px;
+      font-weight: normal;
+      font-size: 13px;
+      color: #ffa400;
+      background-color: #fff7ef;
+      transition: 0.3s ease-in-out;
+      cursor: pointer;
+      :hover {
+        background-color: #ffc048;
+        color: white;
+      }
+    }
+  }
+
   .donate {
     display: flex;
     flex-direction: column;
@@ -75,7 +99,6 @@ const CampaignContentsStyle = styled.div`
       :hover {
         background-color: dodgerblue;
         color: white;
-        transform: scale(1.2);
       }
     }
   }
@@ -93,8 +116,6 @@ const CampaignContentsStyle = styled.div`
 `;
 
 const CampaignContents = ({ data, history }) => {
-  const email = useSelector((state) => state.auth.user.email);
-
   return (
     <CampaignContentsStyle>
       <div className="title">
@@ -115,6 +136,13 @@ const CampaignContents = ({ data, history }) => {
             </span>
           );
         })}
+      </div>
+
+      <div className="story">
+        <p>해당 스토리</p>
+        <span onClick={() => history.push(`/story/${data.Story.id}`)}>
+          {data.Story.story_title}
+        </span>
       </div>
 
       <Donate data={data} history={history} />

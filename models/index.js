@@ -120,10 +120,6 @@ db.User.hasMany(db.Campaign_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
-db.User.hasMany(db.Act, {
-  foreignKey: "user_email",
-  sourceKey: "email",
-});
 db.User.hasMany(db.Talk, {
   foreignKey: "user_email",
   sourceKey: "email",
@@ -350,7 +346,6 @@ db.Act.belongsTo(db.Campaign, {
   foreignKey: "campaign_id",
   targetKey: "id",
 });
-db.Act.belongsTo(db.User, { foreignKey: "user_email", targetKey: "email" });
 db.Act.hasMany(db.Act_File, { foreignKey: "act_id", sourceKey: "id" });
 
 // Act_File

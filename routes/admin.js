@@ -236,11 +236,10 @@ router.get("/act/:page", async (req, res) => {
 
     if (keyword) {
       list = await Act.findAll({
-        attributes: ["act_title", "id", "user_email", "visited", "created_at"],
+        attributes: ["act_title", "id", "visited", "created_at"],
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
-        include: [{ model: User, attributes: ["nickname"] }],
         where: {
           act_title: {
             [Sequelize.Op.like]: "%" + keyword + "%",
@@ -254,11 +253,10 @@ router.get("/act/:page", async (req, res) => {
       });
     } else {
       list = await Act.findAll({
-        attributes: ["act_title", "id", "user_email", "visited", "created_at"],
+        attributes: ["act_title", "id", "visited", "created_at"],
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
-        include: [{ model: User, attributes: ["nickname"] }],
       });
       count = await Act.count({});
     }
