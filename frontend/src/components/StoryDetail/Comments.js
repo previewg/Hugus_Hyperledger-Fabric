@@ -15,7 +15,7 @@ const Comments = ({ data }) => {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      <Report openModal={openModal} setOpenModal={setOpenModal} />
+      <Report openModal={openModal} setOpenModal={setOpenModal} data={data}/>
      <CommentStyle>
       <CommentInput commentList={commentList} data={data} num={num} openModal={openModal} setOpenModal={setOpenModal}/>
       <CommentList commentList={commentList} data={data} num={num} />

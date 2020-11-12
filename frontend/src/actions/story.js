@@ -224,11 +224,12 @@ export const storyLike = (id) => async (dispatch) => {
     });
 };
 //게시물 신고하기 
-export const storyReport = (id) => async (dispatch) => {
+export const storyReport = (data ) => async (dispatch) => {
   dispatch(storyReportStart());
   await axios
-    .put("/story/report", { story_id: id })
-    .then(() => {
+    .put("/story/report", { ...data})
+    .then((res) => {
+      console.log(res)
       dispatch(storyReportSuccess());
     })
     .catch((error) => {

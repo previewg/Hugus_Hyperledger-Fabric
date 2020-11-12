@@ -1,5 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { storyReport } from "../../actions/story";
 
 const ModalStyle = styled.div`
 top:0;
@@ -8,38 +10,32 @@ justify-content: center;
 align-items: center;
 width: 100%;
 height: 100vh;
-display: ${props=>props.openModal ? "flex":"none"};
+display: ${props => props.openModal ? "flex" : "none"};
 background-color: rgba(0, 0, 0, 0.5);
 z-index: 10;
 section {
   background-color: white;
-  width: 550px;
-  height: 400px;
+  width: 700px;
+  height: 300px;
   .header {
-    .close__btn {
-      font-size: 12px;
-      position: relative;
-      left: 170px;
-      cursor: pointer;
-    }
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 25%;
-    p {
+    height: 10%;
+    .close__btn {
+      margin-top: 200px;
       font-size: 25px;
+      position: relative;
+      left: 310px;
+      cursor: pointer;
     }
-  }
-  .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    height: 35%;
+    p {
+      font-size: 30px;
+    }
     input {
-      width: 70%;
-      height: 25px;
+      width: 90%;
+      height: 125px;
       font-size: 15px;
       transition: 0.4s ease-in-out;
       border: solid 0.1px lightgray;
@@ -48,9 +44,37 @@ section {
         outline: none;
         border: solid 0.1px orange;
       }
-    }
-    > div {
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 35%;
+    input {
+      width: 90%;
+      height: 125px;
+      font-size: 15px;
+      transition: 0.4s ease-in-out;
+      border: solid 0.1px lightgray;
+      padding: 10px;
+      :focus {
+        outline: none;
+        border: solid 0.1px orange;
+      }
+      
+    button {
       width: 70%;
+      height: 240px;
+      cursor: pointer;
+      border-radius: 6px;
+      :focus {
+        outline: none;
+      }
+    }
+    }
+    /* > div {
+      width: 60%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -63,107 +87,71 @@ section {
         align-items: center;
         justify-content: space-between;
         input {
-          width: 15px;
-          margin-right: 5px;
+          width: 400px;
+          margin-right: 50px;
         }
-      }
-    }
+      } */
+    /* } */
   }
 
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    height: 40%;
-    button {
-      width: 70%;
-      height: 40px;
-      cursor: pointer;
-      border-radius: 6px;
-      :focus {
-        outline: none;
-      }
-    }
-    button:nth-child(1) {
-      border: none;
-      background-color: pink;
-    }
-    .already {
-      font-size: 12px;
-      color: gray;
-      display: flex;
-      justify-content: space-around;
-      width: 50%;
-      p:nth-child(2) {
-        color: orange;
-        cursor: pointer;
-      }
-    }
+  
+
   }
 }
 `;
 
-    const OpenReport = ( {openModal, setOpenModal} ) => {
-      // const dispatch = useDispatch();
- 
-      // const [errorCode, setErrorCode] = useState(0);
-    
-      // const onChangeHandler = (e) => {
-      //   setUser({
-      //     ...user,
-      //     [e.target.id]: e.target.value,
-      //   });
-      //   setErrorCode(0);
-      //   if (e.key === "Enter") {
-      //     signInHandler();
-      //   }
-      // };
-    
-      // const errorHandler = () => {
-      //   if (!user.email) {
-      //     setErrorCode(1);
-      //     email.current.focus();
-      //     return false;
-      //   } else if (!user.password) {
-      //     setErrorCode(2);
-      //     password.current.focus();
-      //     return false;
-      //   }
-      //   return true;
-      // };
- 
-    
-      // useEffect(() => {
-      //   dispatch(authInit());
-      //   if (signInStatus === "SUCCESS") {
-      //     alert("로그인성공");
-      //   } else if (signInStatus === "FAILURE") {
-      //     setErrorCode(3);
-      //   }
-      // }, [signInStatus]);
-    
-      return (
-        <>
-          <ModalStyle openModal={openModal} >
-            <section>
-              <article className="header">
-                <p
-                  className="close__btn"
-                  onClick={() => setOpenModal(false)}
-                >
-                  닫기
-                </p>
-                <p>신고내용</p>
-                <input></input>
-              </article>
-     
-         
-            </section>
-          </ModalStyle>
-          {/* <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle> */}
-        </>
-      );
-    };
+const OpenReport = ({ data, openModal, setOpenModal }) => {
+  const dispatch = useDispatch();
+  const [reportComments, setReportComments] = useState("");
 
-    export default OpenReport;
+  const reportChangeHandler = (e) => {
+    setReportComments(e.target.value);
+
+  };
+
+  const reportAddHandler = () => {
+    if (reportComments === "") {
+      reportComments.current.focus();
+    } else {
+      setOpenModal(false)
+      dispatch(storyReport({ story_id: data.id, case_detail: reportComments }),
+      );
+    }
+  };
+  const onClick = () => {
+    setOpenModal(false)
+  }
+
+  return (
+    <>
+      <ModalStyle openModal={openModal} >
+        <section>
+          <article className="header">
+            <p
+              className="close__btn"
+              onClick={() => setOpenModal(false)}
+            >
+              닫기
+                </p>
+            <p>신고내용</p>
+            <input
+              value={reportComments}
+              className="report_input"
+              onChange={reportChangeHandler}
+              placeholder="신고 사유에 대해 상세하게 써주시면 감사하겠습니다."
+              onKeyDown={(e) => {
+                if (e.key === "Enter") reportAddHandler(e);
+              }}
+            />
+            <button onClick={reportAddHandler}>확인</button>
+          </article>
+
+
+        </section>
+      </ModalStyle>
+      {/* <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle> */}
+    </>
+  );
+};
+
+export default OpenReport;

@@ -138,9 +138,11 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
     dispatch(storyLike(data.id, status));
     
   };
-  const reportHandler = (status) => {    
-    dispatch(storyReport(data.id, status));
-    setOpenModal(true)
+  const reportHandler = (status) => {  
+    console.log(status)  
+    if (status === false) setOpenModal(true);
+    else{dispatch(storyReport({story_id: data.id, case_detail: ""}))}
+    
 
   };
   
