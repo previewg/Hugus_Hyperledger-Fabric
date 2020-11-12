@@ -97,60 +97,15 @@ const CampaignWriteStyle = styled.div`
       margin-top: 50px;
       display: flex;
       flex-direction: column;
-      > div:nth-child(1) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        label {
-          min-width: 50px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: 0.2s ease-in-out;
-          :hover {
-            color: orange;
-          }
-        }
-        p {
-          cursor: pointer;
-          border-bottom: solid 0.1px palevioletred;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 50px;
-          height: 25px;
-          color: palevioletred;
-          font-size: 15px;
-        }
+      > p {
+        min-width: 50px;
+        font-weight: bold;
       }
-      > div:nth-child(2) {
+      > div {
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-top: 20px;
         justify-content: center;
-        .preImg {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          > p {
-            text-align: center;
-          }
-          > div {
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            width: 100%;
-            height: 300px;
-          }
-          :nth-child(1) {
-            > div {
-              width: 300px;
-              background-size: cover;
-            }
-          }
-        }
-
         input[type="file"] {
           position: absolute;
           width: 1px;
@@ -160,6 +115,56 @@ const CampaignWriteStyle = styled.div`
           overflow: hidden;
           clip: rect(0, 0, 0, 0);
           border: 0;
+        }
+        .subImg {
+          width: 300px;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 2px dashed lightgray;
+          border-radius: 10px;
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-color: ${(props) =>
+            props.subImgDrag ? "darkgray" : "transparent"};
+          background-image: ${(props) =>
+            props.preImgSub ? `url(${props.preImgSub.previewURL})` : "none"};
+          > label {
+            display: ${(props) => (props.subImgDrag ? "none" : "block")};
+            font-size: 20px;
+          }
+          > p {
+            display: ${(props) => (props.subImgDrag ? "none" : "block")};
+            color: orange;
+          }
+        }
+        .mainImg {
+          width: 300px;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 2px dashed lightgray;
+          border-radius: 10px;
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-color: ${(props) =>
+            props.mainImgDrag ? "darkgray" : "transparent"};
+          background-image: ${(props) =>
+            props.preImgMain ? `url(${props.preImgMain.previewURL})` : "none"};
+          > label {
+            display: ${(props) => (props.mainImgDrag ? "none" : "block")};
+            font-size: 20px;
+          }
+          > p {
+            display: ${(props) => (props.mainImgDrag ? "none" : "block")};
+            color: orange;
+          }
         }
       }
     }
@@ -269,6 +274,7 @@ const errorMsg = [
   "",
   "제목을 입력 바랍니다",
   "수혜자를 입력 바랍니다",
+  "썸네일을 추가 바랍니다",
   "내용을 첨부 바랍니다",
   "기부 금액을 입력 바랍니다",
   "해시태그를 입력 바랍니다",
@@ -277,29 +283,35 @@ const errorMsg = [
 const CampaignWrite = (props) => {
   const title = useRef();
   const email = useRef();
-  const files = useRef();
+  const subImg = useRef();
+  const mainImg = useRef();
   const hashtags = useRef();
   const goal = useRef();
   const [data, setData] = useState({
     title: "",
     email: "",
-    files: null,
+    subImg: null,
+    mainImg: null,
     hashtag: "",
     hashtags: [],
     goal: 0,
   });
+  const [subImgDrag, setSubImgDrag] = useState(false);
+  const [mainImgDrag, setMainImgDrag] = useState(false);
 
   const [filled, setFilled] = useState({
     title: true,
     email: true,
-    files: true,
+    subImg: true,
+    mainImg: true,
     hashtags: true,
     goal: true,
   });
 
   const [errorCode, setErrorCode] = useState(0);
 
-  const [preImg, setPreImg] = useState([]);
+  const [preImgSub, setPreImgSub] = useState(null);
+  const [preImgMain, setPreImgMain] = useState(null);
 
   const [fileReaderState, setFileReaderState] = useState("");
 
@@ -320,16 +332,24 @@ const CampaignWrite = (props) => {
         email: false,
       });
       return false;
-    } else if (!data.files) {
+    } else if (!data.subImg) {
       setErrorCode(3);
-      files.current.focus();
+      subImg.current.focus();
       setFilled({
         ...filled,
-        files: false,
+        subImg: false,
+      });
+      return false;
+    } else if (!data.mainImg) {
+      setErrorCode(4);
+      mainImg.current.focus();
+      setFilled({
+        ...filled,
+        subImg: false,
       });
       return false;
     } else if (data.goal === 0) {
-      setErrorCode(4);
+      setErrorCode(5);
       goal.current.focus();
       setFilled({
         ...filled,
@@ -337,7 +357,7 @@ const CampaignWrite = (props) => {
       });
       return false;
     } else if (data.hashtags.length === 0) {
-      setErrorCode(5);
+      setErrorCode(6);
       hashtags.current.focus();
       setFilled({
         ...filled,
@@ -355,12 +375,11 @@ const CampaignWrite = (props) => {
       formData.append("email", data.email);
       formData.append("hashtags", data.hashtags);
       formData.append("campaign_goal", data.goal);
-      if (data.files !== null) {
-        for (const file of data.files) {
-          formData.append(`files`, file);
-        }
-      } else {
-        formData.append("files", "");
+      for (const file of data.subImg) {
+        formData.append(`files`, file);
+      }
+      for (const file of data.mainImg) {
+        formData.append(`files`, file);
       }
       await axios
         .post("/campaign/add", formData, {
@@ -377,18 +396,31 @@ const CampaignWrite = (props) => {
     }
   };
 
-  const previewImg = (e) => {
-    setPreImg([]);
+  const preImgSubHandler = (e) => {
+    setPreImgSub(null);
     for (const file of e.target.files) {
       let reader = new FileReader();
       reader.onloadend = () => {
-        let newPreImg = preImg;
-        newPreImg.push({
+        setPreImgSub({
           file: file,
           previewURL: reader.result,
         });
-        setPreImg(newPreImg);
-        setFileReaderState(file);
+        // setFileReaderState(e.target.file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const preImgMainHandler = (e) => {
+    setPreImgMain(null);
+    for (const file of e.target.files) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        setPreImgMain({
+          file: file,
+          previewURL: reader.result,
+        });
+        // setFileReaderState(e.target.file);
       };
       reader.readAsDataURL(file);
     }
@@ -396,8 +428,14 @@ const CampaignWrite = (props) => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    if (e.target.name === "files") {
-      previewImg(e);
+    if (e.target.name === "subImg") {
+      preImgSubHandler(e);
+      setData({
+        ...data,
+        [e.target.name]: e.target.files,
+      });
+    } else if (e.target.name === "mainImg") {
+      preImgMainHandler(e);
       setData({
         ...data,
         [e.target.name]: e.target.files,
@@ -418,7 +456,7 @@ const CampaignWrite = (props) => {
   };
 
   const addHashtag = (e) => {
-    if (e.target.value === "") setErrorCode(4);
+    if (e.target.value === "") setErrorCode(6);
     else {
       let hashtags = data.hashtags.concat(e.target.value);
       setData({
@@ -454,17 +492,69 @@ const CampaignWrite = (props) => {
     [data]
   );
 
-  const onFileDeleteHandler = () => {
+  const subImgDeleteHandler = () => {
     setData({
       ...data,
-      files: null,
+      subImg: null,
     });
-    setPreImg([]);
+    setPreImgSub(null);
   };
+
+  const mainImgDeleteHandler = () => {
+    setData({
+      ...data,
+      mainImg: null,
+    });
+    setPreImgMain(null);
+  };
+
+  const dragEnter = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (e.target.id === "subImg") setSubImgDrag(true);
+    else if (e.target.id === "mainImg") setMainImgDrag(true);
+  };
+
+  const dragLeave = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (e.target.id === "subImg") setSubImgDrag(false);
+    else if (e.target.id === "mainImg") setMainImgDrag(false);
+  };
+
+  function uploadFiles(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer = e.originalEvent.dataTransfer;
+    let files = e.target.files || e.dataTransfer.files;
+
+    if (files.length > 1) {
+      alert("하나만 가능합니다");
+      return;
+    }
+    if (files[0].type.match(/image.*/)) {
+    } else {
+      alert("이미지가 아닙니다.");
+      return;
+    }
+    if (e.target.id === "subImg") {
+      preImgSubHandler(e);
+      setData({
+        ...data,
+        [e.target.id]: files,
+      });
+      setSubImgDrag(false);
+    } else if (e.target.id === "mainImg") setMainImgDrag(false);
+  }
 
   return (
     <>
-      <CampaignWriteStyle>
+      <CampaignWriteStyle
+        preImgSub={preImgSub}
+        preImgMain={preImgMain}
+        subImgDrag={subImgDrag}
+        mainImgDrag={mainImgDrag}
+      >
         <div className="layout">
           <div className="write_title">
             <p>캠페인 등록</p>
@@ -507,40 +597,60 @@ const CampaignWrite = (props) => {
           </div>
 
           <div className="content">
+            <p>파일 첨부</p>
             <div>
-              <label htmlFor="files">파일 첨부</label>
-              <p onClick={onFileDeleteHandler}>초기화</p>
-            </div>
-            <div>
-              {preImg.slice(0, 2).map((item, key) => {
-                if (key === 0) {
-                  return (
-                    <div key={key} className="preImg">
-                      <p>썸네일 사진</p>
-                      <div
-                        style={{ backgroundImage: `url(${item.previewURL})` }}
-                      ></div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={key} className="preImg">
-                      <p>본문 사진</p>
-                      <div
-                        style={{ backgroundImage: `url(${item.previewURL})` }}
-                      ></div>
-                    </div>
-                  );
-                }
-              })}
-              <input
-                id="files"
-                name="files"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={onChangeHandler}
-              />
+              <div
+                className="subImg"
+                id="subImg"
+                onDragOver={dragEnter}
+                onDragLeave={dragLeave}
+                onDrop={uploadFiles}
+              >
+                <label htmlFor="subImg">썸네일</label>
+                <p> Drag&Drop</p>
+                <input
+                  name="subImg"
+                  type="file"
+                  accept="image/*"
+                  onChange={onChangeHandler}
+                />
+              </div>
+              <div
+                className="mainImg"
+                id="mainImg"
+                onDragOver={dragEnter}
+                onDragLeave={dragLeave}
+              >
+                <label htmlFor="mainImg">본문</label>
+                <p> Drag&Drop</p>
+                <input
+                  name="mainImg"
+                  type="file"
+                  accept="image/*"
+                  onChange={onChangeHandler}
+                />
+              </div>
+              {/*{preImg.slice(0, 2).map((item, key) => {*/}
+              {/*  if (key === 0) {*/}
+              {/*    return (*/}
+              {/*      <div key={key} className="preImg">*/}
+              {/*        <p>썸네일 사진</p>*/}
+              {/*        <div*/}
+              {/*          style={{ backgroundImage: `url(${item.previewURL})` }}*/}
+              {/*        ></div>*/}
+              {/*      </div>*/}
+              {/*    );*/}
+              {/*  } else {*/}
+              {/*    return (*/}
+              {/*      <div key={key} className="preImg">*/}
+              {/*        <p>본문 사진</p>*/}
+              {/*        <div*/}
+              {/*          style={{ backgroundImage: `url(${item.previewURL})` }}*/}
+              {/*        ></div>*/}
+              {/*      </div>*/}
+              {/*    );*/}
+              {/*  }*/}
+              {/*})}*/}
             </div>
           </div>
 
