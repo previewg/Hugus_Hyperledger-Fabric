@@ -80,8 +80,6 @@ const ActListStyle = styled.div`
     }
     
   }
- 
- 
 `;
 
 const ThereIsNoFavorite = styled.p`
@@ -179,7 +177,7 @@ const ActList = ({  search, clicked, setClicked, setLoader }) => {
     return zero + n;
   };
 
-  // if(actList.length === 0) 
+  // if(list.length === 0) 
   // return <ThereIsNoFavorite>검색 결과가 없습니다</ThereIsNoFavorite>;
 
   return (

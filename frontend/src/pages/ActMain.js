@@ -36,7 +36,7 @@ const ActStyle = styled.section`
 `;
 
 const LoaderStyle = styled.div`
-  min-height: 435px;
+  min-height: 100%;
   display: flex;
   align-items: center;
 `;

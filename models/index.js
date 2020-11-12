@@ -143,6 +143,10 @@ db.User.hasMany(db.Talk_Comment_Child, {
   foreignKey: "user_email",
   sourceKey: "email",
 });
+db.User.hasMany(db.Talk_Comment_Like, {
+  foreignKey: "user_email",
+  sourceKey: "email",
+});
 db.User.hasMany(db.Talk_Like, {
   foreignKey: "user_email",
   sourceKey: "email",
@@ -404,6 +408,16 @@ db.Talk_Like.belongsTo(db.Talk, { foreignKey: "talk_id", targetKey: "id" });
 db.Talk_Like.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
+});
+
+// Talk_Comment_Like
+db.Talk_Comment_Like.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "email",
+});
+db.Talk_Comment_Like.belongsTo(db.Talk_Comment, {
+  foreignKey: "comment_id",
+  targetKey: "id",
 });
 
 module.exports = db;

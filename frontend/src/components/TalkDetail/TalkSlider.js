@@ -13,7 +13,7 @@ const SliderStyle = styled.section`
   .slick-list {
     img {
       width: auto;
-      height: 290px;
+      height: 500px;
       object-fit: cover;
     }
   }

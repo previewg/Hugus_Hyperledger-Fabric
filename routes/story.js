@@ -311,7 +311,7 @@ router.get("/list/:page", async (req, res) => {
             sequelize.literal(
               "(SELECT COUNT(1) FROM story_report WHERE story_id = `Story`.id)"
             ),
-            "story_Report",
+            "story_report",
           ],
           [
             sequelize.literal(
@@ -516,7 +516,6 @@ router.get("/:id", async (req, res) => {
       const report = await Story_Report.findOne({
         where: { story_id: story_id, user_email: user_email },
       });
-
       const vote = await Story_Vote.findOne({
         where: { story_id: story_id, user_email: user_email },
       });

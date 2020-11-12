@@ -139,7 +139,6 @@ router.get("/list/:id/:page", async (req, res) => {
         ],
         include: [
           { model: User, attributes: ["nickname", "user_profile"] },
-          { model: Talk_Comment_Like, attributes: ["like"] },
         ],
   
         where: {
@@ -229,5 +228,37 @@ router.post("/child/add", async (req, res) => {
       res.status(400).json({ success: 3 });
     }
   });
+
+  
+// Talk_Comment 좋아요 등록/삭제
+router.put("/like", async (req, res) => {
+  try {
+    const { comment_id, status } = req.body;
+    // const { user_email } = req.session.loginInfo;
+    const { user_email } = "moonnr94@gmail.com";
+    const history = await Talk_Comment_Like.findOne({
+      where: { comment_id, user_email },
+    });
+
+    console.log(comment_id);
+    console.log(user_email);
+    console.log(history);
+
+    if (history) {
+      await Talk_Comment_Like.destroy({
+        where: { comment_id, user_email },
+      });
+    } else {
+      await Talk_Comment_Like.create({
+        comment_id,
+        user_email,
+      });
+    };
+
+    res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
 
 module.exports = router;

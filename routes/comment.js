@@ -149,7 +149,7 @@ router.get("/list/:story_id/:section", async (req, res) => {
       ],
       include: [
         { model: User, attributes: ["nickname", "user_profile"] },
-        { model: Story_Comment_Like, attributes: ["like"] },
+        // { model: Story_Comment_Like, attributes: ["like"] },
       ],
 
       where: {
