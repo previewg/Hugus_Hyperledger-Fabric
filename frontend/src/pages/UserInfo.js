@@ -88,6 +88,7 @@ const UserInfo = (props) => {
   const nickname = useSelector((state) => state.auth.user.nickname);
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const hashEmail = useSelector((state) => state.auth.user.hash_email);
+  const email = useSelector((state) => state.auth.user.email);
 
   const typeChangeHandler = (e) => {
     setInfoType(e.target.id);

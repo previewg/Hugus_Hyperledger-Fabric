@@ -58,8 +58,11 @@ import SearchBar from "./SearchResult/SearchBar";
 import Loader from "./Loader";
 import UserInfoLoader from "./UserInfo/Loader";
 import SideBar from "./Admin/SideBar";
-import Summary from "./Admin/Summary";
+import AdminSummary from "./Admin/AdminSummary";
+import AdminCampaign from "./Admin/Campaign/AdminCampaign";
+import AdminStory from "./Admin/Story/AdminStory";
 import AdminLoader from "./Admin/Loader";
+import AdminAct from "./Admin/Act/AdminAct";
 
 export {
   Main,
@@ -122,6 +125,9 @@ export {
   Loader,
   UserInfoLoader,
   SideBar,
-  Summary,
+  AdminSummary,
+  AdminCampaign,
   AdminLoader,
+  AdminStory,
+  AdminAct,
 };

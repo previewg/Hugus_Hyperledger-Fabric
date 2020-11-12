@@ -33,11 +33,12 @@ router.post("/add", upload.array("files"), async (req, res) => {
   try {
     // const { user_email } = req.session.loginInfo;
     const user_email = "moonnr94@gmail.com";
-    const { act_title, act_buy, act_content } = req.body;
+    const { act_title, act_buy, act_content, beneficiary } = req.body;
     const list = await Act.create({
       act_title,
       act_buy,
       act_content,
+      beneficiary,
       user_email: user_email,
     });
 
@@ -111,6 +112,7 @@ router.get("/list/:page", async (req, res) => {
           "act_title",
           "id",
           "act_content",
+          "beneficiary",
           "user_email",
           "visited",
           "created_at",
@@ -131,6 +133,7 @@ router.get("/list/:page", async (req, res) => {
           "act_title",
           "id",
           "act_content",
+          "beneficiary",
           "user_email",
           "visited",
           "created_at",

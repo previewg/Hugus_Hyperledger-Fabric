@@ -7,7 +7,7 @@ const BlockAllMainStyle = styled.article`
   width: 80%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 50vh;
   .BlockAllMain__head {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr 1fr;
@@ -51,6 +51,9 @@ const BlockAllMainStyle = styled.article`
     .block_hash {
       display: flex;
       align-items: center;
+      input {
+        cursor: pointer;
+      }
     }
     :hover {
       background-color: peachpuff;
@@ -107,6 +110,9 @@ const BlockAllMain = ({ blockList, history, loading }) => {
                   readOnly
                   id={block.block_hash}
                   value={block.block_hash}
+                  onClick={() =>
+                    history.push(`/search/block/${block.block_hash}`)
+                  }
                 />
                 <CopiedAlert id={block.block_hash} />
               </p>

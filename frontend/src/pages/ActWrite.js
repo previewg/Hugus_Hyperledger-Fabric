@@ -393,11 +393,7 @@ const ErrorBoxStyle = styled.p`
   font-size: 15px;
 `;
 
-const errorMsg = [
-  "",
-  "제목을 입력 바랍니다",
-  "내용을 입력 바랍니다",
-];
+const errorMsg = ["", "제목을 입력 바랍니다", "내용을 입력 바랍니다"];
 
 const ActWrite = () => {
   const dispatch = useDispatch();
@@ -422,7 +418,6 @@ const ActWrite = () => {
 
   const [fileReaderState, setFileReaderState] = useState("");
 
-
   return (
     <>
       <ActWriteStyle>
@@ -441,14 +436,12 @@ const ActWrite = () => {
             />
           </div>
 
-
           <div className="submit">
             <button>
               제출하기
               <img alt="submit" src="/icons/PaperPlane.png" />
             </button>
           </div>
-          
         </div>
       </ActWriteStyle>
       <ErrorBoxStyle error={errorCode}>{errorMsg[errorCode]}</ErrorBoxStyle>

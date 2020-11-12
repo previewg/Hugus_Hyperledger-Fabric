@@ -9,9 +9,8 @@ const SummaryStyle = styled.article`
   display: flex;
   justify-content: center;
   padding-top: 60px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: bottom;
+  transition: all 0.5s ease-in-out;
+  padding-left: ${(props) => (props.open ? 250 : 0)}px;
   .cards {
     margin-top: 50px;
     width: 1100px;
@@ -42,7 +41,7 @@ const SummaryStyle = styled.article`
   }
 `;
 
-const Summary = () => {
+const AdminSummary = ({ open }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +58,7 @@ const Summary = () => {
 
   if (loading) return <AdminLoader />;
   return (
-    <SummaryStyle style={{ backgroundImage: 'url("/pics/admin.jpg")' }}>
+    <SummaryStyle open={open}>
       <div className="cards">
         <div className="card">
           <p>현재 스토리</p>
@@ -98,4 +97,4 @@ const Summary = () => {
   );
 };
 
-export default Summary;
+export default AdminSummary;

@@ -21,7 +21,7 @@ const Comments = ({ data }) => {
       <CommentList commentList={commentList} data={data} num={num} />
     </CommentStyle>
     </>
-   
+
   );
 };
 

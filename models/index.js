@@ -206,8 +206,12 @@ db.Story_Like.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
 });
+
 //Story_Report
-db.Story_Report.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
+db.Story_Report.belongsTo(db.Story, {
+  foreignKey: "story_id",
+  targetKey: "id",
+});
 db.Story_Report.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
@@ -325,6 +329,14 @@ db.Hashtag.belongsToMany(db.Story, {
   through: "Story_Hashtag",
   foreignKey: "hashtag_id",
 });
+db.Hashtag.hasMany(db.Campaign_Hashtag, {
+  foreignKey: "hashtag_id",
+  sourceKey: "id",
+});
+db.Hashtag.belongsToMany(db.Campaign, {
+  through: "Campaign_Hashtag",
+  foreignKey: "hashtag_id",
+});
 db.Story_Hashtag.belongsTo(db.Hashtag, {
   foreignKey: "hashtag_id",
   targetKey: "id",
@@ -393,6 +405,5 @@ db.Talk_Like.belongsTo(db.User, {
   foreignKey: "user_email",
   targetKey: "email",
 });
-
 
 module.exports = db;

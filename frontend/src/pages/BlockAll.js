@@ -8,6 +8,7 @@ const BlockAllStyle = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 50px;
 `;
 
 const BlockAll = ({ history }) => {
