@@ -234,7 +234,10 @@ db.Story_File.belongsTo(db.Story, {
 
 //Story_Vote
 db.Story_Vote.belongsTo(db.Story, { foreignKey: "story_id", targetKey: "id" });
-db.Story_Vote.belongsTo(db.User, { foreignKey: "user_id", targetKey: "id" });
+db.Story_Vote.belongsTo(db.User, {
+  foreignKey: "user_email",
+  targetKey: "email",
+});
 
 // Campaign
 db.Campaign.belongsTo(db.Story, {

@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { storyReport } from "../../actions/story";
+import axios from "axios";
 
 const ModalStyle = styled.section`
   top: 0;
@@ -80,8 +81,13 @@ const OpenReport = ({ data, openModal, setOpenModal }) => {
       alert("내용을 입력바랍니다");
       input.current.focus();
     } else {
-      setOpenModal(false);
-      dispatch(storyReport({ story_id: data.id, case_detail: reportComments }));
+      const confirmed = window.confirm("해당 스토리를 신고하시겠습니까?");
+      if (confirmed) {
+        setOpenModal(false);
+        dispatch(
+          storyReport({ story_id: data.id, case_detail: reportComments })
+        );
+      }
     }
   };
 
@@ -91,16 +97,13 @@ const OpenReport = ({ data, openModal, setOpenModal }) => {
         <p className="close__btn" onClick={() => setOpenModal(false)}>
           닫기
         </p>
-        <p className="report__title">신고내용</p>
+        <p className="report__title">신고하기</p>
         <textarea
           ref={input}
           value={reportComments}
           className="report__input"
           onChange={reportChangeHandler}
           placeholder="신고 사유에 대해 상세하게 써주시면 감사하겠습니다."
-          onKeyDown={(e) => {
-            if (e.key === "Enter") reportAddHandler(e);
-          }}
         />
         <button onClick={reportAddHandler}>접수</button>
       </article>

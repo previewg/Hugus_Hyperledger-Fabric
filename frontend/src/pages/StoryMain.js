@@ -11,9 +11,20 @@ const StoryMainStyle = styled.div`
     position: absolute;
     top: 22%;
     right: 15%;
-    color: black;
+    color: orange;
+    font-weight: bold;
     text-decoration: none;
     cursor: pointer;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    border: 0.1px solid orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    :hover {
+      background-color: rgba(255, 165, 0, 0.1);
+    }
   }
 `;
 

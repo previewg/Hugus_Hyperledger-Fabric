@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { storyReport } from "../../../actions/story";
 
 const AdminReportWriteStyle = styled.section`
   top: 0px;
@@ -43,6 +44,7 @@ const AdminReportWriteStyle = styled.section`
       padding: 15px;
       border-radius: 5px;
       white-space: pre;
+      overflow: scroll;
     }
 
     textarea {
@@ -67,6 +69,7 @@ const AdminReportWriteStyle = styled.section`
       border-radius: 5px;
       white-space: pre;
       background-color: lightgray;
+      overflow: scroll;
     }
 
     .report__reply {
@@ -93,17 +96,26 @@ const AdminReportWriteStyle = styled.section`
 
 const AdminReportWrite = ({ type, data, setOpen, setClicked }) => {
   const [reply, setReply] = useState("");
+  const input = useRef();
 
   const reportReplyHandler = async () => {
-    setClicked(true);
-    const result = await axios.post("/admin/report/add", {
-      report_id: data.id,
-      reply: reply,
-    });
-    if (result.data.success === 1) {
-      setClicked(false);
-      alert("답변이 성공적으로 등록되었습니다.");
-      setOpen(false);
+    if (reply === "") {
+      alert("내용을 입력바랍니다");
+      input.current.focus();
+    } else {
+      const confirmed = window.confirm("답변을 등록하시겠습니까?");
+      if (confirmed) {
+        setClicked(true);
+        const result = await axios.post("/admin/report/add", {
+          report_id: data.id,
+          reply: reply,
+        });
+        if (result.data.success === 1) {
+          setClicked(false);
+          alert("답변이 성공적으로 등록되었습니다.");
+          setOpen(false);
+        }
+      }
     }
   };
 
@@ -119,6 +131,7 @@ const AdminReportWrite = ({ type, data, setOpen, setClicked }) => {
           <p className="report__title">신고 내용</p>
           <p className="report__detail">{data.case_detail}</p>
           <textarea
+            ref={input}
             value={reply}
             onChange={onChangeHandler}
             placeholder="답변을 입력바랍니다"
@@ -132,7 +145,9 @@ const AdminReportWrite = ({ type, data, setOpen, setClicked }) => {
           <button onClick={() => setOpen(false)}>닫기</button>
           <p className="report__title">신고 내용</p>
           <p className="report__detail">{data.case_detail}</p>
-          <p className="report__replied">{data.Story_Report_Reply.reply}</p>
+          <p className="report__replied">
+            {data.Story_Report_Reply.reply || ""}
+          </p>
         </article>
       )}
     </AdminReportWriteStyle>

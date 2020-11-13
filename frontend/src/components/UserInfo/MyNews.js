@@ -6,36 +6,78 @@ const MyNewsStyle = styled.section`
   display: grid;
   grid-template-columns: 1fr 2fr;
   align-items: center;
-  .my__news__own {
-    width: 500px;
-    min-width: 500px;
+  article {
     display: flex;
     flex-direction: column;
-    p {
-      margin-top: 0px;
-      font-size: 23px;
-      color: orange;
+    .my__news__own {
+      min-height: 170px;
+      width: 500px;
+      min-width: 500px;
+      display: flex;
+      flex-direction: column;
+      > p {
+        margin-top: 0px;
+        font-size: 23px;
+        color: orange;
+        :nth-child(2) {
+          margin-top: 20px;
+          color: gray;
+          font-size: 16px;
+        }
+      }
+      button {
+        height: 50px;
+        background-color: transparent;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+        font-size: 15px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        text-align: start;
+        padding-left: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        :hover {
+          border: solid 0.1px orange;
+        }
+      }
     }
-    button {
-      height: 50px;
-      background-color: transparent;
-      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
-      outline: none;
-      border: none;
-      cursor: pointer;
-      text-align: start;
-      padding: 5px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      :hover {
-        border: solid 0.1px orange;
+    .my__news__other {
+      min-height: 170px;
+      margin-top: 70px;
+      width: 500px;
+      min-width: 500px;
+      display: flex;
+      flex-direction: column;
+      > p {
+        margin-top: 0px;
+        font-size: 23px;
+        color: orange;
+        :nth-child(2) {
+          margin-top: 20px;
+          color: gray;
+          font-size: 16px;
+        }
+      }
+      > button {
+        height: 50px;
+        background-color: transparent;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+        outline: none;
+        border: none;
+        cursor: pointer;
+        text-align: start;
+        padding-left: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-size: 15px;
+        :hover {
+          border: solid 0.1px orange;
+        }
       }
     }
   }
-  .my__news__other {
-    display: flex;
-    flex-direction: column;
-  }
+
   .my__news__chart {
     position: fixed;
     top: 250px;
@@ -81,6 +123,8 @@ const MyNewsStyle = styled.section`
     }
     > p {
       margin-top: 30px;
+      font-size: 17px;
+      cursor: pointer;
     }
   }
   .watermark__del {
@@ -94,8 +138,9 @@ const MyNewsStyle = styled.section`
   }
 `;
 
-const MyNews = ({ storyList }) => {
-  const [data, setData] = useState(storyList[0] || null);
+const MyNews = ({ storyList, votedList, history }) => {
+  const [data, setData] = useState(storyList[0] || votedList[0] || null);
+  const [now, setNow] = useState({ type: "", idx: 0 });
   const options = {
     interactivityEnabled: false,
     animationEnabled: true,
@@ -121,25 +166,47 @@ const MyNews = ({ storyList }) => {
     ],
   };
   const onClickHandler = (type, key) => {
-    if (type === "own") setData(storyList[key]);
+    if (type === "own") {
+      setData(storyList[key]);
+      setNow({ type: "own", idx: key });
+    } else if (type === "other") {
+      setData(votedList[key]);
+      setNow({ type: "other", idx: key });
+    }
   };
   return (
-    <MyNewsStyle>
-      <div className="my__news__own">
-        <p>나의 스토리</p>
-        {storyList ? (
-          storyList.map((story, key) => {
-            return (
-              <button key={key} onClick={() => onClickHandler("own", key)}>
-                {story.story_title}
-              </button>
-            );
-          })
-        ) : (
-          <p>작성한 글이 없습니다</p>
-        )}
-      </div>
-      <div className="my__news__other"></div>
+    <MyNewsStyle now={now}>
+      <article>
+        <div className="my__news__own">
+          <p>나의 스토리</p>
+          {storyList.length !== 0 ? (
+            storyList.map((story, key) => {
+              return (
+                <button key={key} onClick={() => onClickHandler("own", key)}>
+                  {story.story_title}
+                </button>
+              );
+            })
+          ) : (
+            <p>작성한 글이 없습니다</p>
+          )}
+        </div>
+        <div className="my__news__other">
+          <p>내가 투표한 스토리</p>
+          {votedList.length !== 0 ? (
+            votedList.map((voted, key) => {
+              return (
+                <button key={key} onClick={() => onClickHandler("other", key)}>
+                  {voted.story_title}
+                </button>
+              );
+            })
+          ) : (
+            <p>투표한 스토리가 없습니다</p>
+          )}
+        </div>
+      </article>
+
       <div className="my__news__chart">
         <CanvasJSChart options={options} />
       </div>
@@ -160,7 +227,9 @@ const MyNews = ({ storyList }) => {
               </p>
             </div>
           </div>
-          <p>{data.story_title}</p>
+          <p onClick={() => history.push(`/story/${data.id}`)}>
+            {data.story_title}
+          </p>
         </div>
       )}
       <div className="watermark__del"></div>

@@ -15,8 +15,8 @@ const PaginationStyle = styled.div`
       background-color: transparent;
       outline: none;
       font-weight: bold;
-      height: 35px;
-      width: 35px;
+      height: 30px;
+      width: 30px;
       border: none;
       border-radius: 50%;
       transition: 0.1s ease-in-out;
@@ -88,7 +88,7 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
               onClick={() => setCurrPage(n)}
               style={{
                 backgroundColor: "orange",
-                color: "black",
+                color: "white",
                 transform: "scale(1.2)",
               }}
             >
