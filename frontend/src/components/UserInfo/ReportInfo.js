@@ -2,55 +2,103 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const ReportInfoStyle = styled.section`
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  align-items: center;
-  .report__info__own {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  > p {
+    width: 700px;
+    min-width: 700px;
+    margin-top: 0px;
+    font-size: 23px;
+    color: orange;
+  }
+  .report__list {
     display: flex;
-    flex-direction: column;
-    p {
-      margin-top: 0px;
-      font-size: 23px;
-      color: orange;
+    > p {
+      margin-top: 50px;
+      color: gray;
     }
-    button {
-      height: 50px;
-      background-color: transparent;
-      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
-      outline: none;
-      border: none;
-      cursor: pointer;
-      text-align: start;
-      padding: 5px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      :hover {
-        border: solid 0.1px orange;
+    .report {
+      margin-top: 50px;
+
+      width: 700px;
+      min-width: 700px;
+      display: flex;
+      flex-direction: column;
+      .report__head {
+        height: 30px;
+        display: grid;
+        grid-template-columns: 5fr 1fr 2fr;
+        p:nth-child(2) {
+          justify-self: center;
+        }
+        p:nth-child(3) {
+          justify-self: center;
+        }
+        border-bottom: solid 0.1px lightgray;
+        padding-bottom: 20px;
+      }
+      .report__body {
+        height: 30px;
+        display: grid;
+        grid-template-columns: 5fr 1fr 2fr;
+        p:nth-child(2) {
+          justify-self: center;
+        }
+        p:nth-child(3) {
+          justify-self: center;
+        }
       }
     }
   }
 `;
+const getTimeStamp = (date) => {
+  let givenDate = new Date(date);
+  let newDate =
+    leadingZeros(givenDate.getFullYear(), 4) +
+    "-" +
+    leadingZeros(givenDate.getMonth() + 1, 2) +
+    "-" +
+    leadingZeros(givenDate.getDate(), 2);
+  return newDate;
+};
+
+const leadingZeros = (n, digits) => {
+  let zero = "";
+  n = n.toString();
+
+  if (n.length < digits) {
+    for (let i = 0; i < digits - n.length; i++) zero += "0";
+  }
+  return zero + n;
+};
 
 const ReportInfo = ({ reportList, history }) => {
-  if (!reportList)
-    return <ReportInfoStyle>검색 결과가 없습니다</ReportInfoStyle>;
+  console.log(reportList);
   return (
     <ReportInfoStyle>
-      <div className="report__info__own">
-        <p>신고 리스트</p>
-        {reportList.map((report, key) => {
-          return (
-            <button
-              readOnly
-              key={key}
-              id={report.Story.id}
-              value={report.Story.id}
-              onClick={() => history.push(`/story/${report.Story.id}`)}
-            >
-              스토리번호:{report.Story.id} 신고내용:{report.case_detail}
-            </button>
-          );
-        })}
+      <p>신고 내역</p>
+      <div className="report__list">
+        {reportList.length === 0 ? (
+          <p>신고 내역이 없습니다</p>
+        ) : (
+          <div className="report">
+            <div className="report__head">
+              <p>신고내용</p>
+              <p>스토리</p>
+              <p>접수일자</p>
+            </div>
+            {reportList.map((report, key) => {
+              return (
+                <div className="report__body" key={key} id={report.id}>
+                  <p>{report.case_detail}</p>
+                  <p>{report.story_id}</p>
+                  <p>{getTimeStamp(report.createdAt)}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </ReportInfoStyle>
   );

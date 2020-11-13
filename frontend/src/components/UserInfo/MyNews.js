@@ -7,6 +7,8 @@ const MyNewsStyle = styled.section`
   grid-template-columns: 1fr 2fr;
   align-items: center;
   .my__news__own {
+    width: 500px;
+    min-width: 500px;
     display: flex;
     flex-direction: column;
     p {
@@ -37,14 +39,14 @@ const MyNewsStyle = styled.section`
   .my__news__chart {
     position: fixed;
     top: 250px;
-    left: 1180px;
+    left: 1160px;
   }
   .my__news__detail {
     position: fixed;
     display: flex;
     flex-direction: column;
     top: 295px;
-    left: 1205px;
+    left: 1185px;
     z-index: 2;
     align-items: center;
     > div {

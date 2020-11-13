@@ -8,6 +8,7 @@ const {
   Campaign_File,
   Act,
   Story_Report,
+  Story_Report_Reply,
   sequelize,
   Sequelize,
 } = require("../models");
@@ -295,7 +296,13 @@ router.get("/report/:page", async (req, res) => {
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
-        include: [{ model: User, attributes: ["nickname"] }],
+        include: [
+          { model: User, attributes: ["nickname"] },
+          {
+            model: Story_Report_Reply,
+            attributes: ["reply"],
+          },
+        ],
         where: {
           replied: type === "done",
           case_detail: {
@@ -320,7 +327,13 @@ router.get("/report/:page", async (req, res) => {
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
-        include: [{ model: User, attributes: ["nickname"] }],
+        include: [
+          { model: User, attributes: ["nickname"] },
+          {
+            model: Story_Report_Reply,
+            attributes: ["reply"],
+          },
+        ],
 
         where: {
           replied: type === "done",
@@ -330,6 +343,31 @@ router.get("/report/:page", async (req, res) => {
     }
     count = Math.ceil(count / 10);
     res.json({ list: list, count: count, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+router.post("/report/add", async (req, res) => {
+  try {
+    const { reply, report_id } = req.body;
+    await Story_Report_Reply.create({
+      reply,
+      report_id,
+    });
+
+    await Story_Report.update(
+      {
+        replied: true,
+      },
+      {
+        where: {
+          id: report_id,
+        },
+      }
+    );
+
+    res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

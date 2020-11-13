@@ -591,16 +591,17 @@ router.put("/like", async (req, res) => {
 //게시물 신고하기 등록 삭제
 router.put("/report", async (req, res) => {
   try {
-    console.log(req.body);
     const { story_id } = req.body;
     const { case_detail } = req.body;
     const { user_email } = req.session.loginInfo;
 
+    let newReport = true;
     const history = await Story_Report.findOne({
       where: { story_id, user_email },
     });
 
     if (history) {
+      newReport = false;
       await Story_Report.destroy({
         where: { story_id, user_email },
       });
@@ -612,7 +613,7 @@ router.put("/report", async (req, res) => {
       });
     }
 
-    res.json({ success: 1 });
+    res.json({ success: 1, newReport: newReport });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

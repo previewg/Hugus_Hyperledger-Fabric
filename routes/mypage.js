@@ -5,6 +5,7 @@ const {
   Hashtag,
   Story_File,
   Story_Report,
+  Story_Report_Reply,
   Campaign,
   Campaign_File,
   sequelize,
@@ -215,8 +216,10 @@ router.post("/init", async (req, res) => {
     });
 
     const reportList = await Story_Report.findAll({
-      attributes: ["id", "case_detail", "user_email"],
-      include: [{ model: Story, attributes: ["id"] }],
+      include: [
+        { model: Story, attributes: ["id"] },
+        { model: Story_Report_Reply, attributes: ["reply"] },
+      ],
       where: { user_email: user_email },
     });
 

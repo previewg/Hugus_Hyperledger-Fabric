@@ -55,10 +55,12 @@ const AdminReport = ({ open, history }) => {
       <AdminReportNav setType={setType} type={type} />
       <AdminReportSearch setSearch={setSearch} setClicked={setClicked} />
       <AdminReportList
+        type={type}
         list={list}
         loading={loading}
         history={history}
         deleteHandler={deleteHandler}
+        setClicked={setClicked}
       />
       <AdminReportPagination
         nowPage={nowPage}

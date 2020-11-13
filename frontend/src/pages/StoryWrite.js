@@ -137,7 +137,6 @@ const StoryWriteStyle = styled.div`
         border-radius: 4px;
         transition: 0.3s ease-in-out;
         border: solid 0.1px lightgray;
-
         :focus {
           outline: none;
           border: solid 0.1px orange;

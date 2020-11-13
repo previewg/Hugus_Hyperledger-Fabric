@@ -51,7 +51,7 @@ const UserInfoStyle = styled.section`
       }
       .side__menu {
         background-color: #f1f1f1;
-        height: 220px;
+        height: 290px;
         display: flex;
         flex-direction: column;
         padding: 10px;
@@ -166,11 +166,11 @@ const UserInfo = (props) => {
             <p id="my__news" onClick={typeChangeHandler}>
               내 소식
             </p>
-            <p id="edit__profile" onClick={typeChangeHandler}>
-              회원 정보 관리
-            </p>
             <p id="report__info" onClick={typeChangeHandler}>
               신고 정보
+            </p>
+            <p id="edit__profile" onClick={typeChangeHandler}>
+              회원 정보 관리
             </p>
           </div>
         </article>
@@ -193,15 +193,15 @@ const UserInfo = (props) => {
             />
           )}
           {infoType === "my__news" && <MyNews storyList={storyList} />}
+          {infoType === "report__info" && (
+            <ReportInfo reportList={reportList} history={props.history} />
+          )}
           {infoType === "edit__profile" && (
             <EditInfo
               setInfoType={setInfoType}
               profile={profile}
               nickname={nickname}
             />
-          )}
-          {infoType === "report__info" && (
-            <ReportInfo reportList={reportList} history={props.history} />
           )}
         </section>
       )}
