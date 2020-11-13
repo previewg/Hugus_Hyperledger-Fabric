@@ -5,6 +5,7 @@ import {
   AdminCampaign,
   AdminStory,
   AdminAct,
+  AdminReport,
   SideBar,
 } from "components";
 
@@ -36,7 +37,7 @@ const AdminStyle = styled.section`
 `;
 
 const Admin = (props) => {
-  const [type, setType] = useState("summary");
+  const [type, setType] = useState("report");
   const [open, setOpen] = useState(true);
 
   const openHandler = () => {
@@ -60,6 +61,7 @@ const Admin = (props) => {
       )}
       {type === "story" && <AdminStory open={open} history={props.history} />}
       {type === "act" && <AdminAct open={open} history={props.history} />}
+      {type === "report" && <AdminReport open={open} history={props.history} />}
     </AdminStyle>
   );
 };

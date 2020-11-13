@@ -72,7 +72,7 @@ const SideBar = ({ type, setType, open }) => {
         <p onClick={() => setType("act")}>인증 관리</p>
         <p onClick={() => setType("report")}>신고 관리</p>
         <p onClick={() => setType("user")}>회원 관리</p>
-        <p onClick={() => window.open("http://192.168.0.35:8080/")}>
+        <p onClick={() => window.open("http://192.168.0.36:8080/")}>
           블록 정보
         </p>
       </div>

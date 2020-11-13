@@ -62,6 +62,7 @@ import SideBar from "./Admin/SideBar";
 import AdminSummary from "./Admin/AdminSummary";
 import AdminCampaign from "./Admin/Campaign/AdminCampaign";
 import AdminStory from "./Admin/Story/AdminStory";
+import AdminReport from "./Admin/Report/AdminReport";
 import AdminLoader from "./Admin/Loader";
 import AdminAct from "./Admin/Act/AdminAct";
 
@@ -132,4 +133,5 @@ export {
   AdminLoader,
   AdminStory,
   AdminAct,
+  AdminReport,
 };

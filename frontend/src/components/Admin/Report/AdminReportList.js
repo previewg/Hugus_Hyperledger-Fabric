@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-const AdminActListStyle = styled.article`
+const AdminReportListStyle = styled.article`
   width: 60%;
   height: 470px;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   padding: 20px;
   margin-top: 10px;
-  .act__head {
+  .report__head {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 6fr 1fr 2fr 2fr 1fr;
     border-bottom: solid 0.1px white;
     margin-bottom: 10px;
     p {
@@ -19,12 +19,13 @@ const AdminActListStyle = styled.article`
       color: white;
       :nth-child(2) {
         text-align: start;
+        margin-left: 10px;
       }
     }
   }
-  .act__body {
+  .report__body {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 6fr 1fr 2fr 2fr 1fr;
     align-items: center;
     p {
       justify-self: center;
@@ -35,10 +36,10 @@ const AdminActListStyle = styled.article`
         justify-self: start;
       }
     }
-    .act__title {
+    .story__id {
       cursor: pointer;
     }
-    .act__control {
+    .report__control {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
@@ -101,40 +102,42 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminActList = ({ list, loading, history, deleteHandler }) => {
+const AdminReportList = ({ list, loading, history, deleteHandler }) => {
+  console.log(list);
   return (
-    <AdminActListStyle>
-      <div className="act__head">
+    <AdminReportListStyle>
+      <div className="report__head">
         <p>번호</p>
-        <p>제목</p>
-        <p>조회수</p>
+        <p>내용</p>
+        <p>스토리</p>
+        <p>작성자</p>
         <p>작성일자</p>
         <p></p>
       </div>
       {!loading && list.length === 0 ? (
         <NoResult>검색 결과가 없습니다</NoResult>
       ) : (
-        list.map((act, key) => {
+        list.map((report, key) => {
           return (
-            <div className="act__body" key={key}>
-              <p className="act__id">{act.id}</p>
+            <div className="report__body" key={key}>
+              <p className="report__id">{report.id}</p>
+              <p className="report__detail">{report.case_detail}</p>
               <p
-                className="act__title"
-                onClick={() => history.push(`/act/${act.id}`)}
+                className="story__id"
+                onClick={() => history.push(`/story/${report.story_id}`)}
               >
-                {act.act_title}
+                {report.story_id}
               </p>
-              <p className="act__visit">{act.visited}</p>
-              <p className="created__at">{getTimeStamp(act.created_at)}</p>
-              <div className="act__control">
-                <button>수정</button>
-                <button onClick={() => deleteHandler(act.id)}>삭제</button>
+              <p className="nickname">{report.User.nickname}</p>
+              <p className="created__at">{getTimeStamp(report.created_at)}</p>
+              <div className="report__control">
+                <button>답변하기</button>
               </div>
             </div>
           );
         })
       )}
-    </AdminActListStyle>
+    </AdminReportListStyle>
   );
 };
-export default AdminActList;
+export default AdminReportList;

@@ -11,12 +11,17 @@ export default (Component, option, admin = null) => {
     const email = useSelector((state) => state.auth.user.email);
 
     if (option) {
-      if (!isLoggedIn) props.history.goBack();
-      else {
+      if (!isLoggedIn) {
+        props.history.goBack();
+        return null;
+      } else {
         if (admin) {
           if (email === "admin@admin") {
             return <Component isLoggedIn={isLoggedIn} {...props} />;
-          } else props.history.goBack();
+          } else {
+            props.history.goBack();
+            return null;
+          }
         }
         return <Component isLoggedIn={isLoggedIn} {...props} />;
       }

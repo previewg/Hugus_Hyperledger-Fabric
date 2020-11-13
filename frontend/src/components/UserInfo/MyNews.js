@@ -37,14 +37,14 @@ const MyNewsStyle = styled.section`
   .my__news__chart {
     position: fixed;
     top: 250px;
-    left: 1200px;
+    left: 1180px;
   }
   .my__news__detail {
     position: fixed;
     display: flex;
     flex-direction: column;
     top: 295px;
-    left: 1225px;
+    left: 1205px;
     z-index: 2;
     align-items: center;
     > div {
@@ -93,8 +93,7 @@ const MyNewsStyle = styled.section`
 `;
 
 const MyNews = ({ storyList }) => {
-  const [data, setData] = useState(storyList[0]);
-  console.log(storyList);
+  const [data, setData] = useState(storyList[0] || null);
   const options = {
     interactivityEnabled: false,
     animationEnabled: true,
@@ -105,8 +104,16 @@ const MyNews = ({ storyList }) => {
         innerRadius: "95%",
         type: "doughnut",
         dataPoints: [
-          { name: "현재 득표수", y: data.story_vote, color: "orange" },
-          { name: "목표 득표수", y: data.story_goal, color: "antiquewhite" },
+          {
+            name: "현재 득표수",
+            y: data ? data.story_vote : 0,
+            color: "orange",
+          },
+          {
+            name: "목표 득표수",
+            y: data ? data.story_goal : 0,
+            color: "antiquewhite",
+          },
         ],
       },
     ],
@@ -118,13 +125,17 @@ const MyNews = ({ storyList }) => {
     <MyNewsStyle>
       <div className="my__news__own">
         <p>나의 스토리</p>
-        {storyList.map((story, key) => {
-          return (
-            <button key={key} onClick={() => onClickHandler("own", key)}>
-              {story.story_title}
-            </button>
-          );
-        })}
+        {storyList ? (
+          storyList.map((story, key) => {
+            return (
+              <button key={key} onClick={() => onClickHandler("own", key)}>
+                {story.story_title}
+              </button>
+            );
+          })
+        ) : (
+          <p>작성한 글이 없습니다</p>
+        )}
       </div>
       <div className="my__news__other"></div>
       <div className="my__news__chart">
