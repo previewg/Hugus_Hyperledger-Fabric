@@ -80,6 +80,7 @@ const talkCommentRouter = require("./routes/talk_comment");
 const blockRouter = require("./routes/block");
 const payRouter = require("./routes/pay");
 const campaignRouter = require("./routes/campaign");
+const campaignCommentRouter = require("./routes/campaign_comment");
 const adminRouter = require("./routes/admin");
 
 // Router 사용
@@ -94,6 +95,7 @@ app.use("/talk_comment", talkCommentRouter);
 app.use("/block", blockRouter);
 app.use("/pay", payRouter);
 app.use("/campaign", campaignRouter);
+app.use("/campaign_comment", campaignCommentRouter);
 app.use("/admin", adminRouter);
 
 // 404 처리

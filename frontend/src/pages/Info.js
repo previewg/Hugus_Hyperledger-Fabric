@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpBtnIsClicked } from "actions/user";
 
 const InfoStyle = styled.section`
   width: 100%;
@@ -48,16 +50,75 @@ const InfoStyle = styled.section`
 
     }
   }
+  .bannerBar {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(25deg , #ecb475, 42%, #ebf8e1, #6c97a9);
+    .campaign_section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      gap: 20px;
+      .campaign_link {
+        flex-direction: column;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.4);
+        padding: 20px;
+        font-size: 30px;
+        color: black;
+        text-decoration: none;
+        border: none;
+        outline: none;
+        width: 450px;
+        height: 100px;
+        >span {
+          margin-top: 10px;
+          display: flex;
+          font-weight: normal;
+          font-size: 17px;
+          color: #808080;
+        }
+      }
+      .signIn_link {
+        flex-direction: column;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.4);
+        padding: 20px;
+        font-size: 30px;
+        color: black;
+        text-decoration: none;
+        border: none;
+        outline: none;
+        width: 450px;
+        height: 100px; 
+        >span {
+          margin-top: 10px;
+          display: flex;
+          font-weight: normal;
+          font-size: 17px;
+          color: #808080;
+        }
+      }
+    }
+  }
+
 
   
   }
 `;
 
 const Info = () => {
-
-
-
-
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
 
 
   
@@ -76,6 +137,8 @@ const Info = () => {
       <article className=""></article>
 
       </div>
+
+
 
       <div className="">
 
@@ -98,14 +161,34 @@ const Info = () => {
 
       </div>
 
-      <div className="campaignSection">
 
-      <div className="campaignGo">
-      <span>a</span>
-      <Link></Link>
+
+
+
+      <div className="bannerBar">
+
+      <div className="campaign_section">
+      <Link to="/" className="campaign_link">HUG US의 후원자가 되어보세요!
+      <span>캠페인 후원하기</span>
+      </Link>
+
+      {/* {isLoggedIn ? (
+        <Link to="/"></Link>
+
+
+
+
+      ) : (
+
+
+
+      ) } */}
+      <Link style={{ cursor: "pointer" }}
+          onClick={() => dispatch(signUpBtnIsClicked())}
+           className="signIn_link">HUG US에 가입해주세요!
+      <span>HUG US 가입하기</span>
+      </Link>
       </div>
-
-
 
       </div>
 

@@ -42,6 +42,9 @@ import SearchUser from "./UserDetail/SearchUser";
 import SearchUserHead from "./UserDetail/SearchUserHead";
 import CampaignDetailLoader from "./CampaignDetail/Loader";
 import CampaignContents from "./CampaignDetail/CampaignContents";
+import CampaignComments from "./CampaignDetail/CampaignComments";
+import CampaignCommentInput from "./CampaignDetail/CampaignCommentInput";
+import CampaignCommentList from "./CampaignDetail/CampaignCommentList";
 import PayLoader from "./Pay/Loader";
 import Pending from "./Pay/Pending";
 import BlockSocket from "./BlockInfo/BlockSocket";
@@ -64,6 +67,7 @@ import AdminCampaign from "./Admin/Campaign/AdminCampaign";
 import AdminStory from "./Admin/Story/AdminStory";
 import AdminLoader from "./Admin/Loader";
 import AdminAct from "./Admin/Act/AdminAct";
+
 
 export {
   Main,
@@ -110,6 +114,9 @@ export {
   SearchUserHead,
   CampaignDetailLoader,
   CampaignContents,
+  CampaignComments,
+  CampaignCommentInput,
+  CampaignCommentList,
   PayLoader,
   Pending,
   BlockSocket,
