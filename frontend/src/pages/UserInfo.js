@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import styled from "styled-components";
-import { EditInfo, History, MyHome, MyNews, UserInfoLoader, ReportInfo } from "components";
+import {
+  EditInfo,
+  History,
+  MyHome,
+  MyNews,
+  UserInfoLoader,
+  ReportInfo,
+} from "components";
 
 const UserInfoStyle = styled.section`
   min-height: 80vh;
@@ -73,7 +80,7 @@ const UserInfoStyle = styled.section`
   }
 `;
 
-const UserInfo = (props , history) => {
+const UserInfo = (props) => {
   const [infoType, setInfoType] = useState("my__home");
   const [storyList, setStoryList] = useState(null);
   const [reportList, setReportList] = useState(null);
@@ -193,7 +200,9 @@ const UserInfo = (props , history) => {
               nickname={nickname}
             />
           )}
-          {infoType === "report__info" && <ReportInfo reportList={reportList} history={props.history} />}
+          {infoType === "report__info" && (
+            <ReportInfo reportList={reportList} history={props.history} />
+          )}
         </section>
       )}
     </UserInfoStyle>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-
 const ReportInfoStyle = styled.section`
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -30,30 +29,29 @@ const ReportInfoStyle = styled.section`
       }
     }
   }
-  
 `;
 
-const ReportInfo = ({ reportList,history}) => {
-  if ( !reportList)
-  return <ReportInfoStyle>검색 결과가 없습니다</ReportInfoStyle>;
-  
+const ReportInfo = ({ reportList, history }) => {
+  if (!reportList)
+    return <ReportInfoStyle>검색 결과가 없습니다</ReportInfoStyle>;
   return (
     <ReportInfoStyle>
       <div className="report__info__own">
         <p>신고 리스트</p>
         {reportList.map((report, key) => {
           return (
-            <button 
+            <button
               readOnly
-            id={report.id}
-            value={report.id}
-            onClick={() => history.push(`/story/${report.id}`)}>
-              스토리번호:{report.id} 신고내용:{report.case_detail}
+              key={key}
+              id={report.Story.id}
+              value={report.Story.id}
+              onClick={() => history.push(`/story/${report.Story.id}`)}
+            >
+              스토리번호:{report.Story.id} 신고내용:{report.case_detail}
             </button>
           );
         })}
       </div>
-      
     </ReportInfoStyle>
   );
 };

@@ -215,12 +215,8 @@ router.post("/init", async (req, res) => {
     });
 
     const reportList = await Story_Report.findAll({
-      attributes: [
-        "id",
-        "case_detail",
-        "user_email",
-        
-      ],
+      attributes: ["id", "case_detail", "user_email"],
+      include: [{ model: Story, attributes: ["id"] }],
       where: { user_email: user_email },
     });
 
