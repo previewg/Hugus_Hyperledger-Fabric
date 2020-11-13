@@ -73,7 +73,7 @@ const UserInfoStyle = styled.section`
   }
 `;
 
-const UserInfo = (props) => {
+const UserInfo = (props , history) => {
   const [infoType, setInfoType] = useState("my__home");
   const [storyList, setStoryList] = useState(null);
   const [reportList, setReportList] = useState(null);
@@ -193,7 +193,7 @@ const UserInfo = (props) => {
               nickname={nickname}
             />
           )}
-          {infoType === "report__info" && <ReportInfo reportList={reportList} />}
+          {infoType === "report__info" && <ReportInfo reportList={reportList} history={props.history} />}
         </section>
       )}
     </UserInfoStyle>
