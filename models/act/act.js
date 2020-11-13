@@ -8,20 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      act_buy: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
       act_content: {
         type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      beneficiary: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      user_email: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       visited: {

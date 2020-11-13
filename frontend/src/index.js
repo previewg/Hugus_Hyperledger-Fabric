@@ -99,8 +99,8 @@ ReactDOM.render(
         <Route exact path="/block/all/block" component={Auth(BlockAll, null)} />
         <Route exact path="/block/all/tx" component={Auth(TxAll, null)} />
         <Route exact path="/act" component={Auth(ActMain, null)} />
+        <Route exact path="/act/write" component={Auth(ActWrite, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
-        <Route path="/act/write" component={Auth(ActWrite, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
         <Route path="/talk/write" component={Auth(TalkWrite, null)} />
         <Route path="/talk/update/:id" component={Auth(TalkUpdate, true)} />

@@ -347,6 +347,7 @@ router.get("/:id", async (req, res) => {
         { model: Hashtag, attributes: ["hashtag"] },
         { model: User, attributes: ["nickname"] },
         { model: Campaign_File, attributes: ["file"] },
+        { model: Story, attributes: ["story_title", "id"] },
       ],
     });
 
@@ -412,6 +413,19 @@ router.put("/like", async (req, res) => {
       });
     }
     res.json({ success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// 캠페인 제목 전체 조회
+router.get("/all/title", async (req, res) => {
+  try {
+    const list = await Campaign.findAll({
+      attributes: ["campaign_title"],
+      where: { expired: false },
+    });
+    res.json({ success: 1, list: list });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

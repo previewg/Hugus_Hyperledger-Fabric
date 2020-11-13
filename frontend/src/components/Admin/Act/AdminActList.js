@@ -10,7 +10,7 @@ const AdminActListStyle = styled.article`
   margin-top: 10px;
   .act__head {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 5fr 1fr 2fr 2fr;
     border-bottom: solid 0.1px white;
     margin-bottom: 10px;
     p {
@@ -24,7 +24,7 @@ const AdminActListStyle = styled.article`
   }
   .act__body {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 2fr 2fr;
+    grid-template-columns: 1fr 5fr 1fr 2fr 2fr;
     align-items: center;
     p {
       justify-self: center;
@@ -107,7 +107,6 @@ const AdminActList = ({ list, loading, history }) => {
       <div className="act__head">
         <p>번호</p>
         <p>제목</p>
-        <p>작성자</p>
         <p>조회수</p>
         <p>작성일자</p>
         <p></p>
@@ -125,7 +124,6 @@ const AdminActList = ({ list, loading, history }) => {
               >
                 {act.act_title}
               </p>
-              <p className="nickname">{act.User.nickname}</p>
               <p className="act__visit">{act.visited}</p>
               <p className="created__at">{getTimeStamp(act.created_at)}</p>
               <div className="act__control">

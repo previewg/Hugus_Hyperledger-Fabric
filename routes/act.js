@@ -1,13 +1,15 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { Act, User, Act_File, Sequelize } = require("../models");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 const path = require("path");
 const fs = require("fs");
-const axios = require('axios')
+const axios = require("axios");
+
+const { Act, User, Campaign, Act_File, Sequelize } = require("../models");
+const Transaction = require("../models/block/transaction");
 
 let s3 = new AWS.S3();
 
@@ -26,32 +28,31 @@ let upload = multer({
   }),
 });
 
-let upload_memory = multer( { storage: multer.memoryStorage() } )
+let upload_memory = multer({ storage: multer.memoryStorage() });
 
 // Act 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
-    // const { user_email } = req.session.loginInfo;
-    const user_email = "moonnr94@gmail.com";
-    const { act_title, act_buy, act_content, beneficiary } = req.body;
+    const { act_title, act_content, campaign_title } = req.body;
+    const campaign = await Campaign.findOne({
+      where: { campaign_title },
+    });
+    const campaign_id = campaign.getDataValue("id");
+
     const list = await Act.create({
       act_title,
-      act_buy,
       act_content,
-      beneficiary,
-      user_email: user_email,
+      campaign_id: campaign_id,
     });
-
     const act_id = list.getDataValue("id");
     for (const file of req.files) {
       await Act_File.create({
         act_id: act_id,
         file: file.location,
       });
-    };
+    }
 
-
-    res.json({ list: list, success: 1 });
+    res.json({ success: 1 });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
@@ -61,33 +62,30 @@ router.post("/add", upload.array("files"), async (req, res) => {
 // Act 등록
 router.post("/add/buffer", upload_memory.array("files"), async (req, res) => {
   try {
-    const { act_title, sender, receiver, value } = req.body;
+    const { act_content, campaign_title } = req.body;
+    const campaign = await Campaign.findOne({ where: { campaign_title } });
+    const hash = campaign.getDataValue("hash");
+    console.log(hash);
 
-    const list = await Act.findOne({
-      where: {act_title: act_title,
-      }
-    });
-    console.log(list);
+    const campaignData = await Transaction.aggregate([
+      { $match: { receiver_id: `${hash}` } },
+      { $group: { _id: `${hash}`, value: { $sum: "$value" } } },
+    ]);
 
-    const act_id = await list.dataValues("id");
-    for (const file of req.files) {
-      await Act_File.create({
-        act_id: act_id,
-        file: file.location,
-      });
-    };
+    let value = 0;
+    if (campaignData.length !== 0) {
+      value = campaignData[0].value;
+    }
 
-    let base64data = await req.files[0].buffer.toString('base64');
-    await axios.post(`${process.env.FABRIC_URL}/campaign/donation`, {
+    let base64data = await req.files[1].buffer.toString("base64");
+    await axios.post(`${process.env.FABRIC_URL}/campaign/donate`, {
       data: base64data,
-      sender_id:sender,
-      receiver_id: receiver,
-      value: value
-    
+      senderId: hash,
+      receiverId: "admin",
+      content: act_content,
+      value: value,
     });
-    console.log('Image converted');
-
-    res.json({ success: 1, buf:buf });
+    res.json({ success: 1 });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: 3 });
@@ -106,41 +104,23 @@ router.get("/list/:page", async (req, res) => {
     }
 
     let list;
-    if (keyword){
+    if (keyword) {
       list = await Act.findAll({
-        attributes: [
-          "act_title",
-          "id",
-          "act_content",
-          "beneficiary",
-          "user_email",
-          "visited",
-          "created_at",
-        ],
-        include: [
-          { model: Act_File, attributes: ["file"], limit: 1 },
-        ],
+        attributes: ["act_title", "id", "act_content", "visited", "created_at"],
+        include: [{ model: Act_File, attributes: ["file"], limit: 1 }],
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
-        where:{act_title:{
-          [Sequelize.Op.like]: "%" + keyword + "%"
-      }}
+        where: {
+          act_title: {
+            [Sequelize.Op.like]: "%" + keyword + "%",
+          },
+        },
       });
-    }else{
+    } else {
       list = await Act.findAll({
-        attributes: [
-          "act_title",
-          "id",
-          "act_content",
-          "beneficiary",
-          "user_email",
-          "visited",
-          "created_at",
-        ],
-        include: [
-          { model: Act_File, attributes: ["file"], limit: 1 },
-        ],
+        attributes: ["act_title", "id", "act_content", "visited", "created_at"],
+        include: [{ model: Act_File, attributes: ["file"], limit: 1 }],
         order: [["created_at", "DESC"]],
         offset: offset,
         limit: 10,
@@ -148,7 +128,6 @@ router.get("/list/:page", async (req, res) => {
     }
 
     let total = await Act.count({});
-    
 
     let more = false;
     if (total > page * 10) more = true;
@@ -196,8 +175,5 @@ router.put("/visit", async (req, res) => {
     res.status(400).json({ success: 3 });
   }
 });
-
-
-
 
 module.exports = router;

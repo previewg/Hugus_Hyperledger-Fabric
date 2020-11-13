@@ -90,7 +90,6 @@ const Donate = ({ data, history }) => {
       window.removeEventListener("scroll", scrollHandler);
     };
   }, []);
-  console.log(scroll);
   return (
     <div className="donate">
       <ProgressBar />
