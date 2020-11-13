@@ -17,68 +17,74 @@ const ActListStyle = styled.div`
     display: grid;
     grid-template-rows: 1fr 1fr;
     gap: 30px;
-    >div{
+    > div {
       display: grid;
-      grid-template-columns:1fr 4fr;
+      grid-template-columns: 1fr 4fr;
       gap: 50px;
       > a:nth-child(1) {
-      border-radius: 10px;
-      width: 210px;
-      height: 210px;
-      display: flex;
-      text-decoration: none;
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-      .list {
-        min-width: 100%;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-      }
-    }
-    >a:nth-child(2){
-      flex-direction: column;
-      text-decoration: none;
-      color: black;
-      margin-top: 30px;
-      .act__title {
-        font-size : 24px;
-        font-weight: bold;
-      }
-      .beneficiary {
-      margin-top: 5px;
-      color: grey;
-      }
-      .visitForm{
-        margin-top:60px;
+        border-radius: 10px;
+        width: 210px;
+        height: 210px;
         display: flex;
-        justify-content: flex-end;
-        padding-right: 12px;
-        .eye {
-          margin-right: 3px;
-          width: 25px;
-          height: 25px;
-          }
-          >p {
-          padding-top: 3.5px;
-          margin: 0px;
-          font-size: 15px;
+        text-decoration: none;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        .list {
+          min-width: 100%;
+          width: 100%;
+          height: 100%;
+          align-items: center;
+        }
+      }
+      > a:nth-child(2) {
+        flex-direction: column;
+        text-decoration: none;
+        color: black;
+        margin-top: 10px;
+        .act__title {
+          font-size: 24px;
           font-weight: bold;
-          color: black;
+          display: flex;
+          align-items: flex-end;
+          p {
+            margin-bottom: 15px;
           }
-      }
-      .create__time {
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-        padding-right: 12px;
-        font-size: 15px;
-        color: grey;
+          p:nth-child(2) {
+            margin-left: 5px;
+            font-size: 15px;
+            color: gray;
+            font-weight: normal;
+          }
+        }
+        .visitForm {
+          margin-top: 60px;
+          display: flex;
+          justify-content: flex-end;
+          padding-right: 12px;
+          .eye {
+            margin-right: 3px;
+            width: 25px;
+            height: 25px;
+          }
+          > p {
+            padding-top: 3.5px;
+            margin: 0px;
+            font-size: 15px;
+            font-weight: bold;
+            color: black;
+          }
+        }
+        .create__time {
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-end;
+          padding-right: 12px;
+          font-size: 15px;
+          color: grey;
+        }
       }
     }
-    }
-    
   }
 `;
 
@@ -91,7 +97,7 @@ const ThereIsNoFavorite = styled.p`
   color: gray;
 `;
 
-const ActList = ({  search, clicked, setClicked, setLoader }) => {
+const ActList = ({ search, clicked, setClicked, setLoader }) => {
   const dispatch = useDispatch();
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
@@ -104,14 +110,14 @@ const ActList = ({  search, clicked, setClicked, setLoader }) => {
 
   const LoadHandler = () => {
     const loadInit = async () => {
-        setLoading(true);
-        setClicked(false);
-        const initData = await axios.get(`/act/list/1?keyword=${search}`);
-        setList(initData.data.list);
-        if (initData.data.more || initData.data.list.length % 10 === 0) {
-          setPage(page + 1);
-        }
-        setLoading(false);
+      setLoading(true);
+      setClicked(false);
+      const initData = await axios.get(`/act/list/1?keyword=${search}`);
+      setList(initData.data.list);
+      if (initData.data.more || initData.data.list.length % 10 === 0) {
+        setPage(page + 1);
+      }
+      setLoading(false);
     };
 
     const loadMore = async () => {
@@ -139,9 +145,9 @@ const ActList = ({  search, clicked, setClicked, setLoader }) => {
         loadMore();
       }
     };
-    
+
     useEffect(() => {
-      if (clicked||init.current) {
+      if (clicked || init.current) {
         loadInit();
         init.current = false;
       }
@@ -155,7 +161,6 @@ const ActList = ({  search, clicked, setClicked, setLoader }) => {
     return null;
   };
 
-
   const getTimeStamp = (date) => {
     let givenDate = new Date(date);
     let newDate =
@@ -166,18 +171,18 @@ const ActList = ({  search, clicked, setClicked, setLoader }) => {
       leadingZeros(givenDate.getDate(), 2);
     return newDate;
   };
-  
+
   const leadingZeros = (n, digits) => {
     let zero = "";
     n = n.toString();
-  
+
     if (n.length < digits) {
       for (let i = 0; i < digits - n.length; i++) zero += "0";
     }
     return zero + n;
   };
 
-  // if(list.length === 0) 
+  // if(list.length === 0)
   // return <ThereIsNoFavorite>검색 결과가 없습니다</ThereIsNoFavorite>;
 
   return (
@@ -190,23 +195,29 @@ const ActList = ({  search, clicked, setClicked, setLoader }) => {
               <Link
                 to={`/act/${act.id}`}
                 style={{
-                  backgroundImage: `url("${act.Act_Files[0] ? act.Act_Files[0].file : "http://localhost:3000/HUGUS.png"}") `,
+                  backgroundImage: `url("${
+                    act.Act_Files[0]
+                      ? act.Act_Files[0].file
+                      : "http://localhost:3000/HUGUS.png"
+                  }") `,
                 }}
                 onClick={() => visitHandler(act.id)}
               >
-                <div className="list" >
-           
-                </div>
+                <div className="list"></div>
               </Link>
 
               <Link to={`/act/${act.id}`} onClick={() => visitHandler(act.id)}>
-                <div className="act__title">{act.act_title}</div>
-              <div className="beneficiary">{act.beneficiary}님의 전달 소식입니다.</div>
+                <div className="act__title">
+                  <p>{act.act_title}</p>
+                  <p>의 전달 소식입니다.</p>
+                </div>
                 <div className="visitForm">
                   <img className="eye" src="/icons/eye.png" />
                   <p>{act.visited}</p>
                 </div>
-                <div className="create__time">{getTimeStamp(act.created_at)}</div>
+                <div className="create__time">
+                  {getTimeStamp(act.created_at)}
+                </div>
               </Link>
             </div>
           );

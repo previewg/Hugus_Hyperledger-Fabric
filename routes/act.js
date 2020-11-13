@@ -59,7 +59,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
   }
 });
 
-// Act 등록
+// Act 등록 (이미지 변환 - 패브릭 통신)
 router.post("/add/buffer", upload_memory.array("files"), async (req, res) => {
   try {
     const { act_content, campaign_title } = req.body;
@@ -91,6 +91,76 @@ router.post("/add/buffer", upload_memory.array("files"), async (req, res) => {
     res.status(400).json({ success: 3 });
   }
 });
+
+// Act 수정
+router.post("/update", upload.array("files"), async (req, res) => {
+  try {
+    const { act_id, act_title, act_content, campaign_title } = req.body;
+    const campaign = await Campaign.findOne({
+      where: { campaign_title },
+    });
+    const campaign_id = campaign.getDataValue("id");
+
+    await Act.update({
+      act_title,
+      act_content,
+      campaign_id: campaign_id,
+      where: { id: act_id },
+    });
+
+    await Act_File.destroy({
+      where: { act_id: act_id },
+    });
+
+    for (const file of req.files) {
+      await Act_File.create({
+        act_id: act_id,
+        file: file.location,
+      });
+    }
+
+    res.json({ success: 1 });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// Act 수정 (이미지 변환 - 패브릭 통신)
+router.post(
+  "/update/buffer",
+  upload_memory.array("files"),
+  async (req, res) => {
+    try {
+      const { act_content, campaign_title } = req.body;
+      const campaign = await Campaign.findOne({ where: { campaign_title } });
+      const hash = campaign.getDataValue("hash");
+
+      const campaignData = await Transaction.aggregate([
+        { $match: { receiver_id: `${hash}` } },
+        { $group: { _id: `${hash}`, value: { $sum: "$value" } } },
+      ]);
+
+      let value = 0;
+      if (campaignData.length !== 0) {
+        value = campaignData[0].value;
+      }
+
+      let base64data = await req.files[1].buffer.toString("base64");
+      await axios.post(`${process.env.FABRIC_URL}/campaign/donate`, {
+        data: base64data,
+        senderId: hash,
+        receiverId: "admin",
+        content: act_content,
+        value: value,
+      });
+      res.json({ success: 1 });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ success: 3 });
+    }
+  }
+);
 
 // Act 목록 조회
 router.get("/list/:page", async (req, res) => {
