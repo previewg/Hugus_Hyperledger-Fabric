@@ -14,56 +14,65 @@ const {
 // Talk 댓글 등록
 router.post("/add", async (req, res) => {
     try {
-      const { user_email } = req.session.loginInfo;
-      const { talk_id, comment } = req.body;
-      await Talk_Comment.create({
-        user_email,
-        talk_id,
-        comment,
-      });
-  
-      const list = await Talk_Comment.findAll({
-        attributes: [
-          "id",
-          "user_email",
-          "comment",
-          "createdAt",
-          [
-            sequelize.literal(
-              "(SELECT COUNT(comment_id) FROM talk_comment_child WHERE comment_id = `Talk_Comment`.id)"
-            ),
-            "child_count",
-          ],
-        ],
-        where: {
-          talk_id: req.body.talk_id,
-        },
-        order: [["created_at", "DESC"]],
-        include: [{ model: User, attributes: ["nickname", "user_profile"] }],
-        limit: 10,
-      });
-  
-      const total = await Talk_Comment.count({
-        where: {
-          talk_id: talk_id,
-        },
-      });
-  
-      let more = false;
-      if (total > 10) more = true;
-  
-      res.json({ list: list, success: 1, total: total, more: more });
+        const {user_email} = req.session.loginInfo;
+        const {talk_id, comment} = req.body;
+        if (req.body.type === "mobile") {
+            await Talk_Comment.create({
+                user_email: req.body.email,
+                talk_id: req.body.talk_id,
+                comment: req.body.comment,
+            })
+        }else{
+            await Talk_Comment.create({
+                user_email,
+                talk_id,
+                comment,
+            });
+        }
+
+
+        const list = await Talk_Comment.findAll({
+            attributes: [
+                "id",
+                "user_email",
+                "comment",
+                "createdAt",
+                [
+                    sequelize.literal(
+                        "(SELECT COUNT(comment_id) FROM talk_comment_child WHERE comment_id = `Talk_Comment`.id)"
+                    ),
+                    "child_count",
+                ],
+            ],
+            where: {
+                talk_id: req.body.talk_id,
+            },
+            order: [["created_at", "DESC"]],
+            include: [{model: User, attributes: ["nickname", "user_profile"]}],
+            limit: 10,
+        });
+
+        const total = await Talk_Comment.count({
+            where: {
+                talk_id: talk_id,
+            },
+        });
+
+        let more = false;
+        if (total > 10) more = true;
+
+        res.json({list: list, success: 1, total: total, more: more});
     } catch (error) {
       console.error(error);
       res.status(400).json({ success: 3 });
     }
   });
 
-  
+
 // Talk 댓글 삭제
 router.post("/delete", async (req, res) => {
     const { talk_id, comment_id } = req.body;
-  
+
     try {
       await Talk_Comment.destroy({
         where: {
@@ -75,7 +84,7 @@ router.post("/delete", async (req, res) => {
           id: comment_id,
         },
       });
-  
+
       const list = await Talk_Comment.findAll({
         attributes: [
           "id",
@@ -96,16 +105,16 @@ router.post("/delete", async (req, res) => {
         include: [{ model: User, attributes: ["nickname", "user_profile"] }],
         limit: 10,
       });
-  
+
       const total = await Talk_Comment.count({
         where: {
           talk_id: talk_id,
         },
       });
-  
+
       let more = false;
       if (total > 10) more = true;
-  
+
       res.json({ list: list, success: 1, total: total, more: more });
     } catch (err) {
       console.log(err);
@@ -119,7 +128,7 @@ router.get("/list/:id/:page", async (req, res) => {
       let talk_id = req.params.id;
       let page = req.params.page;
       let offset = 0;
-      
+
       // 10개씩 조회
       if (page > 1) {
         offset = 10 * (page - 1);
@@ -140,7 +149,7 @@ router.get("/list/:id/:page", async (req, res) => {
         include: [
           { model: User, attributes: ["nickname", "user_profile"] },
         ],
-  
+
         where: {
           talk_id: talk_id,
         },
@@ -154,7 +163,7 @@ router.get("/list/:id/:page", async (req, res) => {
           talk_id: talk_id,
         },
       });
-  
+
       let more = false;
       if (total > offset + 10) more = true;
 
@@ -196,13 +205,13 @@ router.post("/child/add", async (req, res) => {
         order: [["created_at", "DESC"]],
         limit: 10,
       });
-  
+
       const total = await Talk_Comment.count({
         where: {
           talk_id: talk_id,
         },
       });
-  
+
       let more = false;
       if (total > 10) more = true;
       res.json({ list: list, success: 1, more: more, total: total });
@@ -211,7 +220,7 @@ router.post("/child/add", async (req, res) => {
       res.status(400).json({ success: 3 });
     }
   });
-  
+
   // Talk 대댓글 목록 조회
   router.get("/childList/:comment_id", async (req, res) => {
     try {
@@ -229,7 +238,7 @@ router.post("/child/add", async (req, res) => {
     }
   });
 
-  
+
 // Talk_Comment 좋아요 등록/삭제
 router.put("/like", async (req, res) => {
   try {
@@ -240,20 +249,18 @@ router.put("/like", async (req, res) => {
       where: { comment_id, user_email },
     });
 
-    console.log(comment_id);
-    console.log(user_email);
-    console.log(history);
 
-    if (history) {
-      await Talk_Comment_Like.destroy({
-        where: { comment_id, user_email },
-      });
-    } else {
-      await Talk_Comment_Like.create({
-        comment_id,
-        user_email,
-      });
-    };
+        if (history) {
+            await Talk_Comment_Like.destroy({
+                where: {comment_id, user_email},
+            });
+        } else {
+            await Talk_Comment_Like.create({
+                comment_id,
+                user_email,
+            });
+        }
+        ;
 
     res.json({ success: 1 });
   } catch (error) {
