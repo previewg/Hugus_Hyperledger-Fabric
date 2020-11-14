@@ -220,8 +220,9 @@ const MyNews = ({ storyList, votedList, history }) => {
             }}
           >
             <div>
-              {" "}
-              <strong>{data.story_vote / data.story_goal.toFixed(1)}%</strong>
+              <strong>
+                {((data.story_vote * 100) / data.story_goal).toFixed(0)}%
+              </strong>
               <p>
                 {data.story_vote}/{data.story_goal}
               </p>

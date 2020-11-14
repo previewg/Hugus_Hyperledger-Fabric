@@ -5,7 +5,6 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 const path = require("path");
-const fs = require("fs");
 const axios = require("axios");
 
 const { Act, User, Campaign, Act_File, Sequelize } = require("../models");

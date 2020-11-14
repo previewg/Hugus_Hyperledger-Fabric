@@ -10,6 +10,7 @@ import {
   UserInfoLoader,
   ReportInfo,
 } from "components";
+import MyAct from "../components/UserInfo/MyAct";
 
 const UserInfoStyle = styled.section`
   min-height: 80vh;
@@ -85,6 +86,7 @@ const UserInfo = (props) => {
   const [storyList, setStoryList] = useState(null);
   const [votedList, setVotedList] = useState(null);
   const [reportList, setReportList] = useState(null);
+  const [actList, setActList] = useState(null);
   const [campaignList, setCampaignList] = useState(null);
   const [userHistory, setUserHistory] = useState(null);
   const [totalValue, setTotalValue] = useState(0);
@@ -107,6 +109,7 @@ const UserInfo = (props) => {
     console.log(result.data);
     setStoryList(result.data.storyList);
     setVotedList(result.data.votedList);
+    setActList(result.data.actList);
     setReportList(result.data.reportList);
     setCampaignList(result.data.campaignList);
     setUserHistory(result.data.userHistory);
@@ -167,6 +170,9 @@ const UserInfo = (props) => {
             <p id="my__news" onClick={typeChangeHandler}>
               내 소식
             </p>
+            <p id="my__act" onClick={typeChangeHandler}>
+              수혜 내역
+            </p>
             <p id="report__info" onClick={typeChangeHandler}>
               신고 정보
             </p>
@@ -199,6 +205,9 @@ const UserInfo = (props) => {
               votedList={votedList}
               history={props.history}
             />
+          )}
+          {infoType === "my__act" && (
+            <MyAct history={props.history} actList={actList} />
           )}
           {infoType === "report__info" && (
             <ReportInfo reportList={reportList} history={props.history} />

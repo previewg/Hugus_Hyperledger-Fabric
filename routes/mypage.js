@@ -2,6 +2,8 @@
 const {
   Story,
   User,
+  Act,
+  Act_File,
   Hashtag,
   Story_File,
   Story_Report,
@@ -215,6 +217,19 @@ router.post("/init", async (req, res) => {
       ],
     });
 
+    const actList = await Act.findAll({
+      attributes: ["act_title", "id", "act_content", "visited", "created_at"],
+      include: [{ model: Act_File, attributes: ["file"], limit: 1 }],
+      order: [["created_at", "DESC"]],
+      where: {
+        campaign_id: [
+          sequelize.literal(
+            `(SELECT id FROM campaign WHERE user_email = '${user_email}')`
+          ),
+        ],
+      },
+    });
+
     const votedList = await Story.findAll({
       attributes: [
         "id",
@@ -262,6 +277,7 @@ router.post("/init", async (req, res) => {
         { model: Story, attributes: ["id"] },
         { model: Story_Report_Reply, attributes: ["reply"] },
       ],
+      order: [["created_at", "DESC"]],
       where: { user_email: user_email },
     });
 
@@ -350,6 +366,7 @@ router.post("/init", async (req, res) => {
       totalCount: totalCount,
       userHistory: userHistory,
       votedList: votedList,
+      actList: actList,
       historyMore: historyMore !== null,
       success: 1,
     });
