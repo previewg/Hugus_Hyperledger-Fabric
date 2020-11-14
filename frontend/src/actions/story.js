@@ -223,14 +223,17 @@ export const storyLike = (id) => async (dispatch) => {
       dispatch(storyLikeFailure());
     });
 };
-//게시물 신고하기 
-export const storyReport = (data ) => async (dispatch) => {
+//게시물 신고하기
+export const storyReport = (data) => async (dispatch) => {
   dispatch(storyReportStart());
   await axios
-    .put("/story/report", { ...data})
+    .put("/story/report", { ...data })
     .then((res) => {
-      console.log(res)
-      dispatch(storyReportSuccess());
+      if (res.data.success === 1) {
+        if (res.data.newReport) alert("신고가 성공적으로 접수되었습니다");
+        else alert("신고가 성공적으로 취소되었습니다");
+        dispatch(storyReportSuccess());
+      }
     })
     .catch((error) => {
       console.log(error);

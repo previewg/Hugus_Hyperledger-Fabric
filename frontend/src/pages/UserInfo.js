@@ -51,7 +51,7 @@ const UserInfoStyle = styled.section`
       }
       .side__menu {
         background-color: #f1f1f1;
-        height: 220px;
+        height: 290px;
         display: flex;
         flex-direction: column;
         padding: 10px;
@@ -83,6 +83,7 @@ const UserInfoStyle = styled.section`
 const UserInfo = (props) => {
   const [infoType, setInfoType] = useState("my__home");
   const [storyList, setStoryList] = useState(null);
+  const [votedList, setVotedList] = useState(null);
   const [reportList, setReportList] = useState(null);
   const [campaignList, setCampaignList] = useState(null);
   const [userHistory, setUserHistory] = useState(null);
@@ -96,7 +97,6 @@ const UserInfo = (props) => {
   const nickname = useSelector((state) => state.auth.user.nickname);
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
   const hashEmail = useSelector((state) => state.auth.user.hash_email);
-  const email = useSelector((state) => state.auth.user.email);
 
   const typeChangeHandler = (e) => {
     setInfoType(e.target.id);
@@ -106,6 +106,7 @@ const UserInfo = (props) => {
     const result = await axios.post("/myPage/init");
     console.log(result.data);
     setStoryList(result.data.storyList);
+    setVotedList(result.data.votedList);
     setReportList(result.data.reportList);
     setCampaignList(result.data.campaignList);
     setUserHistory(result.data.userHistory);
@@ -166,11 +167,11 @@ const UserInfo = (props) => {
             <p id="my__news" onClick={typeChangeHandler}>
               내 소식
             </p>
-            <p id="edit__profile" onClick={typeChangeHandler}>
-              회원 정보 관리
-            </p>
             <p id="report__info" onClick={typeChangeHandler}>
               신고 정보
+            </p>
+            <p id="edit__profile" onClick={typeChangeHandler}>
+              회원 정보 관리
             </p>
           </div>
         </article>
@@ -192,16 +193,22 @@ const UserInfo = (props) => {
               totalCount={totalCount}
             />
           )}
-          {infoType === "my__news" && <MyNews storyList={storyList} />}
+          {infoType === "my__news" && (
+            <MyNews
+              storyList={storyList}
+              votedList={votedList}
+              history={props.history}
+            />
+          )}
+          {infoType === "report__info" && (
+            <ReportInfo reportList={reportList} history={props.history} />
+          )}
           {infoType === "edit__profile" && (
             <EditInfo
               setInfoType={setInfoType}
               profile={profile}
               nickname={nickname}
             />
-          )}
-          {infoType === "report__info" && (
-            <ReportInfo reportList={reportList} history={props.history} />
           )}
         </section>
       )}

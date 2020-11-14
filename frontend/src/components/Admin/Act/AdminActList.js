@@ -101,7 +101,7 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminActList = ({ list, loading, history }) => {
+const AdminActList = ({ list, loading, history, deleteHandler }) => {
   return (
     <AdminActListStyle>
       <div className="act__head">
@@ -128,7 +128,7 @@ const AdminActList = ({ list, loading, history }) => {
               <p className="created__at">{getTimeStamp(act.created_at)}</p>
               <div className="act__control">
                 <button>수정</button>
-                <button>삭제</button>
+                <button onClick={() => deleteHandler(act.id)}>삭제</button>
               </div>
             </div>
           );

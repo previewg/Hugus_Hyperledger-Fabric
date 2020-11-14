@@ -37,11 +37,27 @@ const AdminAct = ({ open, history }) => {
     setLoading(false);
   };
 
+  const deleteHandler = async (act_id) => {
+    setClicked(true);
+    const confirmed = window.confirm("삭제하시겠습니까?");
+    if (confirmed) {
+      const result = await axios.post("/act/delete", { act_id: act_id });
+      if (result.data.success === 1) alert("삭제가 완료되었습니다");
+      else alert("삭제에 실패하였습니다");
+    }
+    setClicked(false);
+  };
+
   return (
     <AdminActStyle open={open}>
       <AdminActNav />
       <AdminActSearch setSearch={setSearch} setClicked={setClicked} />
-      <AdminActList list={list} loading={loading} history={history} />
+      <AdminActList
+        list={list}
+        loading={loading}
+        history={history}
+        deleteHandler={deleteHandler}
+      />
       <AdminActPagination
         nowPage={nowPage}
         pageLimit="10"

@@ -12,6 +12,7 @@ const TalkStyle = styled.section`
   padding-top: 30px;
   display: flex;
   justify-content: center;
+  min-height: 80vh;
   .layout {
     display: flex;
     align-items: center;
@@ -34,15 +35,15 @@ const TalkStyle = styled.section`
       width: 100%;
       display: flex;
       justify-content: flex-end;
-    .talkWrite__btn {
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      :hover {
-      color: orange;
+      .talkWrite__btn {
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        :hover {
+          color: orange;
+        }
       }
     }
-  }
   }
 `;
 
@@ -77,17 +78,17 @@ const TalkMain = (props) => {
   const Loader = () => {
     return (
       <LoaderStyle>
-      <ClipLoader
-        css={css`
-          margin-top: 10px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        `}
-        size={50}
-        color={"#f69a53"}
-        loading={true}
-      />
+        <ClipLoader
+          css={css`
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
+          size={50}
+          color={"#f69a53"}
+          loading={true}
+        />
       </LoaderStyle>
     );
   };
@@ -95,16 +96,27 @@ const TalkMain = (props) => {
   return (
     <TalkStyle>
       <div className="layout">
-          <div className="title">
+        <div className="title">
           <p>수혜자의 이야기</p>
-          </div>
+        </div>
 
-        <TalkSearch search={search} setSearch={setSearch} setClicked={setClicked}/>
+        <TalkSearch
+          search={search}
+          setSearch={setSearch}
+          setClicked={setClicked}
+        />
         {!loading ? <TalkList talkList={talkList} /> : <Loader />}
         <div className="write">
-        <span className="talkWrite__btn" onClick={onClickHandler}>글작성</span>
+          <span className="talkWrite__btn" onClick={onClickHandler}>
+            글작성
+          </span>
         </div>
-        <TalkPagination clicked={clicked} total={total} pageLimit="5" nowPage={nowPage}/>
+        <TalkPagination
+          clicked={clicked}
+          total={total}
+          pageLimit="5"
+          nowPage={nowPage}
+        />
       </div>
     </TalkStyle>
   );

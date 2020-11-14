@@ -108,9 +108,34 @@ router.post("/update", upload.array("files"), async (req, res) => {
       where: { id: act_id },
     });
 
-    await Act_File.destroy({
+    const files = await Act_File.findAll({
       where: { act_id: act_id },
+      attributes: ["file"],
     });
+
+    if (files.length !== 0) {
+      let params = {
+        Bucket: "hugusact",
+        Delete: {
+          Objects: [],
+        },
+      };
+
+      for (const file of files) {
+        const key = file.file.split("/");
+        params.Delete.Objects.push({ Key: decodeURI(key[3]) });
+      }
+
+      await s3.deleteObjects(params, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+
+      await Act_File.destroy({
+        where: { act_id: act_id },
+      });
+    }
 
     for (const file of req.files) {
       await Act_File.create({
@@ -161,6 +186,47 @@ router.post(
     }
   }
 );
+
+// Act 삭제
+router.post("/delete", async (req, res) => {
+  try {
+    const { act_id } = req.body;
+    const files = await Act_File.findAll({
+      where: { act_id: act_id },
+      attributes: ["file"],
+    });
+
+    if (files.length !== 0) {
+      let params = {
+        Bucket: "hugusact",
+        Delete: {
+          Objects: [],
+        },
+      };
+
+      for (const file of files) {
+        const key = file.file.split("/");
+        params.Delete.Objects.push({ Key: decodeURI(key[3]) });
+      }
+
+      await s3.deleteObjects(params, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+
+      await Act_File.destroy({
+        where: { act_id: act_id },
+      });
+    }
+
+    await Act.destroy({ where: { id: act_id } });
+    res.json({ success: 1 });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ success: 3 });
+  }
+});
 
 // Act 목록 조회
 router.get("/list/:page", async (req, res) => {

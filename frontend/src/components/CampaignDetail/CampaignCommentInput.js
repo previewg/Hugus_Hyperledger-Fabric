@@ -1,15 +1,10 @@
-import React, { useRef, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { commentAdd } from "../../actions/comment";
 import { signInBtnIsClicked } from "../../actions/user";
-import { storyLike, storyReport } from "../../actions/story";
-import KakaoLinkAPI from "./KakaoLinkAPI";
-import FacebookLink from "./FacebookLink";
-import Report from "./Report";
-import { Button } from "react-scroll";
 
-const CommentFalseStyle = styled.div`
+const CampaignCommentFalseStyle = styled.div`
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -34,7 +29,8 @@ const CommentFalseStyle = styled.div`
     border-bottom: solid gray 0.1px;
   }
 `;
-const CommentTrueStyle = styled.div`
+
+const CampaignCommentTrueStyle = styled.div`
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -48,14 +44,6 @@ const CommentTrueStyle = styled.div`
         margin-left: 5px;
         cursor: pointer;
         width: 20px;
-
-        :nth-child(2) {
-          margin-top: 12px;
-          margin-left: 5px;
-          cursor: pointer;
-          width: 25px;
-          height: 25px;
-        }
       }
     }
   }
@@ -125,51 +113,55 @@ const ErrorBoxStyle = styled.p`
 `;
 const errorMsg = "댓글을 입력하세요";
 
-const CommentInput = ({ data, num, openModal, setOpenModal }) => {
+const CampaignCommentInput = ({ campaignId, campaignCommentList, setCampaignCommentList, setLikenum }) => {
+
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.user.isLoggedIn);
-  const like = useSelector((state) => state.story.like.user);
-  const report = useSelector((state) => state.story.report.user);
-  const total = useSelector((state) => state.comment.list.total);
+  const [like,setLike] = useState(campaignId.like);
+  const total = campaignCommentList.total;
+  const campaign_id = campaignId.data.id;
+  const id = campaign_id;
   const [error, setError] = useState(false);
+  const [loading,setLoading] = useState(false);
   const comment = useRef();
 
-  const likeHandler = (status) => {
-    dispatch(storyLike(data.id, status));
-  };
-  const reportHandler = (status) => {
-    if (status === false) setOpenModal(true);
-    else {
-      const confirmed = window.confirm("신고를 취소하시겠습니까?");
-      if (confirmed) {
-        dispatch(storyReport({ story_id: data.id, case_detail: "" }));
+  const likeHandler = async ( status ) => {
+      const result = await axios.put('/campaign/like', { campaign_id: id, status: status });
+      if( result.data.success === 1 ) {
+        if(like) setLikenum(likenum => likenum -1);
+        else setLikenum(likenum => likenum +1)
+        setLike(!like);
       }
-    }
-  };
+  }
 
   const Input = () => {
     const [comments, setComments] = useState("");
+
     const commentChangeHandler = (e) => {
       setComments(e.target.value);
       setError(false);
     };
-    const commentAddHandler = () => {
-      if (comments === "") {
-        comment.current.focus();
-        setError(true);
+
+    const commentAddHandler = async () => {
+      if (comments !== "" && !loading) {
+        setLoading(true);
+        const result = await axios.post('/campaign_comment/add', { campaign_id: campaign_id, comment:comments });
+        setCampaignCommentList(result.data);
+        setComments("");
+        setLoading(false);
       } else {
-        dispatch(
-          commentAdd({ comment: comments, story_id: data.id, num: num })
-        );
+        comments.current.focus();
+        setError(true);
       }
     };
+
     const commentClearHandler = () => {
       setComments("");
     };
 
     if (!isLoggedIn) {
       return (
-        <CommentFalseStyle>
+        <CampaignCommentFalseStyle>
           <div className="header">
             <p>댓글 {total}개</p>
             <div className="icon">
@@ -179,17 +171,14 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
                 className="unlike"
                 src="/icons/unlike.svg"
               />
-              <KakaoLinkAPI />
-              <FacebookLink />
-              {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
             </div>
           </div>
           <input disabled placeholder="로그인이 필요합니다." />
-        </CommentFalseStyle>
+        </CampaignCommentFalseStyle>
       );
     }
     return (
-      <CommentTrueStyle>
+      <CampaignCommentTrueStyle>
         <div className="header">
           <p>댓글 {total}개</p>
           <div className="icon">
@@ -208,24 +197,6 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
                 src="/icons/unlike.svg"
               />
             )}
-            {report ? (
-              <img
-                onClick={() => reportHandler(true)}
-                alt="report"
-                className="report"
-                src="/icons/siren_on.png"
-              />
-            ) : (
-              <img
-                onClick={() => reportHandler(false)}
-                alt="unreport"
-                className="unreport"
-                src="/icons/siren_off.png"
-              />
-            )}
-            <KakaoLinkAPI />
-            <FacebookLink />
-            {/*<img alt="share" className="share" src="/icons/share.svg" />*/}
           </div>
         </div>
         <input
@@ -244,7 +215,7 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
           </button>
           <button onClick={commentAddHandler}>등록</button>
         </div>
-      </CommentTrueStyle>
+      </CampaignCommentTrueStyle>
     );
   };
 
@@ -256,4 +227,4 @@ const CommentInput = ({ data, num, openModal, setOpenModal }) => {
   );
 };
 
-export default CommentInput;
+export default CampaignCommentInput;

@@ -5,6 +5,7 @@ const {
   Hashtag,
   Story_File,
   Story_Report,
+  Story_Report_Reply,
   Campaign,
   Campaign_File,
   sequelize,
@@ -214,9 +215,53 @@ router.post("/init", async (req, res) => {
       ],
     });
 
+    const votedList = await Story.findAll({
+      attributes: [
+        "id",
+        "story_title",
+        "user_info",
+        "story_content",
+        "story_goal",
+        "user_email",
+        "visited",
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
+          ),
+          "story_like",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
+          ),
+          "story_vote",
+        ],
+        [
+          sequelize.literal(
+            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+          ),
+          "story_comment",
+        ],
+      ],
+      where: {
+        id: [
+          sequelize.literal(
+            `(SELECT story_id FROM story_vote WHERE user_email = '${user_email}')`
+          ),
+        ],
+      },
+      include: [
+        { model: Hashtag, attributes: ["hashtag"] },
+        { model: User, attributes: ["nickname"] },
+        { model: Story_File, attributes: ["file"] },
+      ],
+    });
+
     const reportList = await Story_Report.findAll({
-      attributes: ["id", "case_detail", "user_email"],
-      include: [{ model: Story, attributes: ["id"] }],
+      include: [
+        { model: Story, attributes: ["id"] },
+        { model: Story_Report_Reply, attributes: ["reply"] },
+      ],
       where: { user_email: user_email },
     });
 
@@ -304,6 +349,7 @@ router.post("/init", async (req, res) => {
       campaignList: campaignList,
       totalCount: totalCount,
       userHistory: userHistory,
+      votedList: votedList,
       historyMore: historyMore !== null,
       success: 1,
     });

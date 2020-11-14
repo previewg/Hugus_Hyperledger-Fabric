@@ -7,6 +7,8 @@ const {
   Campaign,
   Campaign_File,
   Act,
+  Story_Report,
+  Story_Report_Reply,
   sequelize,
   Sequelize,
 } = require("../models");
@@ -262,6 +264,110 @@ router.get("/act/:page", async (req, res) => {
     }
     count = Math.ceil(count / 10);
     res.json({ list: list, count: count, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+// Report 목록 조회
+router.get("/report/:page", async (req, res) => {
+  try {
+    let page = req.params.page;
+    let keyword = req.query.keyword;
+    let order = req.query.order;
+    let type = req.query.type;
+    let offset = 0;
+    // 10개씩 조회
+    if (page > 1) {
+      offset = 10 * (page - 1);
+    }
+    let count = 0;
+    let list = null;
+
+    if (keyword) {
+      list = await Story_Report.findAll({
+        attributes: [
+          "id",
+          "user_email",
+          "story_id",
+          "case_detail",
+          "created_at",
+        ],
+        order: [["created_at", "DESC"]],
+        offset: offset,
+        limit: 10,
+        include: [
+          { model: User, attributes: ["nickname"] },
+          {
+            model: Story_Report_Reply,
+            attributes: ["reply"],
+          },
+        ],
+        where: {
+          replied: type === "done",
+          case_detail: {
+            [Sequelize.Op.like]: "%" + keyword + "%",
+          },
+        },
+      });
+      count = await Story_Report.count({
+        case_detail: {
+          [Sequelize.Op.like]: "%" + keyword + "%",
+        },
+      });
+    } else {
+      list = await Story_Report.findAll({
+        attributes: [
+          "id",
+          "user_email",
+          "story_id",
+          "case_detail",
+          "created_at",
+        ],
+        order: [["created_at", "DESC"]],
+        offset: offset,
+        limit: 10,
+        include: [
+          { model: User, attributes: ["nickname"] },
+          {
+            model: Story_Report_Reply,
+            attributes: ["reply"],
+          },
+        ],
+
+        where: {
+          replied: type === "done",
+        },
+      });
+      count = await Story_Report.count({});
+    }
+    count = Math.ceil(count / 10);
+    res.json({ list: list, count: count, success: 1 });
+  } catch (error) {
+    res.status(400).json({ success: 3 });
+  }
+});
+
+router.post("/report/add", async (req, res) => {
+  try {
+    const { reply, report_id } = req.body;
+    await Story_Report_Reply.create({
+      reply,
+      report_id,
+    });
+
+    await Story_Report.update(
+      {
+        replied: true,
+      },
+      {
+        where: {
+          id: report_id,
+        },
+      }
+    );
+
+    res.json({ success: 1 });
   } catch (error) {
     res.status(400).json({ success: 3 });
   }

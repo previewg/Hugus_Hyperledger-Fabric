@@ -147,7 +147,7 @@ export default function story(state = initialState, action) {
         },
         report: {
           status: { $set: "SUCCESS" },
-          user: { $set: action.like },
+          user: { $set: action.report },
           reportNum: { $set: action.reportNum },
         },
         vote: {
@@ -200,7 +200,7 @@ export default function story(state = initialState, action) {
 
     case STORY_REPORT_SUCCESS:
       let renum;
-      if (state.report.user) renum = state.report.reportNum -1 ;
+      if (state.report.user) renum = state.report.reportNum - 1;
       else renum = state.report.reportNum + 1;
 
       return update(state, {

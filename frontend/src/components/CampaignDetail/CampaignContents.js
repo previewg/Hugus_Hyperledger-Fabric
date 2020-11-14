@@ -115,7 +115,9 @@ const CampaignContentsStyle = styled.div`
   }
 `;
 
-const CampaignContents = ({ data, history }) => {
+const CampaignContents = ({ data, history, likenum }) => {
+
+
   return (
     <CampaignContentsStyle>
       <div className="title">
@@ -147,7 +149,7 @@ const CampaignContents = ({ data, history }) => {
 
       <Donate data={data} history={history} />
       <div className="visited">
-        <p>좋아요 {data.campaign_like}</p>
+        <p>좋아요 {likenum}</p>
         <p>조회수 {data.visited}</p>
       </div>
     </CampaignContentsStyle>

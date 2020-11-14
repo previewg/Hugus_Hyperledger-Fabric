@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Loader from "../Loader";
 
-const PaginationStyle = styled.div`
+const AdminReportPaginationStyle = styled.div`
   margin-top: 30px;
   margin-bottom: 50px;
-  width: 35%;
+  width: 20%;
   div {
     display: flex;
     justify-content: space-around;
@@ -25,8 +26,10 @@ const PaginationStyle = styled.div`
       align-items: center;
       display: flex;
       transition: all 0.3s ease-in-out;
+      color: white;
       :hover {
         background-color: lightgray;
+        color: black;
       }
     }
   }
@@ -38,7 +41,14 @@ const createArr = (n) => {
   return iArr;
 };
 
-const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
+const AdminReportPagination = ({
+  total,
+  pageLimit,
+  nowPage,
+  clicked,
+  loading,
+  type,
+}) => {
   const [blockNum, setBlockNum] = useState(0);
   const [currPage, setCurrPage] = useState(1);
 
@@ -74,10 +84,11 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
 
   useEffect(() => {
     nowPage(currPage);
-  }, [currPage, clicked]);
+  }, [currPage, clicked, type]);
 
+  if (loading) return <Loader />;
   return (
-    <PaginationStyle>
+    <AdminReportPaginationStyle>
       <div>
         <button onClick={firstPage}>&lt;&lt;</button>
         <button onClick={prePage}>&lt;</button>
@@ -87,8 +98,8 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
               key={key}
               onClick={() => setCurrPage(n)}
               style={{
-                backgroundColor: "orange",
-                color: "white",
+                backgroundColor: "white",
+                color: "black",
                 transform: "scale(1.2)",
               }}
             >
@@ -104,8 +115,8 @@ const Pagination = ({ total, pageLimit, nowPage, clicked }) => {
         <button onClick={lastPage}>&gt;&gt;</button>
       </div>
       <div className="current_show"></div>
-    </PaginationStyle>
+    </AdminReportPaginationStyle>
   );
 };
 
-export default Pagination;
+export default AdminReportPagination;

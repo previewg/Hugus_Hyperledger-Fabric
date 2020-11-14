@@ -297,7 +297,7 @@ router.post("/kakao", async (req, res) => {
             nickname: nickname,
             user_profile: user_profile,
             password: password,
-            hash: key.toString("base64"),
+            hash: hash,
           });
         }
       );
@@ -374,7 +374,7 @@ router.post("/naver", async (req, res) => {
             nickname: nickname,
             user_profile: profile,
             password: password,
-            hash: key.toString("base64"),
+            hash: hash,
           });
         }
       );
