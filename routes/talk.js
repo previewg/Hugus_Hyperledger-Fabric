@@ -292,9 +292,7 @@ router.put("/like", async (req, res) => {
     const history = await Talk_Like.findOne({
       where: { talk_id, user_email },
     });
-    console.log(talk_id);
-    console.log(user_email);
-    console.log(history);
+
 
     if (history) {
       await Talk_Like.destroy({

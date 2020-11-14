@@ -441,6 +441,7 @@ router.get("/list/:page", async (req, res) => {
           ],
         ],
         include: [
+          {model: User, attributes:["nickname","user_profile"]},
           { model: Hashtag, attributes: ["hashtag"] },
           { model: Story_File, attributes: ["file"], limit: 1 },
         ],
