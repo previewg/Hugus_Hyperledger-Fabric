@@ -42,8 +42,6 @@ const Donate = ({ data, history }) => {
   const campaign_value = data.campaign_value;
   const campaign_goal = data.campaign_goal;
 
-  const [scroll, setScroll] = useState(0);
-
   const ProgressBar = () => {
     let ratio = (campaign_value / campaign_goal) * 100;
     if (ratio > 100) ratio = 100;
@@ -74,22 +72,15 @@ const Donate = ({ data, history }) => {
   };
 
   const DonateButton = () => {
-    return <button onClick={DonateHandler}>후원하기</button>;
-  };
-
-  const scrollHandler = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    if (scrollTop > 5390) window.removeEventListener("scroll", scrollHandler);
-    setScroll(scrollTop);
+    if (data.expired)
+      return <button className="donate__end">후원이 종료되었습니다</button>;
+    else return <button onClick={DonateHandler}>후원하기</button>;
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    window.addEventListener("scroll", scrollHandler);
-    return () => {
-      window.removeEventListener("scroll", scrollHandler);
-    };
   }, []);
+
   return (
     <div className="donate">
       <ProgressBar />

@@ -11,16 +11,17 @@ router.get("/init", async (req, res) => {
     const blockHeight = await Block.countDocuments({});
     const txList = await Transaction.find({}).sort({ timestamp: -1 }).limit(10);
     const txHeight = await Transaction.countDocuments({});
-    const totalAmount = await Transaction.aggregate([
+    let totalAmount = await Transaction.aggregate([
       { $group: { _id: "totalAmount", value: { $sum: "$value" } } },
     ]);
+
     res.json({
       success: 1,
       blockList: blockList,
       blockHeight: blockHeight,
       txList: txList,
       txHeight: txHeight,
-      totalAmount: totalAmount[0].value,
+      totalAmount: totalAmount[0] ? totalAmount[0].value : 0,
     });
   } catch (err) {
     res.status(400).json({ success: 3 });

@@ -118,52 +118,6 @@ const CampaignWriteStyle = styled.section`
       }
     }
 
-    .email {
-      margin-top: 50px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      p {
-        font-weight: bold;
-        margin-right: 10px;
-        width: 100px;
-      }
-      input {
-        border: none;
-        width: 200px;
-        padding: 5px;
-        border-bottom: solid 0.1px lightgray;
-        transition: 0.3s ease-in-out;
-        :focus {
-          outline: none;
-          border-bottom: solid 0.1px orange;
-        }
-      }
-    }
-
-    .goal {
-      margin-top: 50px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      p {
-        font-weight: bold;
-        margin-right: 10px;
-        width: 100px;
-      }
-      input {
-        border: none;
-        width: 110px;
-        padding: 5px;
-        border-bottom: solid 0.1px lightgray;
-        transition: 0.3s ease-in-out;
-        :focus {
-          outline: none;
-          border-bottom: solid 0.1px orange;
-        }
-      }
-    }
-
     .content {
       width: 100%;
       margin-top: 50px;
@@ -383,32 +337,26 @@ const ErrorBoxStyle = styled.p`
 const errorMsg = [
   "",
   "제목을 입력 바랍니다",
-  "수혜자를 입력 바랍니다",
+  "스토리를 입력 바랍니다",
   "썸네일을 추가 바랍니다",
   "내용을 첨부 바랍니다",
-  "기부 금액을 입력 바랍니다",
   "해시태그를 입력 바랍니다",
-  "스토리를 선택 바랍니다",
 ];
 
 const CampaignWrite = (props) => {
   const title = useRef();
-  const email = useRef();
+  const story = useRef();
   const subImg = useRef();
   const mainImg = useRef();
   const hashtags = useRef();
-  const goal = useRef();
-  const story = useRef();
   const init = useRef(true);
   const [data, setData] = useState({
     title: "",
-    email: "",
     subImg: null,
     mainImg: null,
     hashtag: "",
     hashtags: [],
     story: "",
-    goal: 0,
   });
   const [openSuggest, setOpenSuggest] = useState(false);
   const [now, setNow] = useState(0);
@@ -419,12 +367,10 @@ const CampaignWrite = (props) => {
 
   const [filled, setFilled] = useState({
     title: true,
-    email: true,
     subImg: true,
     mainImg: true,
     hashtags: true,
     story: true,
-    goal: true,
   });
 
   const [errorCode, setErrorCode] = useState(0);
@@ -441,12 +387,12 @@ const CampaignWrite = (props) => {
         title: false,
       });
       return false;
-    } else if (!data.email) {
+    } else if (!data.story) {
       setErrorCode(2);
-      email.current.focus();
+      story.current.focus();
       setFilled({
         ...filled,
-        email: false,
+        story: false,
       });
       return false;
     } else if (!data.subImg) {
@@ -465,28 +411,12 @@ const CampaignWrite = (props) => {
         subImg: false,
       });
       return false;
-    } else if (data.goal === 0) {
-      setErrorCode(5);
-      goal.current.focus();
-      setFilled({
-        ...filled,
-        goal: false,
-      });
-      return false;
     } else if (data.hashtags.length === 0) {
-      setErrorCode(6);
+      setErrorCode(5);
       hashtags.current.focus();
       setFilled({
         ...filled,
         hashtags: false,
-      });
-      return false;
-    } else if (!data.story) {
-      setErrorCode(7);
-      story.current.focus();
-      setFilled({
-        ...filled,
-        story: false,
       });
       return false;
     }
@@ -497,9 +427,7 @@ const CampaignWrite = (props) => {
     if (errorHandler()) {
       const formData = new FormData();
       formData.append("campaign_title", data.title);
-      formData.append("email", data.email);
       formData.append("hashtags", data.hashtags);
-      formData.append("campaign_goal", data.goal);
       formData.append("story_title", data.story);
       for (const file of data.subImg) {
         formData.append(`files`, file);
@@ -531,7 +459,6 @@ const CampaignWrite = (props) => {
           file: file,
           previewURL: reader.result,
         });
-        // setFileReaderState(e.target.file);
       };
       reader.readAsDataURL(file);
     }
@@ -546,7 +473,6 @@ const CampaignWrite = (props) => {
           file: file,
           previewURL: reader.result,
         });
-        // setFileReaderState(e.target.file);
       };
       reader.readAsDataURL(file);
     }
@@ -847,31 +773,6 @@ const CampaignWrite = (props) => {
             </div>
           </div>
 
-          <div className="email">
-            <p>수혜자(email)</p>
-            <input
-              name="email"
-              ref={email}
-              value={data.email}
-              type="text"
-              placeholder="수헤자 이메일을 입력하세요."
-              onChange={onChangeHandler}
-            />
-          </div>
-
-          <div className="goal">
-            <p>목표 기부 금액</p>
-            <input
-              name="goal"
-              ref={goal}
-              value={data.goal}
-              type="number"
-              placeholder="기부 금액을 입력하세요."
-              onChange={onChangeHandler}
-            />
-            <p>원</p>
-          </div>
-
           <div className="content">
             <p>파일 첨부</p>
             <div>
@@ -884,6 +785,7 @@ const CampaignWrite = (props) => {
                 <label htmlFor="subImg">썸네일</label>
                 <p> Drag&Drop</p>
                 <input
+                  ref={subImg}
                   id="subImg"
                   name="subImg"
                   type="file"
@@ -900,6 +802,7 @@ const CampaignWrite = (props) => {
                 <label htmlFor="mainImg">본문</label>
                 <p> Drag&Drop</p>
                 <input
+                  ref={mainImg}
                   id="mainImg"
                   name="mainImg"
                   type="file"

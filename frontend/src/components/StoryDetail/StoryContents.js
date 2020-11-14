@@ -54,7 +54,7 @@ const StoryContentsStyle = styled.div`
       border: solid 0.1px lightgray;
       padding: 15px;
       padding-left: 20px;
-      white-space: pre;
+      white-space: pre-line;
     }
   }
 
@@ -67,7 +67,7 @@ const StoryContentsStyle = styled.div`
       border: solid 0.1px lightgray;
       padding: 15px;
       padding-left: 20px;
-      white-space: pre;
+      white-space: pre-line;
     }
   }
 
@@ -134,6 +134,15 @@ const StoryContentsStyle = styled.div`
       :hover {
         background-color: dodgerblue;
         color: white;
+      }
+    }
+    .vote_end {
+      cursor: not-allowed;
+      border: solid 0.1px gray;
+      color: gray;
+      :hover {
+        background-color: transparent;
+        color: gray;
       }
     }
     .vote_true {
@@ -244,7 +253,7 @@ const StoryContents = ({ data, history }) => {
         })}
       </div>
       <StoryVote data={data} />
-      <div className="visited"> 
+      <div className="visited">
         <p>좋아요 {likeNum}</p>
         <p>신고 {reportNum}</p>
         <p>조회수 {data.visited}</p>

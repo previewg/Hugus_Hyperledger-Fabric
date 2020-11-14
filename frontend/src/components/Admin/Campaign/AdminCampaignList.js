@@ -19,6 +19,10 @@ const AdminCampaignListStyle = styled.article`
       color: white;
       :nth-child(2) {
         text-align: start;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       :nth-child(3) {
         font-weight: bold;

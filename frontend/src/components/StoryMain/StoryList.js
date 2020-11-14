@@ -58,7 +58,7 @@ const StoryListStyle = styled.div`
           margin: 0;
           font-size: 17px;
           color: white;
-          width: 90%;
+          width: 270px;
           height: 60%;
           display: flex;
           align-items: flex-end;
@@ -235,7 +235,7 @@ const StoryList = ({ storyType, changed, setChanged }) => {
         // scroll event listener 해제
         window.removeEventListener("scroll", scrollHandler);
       };
-    }, []);
+    }, [changed]);
 
     return null;
   };
@@ -247,6 +247,7 @@ const StoryList = ({ storyType, changed, setChanged }) => {
       init.current = true;
     }
   }, [changed]);
+
   if (storyType === "my" && list.length === 0)
     return <ThereIsNoFavorite>관심 스토리가 없습니다</ThereIsNoFavorite>;
   if (storyType === "past" && list.length === 0)

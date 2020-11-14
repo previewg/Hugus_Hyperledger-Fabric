@@ -38,18 +38,30 @@ let upload = multer({
   }),
 });
 
+// 특수문자 제거
+const regExp = (str) => {
+  const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  if (reg.test(str)) {
+    return str.replace(reg, "");
+  } else {
+    return str;
+  }
+};
+
 // 캠페인 등록
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
     if (user_email !== "admin@admin") res.status(400).json({ success: 3 });
-    const { campaign_title, email, campaign_goal, story_title } = req.body;
+    const { campaign_title, story_title } = req.body;
 
     const story = await Story.findOne({
       where: { story_title },
     });
 
+    const email = story.getDataValue("user_email");
     const story_id = story.getDataValue("id");
+    const campaign_goal = story.getDataValue("story_goal");
 
     const campaign = await Campaign.create({
       campaign_title: campaign_title,
@@ -59,6 +71,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
     });
 
     const campaign_id = campaign.getDataValue("id");
+
     for (const file of req.files) {
       let fileName = null;
       if (file.location !== null) fileName = file.location;
@@ -88,7 +101,8 @@ router.post("/add", upload.array("files"), async (req, res) => {
         8,
         "sha512",
         async (err, key) => {
-          const hashedCampaign = key.toString("base64");
+          let hashedCampaign = key.toString("base64");
+          hashedCampaign = regExp(hashedCampaign);
           await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
             user_id: hashedCampaign,
           });
@@ -164,7 +178,13 @@ router.post("/delete", async (req, res) => {
       }
     }
 
+    const campaign = await Campaign.findOne({ where: { id } });
+    await axios.post(`${process.env.FABRIC_URL}/auth/delete`, {
+      user_id: campaign.getDataValue("hash"),
+    });
+
     await Campaign.destroy({ where: { id } });
+
     res.json({ success: 1 });
   } catch (err) {
     console.error(err);
@@ -329,6 +349,7 @@ router.get("/:id", async (req, res) => {
         "campaign_value",
         "user_email",
         "visited",
+        "expired",
         [
           sequelize.literal(
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id )"
@@ -397,7 +418,7 @@ router.put("/like", async (req, res) => {
   try {
     const { campaign_id, status } = req.body;
     const { user_email } = req.session.loginInfo;
-    
+
     const history = await Campaign_Like.findOne({
       where: { campaign_id, user_email },
     });

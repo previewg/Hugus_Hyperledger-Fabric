@@ -55,7 +55,6 @@ router.put("/profile", upload.single("file"), async (req, res) => {
 
     if (data.user_profile !== null) {
       const key = data.user_profile.split("/");
-      console.log(key[3]);
       await s3.deleteObject(
         {
           Bucket: "hugus",
@@ -340,12 +339,6 @@ router.post("/init", async (req, res) => {
         ],
         [
           sequelize.literal(
-            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
-          ),
-          "campaign_donate",
-        ],
-        [
-          sequelize.literal(
             "(SELECT COUNT(1) FROM campaign_comment WHERE campaign_id = `Campaign`.id)"
           ),
           "campaign_comment",
@@ -412,12 +405,6 @@ router.post("/load/history/:page", async (req, res) => {
             "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id )"
           ),
           "campaign_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT SUM(value) FROM campaign_donate WHERE campaign_id = `Campaign`.id )"
-          ),
-          "campaign_donate",
         ],
         [
           sequelize.literal(

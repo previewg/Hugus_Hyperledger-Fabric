@@ -40,14 +40,14 @@ const AdminCampaign = ({ open, history }) => {
   };
 
   const deleteHandler = async (campaign_id) => {
-    setClicked(true);
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
       const result = await axios.post("/campaign/delete", { id: campaign_id });
+      setClicked(true);
       if (result.data.success === 1) alert("삭제가 완료되었습니다");
       else alert("삭제에 실패하였습니다");
+      setClicked(false);
     }
-    setClicked(false);
   };
 
   return (

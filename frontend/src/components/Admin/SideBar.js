@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 const SideBarStyle = styled.article`
   position: absolute;
@@ -59,6 +60,13 @@ const SideBarStyle = styled.article`
 `;
 
 const SideBar = ({ type, setType, open }) => {
+  const urlLoader = async () => {
+    const result = await axios.post("/admin/url");
+    if (result.data.success === 1) {
+      window.open(result.data.url);
+    }
+  };
+
   return (
     <SideBarStyle type={type} open={open}>
       <div className="side__top">
@@ -72,9 +80,7 @@ const SideBar = ({ type, setType, open }) => {
         <p onClick={() => setType("act")}>인증 관리</p>
         <p onClick={() => setType("report")}>신고 관리</p>
         <p onClick={() => setType("user")}>회원 관리</p>
-        <p onClick={() => window.open("http://192.168.0.36:8080/")}>
-          블록 정보
-        </p>
+        <p onClick={urlLoader}>블록 정보</p>
       </div>
     </SideBarStyle>
   );

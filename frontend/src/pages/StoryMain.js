@@ -33,6 +33,7 @@ const StoryMain = (props) => {
   const isLoggedIn = props.isLoggedIn;
   const [storyType, setStoryType] = useState("hot");
   const [changed, setChanged] = useState(false);
+
   const typeChange = (e) => {
     e.preventDefault();
     if (e.target.getAttribute("name") === "my" && !isLoggedIn) {
