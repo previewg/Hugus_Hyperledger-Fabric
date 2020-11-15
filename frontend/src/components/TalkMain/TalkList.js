@@ -6,56 +6,54 @@ import styled from "styled-components";
 const TalkListStyle = styled.div`
   width: 100%;
   margin-top: 30px;
-  margin-bottom: 10px;
-  a {
-    text-decoration: none;
-  }
-  .list_tit {
-    border-bottom: solid orange 2px;
+  .talk__list__head {
+    border-bottom: solid orange 0.1px;
     color: black;
     font-weight: bold;
     padding-bottom: 3px;
-  }
-  .list_grid {
     display: grid;
-    grid-template-columns: 10% 45% 15% 13% 17%;
+    grid-template-columns: 1fr 4fr 1fr 1fr 2fr;
+    p {
+      margin-top: 0px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      :nth-child(2) {
+        display: flex;
+        justify-content: start;
+      }
+    }
   }
-  .acenter {
-    text-align: center;
-  }
-  .list_data {
-    width: 100%;
-    line-height: 40px;
-    border-bottom: solid gray 0.1px;
+
+  .talk__list__body {
+    text-decoration: none;
+    border-bottom: solid lightgray 0.1px;
     color: black;
     font-size: 15px;
     transition: 0.1s ease-in-out;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr 1fr 2fr;
     outline: none;
     cursor: pointer;
     :hover {
-      background-color: #faf1e5;
+      background-color: #fffaf4;
     }
-    .talk__id {
-      margin-left: 2px;
-      width: 20%;
+    p {
       display: flex;
       justify-content: center;
+      align-items: center;
     }
     .talk__title {
       display: flex;
+      justify-content: start;
       .comment_count {
+        padding-left: 5px;
         outline: none;
         font-size: 12px;
-        color: red;
+        color: #ff4646;
         font-weight: bold;
       }
-    }
-    .talk__visit {
-      margin-left: 13px;
-    }
-    .create__time {
-      display: flex;
-      justify-content: center;
     }
   }
 `;
@@ -79,12 +77,12 @@ const TalkList = ({ talkList }) => {
 
   return (
     <TalkListStyle>
-      <div className="list_grid list_tit">
-        <div> 번호 </div>
-        <div> 제목 </div>
-        <div className="writer"> 작성자 </div>
-        <div> 조회수 </div>
-        <div className="acenter"> 작성일자 </div>
+      <div className="talk__list__head">
+        <p> 번호 </p>
+        <p> 제목 </p>
+        <p> 작성자 </p>
+        <p> 조회수 </p>
+        <p> 작성일자 </p>
       </div>
 
       {talkList.map((talk, key) => {
@@ -93,19 +91,16 @@ const TalkList = ({ talkList }) => {
             to={`/talk/${talk.id}`}
             onClick={() => visitHandler(talk.id)}
             key={key}
+            className="talk__list__body"
           >
-            <div className="list_grid list_data" key={key}>
-              <div className="talk__id">{talk.id}</div>
-
-              <div className="talk__title">
-                {talk.talk_title}
-                &nbsp;&nbsp;
-                <div className="comment_count">[{talk.CCount}]</div>
-              </div>
-              <div className="nickname">{talk.User.nickname}</div>
-              <div className="talk__visit">{talk.visited}</div>
-              <div className="create__time">{talk.created_at}</div>
-            </div>
+            <p className="talk__id">{talk.id}</p>
+            <p className="talk__title">
+              {talk.talk_title}
+              <span className="comment_count">[{talk.CCount}]</span>
+            </p>
+            <p className="nickname">{talk.User.nickname}</p>
+            <p className="talk__visited">{talk.visited}</p>
+            <p className="created__time">{talk.created_at}</p>
           </Link>
         );
       })}

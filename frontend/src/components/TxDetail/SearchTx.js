@@ -47,6 +47,12 @@ const SearchTxStyle = styled.div`
       p {
         margin: 13px;
       }
+      .data {
+        > p:nth-child(2) {
+          width: 100%;
+          overflow: auto;
+        }
+      }
     }
   }
 `;
@@ -122,9 +128,9 @@ const SearchTx = ({ data, loading }) => {
             <p>{data.value}</p>
           </div>
           {data.tx_type === "donate" && (
-            <div className="receipt">
-              <p>RECEIPT</p>
-              <p>{data.receipt}</p>
+            <div className="data">
+              <p>DATA</p>
+              <p>{data.act_data}</p>
             </div>
           )}
           <div className="timestamp">

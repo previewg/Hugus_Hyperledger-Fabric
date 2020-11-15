@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useCallback, useRef, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { TalkSlider } from "components";
 
 const TalkWriteStyle = styled.section`
   width: 100%;
@@ -67,6 +67,51 @@ const TalkWriteStyle = styled.section`
         }
       }
     }
+
+    .upload {
+      > p {
+        width: 100%;
+        font-weight: bold;
+        text-align: left;
+      }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      label {
+        width: 100%;
+        text-align: end;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+        :hover {
+          color: orange;
+        }
+      }
+      input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+
+      .img__clear {
+        width: 100px;
+        height: 30px;
+        border-radius: 5px;
+        background-color: #cd5c5c;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        outline: none;
+        display: ${(props) => (props.files ? "block" : "none")};
+      }
+    }
+
     .content {
       margin-top: 50px;
       display: flex;
@@ -74,60 +119,6 @@ const TalkWriteStyle = styled.section`
       p {
         font-weight: bold;
       }
-      div {
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
-        margin-bottom: 10px;
-
-        > div {
-          display: flex;
-          margin: 0;
-          .preImg {
-            width: 60px;
-            height: 60px;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
-            margin: 5px;
-          }
-          .preImgClear {
-            position: relative;
-            right: 11px;
-            width: 15px;
-            height: 15px;
-            bottom: 46px;
-            background-color: gray;
-            border-radius: 7.5px;
-            font-size: 12px;
-            background-color: darkgray;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-          }
-        }
-
-        label {
-          min-width: 50px;
-          color: grey;
-          font-size: small;
-          cursor: pointer;
-          transition: 0.2s ease-in-out;
-          :hover {
-            color: orange;
-          }
-        }
-        input[type="file"] {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          padding: 0;
-          margin: -1px;
-          overflow: hidden;
-          clip: rect(0, 0, 0, 0);
-          border: 0;
-        }
-      }
-
       textarea {
         padding: 12px;
         resize: none;
@@ -141,156 +132,6 @@ const TalkWriteStyle = styled.section`
           outline: none;
           border: solid 0.1px orange;
         }
-      }
-    }
-
-    .items {
-      margin-top: 35px;
-      width: 100%;
-      > p {
-        font-weight: bold;
-      }
-
-      .item {
-        margin-top: 40px;
-        width: 90%;
-        display: flex;
-        align-items: center;
-        p {
-          margin-left: 5px;
-          font-size: 13px;
-        }
-        input {
-          padding: 5px;
-          height: 20px;
-          outline: none;
-          border: none;
-          border-bottom: solid 0.1px lightgray;
-          transition: 0.3s ease-in-out;
-          :focus {
-            border-bottom: solid 0.1px orange;
-          }
-        }
-        .item_name {
-          display: flex;
-          flex-direction: column;
-          min-width: 200px;
-          margin-right: 10px;
-        }
-        .item_price {
-          display: flex;
-          flex-direction: column;
-          width: 90px;
-          min-width: 90px;
-          margin-right: 10px;
-        }
-        .item_quantity {
-          display: flex;
-          flex-direction: column;
-          width: 90px;
-          min-width: 90px;
-          margin-right: 10px;
-        }
-
-        button {
-          position: relative;
-          top: 20px;
-          left: 20px;
-          width: 50px;
-          min-width: 50px;
-          height: 30px;
-          margin-right: 5px;
-          background-color: transparent;
-          border-radius: 3px;
-          cursor: pointer;
-          outline: none;
-        }
-        .item_add {
-          border: solid orange 0.1px;
-          color: orange;
-          :hover {
-            background-color: orange;
-            color: white;
-          }
-        }
-        .item_delete {
-          border: solid darkgray 0.1px;
-          color: darkgray;
-          :hover {
-            background-color: darkgray;
-            color: white;
-          }
-        }
-      }
-      .item_list {
-        margin-top: 20px;
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-        > div {
-          display: flex;
-          align-items: center;
-          > p {
-            font-size: 13px;
-          }
-          > button {
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-left: 10px;
-            color: #fa6f6f;
-            width: 40px;
-            height: 25px;
-            border: solid 0.1px #fa6f6f;
-            background-color: transparent;
-            outline: none;
-            :hover {
-              background-color: #fa6f6f;
-              color: white;
-            }
-          }
-        }
-      }
-      .total_price {
-        border-top: solid 0.1px orange;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        p:nth-child(1) {
-          font-size: 12px;
-          cursor: pointer;
-          transition: 0.3s ease-in-out;
-          :hover {
-            color: #f83c3c;
-          }
-        }
-      }
-    }
-
-    .warning {
-      margin-top: 30px;
-      width: 100%;
-      border: solid 0.1px lightgray;
-      margin-bottom: 30px;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      p {
-        margin: 15px;
-        margin-left: 20px;
-      }
-      > p:nth-child(1) {
-        font-weight: bold;
-      }
-      strong:nth-child(1) {
-        color: dodgerblue;
-      }
-      strong:nth-child(2) {
-        color: orange;
-      }
-      div {
-        display: flex;
-        justify-content: space-between;
       }
     }
 
@@ -406,6 +247,7 @@ const TalkWrite = ({ props, match, history }) => {
   const [data, setData] = useState({
     title: "",
     content: "",
+    campaign: "",
     files: null,
   });
 
@@ -413,13 +255,10 @@ const TalkWrite = ({ props, match, history }) => {
     title: true,
     content: true,
   });
-
   const [errorCode, setErrorCode] = useState(0);
-
   const [preImg, setPreImg] = useState([]);
 
   const [fileReaderState, setFileReaderState] = useState("");
-
   const errorHandler = useCallback(() => {
     if (!data.title) {
       setErrorCode(1);
@@ -441,11 +280,15 @@ const TalkWrite = ({ props, match, history }) => {
     return true;
   }, [data, filled]);
 
+  console.log("file:", data.files);
+  console.log("pre:", preImg);
+
   const talkAddHandler = async () => {
     if (errorHandler()) {
       const formData = new FormData();
       formData.append("talk_title", data.title);
       formData.append("talk_content", data.content);
+      formData.append("campaign_id", match.params.id);
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -465,7 +308,6 @@ const TalkWrite = ({ props, match, history }) => {
         });
     }
   };
-
   const previewImg = (e) => {
     setPreImg([]);
     for (const file of e.target.files) {
@@ -481,6 +323,14 @@ const TalkWrite = ({ props, match, history }) => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const imgDeleteHandler = () => {
+    setData({
+      ...data,
+      files: null,
+    });
+    setPreImg([]);
   };
 
   const onChangeHandler = (e) => {
@@ -501,14 +351,12 @@ const TalkWrite = ({ props, match, history }) => {
   };
 
   useEffect(() => {
-    if (init.current) {
-      init.current = false;
-    }
+    window.scrollTo(0, 0);
   }, []);
 
   return (
     <>
-      <TalkWriteStyle>
+      <TalkWriteStyle files={data.files}>
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -524,32 +372,27 @@ const TalkWrite = ({ props, match, history }) => {
               onChange={onChangeHandler}
             />
           </div>
-
+          <div className="upload">
+            <p>파일</p>
+            <label htmlFor="files" onClick={imgDeleteHandler}>
+              첨부하기
+            </label>
+            <input
+              id="files"
+              name="files"
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={onChangeHandler}
+            />
+            <button className="img__clear" onClick={imgDeleteHandler}>
+              사진 초기화
+            </button>
+          </div>
+          <TalkSlider files={preImg} />
           <div className="content">
             <p>소식</p>
-            <div>
-              {preImg.map((item, key) => {
-                return (
-                  <div key={key}>
-                    <img
-                      className="preImg"
-                      src={item.previewURL}
-                      key={key}
-                      alt="preview"
-                    />
-                  </div>
-                );
-              })}
-              <label htmlFor="files">파일 첨부</label>
-              <input
-                id="files"
-                name="files"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={onChangeHandler}
-              />
-            </div>
+
             <textarea
               name="content"
               ref={content}
@@ -559,7 +402,6 @@ const TalkWrite = ({ props, match, history }) => {
               onChange={onChangeHandler}
             />
           </div>
-
           <div className="submit">
             <button onClick={talkAddHandler}>
               제출하기

@@ -26,7 +26,7 @@ const TalkStyle = styled.section`
       > p {
         font-size: 30px;
         border-bottom: solid orange 2px;
-        padding-bottom: 2px;
+        padding-bottom: 5px;
       }
     }
     .write {
@@ -54,8 +54,6 @@ const LoaderStyle = styled.div`
 `;
 
 const TalkMain = (props) => {
-  const dispatch = useDispatch();
-  const isLoggedIn = props.isLoggedIn;
   const [total, setTotal] = useState(0);
   const [talkList, setTalkList] = useState([]);
   const [search, setSearch] = useState("");
@@ -68,11 +66,6 @@ const TalkMain = (props) => {
     setTotal(data.data.count);
     setClicked(false);
     setLoading(false);
-  };
-
-  const onClickHandler = () => {
-    if (isLoggedIn) props.history.push("/talk/write");
-    else dispatch(signInBtnIsClicked());
   };
 
   const Loader = () => {
@@ -106,16 +99,12 @@ const TalkMain = (props) => {
           setClicked={setClicked}
         />
         {!loading ? <TalkList talkList={talkList} /> : <Loader />}
-        <div className="write">
-          <span className="talkWrite__btn" onClick={onClickHandler}>
-            글작성
-          </span>
-        </div>
         <TalkPagination
           clicked={clicked}
           total={total}
           pageLimit="5"
           nowPage={nowPage}
+          loading={loading}
         />
       </div>
     </TalkStyle>

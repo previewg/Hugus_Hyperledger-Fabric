@@ -31,6 +31,7 @@ import TalkContents from "./TalkDetail/TalkContents";
 import TalkComments from "./TalkDetail/TalkComments";
 import TalkCommentInput from "./TalkDetail/TalkCommentInput";
 import TalkCommentList from "./TalkDetail/TalkCommentList";
+import TalkSlider from "./TalkWrite/TalkSlider";
 import NaverCallback from "./User/NaverCallback";
 import Main from "./Home/Main";
 import BlockSearch from "./BlockInfo/BlockSearch";
@@ -69,7 +70,6 @@ import AdminReport from "./Admin/Report/AdminReport";
 import AdminLoader from "./Admin/Loader";
 import AdminAct from "./Admin/Act/AdminAct";
 
-
 export {
   Main,
   NavBar,
@@ -105,6 +105,7 @@ export {
   TalkComments,
   TalkCommentInput,
   TalkCommentList,
+  TalkSlider,
   NaverCallback,
   BlockSearch,
   BlockInfoHead,
