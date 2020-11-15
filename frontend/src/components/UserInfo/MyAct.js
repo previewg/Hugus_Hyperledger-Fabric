@@ -41,7 +41,6 @@ const MyActStyle = styled.section`
         padding-bottom: 20px;
       }
       .act__body {
-        cursor: pointer;
         height: 30px;
         display: grid;
         grid-template-columns: 3fr 1fr 1fr;
@@ -53,6 +52,7 @@ const MyActStyle = styled.section`
           justify-self: center;
         }
         p:nth-child(1) {
+          cursor: pointer;
           padding-left: 10px;
           justify-self: start;
         }
@@ -64,6 +64,12 @@ const MyActStyle = styled.section`
         }
         border-bottom: solid 0.1px lightgray;
         padding-bottom: 20px;
+        button {
+          background-color: transparent;
+          border: none;
+          outline: none;
+          cursor: pointer;
+        }
       }
     }
   }
@@ -107,9 +113,17 @@ const MyAct = ({ actList, history }) => {
             {actList.map((act, key) => {
               return (
                 <div className="act__body" key={key}>
-                  <p>{act.act_title}</p>
+                  <p onClick={() => history.push(`/act/${act.id}`)}>
+                    {act.act_title}
+                  </p>
                   <p>{getTimeStamp(act.created_at)}</p>
-                  <button>작성하기</button>
+                  <button
+                    onClick={() =>
+                      history.push(`/talk/write/${act.campaign_id}`)
+                    }
+                  >
+                    작성하기
+                  </button>
                 </div>
               );
             })}

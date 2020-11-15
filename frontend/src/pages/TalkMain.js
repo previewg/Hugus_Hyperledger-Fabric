@@ -104,6 +104,7 @@ const TalkMain = (props) => {
           total={total}
           pageLimit="5"
           nowPage={nowPage}
+          loading={loading}
         />
       </div>
     </TalkStyle>

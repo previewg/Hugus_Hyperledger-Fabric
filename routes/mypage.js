@@ -217,7 +217,14 @@ router.post("/init", async (req, res) => {
     });
 
     const actList = await Act.findAll({
-      attributes: ["act_title", "id", "act_content", "visited", "created_at"],
+      attributes: [
+        "act_title",
+        "id",
+        "act_content",
+        "visited",
+        "created_at",
+        "campaign_id",
+      ],
       include: [{ model: Act_File, attributes: ["file"], limit: 1 }],
       order: [["created_at", "DESC"]],
       where: {
