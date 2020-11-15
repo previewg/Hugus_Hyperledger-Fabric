@@ -102,16 +102,17 @@ const EditInfoStyle = styled.section`
     }
 
     .profile__nickname {
-      width: 220px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
+      width: 250px;
+      display: grid;
+      grid-template-columns: 1fr 3fr;
       align-items: center;
+      margin-top: 30px;
       > p:nth-child(2) {
-        font-size: 22px;
+        padding-left: 10px;
       }
+
       .update__nickname {
-        width: 38%;
+        width: 100%;
         height: 13px;
         font-size: 15px;
         transition: 0.4s ease-in-out;
@@ -119,6 +120,29 @@ const EditInfoStyle = styled.section`
         padding: 10px;
         border-radius: 20px;
 
+        :focus {
+          outline: none;
+          border: solid 0.1px orange;
+        }
+      }
+    }
+
+    .profile__phone {
+      width: 250px;
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      align-items: center;
+      > p:nth-child(2) {
+        padding-left: 10px;
+      }
+      .update__phone {
+        width: 100%;
+        height: 13px;
+        font-size: 15px;
+        transition: 0.4s ease-in-out;
+        border: solid 0.2px lightgray;
+        padding: 10px;
+        border-radius: 20px;
         :focus {
           outline: none;
           border: solid 0.1px orange;
@@ -127,54 +151,48 @@ const EditInfoStyle = styled.section`
     }
 
     .profile__email {
-      width: 220px;
-      display: flex;
-      justify-content: center;
+      width: 250px;
+      display: grid;
+      grid-template-columns: 1fr 3fr;
       align-items: center;
       > p:nth-child(2) {
-        font-size: 22px;
-        width: 40px;
+        padding-left: 10px;
       }
-    }
-
-    .profile__phone {
-      width: 300px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .update__phone {
-        width: 35%;
-        height: 13px;
-        font-size: 15px;
-        transition: 0.4s ease-in-out;
-        border: solid 0.2px lightgray;
-        padding: 10px;
-        border-radius: 20px;
-        :focus {
-          outline: none;
-          border: solid 0.1px orange;
-        }
-      }
-      > p:nth-child(2) {
-        font-size: 22px;
-      }
-    }
-
-    p {
-      margin-right: 20px;
     }
 
     .profile__delete {
-      display: flex;
+      width: 250px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       margin-top: 30px;
       cursor: pointer;
       p:nth-child(1) {
+        width: 85%;
+        height: 30px;
+        border: solid 0.1px #2273ff;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         color: #2273ff;
+        :hover {
+          font-weight: bold;
+        }
       }
       p:nth-child(2) {
+        width: 85%;
+        height: 30px;
+        border: solid 0.1px gray;
+        border-radius: 5px;
+        text-align: center;
         color: gray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         :hover {
-          color: red;
+          color: #fc4d4d;
+          border: solid 0.1px #fc4d4d;
+          font-weight: bold;
         }
       }
     }
@@ -218,6 +236,7 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
       window.history.back();
     }
   };
+
   const errorMsg = [
     "닉네임이 이미 존재합니다.",
     "휴대전화 번호는 숫자와 '-' 만 입력가능합니다.",
@@ -352,6 +371,7 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
         )}
 
         <div className="profile__nickname">
+          <p>닉네임</p>
           {updateOpen ? (
             <input
               className="update__nickname"
@@ -362,15 +382,11 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
               onKeyPress={onChangeInfo}
             />
           ) : (
-            <p>
-              닉네임 :{myPageData.success === 1 ? userInfo.nickname : username}{" "}
-            </p>
+            <p>{myPageData.success === 1 ? userInfo.nickname : username}</p>
           )}
         </div>
-        <div className="profile__email">
-          <p> 이메일 : {email} </p>
-        </div>
         <div className="profile__phone">
+          <p>휴대전화</p>
           {updateOpen ? (
             <input
               className="update__phone"
@@ -381,11 +397,12 @@ const EditInfo = ({ setInfoType, profile, nickname }) => {
               onKeyPress={onChangeInfo}
             />
           ) : (
-            <p>
-              휴대전화 번호 :{" "}
-              {myPageData.success === 1 ? userInfo.phone : phone_number}
-            </p>
+            <p>{myPageData.success === 1 ? userInfo.phone : phone_number}</p>
           )}
+        </div>
+        <div className="profile__email">
+          <p>이메일</p>
+          <p>{email}</p>
         </div>
         <div className="profile__delete">
           {updateOpen ? (

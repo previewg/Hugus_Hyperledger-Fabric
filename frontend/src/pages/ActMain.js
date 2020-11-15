@@ -24,13 +24,8 @@ const ActStyle = styled.section`
       > p {
         font-size: 30px;
         border-bottom: solid orange 2px;
-        padding-bottom: 2px;
+        padding-bottom: 5px;
       }
-    }
-
-    .actWrite_Btn {
-      font-size: 1px;
-      cursor: pointer;
     }
   }
 `;
@@ -50,16 +45,16 @@ const ActMain = () => {
     return (
       <LoaderStyle>
         <ClipLoader
-                css={css`
-                  margin-top: 10px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                `}
-                size={50}
-                color={"#f69a53"}
-                loading={true}
-              />
+          css={css`
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
+          size={50}
+          color={"#f69a53"}
+          loading={true}
+        />
       </LoaderStyle>
     );
   };
@@ -71,12 +66,16 @@ const ActMain = () => {
           <p>전달 스토리</p>
         </div>
         <Search search={search} setSearch={setSearch} setClicked={setClicked} />
-        {loader ? <ActList 
-                    search={search} 
-                    setClicked={setClicked} 
-                    setLoader={setLoader}
-                    clicked={clicked} /> : <Loader />}
-
+        {loader ? (
+          <ActList
+            search={search}
+            setClicked={setClicked}
+            setLoader={setLoader}
+            clicked={clicked}
+          />
+        ) : (
+          <Loader />
+        )}
       </div>
     </ActStyle>
   );
