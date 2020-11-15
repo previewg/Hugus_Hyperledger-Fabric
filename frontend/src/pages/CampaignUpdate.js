@@ -1,8 +1,10 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { HashLoader } from "react-spinners";
+import { css } from "@emotion/core";
 
-const CampaignUpdateStyle = styled.div`
+const CampaignUpdateStyle = styled.section`
   display: flex;
   justify-content: center;
   margin-bottom: 200px;
@@ -46,7 +48,7 @@ const CampaignUpdateStyle = styled.div`
       }
     }
 
-    .email {
+    .story {
       margin-top: 50px;
       width: 100%;
       display: flex;
@@ -56,38 +58,61 @@ const CampaignUpdateStyle = styled.div`
         margin-right: 10px;
         width: 100px;
       }
-      input {
-        border: none;
-        width: 200px;
-        padding: 5px;
-        border-bottom: solid 0.1px lightgray;
-        transition: 0.3s ease-in-out;
-        :focus {
-          outline: none;
-          border-bottom: solid 0.1px orange;
+      > div {
+        input {
+          border: none;
+          width: 250px;
+          padding: 5px;
+          border-bottom: solid 0.1px lightgray;
+          transition: 0.3s ease-in-out;
+          :focus {
+            outline: none;
+            border-bottom: solid 0.1px orange;
+          }
         }
-      }
-    }
-
-    .goal {
-      margin-top: 50px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      p {
-        font-weight: bold;
-        margin-right: 10px;
-        width: 100px;
-      }
-      input {
-        border: none;
-        width: 110px;
-        padding: 5px;
-        border-bottom: solid 0.1px lightgray;
-        transition: 0.3s ease-in-out;
-        :focus {
-          outline: none;
-          border-bottom: solid 0.1px orange;
+        .live__suggestion {
+          display: ${(props) =>
+            props.story && props.openSuggest ? "flex" : "none"};
+          position: absolute;
+          top: 395px;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 250px;
+          > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            input {
+              cursor: pointer;
+              margin-left: 10px;
+              width: 238px;
+              min-width: 238px;
+              padding: 12px;
+              outline: none;
+              border: solid 0.1px lightgray;
+              border-top: none;
+              :hover {
+                color: orange;
+                font-weight: bold;
+                background-color: #faf4e7;
+              }
+            }
+            img {
+              width: 30px;
+              position: relative;
+              z-index: -100;
+              right: 30px;
+            }
+            :nth-child(${(props) => props.now}) {
+              input {
+                background-color: #faf4e7;
+                color: orange;
+                font-weight: bold;
+              }
+            }
+          }
         }
       }
     }
@@ -97,60 +122,15 @@ const CampaignUpdateStyle = styled.div`
       margin-top: 50px;
       display: flex;
       flex-direction: column;
-      > div:nth-child(1) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        label {
-          min-width: 50px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: 0.2s ease-in-out;
-          :hover {
-            color: orange;
-          }
-        }
-        p {
-          cursor: pointer;
-          border-bottom: solid 0.1px palevioletred;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 50px;
-          height: 25px;
-          color: palevioletred;
-          font-size: 15px;
-        }
+      > p {
+        min-width: 50px;
+        font-weight: bold;
       }
-      > div:nth-child(2) {
+      div {
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-top: 20px;
         justify-content: center;
-        .preImg {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          > p {
-            text-align: center;
-          }
-          > div {
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            width: 100%;
-            height: 300px;
-          }
-          :nth-child(1) {
-            > div {
-              width: 300px;
-              background-size: cover;
-            }
-          }
-        }
-
         input[type="file"] {
           position: absolute;
           width: 1px;
@@ -160,6 +140,85 @@ const CampaignUpdateStyle = styled.div`
           overflow: hidden;
           clip: rect(0, 0, 0, 0);
           border: 0;
+        }
+        .subImg {
+          justify-self: center;
+          width: 300px;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 2px dashed lightgray;
+          border-radius: 10px;
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-color: ${(props) =>
+            props.subImgDrag ? "darkgray" : "transparent"};
+          background-image: ${(props) =>
+            props.preImgSub ? `url(${props.preImgSub.previewURL})` : "none"};
+          > label {
+            display: ${(props) =>
+              props.subImgDrag || props.subImg ? "none" : "block"};
+            font-size: 20px;
+          }
+          > p {
+            display: ${(props) =>
+              props.subImgDrag || props.subImg ? "none" : "block"};
+            color: orange;
+          }
+        }
+        .mainImg {
+          justify-self: center;
+          width: 300px;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 2px dashed lightgray;
+          border-radius: 10px;
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-color: ${(props) =>
+            props.mainImgDrag ? "darkgray" : "transparent"};
+          background-image: ${(props) =>
+            props.preImgMain ? `url(${props.preImgMain.previewURL})` : "none"};
+          > label {
+            display: ${(props) =>
+              props.mainImgDrag || props.mainImg ? "none" : "block"};
+            font-size: 20px;
+          }
+          > p {
+            display: ${(props) =>
+              props.mainImgDrag || props.mainImg ? "none" : "block"};
+            color: orange;
+          }
+        }
+      }
+      .img__clear {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-top: 20px;
+        > button {
+          justify-self: center;
+          width: 100px;
+          height: 30px;
+          border-radius: 5px;
+          background-color: #cd5c5c;
+          color: white;
+          border: none;
+          cursor: pointer;
+          font-size: 15px;
+          outline: none;
+          :nth-child(1) {
+            visibility: ${(props) => (props.subImg ? "visible" : "hidden")};
+          }
+          :nth-child(2) {
+            visibility: ${(props) => (props.mainImg ? "visible" : "hidden")};
+          }
         }
       }
     }
@@ -242,6 +301,15 @@ const CampaignUpdateStyle = styled.div`
   }
 `;
 
+const LoaderStyle = styled.div`
+  width: 40%;
+  height: 20vh;
+  display: flex;
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+`;
+
 const ErrorBoxStyle = styled.p`
   ${(props) => {
     if (props.error == 0) {
@@ -268,40 +336,46 @@ const ErrorBoxStyle = styled.p`
 const errorMsg = [
   "",
   "제목을 입력 바랍니다",
-  "수혜자를 입력 바랍니다",
+  "스토리를 입력 바랍니다",
+  "썸네일을 추가 바랍니다",
   "내용을 첨부 바랍니다",
-  "기부 금액을 입력 바랍니다",
   "해시태그를 입력 바랍니다",
 ];
 
 const CampaignUpdate = (props) => {
   const title = useRef();
-  const email = useRef();
-  const files = useRef();
+  const story = useRef();
+  const subImg = useRef();
+  const mainImg = useRef();
   const hashtags = useRef();
-  const goal = useRef();
+  const init = useRef(true);
   const [data, setData] = useState({
     title: "",
-    email: "",
-    files: null,
+    subImg: null,
+    mainImg: null,
     hashtag: "",
     hashtags: [],
-    goal: 0,
+    story: "",
   });
+  const [openSuggest, setOpenSuggest] = useState(false);
+  const [now, setNow] = useState(0);
+  const [storyList, setStoryList] = useState([]);
+  const [matchedList, setMatchedList] = useState([]);
+  const [subImgDrag, setSubImgDrag] = useState(false);
+  const [mainImgDrag, setMainImgDrag] = useState(false);
 
   const [filled, setFilled] = useState({
     title: true,
-    email: true,
-    files: true,
+    subImg: true,
+    mainImg: true,
     hashtags: true,
-    goal: true,
+    story: true,
   });
 
   const [errorCode, setErrorCode] = useState(0);
 
-  const [preImg, setPreImg] = useState([]);
-
-  const [fileReaderState, setFileReaderState] = useState("");
+  const [preImgSub, setPreImgSub] = useState(null);
+  const [preImgMain, setPreImgMain] = useState(null);
 
   const errorHandler = useCallback(() => {
     if (!data.title) {
@@ -312,28 +386,28 @@ const CampaignUpdate = (props) => {
         title: false,
       });
       return false;
-    } else if (!data.email) {
+    } else if (!data.story) {
       setErrorCode(2);
-      email.current.focus();
+      story.current.focus();
       setFilled({
         ...filled,
-        email: false,
+        story: false,
       });
       return false;
-    } else if (!data.files) {
+    } else if (!data.subImg) {
       setErrorCode(3);
-      files.current.focus();
+      subImg.current.focus();
       setFilled({
         ...filled,
-        files: false,
+        subImg: false,
       });
       return false;
-    } else if (data.goal === 0) {
+    } else if (!data.mainImg) {
       setErrorCode(4);
-      goal.current.focus();
+      mainImg.current.focus();
       setFilled({
         ...filled,
-        goal: false,
+        subImg: false,
       });
       return false;
     } else if (data.hashtags.length === 0) {
@@ -352,18 +426,16 @@ const CampaignUpdate = (props) => {
     if (errorHandler()) {
       const formData = new FormData();
       formData.append("campaign_title", data.title);
-      formData.append("email", data.email);
       formData.append("hashtags", data.hashtags);
-      formData.append("campaign_goal", data.goal);
-      if (data.files !== null) {
-        for (const file of data.files) {
-          formData.append(`files`, file);
-        }
-      } else {
-        formData.append("files", "");
+      formData.append("story_title", data.story);
+      for (const file of data.subImg) {
+        formData.append(`files`, file);
+      }
+      for (const file of data.mainImg) {
+        formData.append(`files`, file);
       }
       await axios
-        .post("/campaign/add", data, {
+        .post("/campaign/add", formData, {
           headers: { "content-type": "multipart/form-data" },
         })
         .then(() => {
@@ -377,18 +449,29 @@ const CampaignUpdate = (props) => {
     }
   };
 
-  const previewImg = (e) => {
-    setPreImg([]);
+  const preImgSubHandler = (e) => {
+    setPreImgSub(null);
     for (const file of e.target.files) {
       let reader = new FileReader();
       reader.onloadend = () => {
-        let newPreImg = preImg;
-        newPreImg.push({
+        setPreImgSub({
           file: file,
           previewURL: reader.result,
         });
-        setPreImg(newPreImg);
-        setFileReaderState(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const preImgMainHandler = (e) => {
+    setPreImgMain(null);
+    for (const file of e.target.files) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        setPreImgMain({
+          file: file,
+          previewURL: reader.result,
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -396,8 +479,14 @@ const CampaignUpdate = (props) => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    if (e.target.name === "files") {
-      previewImg(e);
+    if (e.target.name === "subImg") {
+      preImgSubHandler(e);
+      setData({
+        ...data,
+        [e.target.name]: e.target.files,
+      });
+    } else if (e.target.name === "mainImg") {
+      preImgMainHandler(e);
       setData({
         ...data,
         [e.target.name]: e.target.files,
@@ -418,7 +507,7 @@ const CampaignUpdate = (props) => {
   };
 
   const addHashtag = (e) => {
-    if (e.target.value === "") setErrorCode(4);
+    if (e.target.value === "") setErrorCode(6);
     else {
       let hashtags = data.hashtags.concat(e.target.value);
       setData({
@@ -454,17 +543,109 @@ const CampaignUpdate = (props) => {
     [data]
   );
 
-  const onFileDeleteHandler = () => {
+  const subImgDeleteHandler = () => {
     setData({
       ...data,
-      files: null,
+      subImg: null,
     });
-    setPreImg([]);
+    setPreImgSub(null);
   };
+
+  const mainImgDeleteHandler = () => {
+    setData({
+      ...data,
+      mainImg: null,
+    });
+    setPreImgMain(null);
+  };
+
+  const dragOver = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (e.target.className === "subImg") setSubImgDrag(true);
+    else if (e.target.className === "mainImg") setMainImgDrag(true);
+  };
+
+  const dragLeave = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (e.target.className === "subImg") setSubImgDrag(false);
+    else if (e.target.className === "mainImg") setMainImgDrag(false);
+  };
+
+  const uploadFiles = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+
+    if (files.length > 1) {
+      alert("하나만 가능합니다");
+      return;
+    }
+
+    if (files[0].type.match(/image.*/)) {
+    } else {
+      alert("이미지 파일이 아닙니다.");
+      return;
+    }
+
+    if (e.target.className === "subImg") {
+      setPreImgSub(null);
+      for (const file of files) {
+        let reader = new FileReader();
+        reader.onloadend = () => {
+          setPreImgSub({
+            file: file,
+            previewURL: reader.result,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+      setData({
+        ...data,
+        [e.target.className]: files,
+      });
+      setSubImgDrag(false);
+    } else if (e.target.className === "mainImg") {
+      setPreImgMain(null);
+      for (const file of files) {
+        let reader = new FileReader();
+        reader.onloadend = () => {
+          setPreImgMain({
+            file: file,
+            previewURL: reader.result,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+      setData({
+        ...data,
+        [e.target.className]: files,
+      });
+      setMainImgDrag(false);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (init.current) {
+      init.current = false;
+    }
+  }, []);
 
   return (
     <>
-      <CampaignUpdateStyle>
+      <CampaignUpdateStyle
+        preImgSub={preImgSub}
+        preImgMain={preImgMain}
+        subImgDrag={subImgDrag}
+        mainImgDrag={mainImgDrag}
+        subImg={data.subImg}
+        mainImg={data.mainImg}
+        story={data.story}
+        now={now}
+        openSuggest={openSuggest}
+      >
         <div className="layout">
           <div className="write_title">
             <p>캠페인 등록</p>
@@ -481,66 +662,52 @@ const CampaignUpdate = (props) => {
             />
           </div>
 
-          <div className="email">
-            <p>수혜자(email)</p>
-            <input
-              name="email"
-              ref={email}
-              value={data.email}
-              type="text"
-              placeholder="수헤자 이메일을 입력하세요."
-              onChange={onChangeHandler}
-            />
-          </div>
-
-          <div className="goal">
-            <p>목표 기부 금액</p>
-            <input
-              name="goal"
-              ref={goal}
-              value={data.goal}
-              type="number"
-              placeholder="기부 금액을 입력하세요."
-              onChange={onChangeHandler}
-            />
-            <p>원</p>
+          <div className="story">
+            <p>해당 스토리</p>
+            <div></div>
           </div>
 
           <div className="content">
+            <p>파일 첨부</p>
             <div>
-              <label htmlFor="files">파일 첨부</label>
-              <p onClick={onFileDeleteHandler}>초기화</p>
+              <div
+                className="subImg"
+                onDragOver={dragOver}
+                onDragLeave={dragLeave}
+                onDrop={uploadFiles}
+              >
+                <label htmlFor="subImg">썸네일</label>
+                <p> Drag&Drop</p>
+                <input
+                  ref={subImg}
+                  id="subImg"
+                  name="subImg"
+                  type="file"
+                  accept="image/*"
+                  onChange={onChangeHandler}
+                />
+              </div>
+              <div
+                className="mainImg"
+                onDragOver={dragOver}
+                onDragLeave={dragLeave}
+                onDrop={uploadFiles}
+              >
+                <label htmlFor="mainImg">본문</label>
+                <p> Drag&Drop</p>
+                <input
+                  ref={mainImg}
+                  id="mainImg"
+                  name="mainImg"
+                  type="file"
+                  accept="image/*"
+                  onChange={onChangeHandler}
+                />
+              </div>
             </div>
-            <div>
-              {preImg.slice(0, 2).map((item, key) => {
-                if (key === 0) {
-                  return (
-                    <div key={key} className="preImg">
-                      <p>썸네일 사진</p>
-                      <div
-                        style={{ backgroundImage: `url(${item.previewURL})` }}
-                      ></div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={key} className="preImg">
-                      <p>본문 사진</p>
-                      <div
-                        style={{ backgroundImage: `url(${item.previewURL})` }}
-                      ></div>
-                    </div>
-                  );
-                }
-              })}
-              <input
-                id="files"
-                name="files"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={onChangeHandler}
-              />
+            <div className="img__clear">
+              <button onClick={subImgDeleteHandler}>썸네일 초기화</button>
+              <button onClick={mainImgDeleteHandler}>본문 초기화</button>
             </div>
           </div>
 
