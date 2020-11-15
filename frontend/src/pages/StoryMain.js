@@ -49,13 +49,17 @@ const StoryMain = (props) => {
     else dispatch(signInBtnIsClicked());
   };
 
+  // useEffect(() => {
+  //   if (props.location.search) {
+  //     setStoryType(props.location.search.split("=")[1]);
+  //     setChanged(true);
+  //   }
+  //   window.scrollTo(0, 0);
+  // }, [props.location.search]);
+
   useEffect(() => {
-    if (props.location.search) {
-      setStoryType(props.location.search.split("=")[1]);
-      setChanged(true);
-    }
     window.scrollTo(0, 0);
-  }, [props.location.search]);
+  }, []);
 
   return (
     <StoryMainStyle>

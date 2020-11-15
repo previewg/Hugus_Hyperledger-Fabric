@@ -10,7 +10,6 @@ import CampaignList from "./Home/CampaignList";
 import MoreBtn from "./Home/MoreBtn";
 import ScrollTop from "./ScrollTop";
 import EditInfo from "./UserInfo/EditInfo";
-import History from "./UserInfo/History";
 import MyNews from "./UserInfo/MyNews";
 import ReportInfo from "./UserInfo/ReportInfo";
 import MyHome from "./UserInfo/MyHome";
@@ -84,7 +83,6 @@ export {
   CampaignList,
   ScrollTop,
   EditInfo,
-  History,
   MyHome,
   MyNews,
   ReportInfo,
