@@ -95,7 +95,7 @@ const MyAct = ({ actList, history }) => {
     <MyActStyle>
       <p>수혜 내역</p>
       <div className="act__list">
-        {!actList ? (
+        {actList.length === 0 ? (
           <p>수혜 내역이 없습니다</p>
         ) : (
           <div className="act">
