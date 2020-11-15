@@ -36,7 +36,11 @@ const AdminStoryListStyle = styled.article`
       }
     }
     .story__title {
+      width: 100%;
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .story__control {
       display: grid;

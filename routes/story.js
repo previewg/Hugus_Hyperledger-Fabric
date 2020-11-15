@@ -54,8 +54,7 @@ router.post("/add", upload.array("files"), async (req, res) => {
 
     const story_id = story.getDataValue("id");
     for (const file of req.files) {
-      let fileName = null;
-      if (file.location !== null) fileName = file.location;
+      let fileName = file.location;
       await Story_File.create({
         story_id: story_id,
         file: fileName,
@@ -164,38 +163,40 @@ router.post("/update", upload.array("files"), async (req, res) => {
       del_hashtags,
     } = req.body;
 
-    // 프론트에서 사진 유지한다는 값을 던져줘야함 -> 처리하기
-    // const files = await Story_File.findAll({
-    //   where: { story_id: id },
-    //   attributes: ["file"],
-    // });
-    //
-    // let params = {
-    //   Bucket: "hugusstory",
-    //   Delete: {
-    //     Objects: [],
-    //   },
-    // };
-    //
-    // for (const file of files) {
-    //   const key = file.file.split("/");
-    //   params.Delete.Objects.push({ Key: decodeURI(key[3]) });
-    // }
-    //
-    // await s3.deleteObjects(params, (err) => {
-    //   if (err) {
-    //     throw err;
-    //   }
-    // });
-    // await Story_File.destroy({
-    //   where: { story_id: id },
-    // });
-
-    for (const file of req.files) {
-      await Story_File.create({
-        story_id: story.dataValues.id,
-        file: file.filename,
+    if (req.files.length !== 0) {
+      const files = await Story_File.findAll({
+        where: { story_id: id },
+        attributes: ["file"],
       });
+
+      let params = {
+        Bucket: "hugusstory",
+        Delete: {
+          Objects: [],
+        },
+      };
+
+      for (const file of files) {
+        const key = file.file.split("/");
+        params.Delete.Objects.push({ Key: decodeURI(key[3]) });
+      }
+
+      await s3.deleteObjects(params, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+      await Story_File.destroy({
+        where: { story_id: id },
+      });
+
+      for (const file of req.files) {
+        let fileName = file.location;
+        await Story_File.create({
+          story_id: id,
+          file: fileName,
+        });
+      }
     }
 
     const delHashtagList = JSON.parse(del_hashtags);
@@ -233,25 +234,6 @@ router.post("/update", upload.array("files"), async (req, res) => {
       }
     }
 
-    // 아이템은 수정 못하게
-    // for (const id of del_items.split(",")) {
-    //   await Story_Item.destroy({
-    //     where: { id: id },
-    //   });
-    // }
-    //
-    // const itemList = JSON.parse(items);
-    // for (const item of itemList) {
-    //   if (item.new) {
-    //     await Story_Item.create({
-    //       story_id: id,
-    //       item_name: item.item_name,
-    //       item_price: item.item_price,
-    //       item_quantity: item.item_quantity,
-    //     });
-    //   }
-    // }
-
     await Story.update(
       {
         story_title,
@@ -262,10 +244,9 @@ router.post("/update", upload.array("files"), async (req, res) => {
         where: { id },
       }
     );
-
     res.json({ success: 1 });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.json({ message: false });
   }
 });
@@ -441,7 +422,7 @@ router.get("/list/:page", async (req, res) => {
           ],
         ],
         include: [
-          {model: User, attributes:["nickname","user_profile"]},
+          { model: User, attributes: ["nickname", "user_profile"] },
           { model: Hashtag, attributes: ["hashtag"] },
           { model: Story_File, attributes: ["file"], limit: 1 },
         ],
@@ -477,6 +458,7 @@ router.get("/:id", async (req, res) => {
         "story_goal",
         "user_email",
         "visited",
+        "expired",
         [
           sequelize.literal(
             "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"

@@ -37,6 +37,9 @@ const MyNewsStyle = styled.section`
         padding-left: 15px;
         margin-bottom: 15px;
         border-radius: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         :hover {
           border: solid 0.1px orange;
         }
@@ -70,6 +73,9 @@ const MyNewsStyle = styled.section`
         padding-left: 15px;
         margin-bottom: 10px;
         border-radius: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-size: 15px;
         :hover {
           border: solid 0.1px orange;
@@ -122,9 +128,14 @@ const MyNewsStyle = styled.section`
       }
     }
     > p {
+      text-align: center;
       margin-top: 30px;
       font-size: 17px;
+      width: 200px;
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .watermark__del {
@@ -220,8 +231,9 @@ const MyNews = ({ storyList, votedList, history }) => {
             }}
           >
             <div>
-              {" "}
-              <strong>{data.story_vote / data.story_goal.toFixed(1)}%</strong>
+              <strong>
+                {((data.story_vote * 100) / data.story_goal).toFixed(0)}%
+              </strong>
               <p>
                 {data.story_vote}/{data.story_goal}
               </p>

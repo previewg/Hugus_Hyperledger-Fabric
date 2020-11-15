@@ -26,12 +26,12 @@ const SearchStyle = styled.div`
     margin-left: 10px;
     cursor: pointer;
     width: 30px;
+    height: 30px;
     z-index: 1;
     right: 45px;
     cursor: pointer;
     transition: 0.1s ease-in-out;
     :hover {
-      color: orange;
       transform: scale(1.2);
     }
   }
@@ -47,11 +47,6 @@ const Search = ({ search, setSearch, setClicked }) => {
     setPlaceholder("SEARCH");
     here.current.focus();
   };
-
-  // const inputClose = (e) => {
-  //     setSearch("")
-  //     setIsClicked(false);
-  //   };
 
   const onChangeHandler = (e) => {
     e.preventDefault();

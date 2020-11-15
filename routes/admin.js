@@ -373,4 +373,8 @@ router.post("/report/add", async (req, res) => {
   }
 });
 
+router.post("/url", (req, res) => {
+  res.json({ success: 1, url: process.env.FABRIC_EXPLORER_URL });
+});
+
 module.exports = router;

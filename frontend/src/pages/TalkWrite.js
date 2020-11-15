@@ -399,27 +399,9 @@ const ErrorBoxStyle = styled.p`
 const errorMsg = ["", "제목을 입력 바랍니다", "소식을 입력 바랍니다"];
 
 const TalkWrite = ({ props, match, history }) => {
-  const dispatch = useDispatch();
   const title = useRef();
   const content = useRef();
   const init = useRef(true);
-  const [talkId, setTalkId] = useState([]);
-  const [talkCommentList, setTalkCommentList] = useState([]);
-  useEffect(() => {
-    const id = match.params.id;
-    const page = 1;
-
-    const initFunc = async () => {
-      const data = await axios.get(`/talk/${id}`);
-      const comment = await axios.get(`/talk_comment/list/${id}/${page}`);
-      setTalkId(data.data);
-      setTalkCommentList(comment.data);
-    };
-    if (init.current) {
-      init.current = false;
-      initFunc();
-    }
-  }, []);
 
   const [data, setData] = useState({
     title: "",
@@ -474,7 +456,6 @@ const TalkWrite = ({ props, match, history }) => {
       await axios
         .post(`/talk/add`, formData)
         .then((res) => {
-          setTalkCommentList(res.data);
           alert("성공적으로 등록되었습니다.");
           history.push("/talk");
         })
@@ -518,6 +499,12 @@ const TalkWrite = ({ props, match, history }) => {
       setErrorCode(0);
     }
   };
+
+  useEffect(() => {
+    if (init.current) {
+      init.current = false;
+    }
+  }, []);
 
   return (
     <>

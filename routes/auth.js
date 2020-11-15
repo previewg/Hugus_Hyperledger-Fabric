@@ -11,6 +11,16 @@ const axios = require("axios");
 
 const { User, Email_confirm } = require("../models");
 
+// 특수문자 제거
+const regExp = (str) => {
+  const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  if (reg.test(str)) {
+    return str.replace(reg, "");
+  } else {
+    return str;
+  }
+};
+
 // 회원가입
 router.post("/signup", async (req, res) => {
   const { email, nickname, password } = req.body;
@@ -63,7 +73,8 @@ router.post("/signup", async (req, res) => {
         8,
         "sha512",
         async (err, key) => {
-          const hashedEmail = key.toString("base64");
+          let hashedEmail = key.toString("base64");
+          hashedEmail = regExp(hashedEmail);
           await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
             user_id: hashedEmail,
           });
@@ -79,6 +90,7 @@ router.post("/signup", async (req, res) => {
     return res.status(200).json({ success: 1 });
   } catch (err) {
     console.error(err);
+    return res.status(400).json({ success: 3 });
   }
 });
 
@@ -289,6 +301,7 @@ router.post("/kakao", async (req, res) => {
         "sha512",
         async (err, key) => {
           hash = key.toString("base64");
+          hash = regExp(hash);
           await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
             user_id: hash,
           });
@@ -366,6 +379,7 @@ router.post("/naver", async (req, res) => {
         "sha512",
         async (err, key) => {
           hash = key.toString("base64");
+          hash = regExp(hash);
           await axios.post(`${process.env.FABRIC_URL}/auth/enroll/user`, {
             user_id: hash,
           });

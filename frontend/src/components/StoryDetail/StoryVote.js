@@ -80,25 +80,29 @@ const StoryVote = ({ data }) => {
   };
 
   const VoteButton = () => {
-    if (!isLoggedIn) {
-      return (
-        <button className="vote_false" onClick={voteHandler}>
-          후원을 희망합니다
-        </button>
-      );
+    if (data.expired) {
+      return <button className="vote_end">투표가 종료되었습니다</button>;
     } else {
-      if (vote.user) {
-        return (
-          <button className="vote_true" onClick={voteHandler}>
-            투표 취소하기
-          </button>
-        );
-      } else {
+      if (!isLoggedIn) {
         return (
           <button className="vote_false" onClick={voteHandler}>
             후원을 희망합니다
           </button>
         );
+      } else {
+        if (vote.user) {
+          return (
+            <button className="vote_true" onClick={voteHandler}>
+              투표 취소하기
+            </button>
+          );
+        } else {
+          return (
+            <button className="vote_false" onClick={voteHandler}>
+              후원을 희망합니다
+            </button>
+          );
+        }
       }
     }
   };

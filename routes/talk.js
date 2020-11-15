@@ -37,7 +37,6 @@ let upload = multer({
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
-    // const user_email = "admin@admin";
 
     const { talk_title, talk_content, campaign_title } = req.body;
 

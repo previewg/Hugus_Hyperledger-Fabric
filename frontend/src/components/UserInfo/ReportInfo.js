@@ -81,8 +81,12 @@ const ReportStyle = styled.div`
       justify-self: center;
     }
     p:nth-child(1) {
+      width: 100%;
       padding-left: 10px;
       justify-self: start;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .done {
       color: dodgerblue;
@@ -110,7 +114,7 @@ const ReportStyle = styled.div`
         font-size: 13px;
       }
       p {
-        white-space: pre;
+        white-space: pre-line;
         font-size: 15px;
         color: orange;
         font-weight: bold;
@@ -142,7 +146,7 @@ const ReportStyle = styled.div`
       }
     }
     > p {
-      white-space: pre;
+      white-space: pre-line;
       font-size: 15px;
       :nth-child(1) {
         color: orange;

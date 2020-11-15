@@ -38,18 +38,6 @@ const AdminReport = ({ open, history }) => {
     setLoading(false);
   };
 
-  const deleteHandler = async (report_id) => {
-    setClicked(true);
-    const confirmed = window.confirm("삭제하시겠습니까?");
-    if (confirmed) {
-      const result = await axios.post("/story/delete", { id: report_id });
-      if (result.data.success === 1) {
-        alert("삭제가 완료되었습니다");
-        setClicked(false);
-      } else alert("삭제에 실패하였습니다");
-    }
-  };
-
   return (
     <AdminReportStyle open={open} type={type}>
       <AdminReportNav setType={setType} type={type} />
@@ -59,7 +47,6 @@ const AdminReport = ({ open, history }) => {
         list={list}
         loading={loading}
         history={history}
-        deleteHandler={deleteHandler}
         setClicked={setClicked}
       />
       <AdminReportPagination

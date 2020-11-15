@@ -37,7 +37,7 @@ const AdminStyle = styled.section`
 `;
 
 const Admin = (props) => {
-  const [type, setType] = useState("report");
+  const [type, setType] = useState("summary");
   const [open, setOpen] = useState(true);
 
   const openHandler = () => {

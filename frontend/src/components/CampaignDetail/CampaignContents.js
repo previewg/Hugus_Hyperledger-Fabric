@@ -101,6 +101,15 @@ const CampaignContentsStyle = styled.div`
         color: white;
       }
     }
+    .donate__end {
+      cursor: not-allowed;
+      color: gray;
+      border: solid 0.1px gray;
+      :hover {
+        background-color: transparent;
+        color: gray;
+      }
+    }
   }
 
   .visited {
@@ -116,8 +125,6 @@ const CampaignContentsStyle = styled.div`
 `;
 
 const CampaignContents = ({ data, history, likenum }) => {
-
-
   return (
     <CampaignContentsStyle>
       <div className="title">

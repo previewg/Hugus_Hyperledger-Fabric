@@ -2,7 +2,6 @@
 const express = require("express");
 const path = require("path");
 const models = require("./models");
-// const fs = require("fs");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 

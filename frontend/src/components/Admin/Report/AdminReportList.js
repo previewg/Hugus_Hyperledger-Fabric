@@ -35,6 +35,10 @@ const AdminReportListStyle = styled.article`
       color: white;
       :nth-child(2) {
         justify-self: start;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     .story__id {
@@ -102,14 +106,7 @@ const leadingZeros = (n, digits) => {
   return zero + n;
 };
 
-const AdminReportList = ({
-  type,
-  list,
-  loading,
-  history,
-  deleteHandler,
-  setClicked,
-}) => {
+const AdminReportList = ({ type, list, loading, history, setClicked }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(null);
 
