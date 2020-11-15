@@ -6,11 +6,10 @@ import { signUpBtnIsClicked } from "actions/user";
 
 const InfoStyle = styled.section`
   width: 100%;
-  height: 100vh;
   padding-top: 70px;
   .Layout {
     display: grid;
-    grid-template-rows: 5fr 8fr 4fr ;
+    grid-template-rows: 6fr 10fr 8fr 4fr 8fr 8fr ;
     height: 100vh;
   >div:nth-child(1) {
     display: flex;
@@ -28,7 +27,46 @@ const InfoStyle = styled.section`
     color: grey;
     }
   }
+
   >div:nth-child(2) {
+    padding-bottom: 30px;
+    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    background-color: #808080;
+    .donate_title {
+      display: flex;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: bold;
+      >p {
+
+      }
+    }
+
+
+
+    .donate_line {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+    }
+  }
+
+
+
+
+
+
+
+
+
+  >div:nth-child(3) {
+    padding-bottom: 30px;
+    padding-top: 30px;
     background-color: #f0f0f0;
     display: grid;
     align-items: center;
@@ -112,7 +150,22 @@ const InfoStyle = styled.section`
   }
 
 
+
+
+
+  .patners_section {
+    width: 100%;
+  }
   
+
+
+
+  .contact_section {
+
+  }
+
+
+
   }
 `;
 
@@ -137,6 +190,46 @@ const Info = () => {
       <article className=""></article>
 
       </div>
+
+      <div className="donate_section">
+
+      <div className="donate_title">
+        <p>HUG US에 스며드는 따뜻함</p>
+      </div>
+      <div className="donate_line">
+
+        <div className="donate_all_story">
+          <p>전체 스토리 수</p>
+          <img></img>
+          <p>건</p>
+        </div>
+        <div className="donate_all_price">
+          <p>총 후원 금액</p>
+          <img></img>
+          <p>원</p>
+        </div>
+        <div className="donate_all_user">
+          <p>전체 회원 수 </p>
+          <img></img>
+          <p>명</p>
+        </div>
+        <div className="donate_all_campaign">
+          <p>전체 캠페인 수</p>
+          <img></img>
+          <p>건</p>
+        </div>
+
+      </div>
+      
+      
+      
+      
+      </div>
+
+
+
+
+
 
 
 
@@ -193,8 +286,17 @@ const Info = () => {
       </div>
 
 
+      <div className="patners_section">
+        <div>
+          <p>asdf</p>
+        </div>
+      </div>
 
 
+
+      <div className="contact_section">
+
+      </div>
 
 
 

@@ -6,6 +6,7 @@ const SearchStyle = styled.div`
     display:flex;
     justify-content:flex-end;
     margin-bottom: 30px;
+    margin-top: 50px;
             .search_form {
             font-size: 13px;
             outline: none;
@@ -23,22 +24,19 @@ const SearchStyle = styled.div`
                 }
             }
             }   
-            .search__bar {
-            font-size: 13px;
-            width:60px;
-            height:29px;
-            margin-left:20px;
-            background-color:orange;
-            border:none;
-            color:black;
-            border-radius:3px;
-            transition: 0.2s ease-in-out;
-            outline:none;
-            cursor: pointer;
+            > img {
+                margin-left: 10px;
+                cursor: pointer;
+                width: 30px;
+                z-index: 1;
+                right: 45px;
+                cursor: pointer;
+                transition: 0.1s ease-in-out;
                 :hover {
-                    transform: translateY(-2px);
-                }   
-            }
+                  color: orange;
+                  transform: scale(1.2);
+                }
+              }
 `;
 
 const Search = ({ search, setSearch, setClicked }) => {
@@ -77,7 +75,11 @@ const Search = ({ search, setSearch, setClicked }) => {
                 if (e.key === "Enter") setClicked();
               }}
             />
-            <button className="search__bar" onClick={()=>setClicked(true)}>검색</button>    
+             <img
+        className="search__bar"
+        src="/icons/Search.png"
+        onClick={() => setClicked(true)}
+      />
         </SearchStyle>
     
     )
