@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
@@ -140,7 +140,10 @@ const BarStyle = styled.div`
 `;
 
 const ThereIsNoFavorite = styled.p`
+  position: relative;
   height: 50vh;
+  left: 300px;
+  bottom: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -151,7 +154,7 @@ const ThereIsNoFavorite = styled.p`
 const StoryList = ({ storyType, changed, setChanged }) => {
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const init = useRef(true);
 
   const visitHandler = async (story_id) => {
@@ -168,7 +171,6 @@ const StoryList = ({ storyType, changed, setChanged }) => {
       });
       return () => clearTimeout(init);
     }, []);
-
     return (
       <BarStyle ratio={ratio}>
         <div className="count">
@@ -190,10 +192,12 @@ const StoryList = ({ storyType, changed, setChanged }) => {
 
   const LoadHandler = ({ storyType }) => {
     const loadInit = async () => {
-      setLoading(true);
       const initData = await axios.get(`/story/list/1?type=${storyType}`);
       setList(initData.data.list);
-      if (initData.data.more || initData.data.list.length % 9 === 0) {
+      if (
+        initData.data.more ||
+        (initData.data.list.length % 9 === 0 && initData.data.list.length !== 0)
+      ) {
         setPage(page + 1);
       }
       setLoading(false);
@@ -224,6 +228,7 @@ const StoryList = ({ storyType, changed, setChanged }) => {
         loadMore();
       }
     };
+
     useEffect(() => {
       if (init.current) {
         loadInit();
@@ -241,92 +246,99 @@ const StoryList = ({ storyType, changed, setChanged }) => {
   };
 
   useEffect(() => {
-    if (changed === true) {
-      setChanged(false);
-      setPage(1);
-      init.current = true;
-    }
+    setChanged(false);
+    setPage(1);
+    init.current = true;
   }, [changed]);
 
-  if (storyType === "my" && list.length === 0)
-    return <ThereIsNoFavorite>관심 스토리가 없습니다</ThereIsNoFavorite>;
-  if (storyType === "past" && list.length === 0)
-    return <ThereIsNoFavorite>지난 스토리가 없습니다</ThereIsNoFavorite>;
   return (
     <StoryListStyle>
       <LoadHandler storyType={storyType} />
       <section>
-        {list.map((story, key) => {
-          if (story.Story_Files[0]) {
-            return (
-              <Link
-                to={`/story/${story.id}`}
-                style={{
-                  backgroundImage: `url("${story.Story_Files[0].file}") `,
-                }}
-                onClick={() => visitHandler(story.id)}
-                key={key}
-              >
-                <div>
-                  <div className="story__hashtag">
-                    {story.Hashtags.slice(0, 3).map((tag, key) => {
-                      return <p key={key}>#{tag.hashtag}</p>;
-                    })}
-                  </div>
+        {list.length === 0
+          ? (storyType === "hot" && (
+              <ThereIsNoFavorite>인기 스토리가 없습니다</ThereIsNoFavorite>
+            )) ||
+            (storyType === "new" && (
+              <ThereIsNoFavorite>최신 스토리가 없습니다</ThereIsNoFavorite>
+            )) ||
+            (storyType === "my" && (
+              <ThereIsNoFavorite>관심 스토리가 없습니다</ThereIsNoFavorite>
+            )) ||
+            (storyType === "past" && (
+              <ThereIsNoFavorite>지난 스토리가 없습니다</ThereIsNoFavorite>
+            ))
+          : list.map((story, key) => {
+              if (story.Story_Files[0]) {
+                return (
+                  <Link
+                    to={`/story/${story.id}`}
+                    style={{
+                      backgroundImage: `url("${story.Story_Files[0].file}") `,
+                    }}
+                    onClick={() => visitHandler(story.id)}
+                    key={key}
+                  >
+                    <div>
+                      <div className="story__hashtag">
+                        {story.Hashtags.slice(0, 3).map((tag, key) => {
+                          return <p key={key}>#{tag.hashtag}</p>;
+                        })}
+                      </div>
 
-                  <p className="story__title">{story.story_title}</p>
-                  <ProgressBar
-                    vote={story.story_vote}
-                    goal={story.story_goal}
-                  />
-                </div>
-                <div className="more__info">
-                  <div>
-                    <img src="/icons/love.svg" />
-                    <p>{story.story_like}</p>
-                    <img src="/icons/comment.svg" />
-                    <p>{story.story_comment}</p>
-                  </div>
-                  <UserInfo story={story} />
-                </div>
-              </Link>
-            );
-          } else {
-            return (
-              <Link
-                to={`/story/${story.id}`}
-                style={{
-                  backgroundImage: `url("http://localhost:3000/HUGUS.png") `,
-                }}
-                onClick={() => visitHandler(story.id)}
-                key={key}
-              >
-                <div>
-                  <div className="story__hashtag">
-                    {story.Hashtags.slice(0, 3).map((tag, key) => {
-                      return <p key={key}>#{tag.hashtag}</p>;
-                    })}
-                  </div>
+                      <p className="story__title">{story.story_title}</p>
+                      <ProgressBar
+                        vote={story.story_vote}
+                        goal={story.story_goal}
+                      />
+                    </div>
+                    <div className="more__info">
+                      <div>
+                        <img src="/icons/love.svg" />
+                        <p>{story.story_like}</p>
+                        <img src="/icons/comment.svg" />
+                        <p>{story.story_comment}</p>
+                      </div>
+                      <UserInfo story={story} />
+                    </div>
+                  </Link>
+                );
+              } else {
+                return (
+                  <Link
+                    to={`/story/${story.id}`}
+                    style={{
+                      backgroundImage: `url("http://localhost:3000/HUGUS.png") `,
+                    }}
+                    onClick={() => visitHandler(story.id)}
+                    key={key}
+                  >
+                    <div>
+                      <div className="story__hashtag">
+                        {story.Hashtags.slice(0, 3).map((tag, key) => {
+                          return <p key={key}>#{tag.hashtag}</p>;
+                        })}
+                      </div>
 
-                  <p className="story__title">{story.story_title}</p>
-                  <ProgressBar
-                    vote={story.story_vote}
-                    goal={story.story_goal}
-                  />
-                </div>
-                <div className="more__info">
-                  <div>
-                    <img src="/icons/love.svg" />
-                    <p>{story.story_like}</p>
-                    <img src="/icons/comment.svg" />
-                    <p>{story.story_comment}</p>
-                  </div>
-                  <UserInfo story={story} />
-                </div>
-              </Link>
-            );
-          }
-        })}
+                      <p className="story__title">{story.story_title}</p>
+                      <ProgressBar
+                        vote={story.story_vote}
+                        goal={story.story_goal}
+                      />
+                    </div>
+                    <div className="more__info">
+                      <div>
+                        <img src="/icons/love.svg" />
+                        <p>{story.story_like}</p>
+                        <img src="/icons/comment.svg" />
+                        <p>{story.story_comment}</p>
+                      </div>
+                      <UserInfo story={story} />
+                    </div>
+                  </Link>
+                );
+              }
+            })}
         {loading && <Loader />}
       </section>
     </StoryListStyle>

@@ -52,7 +52,7 @@ const UserInfoStyle = styled.section`
       }
       .side__menu {
         background-color: #f1f1f1;
-        height: 290px;
+        height: 350px;
         display: flex;
         flex-direction: column;
         padding: 10px;
@@ -106,7 +106,6 @@ const UserInfo = (props) => {
 
   const init = async () => {
     const result = await axios.post("/myPage/init");
-    console.log(result.data);
     setStoryList(result.data.storyList);
     setVotedList(result.data.votedList);
     setActList(result.data.actList);

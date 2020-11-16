@@ -37,14 +37,7 @@ let upload = multer({
 router.post("/add", upload.array("files"), async (req, res) => {
   try {
     const { user_email } = req.session.loginInfo;
-
-    const { talk_title, talk_content, campaign_title } = req.body;
-
-    const campaign = await Campaign.findOne({
-      where: { campaign_title },
-    });
-
-    const campaign_id = campaign.getDataValue("id");
+    const { talk_title, talk_content, campaign_id } = req.body;
 
     const list = await Talk.create({
       talk_title,
@@ -291,7 +284,6 @@ router.put("/like", async (req, res) => {
     const history = await Talk_Like.findOne({
       where: { talk_id, user_email },
     });
-
 
     if (history) {
       await Talk_Like.destroy({

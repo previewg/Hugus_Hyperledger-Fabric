@@ -102,7 +102,7 @@ ReactDOM.render(
         <Route exact path="/act/write" component={Auth(ActWrite, null)} />
         <Route path="/act/:id" component={Auth(ActDetail, null)} />
         <Route exact path="/talk" component={Auth(TalkMain, null)} />
-        <Route path="/talk/write" component={Auth(TalkWrite, null)} />
+        <Route path="/talk/write/:id" component={Auth(TalkWrite, null)} />
         <Route path="/talk/update/:id" component={Auth(TalkUpdate, true)} />
         <Route path="/talk/:id" component={Auth(TalkDetail, null)} />
         <Route exact path="/auth/naver" component={Auth(NaverCallback, null)} />

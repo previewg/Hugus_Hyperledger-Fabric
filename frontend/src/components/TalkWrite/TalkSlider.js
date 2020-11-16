@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
 
@@ -10,11 +10,9 @@ const SliderStyle = styled.section`
   .slick-slider {
     width: 300px;
   }
-  .slick-list {
-    img {
-      height: 290px;
-      object-fit: contain;
-    }
+  .talk_file {
+    height: 290px;
+    object-fit: contain;
   }
 
   .slick-dots {
@@ -31,8 +29,41 @@ const SliderStyle = styled.section`
       height: 50px;
     }
   }
+  .story_file {
+    outline: none;
+    cursor: pointer;
+  }
+`;
 
-  .talk_file {
+const EnlargedImgStyle = styled.div`
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 80;
+  > div {
+    width: 900px;
+    height: 500px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    display: flex;
+  }
+  > button {
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 25px;
+    border: solid 0.1px orange;
+    color: orange;
+    font-weight: bold;
     outline: none;
     cursor: pointer;
   }
@@ -72,40 +103,6 @@ const PrevArrow = (props) => {
   );
 };
 
-const EnlargedImgStyle = styled.div`
-  top: 0;
-  left: 0;
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 80;
-  > div {
-    width: 900px;
-    height: 500px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    display: flex;
-  }
-  > button {
-    margin-top: 20px;
-    width: 50px;
-    height: 50px;
-    background-color: white;
-    border-radius: 25px;
-    border: solid 0.1px orange;
-    color: orange;
-    font-weight: bold;
-    outline: none;
-    cursor: pointer;
-  }
-`;
-
 const TalkSlider = ({ files }) => {
   const [open, setOpen] = useState(false);
   const [src, setSrc] = useState("");
@@ -128,7 +125,7 @@ const TalkSlider = ({ files }) => {
     customPaging: function (i) {
       return (
         <a>
-          <img src={files[i].file} />
+          <img src={files[i].previewURL} />
         </a>
       );
     },
@@ -141,27 +138,27 @@ const TalkSlider = ({ files }) => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
-
-  return (
-    <>
-      {open && <EnlargedImg />}
-
-      <SliderStyle>
-        <Slider {...settings}>
-          {files.map((file, key) => {
-            return (
-              <img
-                className="talk_file"
-                key={key}
-                src={file.file}
-                onClick={() => openHandler(file.file)}
-              />
-            );
-          })}
-        </Slider>
-      </SliderStyle>
-    </>
-  );
+  console.log(files);
+  if (files)
+    return (
+      <>
+        {open && <EnlargedImg />}
+        <SliderStyle>
+          <Slider {...settings}>
+            {files.map((file, key) => {
+              return (
+                <img
+                  className="talk_file"
+                  key={key}
+                  src={file.previewURL}
+                  onClick={() => openHandler(file.previewURL)}
+                />
+              );
+            })}
+          </Slider>
+        </SliderStyle>
+      </>
+    );
 };
 
 export default TalkSlider;

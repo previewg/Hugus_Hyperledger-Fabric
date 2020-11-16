@@ -10,13 +10,14 @@ const ActDetailStyle = styled.div`
   margin-bottom: 70px;
   align-items: center;
   flex-direction: column;
-`;  
+`;
 
 const ActDetail = ({ match }) => {
   const init = useRef(true);
   const [actId, setActId] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const id = match.params.id;
     const initFunc = async () => {
       const data = await axios.get(`/act/${id}`);
