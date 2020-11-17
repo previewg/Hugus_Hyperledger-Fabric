@@ -173,7 +173,10 @@ const CampaignList = () => {
       setLoading(true);
       const initData = await axios.get(`/campaign/list/1`);
       setList(initData.data.list);
-      if (initData.data.more) {
+      if (
+        initData.data.more ||
+        (initData.data.list.length % 9 === 0 && initData.data.list.length !== 0)
+      ) {
         setPage(page + 1);
       }
       setLoading(false);

@@ -71,85 +71,65 @@ const CommentListStyle = styled.section`
         cursor: pointer;
         width: 100px;
       }
-      .like_group {
-        display: flex;
-        align-items: center;
-        margin-top: 5px;
-        height: 25px;
-
-        > img {
-          width: 17px;
-          height: 17px;
-          cursor: pointer;
-          margin-right: 7px;
-        }
-        img:nth-child(2) {
-          display: none;
-        }
-        img:nth-child(4) {
-          display: none;
-        }
-
-        p {
-          background-color: transparent;
-          margin-left: 7px;
-          font-size: 14px;
-          width: 50px;
-          height: 15px;
-          cursor: pointer;
-          outline: none;
-          border: none;
-          color: gray;
-          transition: 0.2s ease-in-out;
-          :hover {
-            color: orange;
-          }
+      .comment_child_btn {
+        background-color: transparent;
+        font-size: 13px;
+        margin-bottom: 5px;
+        width: 50px;
+        height: 15px;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        color: gray;
+        transition: 0.2s ease-in-out;
+        :hover {
+          color: orange;
         }
       }
+    }
 
-      .comment_child_input {
-        width: 100%;
+    .comment_child_input {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      > input {
+        height: 15px;
+        padding: 10px;
+        outline: none;
+        transition: 0.4s ease-in-out;
+        border: none;
+        border-bottom: solid gray 0.1px;
+        :focus {
+          border-bottom: solid orange 0.1px;
+        }
+      }
+      .comment__buttons {
+        margin-top: 10px;
         display: flex;
-        flex-direction: column;
-        > input {
-          height: 15px;
-          padding: 10px;
+        justify-content: flex-end;
+        > button {
+          background-color: transparent;
+          width: 50px;
+          height: 30px;
+          border-radius: 3px;
+          cursor: pointer;
           outline: none;
-          transition: 0.4s ease-in-out;
-          border: none;
-          border-bottom: solid gray 0.1px;
-          :focus {
-            border-bottom: solid orange 0.1px;
+        }
+        button:nth-child(1) {
+          border: solid darkgray 0.1px;
+          color: darkgray;
+          :hover {
+            background-color: darkgray;
+            color: white;
           }
         }
-        .comment__buttons {
-          margin-top: 10px;
-          display: flex;
-          justify-content: flex-end;
-          > button {
-            background-color: transparent;
-            width: 50px;
-            height: 30px;
-            border-radius: 3px;
-            cursor: pointer;
-            outline: none;
-          }
-          button:nth-child(1) {
-            border: solid darkgray 0.1px;
-            color: darkgray;
-            :hover {
-              background-color: darkgray;
-              color: white;
-            }
-          }
-          button:nth-child(2) {
-            margin-left: 5px;
-            border: solid orange 0.1px;
-            color: orange;
-            :hover {
-              background-color: orange;
-              color: white;
-            }
+        button:nth-child(2) {
+          margin-left: 5px;
+          border: solid orange 0.1px;
+          color: orange;
+          :hover {
+            background-color: orange;
+            color: white;
           }
         }
       }

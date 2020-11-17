@@ -32,7 +32,6 @@ const StoryMain = (props) => {
   const dispatch = useDispatch();
   const isLoggedIn = props.isLoggedIn;
   const [storyType, setStoryType] = useState("hot");
-  const [changed, setChanged] = useState(false);
 
   const typeChange = (e) => {
     e.preventDefault();
@@ -41,21 +40,12 @@ const StoryMain = (props) => {
       return;
     }
     setStoryType(e.target.getAttribute("name"));
-    setChanged(true);
   };
 
   const onClickHandler = () => {
     if (isLoggedIn) props.history.push("/story/write");
     else dispatch(signInBtnIsClicked());
   };
-
-  // useEffect(() => {
-  //   if (props.location.search) {
-  //     setStoryType(props.location.search.split("=")[1]);
-  //     setChanged(true);
-  //   }
-  //   window.scrollTo(0, 0);
-  // }, [props.location.search]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,11 +57,7 @@ const StoryMain = (props) => {
       <p className="StoryWrite__btn" onClick={onClickHandler}>
         글작성
       </p>
-      <StoryList
-        storyType={storyType}
-        changed={changed}
-        setChanged={setChanged}
-      />
+      <StoryList storyType={storyType} />
     </StoryMainStyle>
   );
 };

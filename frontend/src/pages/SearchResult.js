@@ -10,21 +10,23 @@ import axios from "axios";
 
 const SearchResultStyle = styled.section`
   width: 100%;
-  height: 100vh;
 `;
 
 const SearchResult = ({ match, history }) => {
   const [loading, setLoading] = useState(false);
   const [storyList, setStoryList] = useState([]);
   const [campaignList, setCampaignList] = useState([]);
+
   const load = async (hashtag) => {
     setLoading(true);
-    const storyData = await axios.post("/hashtag/search", {
+    const data = await axios.post("/hashtag/search", {
       search: match.params.hashtag,
     });
-    setStoryList(storyData.data.list);
+    setStoryList(data.data.storyList);
+    setCampaignList(data.data.campaignList);
     setLoading(false);
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     load();
@@ -37,7 +39,7 @@ const SearchResult = ({ match, history }) => {
         <SearchResultLoader />
       ) : (
         <>
-          {/*<SearchResultCampaignList campaignList={campaignList} />*/}
+          <SearchResultCampaignList campaignList={campaignList} />
           <SearchResultStoryList storyList={storyList} />
         </>
       )}

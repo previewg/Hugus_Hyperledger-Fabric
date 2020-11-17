@@ -164,12 +164,12 @@ const MyNews = ({ storyList, votedList, history }) => {
         dataPoints: [
           {
             name: "현재 득표수",
-            y: data ? data.story_vote : 0,
+            y: data ? (data.story_vote / data.story_goal) * 100 : 0,
             color: "orange",
           },
           {
             name: "목표 득표수",
-            y: data ? data.story_goal : 0,
+            y: data ? 100 - (data.story_vote / data.story_goal) * 100 : 0,
             color: "antiquewhite",
           },
         ],

@@ -47,6 +47,10 @@ const AdminCampaignListStyle = styled.article`
     }
     .campaign__title {
       cursor: pointer;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .campaign__control {
       display: grid;

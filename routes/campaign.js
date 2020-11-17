@@ -8,6 +8,7 @@ const {
   Campaign_Hashtag,
   Hashtag,
   Story,
+  Story_Item,
   User,
   sequelize,
 } = require("../models");
@@ -61,7 +62,18 @@ router.post("/add", upload.array("files"), async (req, res) => {
 
     const email = story.getDataValue("user_email");
     const story_id = story.getDataValue("id");
-    const campaign_goal = story.getDataValue("story_goal");
+
+    const items = await Story_Item.findAll({
+      where: { story_id: story_id },
+    });
+
+    let campaign_goal = 0;
+
+    for (const item of items) {
+      const price = item.getDataValue("item_price");
+      const quantity = item.getDataValue("item_quantity");
+      campaign_goal += price * quantity;
+    }
 
     const campaign = await Campaign.create({
       campaign_title: campaign_title,

@@ -185,7 +185,6 @@ const SignIn = () => {
   useEffect(() => {
     dispatch(authInit());
     if (signInStatus === "SUCCESS") {
-      alert("로그인성공");
     } else if (signInStatus === "FAILURE") {
       setErrorCode(3);
     }

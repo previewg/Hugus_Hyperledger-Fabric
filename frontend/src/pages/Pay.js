@@ -422,7 +422,7 @@ const Pay = ({ match, history }) => {
                       setAmount(Number(amount) + 100000);
                     }}
                   >
-                    +1십만원
+                    +10만원
                   </button>
                 </div>
               </div>

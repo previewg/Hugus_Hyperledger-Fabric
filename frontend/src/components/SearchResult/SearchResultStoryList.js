@@ -6,7 +6,7 @@ import Loader from "../../pages/Loader";
 import { Link } from "react-router-dom";
 
 const SearchResultStoryListStyle = styled.section`
-  display: flex;
+  display: ${(props) => (props.storyList.length !== 0 ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   margin-top: 30px;
@@ -201,7 +201,7 @@ const SearchResultStoryList = ({ storyList }) => {
           <span>{storyList ? storyList.length : 0}건</span>
         </div>
       </InfoStyle>
-      <SearchResultStoryListStyle>
+      <SearchResultStoryListStyle storyList={storyList}>
         <article>
           {storyList &&
             storyList.map((story, key) => {

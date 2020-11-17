@@ -151,7 +151,7 @@ const ThereIsNoFavorite = styled.p`
   color: gray;
 `;
 
-const StoryList = ({ storyType, changed, setChanged }) => {
+const StoryList = ({ storyType }) => {
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -190,19 +190,19 @@ const StoryList = ({ storyType, changed, setChanged }) => {
     return <p>{story.user_info}</p>;
   };
 
-  const LoadHandler = ({ storyType }) => {
-    const loadInit = async () => {
-      const initData = await axios.get(`/story/list/1?type=${storyType}`);
-      setList(initData.data.list);
-      if (
-        initData.data.more ||
-        (initData.data.list.length % 9 === 0 && initData.data.list.length !== 0)
-      ) {
-        setPage(page + 1);
-      }
-      setLoading(false);
-    };
+  const loadInit = async () => {
+    const initData = await axios.get(`/story/list/1?type=${storyType}`);
+    setList(initData.data.list);
+    if (
+      initData.data.more ||
+      (initData.data.list.length % 9 === 0 && initData.data.list.length !== 0)
+    ) {
+      setPage(page + 1);
+    }
+    setLoading(false);
+  };
 
+  const LoadHandler = ({ storyType }) => {
     const loadMore = async () => {
       setLoading(true);
       const moreData = await axios.get(`/story/list/${page}?type=${storyType}`);
@@ -230,26 +230,25 @@ const StoryList = ({ storyType, changed, setChanged }) => {
     };
 
     useEffect(() => {
-      if (init.current) {
-        loadInit();
-        init.current = false;
-      }
       // scroll event listener 등록
       window.addEventListener("scroll", scrollHandler);
       return () => {
         // scroll event listener 해제
         window.removeEventListener("scroll", scrollHandler);
       };
-    }, [changed]);
+    }, []);
 
     return null;
   };
 
   useEffect(() => {
-    setChanged(false);
     setPage(1);
     init.current = true;
-  }, [changed]);
+    if (init.current) {
+      loadInit();
+      init.current = false;
+    }
+  }, [storyType]);
 
   return (
     <StoryListStyle>

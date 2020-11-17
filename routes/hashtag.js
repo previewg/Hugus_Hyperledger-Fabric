@@ -4,7 +4,10 @@ const router = express.Router();
 const {
   Hashtag,
   Story_Hashtag,
+  Campaign_Hashtag,
   Story_File,
+  Campaign_File,
+  Campaign,
   Story,
   sequelize,
 } = require("../models");
@@ -38,15 +41,29 @@ router.post("/search", async (req, res) => {
     const search_data = await Hashtag.findOne({
       where: { hashtag: search },
       attributes: ["id"],
-      include: [{ model: Story_Hashtag, attributes: ["story_id"] }],
+      include: [
+        { model: Story_Hashtag, attributes: ["story_id"] },
+        { model: Campaign_Hashtag, attributes: ["campaign_id"] },
+      ],
     });
-    const candidate = [];
+    const storyCandidate = [];
+    const campaignCandidate = [];
+    let storyList;
+    let campaignList;
+
     const stories = search_data.getDataValue("Story_Hashtags");
+    const campaigns = search_data.getDataValue("Campaign_Hashtags");
+
     for (const story of stories) {
-      candidate.push(story.getDataValue("story_id"));
+      storyCandidate.push(story.getDataValue("story_id"));
     }
-    if (candidate !== null) {
-      const list = await Story.findAll({
+
+    for (const campaign of campaigns) {
+      campaignCandidate.push(campaign.getDataValue("campaign_id"));
+    }
+
+    if (storyCandidate !== null) {
+      storyList = await Story.findAll({
         attributes: [
           "id",
           "story_title",
@@ -74,16 +91,58 @@ router.post("/search", async (req, res) => {
             "story_comment",
           ],
         ],
-        where: { id: candidate },
+        where: { id: storyCandidate },
         include: [
           { model: Hashtag, attributes: ["hashtag"] },
           { model: Story_File, attributes: ["file"], limit: 1 },
         ],
       });
-      res.json({ list: list, success: 1 });
-    } else {
+    }
+
+    if (campaignCandidate !== null) {
+      campaignList = await Campaign.findAll({
+        attributes: [
+          "id",
+          "campaign_title",
+          "campaign_goal",
+          "hash",
+          "user_email",
+          "visited",
+          "createdAt",
+          "campaign_value",
+          [
+            sequelize.literal(
+              "(SELECT (campaign_value)/(campaign_goal) FROM campaign WHERE id = `Campaign`.id)"
+            ),
+            "campaign_ratio",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM campaign_like WHERE campaign_id = `Campaign`.id)"
+            ),
+            "campaign_like",
+          ],
+          [
+            sequelize.literal(
+              "(SELECT COUNT(1) FROM campaign_comment WHERE campaign_id = `Campaign`.id)"
+            ),
+            "campaign_comment",
+          ],
+        ],
+        include: [
+          { model: Hashtag, attributes: ["hashtag"] },
+          { model: Campaign_File, attributes: ["file"], limit: 1 },
+        ],
+        order: [
+          [sequelize.cast(sequelize.col("campaign_ratio"), "FLOAT"), "DESC"],
+        ],
+        where: { id: campaignCandidate },
+      });
+    }
+    if (!campaignCandidate && !storyCandidate) {
       res.json({ success: 3 });
     }
+    res.json({ storyList: storyList, campaignList: campaignList, success: 1 });
   } catch (err) {
     res.json({ success: 2 });
     console.log(err);

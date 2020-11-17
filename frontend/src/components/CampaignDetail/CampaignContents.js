@@ -140,7 +140,11 @@ const CampaignContents = ({ data, history, likenum }) => {
         <p>태그</p>
         {data.Hashtags.map((tag, key) => {
           return (
-            <span className="tag" key={key}>
+            <span
+              className="tag"
+              key={key}
+              onClick={() => history.push(`/search/${tag.hashtag}`)}
+            >
               #{tag.hashtag}
             </span>
           );

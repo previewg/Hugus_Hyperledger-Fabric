@@ -68,13 +68,9 @@ const CommentChildInput = ({ comment, story_id }) => {
 
   return (
     <>
-      <div className="like_group">
-        <img className="like_normal" src="/icons/like_normal.png" />
-        <img className="liked" src="/icons/like.png" />
-        <img className="disLike_normal" src="/icons/disLike_normal.png" />
-        <img className="disLiked" src="/icons/disLike.png" />
-        <p onClick={onClickHandler}>답글</p>
-      </div>
+      <p className="comment_child_btn" onClick={onClickHandler}>
+        답글작성
+      </p>
       {isClicked && (
         <div className="comment_child_input">
           <input
