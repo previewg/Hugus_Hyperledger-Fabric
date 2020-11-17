@@ -12,7 +12,7 @@ const InfoStyle = styled.section`
   padding-top: 70px;
   .Layout {
     display: grid;
-    grid-template-rows: 2fr 0.8fr 5fr 1.5fr 4.5fr 1.5fr ;
+    grid-template-rows: 3.8fr 1.5fr 5fr 1.5fr 4.5fr 1.5fr ;
   >div:nth-child(1) {
     padding-bottom: 20px;
     padding-top: 20px;
@@ -21,10 +21,11 @@ const InfoStyle = styled.section`
     flex-direction: column;
     width: 100%;
     background-color: white;
+    gap: 150px;
     .donate_title {
       display: flex;
       justify-content: center;
-      font-size: 35px;
+      font-size: 50px;
       font-weight: bold;
     }
     .donate_line {
@@ -73,7 +74,6 @@ const InfoStyle = styled.section`
     }
   }
 
-
   .bar {
     background: linear-gradient(25deg , #ecb475, 42%, #ebf8e1, #6c97a9);
     display: flex;
@@ -94,18 +94,16 @@ const InfoStyle = styled.section`
         font-size: 28px;
       }
       >span:nth-child(3) {
-        color: #52c574;
+        color: #cc2569;
         font-weight: bold;
         font-size: 28px;
       }
       }
-
     }
     >img {
       width: 600px;
     }
   }
-
 
   .asdfasdf {
     padding-left: 140px;
@@ -136,7 +134,6 @@ const InfoStyle = styled.section`
     height: 440px;
     }
   }
-   
     .partTwo {
       width: 90%;
       display: flex;
@@ -280,18 +277,14 @@ const InfoStyle = styled.section`
   }
 
   .patners_section {
-    background: linear-gradient(155deg, #6c97a9, 15%, #ebf8e1, #ecb475);
+    background: linear-gradient(120deg, #6c97a9, 30%, #ecb475, #ebf8e1);
     width: 100%;
     display: flex;
     justify-content: center;
     padding-bottom: 60px;
-
-
   }
-
   }
 `;
-
 
 const SliderStyle = styled.section`
   display: flex;
@@ -337,17 +330,13 @@ const SliderStyle = styled.section`
       display: flex;
       justify-content: center;
       transition: all 0.7s ease-in-out;
-
     }
-  
     .slick-center {
       transform: scale(1.2);
     }
     .slick-list {
       padding-bottom: 50px;
-   
     }
-
 
     @media (max-width: 700px) {
       .slick-slider {
@@ -359,8 +348,6 @@ const SliderStyle = styled.section`
         padding: 20px;
       }
     }
-
-
     .upchain_logo {
         width: 180px;
       }
@@ -374,9 +361,7 @@ const SliderStyle = styled.section`
         display: flex;
         width: 190px;
     }
- 
   }
-
 `;
 
 const LoaderStyle = styled.div`
@@ -386,7 +371,6 @@ const LoaderStyle = styled.div`
   width: 100%;
   height: 100px;
 `;
-
 
 const Info = ({history}) => {
   const dispatch = useDispatch();
@@ -412,7 +396,6 @@ const Info = ({history}) => {
     );
   };
 
-
   const signUpHandler = () => {
     if (isLoggedIn) {
       history.push("/");
@@ -420,7 +403,6 @@ const Info = ({history}) => {
       dispatch(signUpBtnIsClicked());
     }
   }
-
 
   const NextArrow = (props) => {
     const { className, style, onClick } = props;
@@ -473,7 +455,7 @@ const Info = ({history}) => {
     return (
       <SliderStyle>
       <div className="title">
-          <span>협력사</span>
+          <span>Partners</span>
       </div>
         <div>
           <Slider {...settings}>
@@ -494,18 +476,11 @@ const Info = ({history}) => {
             <div>
             <img className="coinone_logo" src="./icons/coinone_logo.png" />
             </div>
-            
-
           </Slider>
         </div>
       </SliderStyle>
     );
   };
-
-
-
-
-
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -514,11 +489,7 @@ const Info = ({history}) => {
   return (
     <InfoStyle>
       <div className="Layout">
-
-
-
       <div className="donate_section">
-
       <div className="donate_title">
         <p>투명하고 자율적인 블록체인 기반 기부 플랫폼</p>
       </div>
@@ -565,26 +536,17 @@ const Info = ({history}) => {
                 )}
         </div>
       </div>
-      
       </div>
 
       <div className="bar">
         <div className="write_section">
           <p>간편한 <span>"페이 결제"</span>로<br/>
-          <span>소액</span>도 후원할 수 있어요</p>
+          <span>"소액"</span>도 후원할 수 있어요</p>
         </div>
         <img src="/icons/info_bar_img.png"/>          
       </div>
 
-
-
-
-
-
-
-
       <div className="asdfasdf">
-        
       <div className="partOne">
       <div className="write_line">
         <span className="topName">주변의 어려움을 <br/> 직접 올려주세요</span>
@@ -596,7 +558,6 @@ const Info = ({history}) => {
       </div>
       <img src="/icons/main_sample.png"/>
       </div>
-
       <div className="partTwo">
         <div className="write_line">
           <span className="bottomName">후원을 하시려면</span>
@@ -609,75 +570,48 @@ const Info = ({history}) => {
       </div>
     </div>
 
-
-
-
-
-
-
       <div className="bannerBar">
-
       <div className="campaign_section">
         <Link to="/" className="campaign_link">HUG US의 후원자가 되어보세요!
           <span>캠페인 후원하기</span>
         </Link>
-
-
         <Link style={{ cursor: "pointer" }}
             onClick={() => signUpHandler()}
             className="signIn_link">HUG US에 가입해주세요!
           <span>HUG US 가입하기</span>
         </Link>
       </div>
-
       </div>
 
-
-
-
-      <div className="">
-
-      <div className="partOne">
-        <div className="write_line">
-          <span className="topName"> HUGUS 의 목표는<br/>
-          </span>
-            <p>
-            기부의 생활화를 통한 사회의 선순환 효과<br/>
-            주변의 이야기를 작성하고 읽고 나누어 따뜻한 손길이<br/>
+        <div className="">
+          <div className="partOne">
+            <div className="write_line">
+              <span className="topName"> HUGUS 의 목표는<br />
+              </span>
+              <p>
+                기부의 생활화를 통한 사회의 선순환 효과<br />
+            주변의 이야기를 작성하고 읽고 나누어 따뜻한 손길이<br />
             닿을수 있게 하겠습니다.
             </p>
-        </div>
-        <img src="/icons/story_detail_sample.png"/>
-      </div>
+            </div>
+            <img src="/icons/story_detail_sample.png" />
+          </div>
 
-      <div className="partTwo">
-        <div className="write_line">
-          <span className="bottomName">블록체인으로 투명한<br/> 기부금 관리</span>
-          <p>
-          모금부터 사용까지 모든 기부금 정보를 블록체인에 실시간으로 기록합니다.<br/>
+          <div className="partTwo">
+            <div className="write_line">
+              <span className="bottomName">블록체인으로 투명한<br /> 기부금 관리</span>
+              <p>
+                모금부터 사용까지 모든 기부금 정보를 블록체인에 실시간으로 기록합니다.<br />
           기부금은 누구도 개입할 수 없는 스마트계약에 의해서만 전달돼요!
           </p>
+            </div>
+            <img src="/icons/block_chain_sample.png" />
+          </div>
         </div>
-
-        <img src="/icons/block_chain_sample.png"/>
-      </div>
-
-      </div>
-
-
-
-
-
-
-
-
-
-
       <div className="patners_section">
         <PartnersSlider />
       </div>
-
-      </div>
+    </div>
     </InfoStyle>
   );
 };
