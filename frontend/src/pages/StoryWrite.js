@@ -68,6 +68,70 @@ const StoryWriteStyle = styled.div`
         }
       }
     }
+
+    .thumbnail {
+      margin-top: 35px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      > p {
+        width: 100%;
+        text-align: left;
+        font-weight: bold;
+      }
+      .subImg {
+        justify-self: center;
+        width: 250px;
+        height: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px dashed lightgray;
+        border-radius: 10px;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: ${(props) =>
+          props.subImgDrag ? "darkgray" : "transparent"};
+        background-image: ${(props) =>
+          props.preImgSub ? `url(${props.preImgSub.previewURL})` : "none"};
+        > label {
+          display: ${(props) =>
+            props.subImgDrag || props.subImg ? "none" : "block"};
+          font-size: 18px;
+        }
+        > p {
+          display: ${(props) =>
+            props.subImgDrag || props.subImg ? "none" : "block"};
+          color: orange;
+        }
+        > input[type="file"] {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          border: 0;
+        }
+      }
+      .subImg__clear {
+        margin-top: 20px;
+        width: 100px;
+        height: 30px;
+        border-radius: 5px;
+        background-color: #cd5c5c;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        outline: none;
+        display: ${(props) => (props.subImg ? "block" : "none")};
+      }
+    }
+
     .content {
       margin-top: 50px;
       display: flex;
@@ -445,6 +509,9 @@ const StoryWrite = (props) => {
     totalPrice: 0,
     goal: 0,
   });
+  const [subImg, setSubImg] = useState(null);
+  const [subImgDrag, setSubImgDrag] = useState(false);
+  const [preImgSub, setPreImgSub] = useState(null);
 
   const [filled, setFilled] = useState({
     title: true,
@@ -514,6 +581,11 @@ const StoryWrite = (props) => {
       formData.append("hashtags", data.hashtags);
       formData.append("items", JSON.stringify(data.items));
       formData.append("story_goal", data.goal);
+      if (subImg !== null) {
+        for (const file of subImg) {
+          formData.append(`files`, file);
+        }
+      }
       if (data.files !== null) {
         for (const file of data.files) {
           formData.append(`files`, file);
@@ -522,6 +594,20 @@ const StoryWrite = (props) => {
         formData.append("files", "");
       }
       dispatch(storyAdd(formData, { ...props }));
+    }
+  };
+
+  const preImgSubHandler = (e) => {
+    setPreImgSub(null);
+    for (const file of e.target.files) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        setPreImgSub({
+          file: file,
+          previewURL: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -544,7 +630,11 @@ const StoryWrite = (props) => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    if (e.target.name === "files") {
+
+    if (e.target.name === "subImg") {
+      preImgSubHandler(e);
+      setSubImg(e.target.files);
+    } else if (e.target.name === "files") {
       previewImg(e);
       setData({
         ...data,
@@ -654,6 +744,54 @@ const StoryWrite = (props) => {
     [data]
   );
 
+  const subImgDeleteHandler = () => {
+    setSubImg(null);
+    setPreImgSub(null);
+  };
+
+  const dragOver = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSubImgDrag(true);
+  };
+
+  const dragLeave = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSubImgDrag(false);
+  };
+
+  const uploadFiles = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+
+    if (files.length > 1) {
+      alert("하나만 가능합니다");
+      return;
+    }
+
+    if (files[0].type.match(/image.*/)) {
+    } else {
+      alert("이미지 파일이 아닙니다.");
+      return;
+    }
+
+    setPreImgSub(null);
+    for (const file of files) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        setPreImgSub({
+          file: file,
+          previewURL: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+    setSubImg(files);
+    setSubImgDrag(false);
+  };
+
   const onTagDeleteHandler = useCallback(
     (key) => () => {
       let hashtags;
@@ -710,7 +848,11 @@ const StoryWrite = (props) => {
 
   return (
     <>
-      <StoryWriteStyle>
+      <StoryWriteStyle
+        preImgSub={preImgSub}
+        subImgDrag={subImgDrag}
+        subImg={subImg}
+      >
         <div className="layout">
           <div className="write_title">
             <p>글쓰기</p>
@@ -737,6 +879,29 @@ const StoryWrite = (props) => {
               placeholder="본인을 마음껏 표현해주세요."
               onChange={onChangeHandler}
             />
+          </div>
+
+          <div className="thumbnail">
+            <p>썸네일</p>
+            <div
+              className="subImg"
+              onDragOver={dragOver}
+              onDragLeave={dragLeave}
+              onDrop={uploadFiles}
+            >
+              <label htmlFor="subImg">썸네일 등록하기</label>
+              <p> Drag&Drop </p>
+              <input
+                id="subImg"
+                name="subImg"
+                type="file"
+                accept="image/*"
+                onChange={onChangeHandler}
+              />
+            </div>
+            <button className="subImg__clear" onClick={subImgDeleteHandler}>
+              썸네일 초기화
+            </button>
           </div>
 
           <div className="content">
