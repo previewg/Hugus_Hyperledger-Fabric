@@ -150,7 +150,7 @@ const CampaignCommentInput = ({ campaignId, campaignCommentList, setCampaignComm
         setComments("");
         setLoading(false);
       } else {
-        comments.current.focus();
+        comment.current.focus();
         setError(true);
       }
     };
