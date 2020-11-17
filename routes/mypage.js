@@ -182,12 +182,13 @@ router.post("/init", async (req, res) => {
     try {
         let user_hash
         let user_email
+        console.log(req.session)
         if (req.body.type === "mobile") {
             user_hash = req.body.hash_email
             user_email = req.body.email
         } else {
-            user_hash = req.session.loginInfo;
-            user_email = req.session.loginInfo;
+            user_hash = req.session.loginInfo.user_hash;
+            user_email = req.session.loginInfo.user_email;
         }
         const storyList = await Story.findAll({
             attributes: [
