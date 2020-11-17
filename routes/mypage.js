@@ -55,6 +55,7 @@ router.put("/profile", upload.single("file"), async (req, res) => {
 
     if (data.user_profile !== null) {
       const key = data.user_profile.split("/");
+      console.log(key[3]);
       await s3.deleteObject(
         {
           Bucket: "hugus",
@@ -178,43 +179,52 @@ router.post("/update", async (req, res) => {
 });
 
 router.post("/init", async (req, res) => {
-  try {
-    const { user_hash, user_email } = req.session.loginInfo;
-    const storyList = await Story.findAll({
-      attributes: [
-        "id",
-        "story_title",
-        "user_info",
-        "story_content",
-        "story_goal",
-        "user_email",
-        "visited",
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
-          ),
-          "story_like",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
-          ),
-          "story_vote",
-        ],
-        [
-          sequelize.literal(
-            "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
-          ),
-          "story_comment",
-        ],
-      ],
-      where: { user_email: user_email },
-      include: [
-        { model: Hashtag, attributes: ["hashtag"] },
-        { model: User, attributes: ["nickname"] },
-        { model: Story_File, attributes: ["file"] },
-      ],
-    });
+    try {
+        let user_hash
+        let user_email
+        console.log(req.session)
+        if (req.body.type === "mobile") {
+            user_hash = req.body.hash_email
+            user_email = req.body.email
+        } else {
+            user_hash = req.session.loginInfo.user_hash;
+            user_email = req.session.loginInfo.user_email;
+        }
+        const storyList = await Story.findAll({
+            attributes: [
+                "id",
+                "story_title",
+                "user_info",
+                "story_content",
+                "story_goal",
+                "user_email",
+                "visited",
+                [
+                    sequelize.literal(
+                        "(SELECT COUNT(1) FROM story_like WHERE story_id = `Story`.id)"
+                    ),
+                    "story_like",
+                ],
+                [
+                    sequelize.literal(
+                        "(SELECT COUNT(1) FROM story_vote WHERE story_id = `Story`.id)"
+                    ),
+                    "story_vote",
+                ],
+                [
+                    sequelize.literal(
+                        "(SELECT COUNT(1) FROM story_comment WHERE story_id = `Story`.id)"
+                    ),
+                    "story_comment",
+                ],
+            ],
+            where: {user_email: user_email},
+            include: [
+                {model: Hashtag, attributes: ["hashtag"]},
+                {model: User, attributes: ["nickname"]},
+                {model: Story_File, attributes: ["file"]},
+            ],
+        });
 
     const actList = await Act.findAll({
       attributes: [

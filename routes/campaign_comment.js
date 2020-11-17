@@ -232,17 +232,12 @@ router.get("/childList/:comment_id", async (req, res) => {
 
 // Campaign_Comment 좋아요 등록/삭제
 router.put("/like", async (req, res) => {
-  try {
-    const { comment_id, status } = req.body;
-    // const { user_email } = req.session.loginInfo;
-    const user_email = "moonnr94@gmail.com";
-    const history = await Campaign_Comment_Like.findOne({
-      where: { comment_id, user_email },
-    });
-
-    console.log(comment_id);
-    console.log(user_email);
-    console.log(history);
+    try {
+        const {comment_id, status} = req.body;
+        const { user_email } = req.session.loginInfo;
+        const history = await Campaign_Comment_Like.findOne({
+            where: {comment_id, user_email},
+        });
 
     if (history) {
       await Campaign_Comment_Like.destroy({
@@ -253,12 +248,12 @@ router.put("/like", async (req, res) => {
         comment_id,
         user_email,
       });
-    }
+    };
 
-    res.json({ success: 1 });
-  } catch (error) {
-    res.status(400).json({ success: 3 });
-  }
+        res.json({success: 1});
+    } catch (error) {
+        res.status(400).json({success: 3});
+    }
 });
 
 module.exports = router;
