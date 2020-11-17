@@ -66,7 +66,7 @@ router.get("/approval", async (req, res) => {
     });
     server.emit(user_email, "SUCCESS");
     res.send(
-      "<script type=\"text/javascript\">alert(\"결제가 완되었습니다.\");window.open('','_self').close();</script>"
+      "<script type=\"text/javascript\">alert(\"결제가 완료되었습니다.\");window.open('','_self').close();</script>"
     );
     await Kakao_Pay.destroy({ where: { hashed_email: hashed_email } });
   } catch (error) {
