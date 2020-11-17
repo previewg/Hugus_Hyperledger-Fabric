@@ -456,7 +456,6 @@ router.get("/all/title", async (req, res) => {
   try {
     const list = await Campaign.findAll({
       attributes: ["campaign_title"],
-      where: { expired: false },
     });
     res.json({ success: 1, list: list });
   } catch (error) {

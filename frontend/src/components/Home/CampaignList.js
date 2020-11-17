@@ -168,20 +168,20 @@ const CampaignList = () => {
     );
   };
 
-  const LoadHandler = () => {
-    const loadInit = async () => {
-      setLoading(true);
-      const initData = await axios.get(`/campaign/list/1`);
-      setList(initData.data.list);
-      if (
-        initData.data.more ||
-        (initData.data.list.length % 9 === 0 && initData.data.list.length !== 0)
-      ) {
-        setPage(page + 1);
-      }
-      setLoading(false);
-    };
+  const loadInit = async () => {
+    setLoading(true);
+    const initData = await axios.get(`/campaign/list/1`);
+    setList(initData.data.list);
+    if (
+      initData.data.more ||
+      (initData.data.list.length % 9 === 0 && initData.data.list.length !== 0)
+    ) {
+      setPage(page + 1);
+    }
+    setLoading(false);
+  };
 
+  const LoadHandler = () => {
     const loadMore = async () => {
       setLoading(true);
       const moreData = await axios.get(`/campaign/list/${page}`);
@@ -192,6 +192,7 @@ const CampaignList = () => {
       } else {
         let newData = list.concat(moreData.data.list);
         setList(newData);
+        setPage(page + 1);
       }
       if (moreData.data.more) {
         setPage(page + 1);
@@ -209,20 +210,23 @@ const CampaignList = () => {
       }
     };
     useEffect(() => {
-      if (init.current) {
-        loadInit();
-        init.current = false;
-      }
       // scroll event listener 등록
       window.addEventListener("scroll", scrollHandler);
       return () => {
-        // scroll event listener 해제
         window.removeEventListener("scroll", scrollHandler);
       };
     }, []);
 
     return null;
   };
+
+  useEffect(() => {
+    if (init.current) {
+      loadInit();
+      init.current = false;
+    }
+  }, []);
+
   return (
     <CampaignListStyle>
       <LoadHandler />

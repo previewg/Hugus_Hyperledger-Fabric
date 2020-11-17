@@ -27,13 +27,19 @@ const ErrorBoxStyle = styled.p`
 
 const errorMsg = "답글을 입력하세요";
 
-const CampaignCommentChildInput = ({ comment, campaign_id, setCampaignCommentList, commentLikenum, setCommentLikenum }) => {
+const CampaignCommentChildInput = ({
+  comment,
+  campaign_id,
+  setCampaignCommentList,
+  commentLikenum,
+  setCommentLikenum,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
   const [comments, setComments] = useState("");
   // const [like,setLike] = useState(campaignId.like);
   const [error, setError] = useState(false);
   const commentChild = useRef();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onCommentChangeHandler = (e) => {
     setComments(e.target.value);
@@ -45,36 +51,21 @@ const CampaignCommentChildInput = ({ comment, campaign_id, setCampaignCommentLis
   };
 
   const commentChildAddHandler = async () => {
-     if(comments !== "" && !loading) {
-      setLoading(true)
-      const result = await axios.post("/campaign_comment/child/add", 
-      { 
-        comment: comments, comment_id: comment.id, campaign_id: campaign_id 
-      })
+    if (comments !== "" && !loading) {
+      setLoading(true);
+      const result = await axios.post("/campaign_comment/child/add", {
+        comment: comments,
+        comment_id: comment.id,
+        campaign_id: campaign_id,
+      });
       setCampaignCommentList(result.data);
       setComments("");
-      setLoading(false)
-    }else{
+      setLoading(false);
+    } else {
       commentChild.current.focus();
       setError(true);
     }
   };
-
-
-
-
-//   const likeHandler = async ( status ) => {
-//     const result = await axios.put('/campaign_comment/like', { campaign_id: campaign_id, status: status });
-//     if( result.data.success === 1 ) {
-//       if(like) setCommentLikenum(likenum => likenum -1);
-//       else setCommentLikenum(likenum => likenum +1)
-//       setLike(!like);
-//     }
-// }
-
-
-
-
 
   const onClickHandler = () => {
     if (isClicked) setIsClicked(false);
@@ -83,36 +74,9 @@ const CampaignCommentChildInput = ({ comment, campaign_id, setCampaignCommentLis
 
   return (
     <>
-      <div className="like_group">
-
-
-      {/* {like ? (
-              <img
-                onClick={() => likeHandler(true)}
-                alt="like"
-                className="like"
-                src="/icons/like.svg"
-              />
-            ) : (
-              <img
-                onClick={() => likeHandler(false)}
-                alt="unlike"
-                className="unlike"
-                src="/icons/unlike.svg"
-              />
-            )} */}
-
-
-
-
-
-
-        <img className="like_normal" src="/icons/like_normal.png" />
-        <img className="liked" src="/icons/like.png" />
-        <img className="disLike_normal" src="/icons/disLike_normal.png" />
-        <img className="disLiked" src="/icons/disLike.png" />
-        <p onClick={onClickHandler}>답글</p>
-      </div>
+      <p className="child_input_btn" onClick={onClickHandler}>
+        답글
+      </p>
       {isClicked && (
         <div className="comment_child_input">
           <input

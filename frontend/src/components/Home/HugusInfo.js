@@ -12,6 +12,7 @@ const HugusInfoStyle = styled.section`
   margin-top: 100px;
   align-items: center;
   margin-bottom: 200px;
+  background-color: rgba(0, 0, 0, 0.1);
   .info__left {
     justify-self: center;
     display: flex;

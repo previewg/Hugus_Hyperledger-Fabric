@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import CampaignCommentChild from "./CampaignCommentChild";
 import CampaignCommentChildInput from "./CampaignCommentChildInput";
 import axios from "axios";
@@ -70,39 +70,19 @@ const CampaignCommentListStyle = styled.section`
         cursor: pointer;
         width: 100px;
       }
-      .like_group {
-        display: flex;
-        align-items: center;
-        margin-top: 5px;
-        height: 25px;
-
-        > img {
-          width: 17px;
-          height: 17px;
-          cursor: pointer;
-          margin-right: 7px;
-        }
-        img:nth-child(2) {
-          display: none;
-        }
-        img:nth-child(4) {
-          display: none;
-        }
-
-        p {
-          background-color: transparent;
-          margin-left: 7px;
-          font-size: 14px;
-          width: 50px;
-          height: 15px;
-          cursor: pointer;
-          outline: none;
-          border: none;
-          color: gray;
-          transition: 0.2s ease-in-out;
-          :hover {
-            color: orange;
-          }
+      .child_input_btn {
+        margin-bottom: 5px;
+        background-color: transparent;
+        font-size: 13px;
+        width: 50px;
+        height: 15px;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        color: gray;
+        transition: 0.2s ease-in-out;
+        :hover {
+          color: orange;
         }
       }
 
@@ -151,9 +131,9 @@ const CampaignCommentListStyle = styled.section`
             }
           }
         }
+      }
     }
   }
-}
   .bottom {
     display: flex;
     justify-content: space-between;
@@ -168,24 +148,24 @@ const CampaignCommentListStyle = styled.section`
     }
   }
 
- .back {
+  .back {
     margin-bottom: 50px;
     width: 100%;
     display: flex;
     justify-content: flex-end;
-  .back_btn {
-    font-size: 15px;
-    font-weight: bold;
-    text-decoration: none;
-    color: grey;
-    cursor: pointer;
-    transition: 0.1s ease-in-out;
-    outline: none;
-    :hover {
-    color: orange;
+    .back_btn {
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      color: grey;
+      cursor: pointer;
+      transition: 0.1s ease-in-out;
+      outline: none;
+      :hover {
+        color: orange;
+      }
     }
   }
-}
 `;
 
 const time = (value) => {
@@ -213,7 +193,14 @@ const time = (value) => {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
 
-const CampaignCommentList = ({ match, campaignId, campaignCommentList, setCampaignCommentList, commentLikenum, setCommentLikenum }) => {
+const CampaignCommentList = ({
+  match,
+  campaignId,
+  campaignCommentList,
+  setCampaignCommentList,
+  commentLikenum,
+  setCommentLikenum,
+}) => {
   const email = useSelector((state) => state.auth.user.email);
   const data = campaignCommentList.list;
   const campaign_id = campaignId.data.id;
@@ -224,9 +211,12 @@ const CampaignCommentList = ({ match, campaignId, campaignCommentList, setCampai
   const commentDeleteHandler = async (id) => {
     const confirmed = window.confirm("삭제하시겠습니까?");
     if (confirmed) {
-    const result = await axios.post("/campaign_comment/delete",{ comment_id: id, campaign_id: campaign_id });
-    setCampaignCommentList(result.data)
-  }
+      const result = await axios.post("/campaign_comment/delete", {
+        comment_id: id,
+        campaign_id: campaign_id,
+      });
+      setCampaignCommentList(result.data);
+    }
   };
 
   const CampaignCommentChildMain = ({ comment }) => {
@@ -249,7 +239,7 @@ const CampaignCommentList = ({ match, campaignId, campaignCommentList, setCampai
             답글 {comment.child_count}개 숨기기
           </p>
         )}
-        
+
         {status && <CampaignCommentChild id={comment.id} />}
       </>
     );
@@ -263,72 +253,72 @@ const CampaignCommentList = ({ match, campaignId, campaignCommentList, setCampai
     campaignCommentList.list = newCommentList;
     setCampaignCommentList(campaignCommentList);
     if (comment.data.more === true) {
-          setNum(num => num + 1);
-          setMore(true)
+      setNum((num) => num + 1);
+      setMore(true);
     } else {
-          setMore(false)
-        };
+      setMore(false);
+    }
     setStatus("SUCCESS");
   };
 
   return (
     <CampaignCommentListStyle>
-      {campaignCommentList.list !== 0 && data.map((comment, key) => {
-        return (
-          <article key={key}>
-            {comment.User.user_profile ? (
-              <div
-                className="comment_icon"
-                style={{
-                  backgroundImage: `url("${comment.User.user_profile}") `,
-                }}
-              ></div>
-            ) : (
-              <img
-                className="comment_icon"
-                alt="comment_icon"
-                src="/icons/hugus_icon.png"
-              />
-            )}
+      {campaignCommentList.list !== 0 &&
+        data.map((comment, key) => {
+          return (
+            <article key={key}>
+              {comment.User.user_profile ? (
+                <div
+                  className="comment_icon"
+                  style={{
+                    backgroundImage: `url("${comment.User.user_profile}") `,
+                  }}
+                ></div>
+              ) : (
+                <img
+                  className="comment_icon"
+                  alt="comment_icon"
+                  src="/icons/hugus_icon.png"
+                />
+              )}
 
-            <div className="comment">
-              <div className="header">
-                <a>{comment.User.nickname}</a>
-                <div>
-                  {email == comment.user_email && 
-                  ( <button onClick={() => commentDeleteHandler(comment.id)}>
-                      삭제
-                    </button>
-                  )}
-                  <p className="date">{time(comment.createdAt)}</p>
+              <div className="comment">
+                <div className="header">
+                  <a>{comment.User.nickname}</a>
+                  <div>
+                    {email == comment.user_email && (
+                      <button onClick={() => commentDeleteHandler(comment.id)}>
+                        삭제
+                      </button>
+                    )}
+                    <p className="date">{time(comment.createdAt)}</p>
+                  </div>
                 </div>
-              </div> 
-              <p>{comment.comment}</p>
-              <CampaignCommentChildInput 
-              comment={comment} 
-              campaign_id={campaign_id} 
-              setCampaignCommentList={setCampaignCommentList}
-              commentLikenum={commentLikenum}
-              setCommentLikenum={setCommentLikenum}
-              />
-              <CampaignCommentChildMain comment={comment} />
-            </div>
-          </article>
-        );
-      })}
-      
-      {more &&
+                <p>{comment.comment}</p>
+                <CampaignCommentChildInput
+                  comment={comment}
+                  campaign_id={campaign_id}
+                  setCampaignCommentList={setCampaignCommentList}
+                  commentLikenum={commentLikenum}
+                  setCommentLikenum={setCommentLikenum}
+                />
+                <CampaignCommentChildMain comment={comment} />
+              </div>
+            </article>
+          );
+        })}
+
+      {more && (
         <div className="bottom">
           <p onClick={loadMore}>댓글 더보기</p>
         </div>
-      }
+      )}
 
       <div className="back">
-      <Link className="back_btn" to="/">
-      글목록
-      </Link>
+        <Link className="back_btn" to="/">
+          글목록
+        </Link>
       </div>
-      
     </CampaignCommentListStyle>
   );
 };

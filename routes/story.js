@@ -324,7 +324,16 @@ router.get("/list/:page", async (req, res) => {
 
         order: [["created_at", "DESC"]],
       });
-      const total = await Story.count({ where: {} });
+      const total = await Story.count({
+        where: {
+          id: [
+            sequelize.literal(
+              `(SELECT story_id FROM story_like WHERE user_email = '${user_email}')`
+            ),
+          ],
+          expired: false,
+        },
+      });
       let more = false;
       if (total > page * 9) more = true;
       res.json({ list: list, success: 1, more: more });
@@ -375,7 +384,7 @@ router.get("/list/:page", async (req, res) => {
         },
         order: [["created_at", "DESC"]],
       });
-      const total = await Story.count({ where: {} });
+      const total = await Story.count({ where: { expired: true } });
       let more = false;
       if (total > page * 9) more = true;
       res.json({ list: list, success: 1, more: more });
@@ -431,10 +440,9 @@ router.get("/list/:page", async (req, res) => {
         limit: 9,
         order: order,
       });
-      const total = await Story.count({});
+      const total = await Story.count({ where: { expired: false } });
       let more = false;
       if (total > page * 10) more = true;
-      console.log(list);
       res.json({ list: list, success: 1, more: more });
     }
   } catch (error) {
