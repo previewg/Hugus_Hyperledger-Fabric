@@ -1,20 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
+import { ClipLoader } from "react-spinners";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpBtnIsClicked } from "actions/user";
 import axios from "axios";
-import Loader from "./Loader";
 
 const InfoStyle = styled.section`
   width: 100%;
   padding-top: 70px;
   .Layout {
     display: grid;
-    grid-template-rows: 3.5fr 5fr 2.5fr 6fr 3fr ;
-
-
+    grid-template-rows: 2fr 0.8fr 5fr 1.5fr 4.5fr 1.5fr ;
   >div:nth-child(1) {
     padding-bottom: 20px;
     padding-top: 20px;
@@ -23,7 +21,6 @@ const InfoStyle = styled.section`
     flex-direction: column;
     width: 100%;
     background-color: white;
-
     .donate_title {
       display: flex;
       justify-content: center;
@@ -44,7 +41,6 @@ const InfoStyle = styled.section`
         >img {
         width: 60px;
         height: 60px;
-
       }
       }
       .donate_all_price {
@@ -78,49 +74,49 @@ const InfoStyle = styled.section`
   }
 
 
-
-  .asdfasdf {
-    padding-left: 100px;
-    padding-bottom: 30px;
-    padding-top: 30px;
-    background-color: #f0f0f0;
-    display: grid;
+  .bar {
+    background: linear-gradient(25deg , #ecb475, 42%, #ebf8e1, #6c97a9);
+    display: flex;
+    width: 100%;
     align-items: center;
-    .partOne {
-      margin-left: 30px;
-      .topName {
-      font-size: 40px;
-      font-weight: bold;
-      }
-    
-      >p {
-        color: #303030; 
-      }
-    }
-   
-    .partTwo {
-      margin-left: 30px;
-      .bottomName {
-        font-size: 40px;
+    justify-content: space-around;
+    .write_section {
+      display: flex;
+      width: 300px;
+      justify-content: center;
+      flex-direction: column;
+      >p:nth-child(1) {
+      font-size: 25px;
+      color: white;
+      span:nth-child(1) {
+        color: #ea4540;
         font-weight: bold;
+        font-size: 28px;
       }
-      >p {
-        color: #303030; 
+      >span:nth-child(3) {
+        color: #52c574;
+        font-weight: bold;
+        font-size: 28px;
       }
+      }
+
+    }
+    >img {
+      width: 600px;
     }
   }
 
-  >div:nth-child(4) {
-    padding-top: 30px;
-    padding-left: 100px;
+
+  .asdfasdf {
+    padding-left: 140px;
     padding-bottom: 30px;
+    padding-top: 30px;
     display: grid;
     align-items: center;
-    width: 100%;
-      .partOne {
-      width: 80%;
+    .partOne {
+      width: 90%;
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       .write_line {
       display: flex;
@@ -130,28 +126,42 @@ const InfoStyle = styled.section`
       font-size: 40px;
       font-weight: bold;
       }
+    }
       >p {
         color: #303030; 
       }
-    }
-    >img {
+      >img {
     display: flex;
     width: 220px;
-    height: 400px;
+    height: 440px;
     }
   }
-
    
     .partTwo {
+      width: 90%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .write_line {
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
       .bottomName {
         font-size: 40px;
         font-weight: bold;
       }
+    }
       >p {
         color: #303030; 
       }
+      >img {
+      display: flex;
+      width: 220px;
+      height: 440px;
     }
   }
+}
+
   .bannerBar {
     display: flex;
     align-items: center;
@@ -161,7 +171,7 @@ const InfoStyle = styled.section`
       justify-content: center;
       align-items: center;
       width: 100%;
-      gap: 20px;
+      gap: 80px;
       .campaign_link {
         flex-direction: column;
         display: flex;
@@ -213,9 +223,61 @@ const InfoStyle = styled.section`
     }
   }
 
-
-
-
+  >div:nth-child(5) {
+    padding-top: 30px;
+    padding-left: 140px;
+    padding-bottom: 30px;
+    display: grid;
+    align-items: center;
+      .partOne {
+      width: 90%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .write_line {
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+      .topName {
+      font-size: 40px;
+      font-weight: bold;
+      }
+      >p {
+        color: #303030; 
+      }
+    }
+    >img {
+    display: flex;
+    width: 220px;
+    height: 430px;
+    }
+  }
+   
+    .partTwo {
+      margin-top: 30px;
+      width: 90%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .write_line {
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+      .bottomName {
+        font-size: 40px;
+        font-weight: bold;
+      }
+      >p {
+        color: #303030; 
+      }
+      }
+      >img {
+      display: flex;
+      width: 400px;
+      height: 250px;
+      }
+    }
+  }
 
   .patners_section {
     background: linear-gradient(155deg, #6c97a9, 15%, #ebf8e1, #ecb475);
@@ -317,6 +379,14 @@ const SliderStyle = styled.section`
 
 `;
 
+const LoaderStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+`;
+
 
 const Info = ({history}) => {
   const dispatch = useDispatch();
@@ -334,6 +404,14 @@ const Info = ({history}) => {
     init();
   }, []);
 
+  const Loader = () => {
+    return (
+      <LoaderStyle>
+        <ClipLoader size={50} color={"#f69a53"} loading={true} />
+      </LoaderStyle>
+    );
+  };
+
 
   const signUpHandler = () => {
     if (isLoggedIn) {
@@ -342,8 +420,6 @@ const Info = ({history}) => {
       dispatch(signUpBtnIsClicked());
     }
   }
-
-
 
 
   const NextArrow = (props) => {
@@ -384,7 +460,7 @@ const Info = ({history}) => {
 
     const settings = {
       infinite: true,
-      autopspeed: 5000,
+      autopspeed: 1800,
       slidesToShow: 3,
       slidesToScroll: 1,
       centerMode: true,
@@ -455,13 +531,18 @@ const Info = ({history}) => {
                 (
                   <Loader />
                 ) : (
-                  <p>{data.activeStoryCount} 건</p>
+                  <p><span>{data.activeStoryCount}</span> 건</p>
                 )}
             </div>
             <div className="donate_all_price">
               <p>총 후원 금액</p>
               <img src="./icons/money.png" />
-              <p> 원</p>
+              {!loading ?
+                (
+                  <Loader />
+                ) : (
+                <p>{data.totalAmount.toLocaleString()} 원</p>
+                )}
             </div>
             <div className="donate_all_user">
               <p>전체 회원 수 </p>
@@ -487,6 +568,15 @@ const Info = ({history}) => {
       
       </div>
 
+      <div className="bar">
+        <div className="write_section">
+          <p>간편한 <span>"페이 결제"</span>로<br/>
+          <span>소액</span>도 후원할 수 있어요</p>
+        </div>
+        <img src="/icons/info_bar_img.png"/>          
+      </div>
+
+
 
 
 
@@ -496,23 +586,28 @@ const Info = ({history}) => {
       <div className="asdfasdf">
         
       <div className="partOne">
-      <span className="topName">주변의 어려움을 <br/> 직접 올려주세요</span>
-      <p>
+      <div className="write_line">
+        <span className="topName">주변의 어려움을 <br/> 직접 올려주세요</span>
+        <p>
         스토리에 직접 사진과 글로 주변이나 자신의 어려움을<br/>
         올려주시면, 고민하고 이야기 나누며<br/>
-        함께 해결책을 찾아봅시다.
-      </p>
+        함께 해결책을 찾을 수 있습니다.
+        </p>
+      </div>
+      <img src="/icons/main_sample.png"/>
       </div>
 
       <div className="partTwo">
-      <span className="bottomName">후원을 하시려면</span>
-      <p>
-        스토리에 후원 희망을 통해 후원 의사를 표현하고<br/>
-        채택이 된 캠페인에서 후원하기를 통해 도움을 줄 수 있습니다.
-        </p>
+        <div className="write_line">
+          <span className="bottomName">후원을 하시려면</span>
+          <p>
+            스토리에 후원 희망을 통해 후원 의사를 표현하고<br/>
+            채택이 된 캠페인에서 후원하기를 통해 도움을 줄 수 있습니다.
+            </p>
+        </div>
+      <img src="/icons/campaign_sample.png"/>
       </div>
-        
-      </div>
+    </div>
 
 
 
@@ -543,24 +638,28 @@ const Info = ({history}) => {
       <div className="">
 
       <div className="partOne">
-      <div className="write_line">
-      <span className="topName"> HUGUS 의 목표는<br/>
-      </span>
-      <p>
-      기부의 생활화를 통한 사회의 선순환 효과<br/>
-      주변의 이야기를 작성하고 읽고 나누어 따뜻한 손길을.<br/>
-      </p>
-      </div>
-
-      <img src="/icons/story_detail_sample.png"/>
+        <div className="write_line">
+          <span className="topName"> HUGUS 의 목표는<br/>
+          </span>
+            <p>
+            기부의 생활화를 통한 사회의 선순환 효과<br/>
+            주변의 이야기를 작성하고 읽고 나누어 따뜻한 손길이<br/>
+            닿을수 있게 하겠습니다.
+            </p>
+        </div>
+        <img src="/icons/story_detail_sample.png"/>
       </div>
 
       <div className="partTwo">
-      <span className="bottomName">블록체인으로 투명한 기부금 관리</span>
-      <p>
-        모금부터 사용까지 모든 기부금 정보를 블록체인에 실시간으로 기록합니다.<br/>
-        기부금은 누구도 개입할 수 없는 스마트계약에 의해서만 전달돼요!
-        </p>
+        <div className="write_line">
+          <span className="bottomName">블록체인으로 투명한<br/> 기부금 관리</span>
+          <p>
+          모금부터 사용까지 모든 기부금 정보를 블록체인에 실시간으로 기록합니다.<br/>
+          기부금은 누구도 개입할 수 없는 스마트계약에 의해서만 전달돼요!
+          </p>
+        </div>
+
+        <img src="/icons/block_chain_sample.png"/>
       </div>
 
       </div>
