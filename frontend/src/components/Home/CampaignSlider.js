@@ -66,7 +66,7 @@ const CampaignSliderStyle = styled.section`
         }
       }
       .campaign__img {
-        width: 290px;
+        width: 100%;
         height: 290px;
         background-repeat: no-repeat;
         background-position: center;
@@ -232,6 +232,7 @@ const CampaignSlider = () => {
     }
   }, []);
 
+  console.log(list);
   return (
     <CampaignSliderStyle>
       <p>진행 중인 캠페인</p>

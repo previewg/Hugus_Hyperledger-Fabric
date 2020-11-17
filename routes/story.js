@@ -434,6 +434,7 @@ router.get("/list/:page", async (req, res) => {
       const total = await Story.count({});
       let more = false;
       if (total > page * 10) more = true;
+      console.log(list);
       res.json({ list: list, success: 1, more: more });
     }
   } catch (error) {

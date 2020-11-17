@@ -255,7 +255,7 @@ const StoryList = ({ storyType, changed, setChanged }) => {
     <StoryListStyle>
       <LoadHandler storyType={storyType} />
       <section>
-        {list.length === 0
+        {list.length === 0 && !loading
           ? (storyType === "hot" && (
               <ThereIsNoFavorite>인기 스토리가 없습니다</ThereIsNoFavorite>
             )) ||

@@ -3,7 +3,7 @@ import socketIOClient from "socket.io-client";
 
 const BlockSocket = ({ txList, setTxList, blockList, setBlockList }) => {
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:2002");
+    const socket = socketIOClient("http://192.168.0.26:2002");
     console.log("socket is opened");
     socket.on("hugus_tx", (res) => {
       txList.unshift(JSON.parse(res));

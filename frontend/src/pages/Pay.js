@@ -55,6 +55,8 @@ const PayStyle = styled.section`
           align-items: center;
           font-size: 18px;
           > p {
+            width: 80%;
+            text-align: center;
             justify-self: center;
           }
           > div {
@@ -278,9 +280,8 @@ const Pay = ({ match, history }) => {
   const [error, setError] = useState(false);
   const init = useRef(true);
   const email = useSelector((state) => state.auth.user.email);
-  const naverPayObj = useSelector(state=>state.auth.naverPayObj);
+  const naverPayObj = useSelector((state) => state.auth.naverPayObj);
   const kakaoPay = async () => {
-    
     setPending("WAITING");
     const data = await axios.post("/pay/", {
       campaign_id: match.params.id,
@@ -295,13 +296,13 @@ const Pay = ({ match, history }) => {
 
   const naverPay = async () => {
     naverPayObj.open({
-      "merchantUserKey": "partner-userkey",
-      "merchantPayKey": "partnder-orderkey",
-      "productName": data.campaign_title ,
-      "totalPayAmount": amount,
-      "taxScopeAmount": amount,
-      "taxExScopeAmount": "0",
-      "returnUrl": "http://localhost:3001"
+      merchantUserKey: "partner-userkey",
+      merchantPayKey: "partnder-orderkey",
+      productName: data.campaign_title,
+      totalPayAmount: amount,
+      taxScopeAmount: amount,
+      taxExScopeAmount: "0",
+      returnUrl: "http://localhost:3001",
     });
   };
 

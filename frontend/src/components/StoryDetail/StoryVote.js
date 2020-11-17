@@ -56,7 +56,9 @@ const StoryVote = ({ data }) => {
     if (ratio > 100) ratio = 100;
     return (
       <BarStyle ratio={ratio}>
-        <p className="ratio">{(vote.voteNum / data.story_goal) * 100}%</p>
+        <p className="ratio">
+          {((vote.voteNum / data.story_goal) * 100).toFixed(1)}%
+        </p>
         <div className="bar">
           <div></div>
         </div>

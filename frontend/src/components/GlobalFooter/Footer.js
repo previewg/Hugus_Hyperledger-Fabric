@@ -43,11 +43,6 @@ const Footer = () => {
         <div>HUGUS 이용약관</div>
         <div>|</div>
         <div>개인정보처리방침</div>
-        <div>|</div>
-        <div>허철진 바보</div>
-      </div>
-      <div className={"second__layout"}>
-        대표 허철진 | 대표변호 010 5019 2736
       </div>
       <div className={"second__layout"}>
         블록체인 기반 기부 플랫폼 <span>HUGUS</span>
