@@ -1,7 +1,13 @@
-<h2 style="text-align: center">블록체인 기반(Hyperledger Fabric) 기부 플랫폼</h2>
-<h2 style="text-align: center">
-    <img style="height: 100px;" src="https://github.com/previewg/hugus_Hyperledger-Fabric/blob/master/frontend/public/icons/hugus.png?raw=true">
-</h2>
+<h2 align=center>블록체인 기반(Hyperledger Fabric) 기부 플랫폼</h2>
+
+
+<h1 align=center>
+<br>
+<br>
+    <img style="height: 150px;" src="https://github.com/previewg/hugus_Hyperledger-Fabric/blob/master/frontend/public/icons/hugus.png?raw=true">
+<br>
+<br>
+</h1>
 
 ##📍 프로젝트 개요
     1️⃣ 프로젝트 설명       |    블록체인(하이퍼레저 패브릭) 기반 기부 플랫폼입니다.
